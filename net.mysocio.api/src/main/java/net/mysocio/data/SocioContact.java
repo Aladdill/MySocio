@@ -3,6 +3,7 @@
  */
 package net.mysocio.data;
 
+import javax.jdo.annotations.PersistenceCapable;
 import javax.persistence.Entity;
 
 
@@ -11,6 +12,7 @@ import javax.persistence.Entity;
  * @author Aladdin
  *
  */
+@PersistenceCapable
 @Entity(name="contacts")
 public class SocioContact extends Contact implements IContact {
 
