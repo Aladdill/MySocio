@@ -1,0 +1,55 @@
+================================================
+Copyright 2008, Troy Bourdon
+
+This is the client file for the LJToolkit 0.6.0
+================================================
+
+===== Intro =====
+There is a small but serviceable reference implementation of a command line tool
+for the LJToolkit distribution. The source can be found in the org.ljtoolkit.client
+package. The client provides the ablility to add/update/delete and fetch a listing
+of the user's Live Journal events. There are a couple of different ways to run the
+client.
+
+==== Running Client =====
+1.) Goto the ljtoolkit/lib directory and issue the following command: 
+	
+java -jar ljtoolkit.jar -h
+
+Of course this assumes that java is in your path. In order to do anything useful the
+user will have to enter -u username -p password on the command line for all commands
+but help. This can make for a lot of typing so the following option is prefferable.
+
+2.) Create a system environment variable LJTOOLKIT_HOME and then add the following to
+your system PATH environment variable:
+
+%LJTOOLKIT_HOME%\bin
+
+There is an ljclient bat file in the bin directory where the user can enter their
+username and password. At the point the user should be able to run 'ljclient -h' from
+anywhere in the command shell.
+
+The batch file should work for Windows NT/2000/XP. Anyone that would like to contribute
+working batch files or shell scripts for other operating systems is more than welcome.
+
+In addition to the ljclient.bat file there are a number of convienence batch files which
+restrict the number of command line options that are needed.
+
+==== Adding and Updating an Entry =====
+This should give you the command line. For adding and updating actions an input file
+needs to be provided with the content for adding or updating. The format of that file
+is as follows:
+
+Title: Some title goes here
+Security: Security tag goes here (PUBLIC/PRIVATE)
+Tags: Some comma delimeted tags go here (foo, bar, baz)
+
+Contents of post go here
+
+From the above example the following rules apply:
+	- The first line MUST have Title:
+	- The second line MUST have Security:
+	- The third line MUST have Tags:
+	- The contents of the post range from the fifth line to eof.
+
+The contents of the post can have all the html that Live Journal excepts for an event.

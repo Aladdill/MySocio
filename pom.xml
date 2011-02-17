@@ -1,0 +1,136 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>net.mysocio</groupId>
+	<artifactId>my-socio</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<name>MySocio</name>
+	<description>My Socio parent project</description>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.0.2</version>
+				<configuration>
+					<source>1.6</source>
+					<target>1.6</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.datanucleus</groupId>
+				<artifactId>maven-datanucleus-plugin</artifactId>
+				<version>2.2.1</version>
+				<configuration>
+					<mappingIncludes>**/*.jdo, **/*.class</mappingIncludes>
+					<log4jConfiguration>${basedir}/log4j.properties</log4jConfiguration>
+					<verbose>true</verbose>
+					<enhancerName>ASM</enhancerName>
+					<props>${basedir}/datanucleus.properties</props>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>compile</phase>
+						<goals>
+							<goal>enhance</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+	<repositories>
+		<!-- <repository> -->
+		<!-- <id>nexus</id> -->
+		<!-- <url>http://illabbldlnx16.devlab.ad:8080/nexus/content/repositories/public</url> -->
+		<!-- <name>nexus</name> -->
+		<!-- </repository> -->
+		<repository>
+			<id>apache.m2.repo</id>
+			<name>Apache Maven2 Repository</name>
+			<url>http://people.apache.org/repo/m2-ibiblio-rsync-repository</url>
+		</repository>
+		<repository>
+			<id>camel.m2.repo</id>
+			<name>Camel Maven2 Repository</name>
+			<url>http://ondex.rothamsted.bbsrc.ac.uk/nexus/content/repositories/atlassian
+			</url>
+		</repository>
+		<repository>
+			<id>DataNucleus_Repos</id>
+			<name>DataNucleus Repository</name>
+			<url>http://www.datanucleus.org/downloads/maven</url>
+			<layout>legacy</layout>
+		</repository>
+		<repository>
+			<id>DataNucleus_Repos2</id>
+			<name>DataNucleus Repository</name>
+			<url>http://www.datanucleus.org/downloads/maven2</url>
+		</repository>
+	</repositories>
+	<pluginRepositories>
+		<!-- <pluginRepository> -->
+		<!-- <id>nexus</id> -->
+		<!-- <url>http://illabbldlnx16.devlab.ad:8080/nexus/content/repositories/public</url> -->
+		<!-- <name>nexus</name> -->
+		<!-- </pluginRepository> -->
+		<pluginRepository>
+			<id>apache.m2.repo</id>
+			<name>Apache Maven2 Repository</name>
+			<url>http://people.apache.org/repo/m2-ibiblio-rsync-repository</url>
+		</pluginRepository>
+		<pluginRepository>
+			<id>DataNucleus_2</id>
+			<url>http://www.datanucleus.org/downloads/maven2/</url>
+		</pluginRepository>
+	</pluginRepositories>
+	<modules>
+		<module>net.mysocio.api</module>
+		<module>net.mysocio.data-management</module>
+		<module>net.mysocio.default-ui-manager</module>
+		<module>net.mysocio.lj-source</module>
+		<module>net.mysocio.rss-source</module>
+		<module>net.mysocio.web-app</module>
+		<module>org.katkov.lj-api</module>
+		<module>org.ljtoolkit.ljtoolkit</module>
+	</modules>
+	<properties>
+		<camel-version>2.5.0</camel-version>
+		<mysocio.version>0.0.1-SNAPSHOT</mysocio.version>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.5.11</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.5.11</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.camel</groupId>
+			<artifactId>camel-rss</artifactId>
+			<version>${camel-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.camel</groupId>
+			<artifactId>camel-spring</artifactId>
+			<version>${camel-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.persistence</groupId>
+			<artifactId>com.springsource.javax.persistence</artifactId>
+			<version>2.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.scribe</groupId>
+			<artifactId>scribe</artifactId>
+			<version>1.1.0</version>
+		</dependency>
+	</dependencies>
+</project>
