@@ -26,18 +26,7 @@ public class ConnectionData implements IConnectionData{
 	}
 	@Override
 	public SocioUser getUser(){
-		SocioUser user = (SocioUser)session.getAttribute("user");
-		if (user == null){
-			String identifier = getRequestParameter("identifier");
-			String identifierValue = getRequestParameter(identifier);
-			logger.debug("identifier="+identifier+" identifierValue="+identifierValue);
-			user = DataManagerFactory.getDataManager().getUser(identifier, identifierValue);
-			if (user == null){
-				user = DataManagerFactory.getDataManager().createUser(identifier, identifierValue);
-			}
-			session.setAttribute("user",user);
-		}
-		return user;
+		return (SocioUser)session.getAttribute("user");
 	}
 	@Override
 	public void cleanSession() {
@@ -46,5 +35,9 @@ public class ConnectionData implements IConnectionData{
 	@Override
 	public String getRequestParameter(String parameterName){
 		return request.getParameter(parameterName);
+	}
+	@Override
+	public void setUser(SocioUser user) {
+		session.setAttribute("user", user);
 	}
 }

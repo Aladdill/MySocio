@@ -10,7 +10,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import net.mysocio.data.IConnectionData;
+import net.mysocio.data.SocioUser;
 import net.mysocio.data.management.ConnectionData;
+import net.mysocio.data.management.DataManagerFactory;
 import net.mysocio.ui.management.CommandIterpreterFactory;
 import net.mysocio.ui.management.ICommandInterpreter;
 
@@ -51,10 +53,27 @@ public class RequestHandler extends HttpServlet {
 		if (command != null && command.equals("logout")){
 			logout(connectionData, response);
 		}
+		if (command == null){
+			initUser(connectionData);
+		}
 		PrintWriter out = response.getWriter();
 		ICommandInterpreter commandInterpreter = CommandIterpreterFactory.getCommandInterpreter(connectionData);
 		response.setContentType(commandInterpreter.getCommandResponseType(command));
 		out.print(commandInterpreter.executeCommand(command));
+	}
+
+	private void initUser(IConnectionData connectionData) {
+		SocioUser user = connectionData.getUser();
+		if (user == null){
+			String identifier = connectionData.getRequestParameter("identifier");
+			String identifierValue = connectionData.getRequestParameter(identifier);
+			logger.debug("identifier="+identifier+" identifierValue="+identifierValue);
+			user = DataManagerFactory.getDataManager().getUser(identifier, identifierValue);
+			if (user == null){
+				user = DataManagerFactory.getDataManager().createUser(identifier, identifierValue);
+			}
+			connectionData.setUser(user);
+		}
 	}
 
 	private void logout(IConnectionData connectionData, HttpServletResponse response) throws IOException {

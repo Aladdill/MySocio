@@ -35,20 +35,20 @@ public class GetMessagesExecutor implements ICommandExecutor {
 		return output.toString();
 	}
 	
-	private static List<? extends IMessage> getMessages(IConnectionData connectionManager) {
-		String id = connectionManager.getRequestParameter(DefaultUiManager.SOURCE_ID);
+	private static List<? extends IMessage> getMessages(IConnectionData connectionData) {
+		String id = connectionData.getRequestParameter(DefaultUiManager.SOURCE_ID);
 		if (id == null){
 			return Collections.emptyList();
 		}
 		if (id.equalsIgnoreCase("ALL")){
-			Collection<UnreaddenMessages> allMessages = connectionManager.getUser().getUnreadMessages().values();
+			Collection<UnreaddenMessages> allMessages = connectionData.getUser().getUnreadMessages().values();
 			ArrayList<IMessage> messages = new ArrayList<IMessage>();
 			for (UnreaddenMessages unreaddenMessages : allMessages) {
 				messages.addAll(unreaddenMessages.getMessages());
 			}
 			return messages;
 		}
-		UnreaddenMessages unreadMessages = connectionManager.getUser().getUnreadMessages(Long.parseLong(id));
+		UnreaddenMessages unreadMessages = connectionData.getUser().getUnreadMessages(Long.parseLong(id));
 		if (unreadMessages == null){
 			return Collections.emptyList();
 		}
