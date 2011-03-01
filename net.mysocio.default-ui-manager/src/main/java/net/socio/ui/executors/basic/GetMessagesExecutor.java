@@ -3,12 +3,13 @@
  */
 package net.socio.ui.executors.basic;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
+import net.mysocio.data.IConnectionData;
 import net.mysocio.data.IMessage;
-import net.mysocio.data.SocioUser;
 import net.mysocio.data.UnreaddenMessages;
 import net.mysocio.ui.management.ICommandExecutor;
 import net.socio.ui.managers.basic.DefaultUiManager;
@@ -25,22 +26,29 @@ public class GetMessagesExecutor implements ICommandExecutor {
 	 * @see net.mysocio.ui.management.ICommandExecutor#execute(javax.servlet.http.HttpServletRequest)
 	 */
 	@Override
-	public String execute(SocioUser user, Map parameters) {
+	public String execute(IConnectionData connectionManager) {
 		StringBuffer output = new StringBuffer();
-		List<? extends IMessage> messages = getMessages(user, parameters);
+		List<? extends IMessage> messages = getMessages(connectionManager);
 		for (IMessage message : messages) {
 			output.append(wrapXmlMessage(message.getId(), message.getTitle(), message.getLink(), message.getText()));
 		}
 		return output.toString();
 	}
 	
-	private static List<? extends IMessage> getMessages(SocioUser user, Map parameters) {
-		Object id = parameters.get(DefaultUiManager.SOURCE_ID);
+	private static List<? extends IMessage> getMessages(IConnectionData connectionManager) {
+		String id = connectionManager.getRequestParameter(DefaultUiManager.SOURCE_ID);
 		if (id == null){
 			return Collections.emptyList();
 		}
-		String[] ids = (String[])id;
-		UnreaddenMessages unreadMessages = user.getUnreadMessages(Long.parseLong(ids[0]));
+		if (id.equalsIgnoreCase("ALL")){
+			Collection<UnreaddenMessages> allMessages = connectionManager.getUser().getUnreadMessages().values();
+			ArrayList<IMessage> messages = new ArrayList<IMessage>();
+			for (UnreaddenMessages unreaddenMessages : allMessages) {
+				messages.addAll(unreaddenMessages.getMessages());
+			}
+			return messages;
+		}
+		UnreaddenMessages unreadMessages = connectionManager.getUser().getUnreadMessages(Long.parseLong(id));
 		if (unreadMessages == null){
 			return Collections.emptyList();
 		}

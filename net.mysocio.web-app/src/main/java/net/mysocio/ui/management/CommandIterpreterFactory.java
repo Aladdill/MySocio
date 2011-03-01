@@ -3,7 +3,7 @@
  */
 package net.mysocio.ui.management;
 
-import net.mysocio.data.SocioUser;
+import net.mysocio.data.IConnectionData;
 import net.socio.ui.managers.basic.DefaultCommandIterpreter;
 
 /**
@@ -11,7 +11,7 @@ import net.socio.ui.managers.basic.DefaultCommandIterpreter;
  *
  */
 public class CommandIterpreterFactory {
-	static public ICommandInterpreter getCommandInterpreter(SocioUser user){
-		return new DefaultCommandIterpreter(user);
+	static public ICommandInterpreter getCommandInterpreter(IConnectionData connectionManager){
+		return new DefaultCommandIterpreter(connectionManager);
 	}
 }

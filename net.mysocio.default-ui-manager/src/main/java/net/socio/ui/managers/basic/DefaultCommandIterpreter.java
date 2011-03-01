@@ -3,9 +3,7 @@
  */
 package net.socio.ui.managers.basic;
 
-import java.util.Map;
-
-import net.mysocio.data.SocioUser;
+import net.mysocio.data.IConnectionData;
 import net.mysocio.ui.management.ICommandInterpreter;
 
 /**
@@ -16,21 +14,21 @@ public class DefaultCommandIterpreter implements ICommandInterpreter{
 	public static final String TEXT_XML = "text/xml";
 	public static final String TEXT_HTML = "text/html";
 	private DefaultUiManager uiManager = new DefaultUiManager();
-	private SocioUser user;
+	private IConnectionData connectionData;
 	
-	public DefaultCommandIterpreter(SocioUser user) {
+	public DefaultCommandIterpreter(IConnectionData connectionData) {
 		super();
-		this.user = user;
+		this.connectionData = connectionData;
 	}
 
 	@Override
-	public String executeCommand(String command, Map parameters) {
+	public String executeCommand(String command) {
 		if (command == null){
 			return uiManager.getStartingPage();
 		}
 		EDefaultCommand commandObject = EDefaultCommand.valueOf(command);
 		String response = "No page set for this command";
-		response = commandObject.getExecutor().execute(user, parameters);
+		response = commandObject.getExecutor().execute(connectionData);
 		return response;
 	}
 	

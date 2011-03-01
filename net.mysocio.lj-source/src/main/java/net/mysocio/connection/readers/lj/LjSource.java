@@ -3,7 +3,8 @@
  */
 package net.mysocio.connection.readers.lj;
 
-import javax.persistence.Entity;
+import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.PersistenceCapable;
 
 import net.mysocio.connection.readers.Source;
 
@@ -11,7 +12,7 @@ import net.mysocio.connection.readers.Source;
  * @author gurfinke
  *
  */
-@Entity
+@PersistenceCapable(identityType = IdentityType.APPLICATION, detachable="true")
 public class LjSource extends Source {
 	private String username;
 	private int groupMask;

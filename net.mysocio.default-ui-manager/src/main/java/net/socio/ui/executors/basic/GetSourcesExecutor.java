@@ -4,11 +4,10 @@
 package net.socio.ui.executors.basic;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import net.mysocio.connection.readers.ISource;
 import net.mysocio.connection.readers.ISourcesGroup;
+import net.mysocio.data.IConnectionData;
 import net.mysocio.data.SocioUser;
 import net.mysocio.data.UnreaddenMessages;
 import net.mysocio.ui.management.ICommandExecutor;
@@ -22,18 +21,18 @@ public class GetSourcesExecutor implements ICommandExecutor {
 	 * @see net.mysocio.ui.management.ICommandExecutor#execute(javax.servlet.http.HttpServletRequest)
 	 */
 	@Override
-	public String execute(SocioUser user, Map parameters) {
+	public String execute(IConnectionData connectionManager) {
 		StringBuffer out = new StringBuffer();
 		out.append("<?xml version='1.0' encoding='UTF-8'?>" +
 				"<tree id=\"0\">" +
 		"<item text=\"All\" id=\"All\">");
-		addSourcesTree(user, out);
+		addSourcesTree(connectionManager.getUser(), out);
 		out.append("</item></tree>");
 		return out.toString();
 	}
 
 	private void addSourcesTree(SocioUser user, StringBuffer output){
-		Set<ISourcesGroup> sourcesGroups = user.getSourcesGroups();
+		List<ISourcesGroup> sourcesGroups = user.getSourcesGroups();
 		for (ISourcesGroup sourcesGroup : sourcesGroups) {
 			List<ISource> sources = sourcesGroup.getSources();
 			StringBuffer sourcesBuffer = new StringBuffer();

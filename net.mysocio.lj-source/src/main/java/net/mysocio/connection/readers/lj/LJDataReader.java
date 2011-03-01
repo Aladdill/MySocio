@@ -11,7 +11,8 @@ import java.util.Set;
 import net.mysocio.connection.readers.ISourcesGroup;
 import net.mysocio.data.IContact;
 import net.mysocio.data.SocioContact;
-import net.mysocio.data.management.DataManager;
+import net.mysocio.data.management.DataManagerFactory;
+import net.mysocio.data.management.HibernateDataManager;
 
 import org.katkov.lj.ClientsFactory;
 import org.katkov.lj.ConvenientClient;
@@ -37,7 +38,7 @@ public class LJDataReader {
 			int groupmask = friend.getGroupmask();
 			LjSource source = new LjSource(friend.getUsername(), friend.getFullname(), groupmask);
 			this.friends.add(source);
-			DataManager.saveSource(source);
+			DataManagerFactory.getDataManager().saveSource(source);
 		}
 		this.friendgroups = login.getFriendgroups();
 	}
@@ -49,7 +50,7 @@ public class LJDataReader {
 			SocioContact friendContact = new SocioContact();
 			friendContact.setName(source.getName());
 			friendContact.addSource(source);
-			DataManager.saveContact(friendContact);
+			DataManagerFactory.getDataManager().saveContact(friendContact);
 			contacts.add(friendContact);
 		}
 		return contacts;
@@ -60,11 +61,11 @@ public class LJDataReader {
 		for (FriendGroup group : this.friendgroups){
 			int lgGroupMask = 1 << group.getId();
 			LjFriendsGroup ljGroup = new LjFriendsGroup(group.getName(), lgGroupMask);
-			DataManager.saveSourcesGroup(ljGroup);
+			DataManagerFactory.getDataManager().saveSourcesGroup(ljGroup);
 			groups.add(ljGroup);
 		}
 		LjFriendsGroup noneGroup = new LjFriendsGroup("None", 0);
-		DataManager.saveSourcesGroup(noneGroup);
+		DataManagerFactory.getDataManager().saveSourcesGroup(noneGroup);
 		groups.add(noneGroup);
 		for (LjSource source : this.friends) {
 			int groupmask = source.getGroupMask();

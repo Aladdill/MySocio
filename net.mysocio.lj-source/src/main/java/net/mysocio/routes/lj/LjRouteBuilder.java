@@ -23,7 +23,8 @@ import java.util.List;
 import net.mysocio.connection.readers.ISource;
 import net.mysocio.connection.readers.lj.LjSource;
 import net.mysocio.data.lj.LjMessage;
-import net.mysocio.data.management.DataManager;
+import net.mysocio.data.management.DataManagerFactory;
+import net.mysocio.data.management.HibernateDataManager;
 
 import org.apache.camel.Body;
 import org.apache.camel.builder.RouteBuilder;
@@ -52,7 +53,7 @@ public class LjRouteBuilder extends RouteBuilder {
     }
 
     public void configure() {
-    	List<ISource> sources = DataManager.getSources(LjSource.class);
+    	List<ISource> sources = DataManagerFactory.getDataManager().getSources(LjSource.class);
     	for (ISource source : sources) {
     		from("rss:" + source.getUrl() + "?consumer.delay=100").
             bean(new SomeBean(source.getId()));

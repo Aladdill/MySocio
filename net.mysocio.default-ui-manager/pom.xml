@@ -16,5 +16,10 @@
 			<artifactId>api</artifactId>
 			<version>${mysocio.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>net.mysocio</groupId>
+			<artifactId>data-management</artifactId>
+			<version>${mysocio.version}</version>
+		</dependency>
 	</dependencies>
 </project>
