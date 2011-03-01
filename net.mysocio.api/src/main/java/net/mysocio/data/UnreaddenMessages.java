@@ -6,20 +6,22 @@ package net.mysocio.data;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.Join;
+import javax.jdo.annotations.NullValue;
 import javax.jdo.annotations.PersistenceCapable;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToMany;
+import javax.jdo.annotations.Persistent;
 
 /**
  * @author Aladdin
  *
  */
-@PersistenceCapable
-@Entity
+@PersistenceCapable(identityType = IdentityType.APPLICATION, detachable="true")
 public class UnreaddenMessages extends SocioObject{
+	@Persistent(nullValue=NullValue.DEFAULT)
 	private Long lastId;
-	@ManyToMany(targetEntity = GeneralMessage.class, fetch = FetchType.EAGER)
+	@Join
+	@Persistent(types={GeneralMessage.class},mappedBy = "id")
 	private List<IMessage> messages = new ArrayList<IMessage>();
 	/**
 	 * @return the lastId

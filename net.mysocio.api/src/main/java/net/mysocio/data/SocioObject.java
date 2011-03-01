@@ -3,11 +3,13 @@
  */
 package net.mysocio.data;
 
+import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.Inheritance;
+import javax.jdo.annotations.InheritanceStrategy;
+import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
+import javax.jdo.annotations.PrimaryKey;
 
 
 
@@ -15,11 +17,11 @@ import javax.persistence.MappedSuperclass;
  * @author gurfinke
  *
  */
-@MappedSuperclass
+@PersistenceCapable(identityType = IdentityType.APPLICATION, detachable="true")
+@Inheritance(strategy=InheritanceStrategy.SUBCLASS_TABLE)
 public class SocioObject implements ISocioObject{
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Persistent(primaryKey="true")
+	@PrimaryKey
+	@Persistent(valueStrategy = IdGeneratorStrategy.NATIVE)
 	protected Long id;
 	
 	/**

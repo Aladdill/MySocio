@@ -3,18 +3,20 @@
  */
 package net.mysocio.data;
 
-import javax.persistence.Entity;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
+import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.NullValue;
+import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Persistent;
 
 /**
  * @author Aladdin
  *
  */
-@Entity(name="accounts")
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@PersistenceCapable(identityType = IdentityType.APPLICATION, detachable="true")
 public class Account extends NamedObject {
+	@Persistent(nullValue=NullValue.DEFAULT)
 	private String userName;
+	@Persistent(nullValue=NullValue.DEFAULT)
 	private String password;
 	
 	public String getUserName() {

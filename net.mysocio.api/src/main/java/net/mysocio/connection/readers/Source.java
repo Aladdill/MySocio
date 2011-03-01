@@ -3,10 +3,11 @@
  */
 package net.mysocio.connection.readers;
 
-import javax.persistence.Entity;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.Transient;
+import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.NotPersistent;
+import javax.jdo.annotations.NullValue;
+import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Persistent;
 
 import net.mysocio.data.NamedObject;
 
@@ -14,11 +15,11 @@ import net.mysocio.data.NamedObject;
  * @author Aladdin
  *
  */
-@Entity(name = "sources")
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@PersistenceCapable(identityType = IdentityType.APPLICATION, detachable="true")
 public abstract class Source extends NamedObject implements ISource {
+	@Persistent(nullValue=NullValue.DEFAULT)
 	protected Long lastMessageId;
-	@Transient
+	@NotPersistent
 	private boolean visible = true;
 	
 	public Source() {

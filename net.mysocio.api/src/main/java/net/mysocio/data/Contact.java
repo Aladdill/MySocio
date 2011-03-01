@@ -5,9 +5,12 @@ package net.mysocio.data;
 
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.OneToOne;
+import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.Inheritance;
+import javax.jdo.annotations.InheritanceStrategy;
+import javax.jdo.annotations.NullValue;
+import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Persistent;
 
 import net.mysocio.connection.readers.ISource;
 import net.mysocio.connection.readers.SourcesGroup;
@@ -17,13 +20,16 @@ import net.mysocio.connection.writers.DestinationsGroup;
  * @author Aladdin
  *
  */
-@MappedSuperclass
+@PersistenceCapable(identityType = IdentityType.APPLICATION, detachable="true")
+@Inheritance(strategy=InheritanceStrategy.SUBCLASS_TABLE)
 public abstract class Contact extends NamedObject implements IContact {
-	@OneToOne(cascade = {CascadeType.ALL})
+	@Persistent
 	private SourcesGroup sourcesGroup = new SourcesGroup();
-	@OneToOne(cascade = {CascadeType.ALL})
+	@Persistent
 	private DestinationsGroup destinationsGroup = new DestinationsGroup();
+	@Persistent(nullValue=NullValue.DEFAULT)
 	private String userpicUrl;
+	@Persistent(nullValue=NullValue.DEFAULT)
 	private String email;
 	
 

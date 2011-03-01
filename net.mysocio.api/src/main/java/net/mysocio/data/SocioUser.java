@@ -3,15 +3,17 @@
  */
 package net.mysocio.data;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.jdo.annotations.Join;
+import javax.jdo.annotations.Key;
 import javax.jdo.annotations.PersistenceCapable;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
+import javax.jdo.annotations.Persistent;
+import javax.jdo.annotations.Value;
 
 import net.mysocio.connection.readers.ISourcesGroup;
 import net.mysocio.connection.readers.SourcesGroup;
@@ -21,18 +23,22 @@ import net.mysocio.connection.readers.SourcesGroup;
  *
  */
 @PersistenceCapable
-@Entity(name="users")
 public class SocioUser extends Contact implements IUser {
-	@ElementCollection()
+	@Join
+	@Key(types=java.lang.Long.class)
+    @Value(types=UnreaddenMessages.class)
 	private Map<Long, UnreaddenMessages> unreadMessages = new HashMap<Long, UnreaddenMessages>();
-	@ElementCollection()
-	private Set<Account> accounts = new HashSet<Account>();
-	@ManyToMany(targetEntity = SourcesGroup.class)
-	private Set<ISourcesGroup> sourcesGroups = new HashSet<ISourcesGroup>();
-	@ManyToMany(targetEntity = SocioContact.class)
-	private Set<IContact> contacts = new HashSet<IContact>();
+	@Join
+	@Persistent(types={Account.class},mappedBy = "id")
+	private List<Account> accounts = new ArrayList<Account>();
+	@Join
+	@Persistent(types={SourcesGroup.class},mappedBy = "id")
+	private List<ISourcesGroup> sourcesGroups = new ArrayList<ISourcesGroup>();
+	@Join
+	@Persistent(types={SocioContact.class},mappedBy = "id")
+	private List<IContact> contacts = new ArrayList<IContact>();
 	
-	public Set<IContact> getContacts(){
+	public List<IContact> getContacts(){
 		return contacts;
 	}
 
@@ -52,21 +58,21 @@ public class SocioUser extends Contact implements IUser {
 		this.sourcesGroups.add(SourcesGroup);		
 	}
 
-	public Set<ISourcesGroup> getSourcesGroups() {
+	public List<ISourcesGroup> getSourcesGroups() {
 		return this.sourcesGroups;
 	}
 
 	/**
 	 * @return the accounts
 	 */
-	public Set<Account> getAccounts() {
+	public List<Account> getAccounts() {
 		return accounts;
 	}
 
 	/**
 	 * @param accounts the accounts to set
 	 */
-	public void setAccounts(Set<Account> accounts) {
+	public void setAccounts(List<Account> accounts) {
 		this.accounts = accounts;
 	}
 	
@@ -77,7 +83,7 @@ public class SocioUser extends Contact implements IUser {
 	/**
 	 * @param contacts the contacts to set
 	 */
-	public void setContacts(Set<IContact> contacts) {
+	public void setContacts(List<IContact> contacts) {
 		this.contacts = contacts;
 	}
 	public void addContact(IContact contact) {

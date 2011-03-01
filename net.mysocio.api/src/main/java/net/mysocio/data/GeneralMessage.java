@@ -6,9 +6,12 @@ package net.mysocio.data;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.persistence.Entity;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
+import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.Inheritance;
+import javax.jdo.annotations.InheritanceStrategy;
+import javax.jdo.annotations.NullValue;
+import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Persistent;
 
 
 
@@ -16,12 +19,15 @@ import javax.persistence.InheritanceType;
  * @author Aladdin
  *
  */
-@Entity(name = "messages")
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@PersistenceCapable(identityType = IdentityType.APPLICATION, detachable="true")
 public abstract class GeneralMessage extends SocioObject implements IMessage{
+	@Persistent(nullValue=NullValue.DEFAULT)
 	private String link;
+	@Persistent(nullValue=NullValue.DEFAULT)
 	private String title;
+	@Persistent(nullValue=NullValue.DEFAULT)
 	private String text;
+	@Persistent(nullValue=NullValue.DEFAULT)
 	private Long sourceId;
 
 	public GeneralMessage() {

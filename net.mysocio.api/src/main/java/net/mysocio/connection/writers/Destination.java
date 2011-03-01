@@ -1,12 +1,10 @@
 package net.mysocio.connection.writers;
 
-import javax.persistence.Entity;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
+import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.PersistenceCapable;
 
 import net.mysocio.data.NamedObject;
 
-@Entity(name = "destinations")
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-public abstract class Destination extends NamedObject implements IDestinatioin{
+@PersistenceCapable(identityType = IdentityType.APPLICATION, detachable="true")
+public abstract class Destination extends NamedObject implements IDestination{
 }

@@ -6,11 +6,10 @@ package net.mysocio.connection.readers;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.Join;
+import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Persistent;
 
 import net.mysocio.data.NamedObject;
 
@@ -18,10 +17,10 @@ import net.mysocio.data.NamedObject;
  * @author Aladdin
  *
  */
-@Entity
+@PersistenceCapable(identityType = IdentityType.APPLICATION, detachable="true")
 public class SourcesGroup extends NamedObject implements ISourcesGroup{
-	@ManyToMany(targetEntity = Source.class, fetch = FetchType.EAGER)
-	@JoinTable(name="sources_topology",joinColumns = {@JoinColumn(name = "parent_id")}, inverseJoinColumns = {@JoinColumn(name = "child_id")})
+	@Join()
+	@Persistent(types={Source.class},mappedBy = "id")
 	private List<ISource> sources = new ArrayList<ISource>();
 
 	@Override

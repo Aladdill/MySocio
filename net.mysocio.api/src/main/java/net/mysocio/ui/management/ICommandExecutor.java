@@ -1,10 +1,8 @@
 package net.mysocio.ui.management;
 
-import java.util.Map;
-
-import net.mysocio.data.SocioUser;
+import net.mysocio.data.IConnectionData;
 
 
 public interface ICommandExecutor {
-	public String execute(SocioUser user, Map<String, String> parameters);
+	public String execute(IConnectionData connectionManager);
 }

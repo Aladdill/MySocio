@@ -6,32 +6,32 @@ package net.mysocio.connection.writers;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.Join;
+import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Persistent;
 
 
 /**
  * @author gurfinke
  *
  */
-@Entity
+@PersistenceCapable(identityType = IdentityType.APPLICATION, detachable="true")
 public class DestinationsGroup extends Destination {
-	@ManyToMany(targetEntity = Destination.class)
-	@JoinTable(name="destination_topology",joinColumns = {@JoinColumn(name = "parent_id")}, inverseJoinColumns = {@JoinColumn(name = "child_id")})
-	private List<IDestinatioin> destinations = new ArrayList<IDestinatioin>();
+	@Join
+	@Persistent(types={Destination.class},mappedBy = "id")
+	private List<IDestination> destinations = new ArrayList<IDestination>();
 	
-	public List<IDestinatioin> getDestinations() {
+	public List<IDestination> getDestinations() {
 		return destinations;
 	}
 	
-	public void addDestinations(List<? extends IDestinatioin> destinations) {
-		for (IDestinatioin destination : destinations) {
+	public void addDestinations(List<? extends IDestination> destinations) {
+		for (IDestination destination : destinations) {
 			addDestination(destination);
 		}
 	}
-	public void addDestination(IDestinatioin destination) {
+	public void addDestination(IDestination destination) {
 		this.destinations.add(destination);
 	}
 }

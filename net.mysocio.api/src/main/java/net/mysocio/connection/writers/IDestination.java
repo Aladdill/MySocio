@@ -9,5 +9,5 @@ import net.mysocio.data.ISocioObject;
  * @author Aladdin
  *
  */
-public interface IDestinatioin extends ISocioObject{
+public interface IDestination extends ISocioObject{
 }
