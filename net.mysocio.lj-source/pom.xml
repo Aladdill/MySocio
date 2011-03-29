@@ -9,7 +9,7 @@
 	<groupId>net.mysocio</groupId>
 	<artifactId>lj-source</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>LJ Sourcce</name>
+	<name>LJ Source</name>
 	<dependencies>
 		<dependency>
 			<groupId>org.ljtoolkit</groupId>
