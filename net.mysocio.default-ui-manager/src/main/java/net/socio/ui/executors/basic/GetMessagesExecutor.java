@@ -19,9 +19,6 @@ import net.socio.ui.managers.basic.DefaultUiManager;
  *
  */
 public class GetMessagesExecutor implements ICommandExecutor {
-	public static final String MESSAGE_TEXT = "i";
-	public static final String MESSAGE_TITLE = "b";
-
 	/* (non-Javadoc)
 	 * @see net.mysocio.ui.management.ICommandExecutor#execute(javax.servlet.http.HttpServletRequest)
 	 */
@@ -36,7 +33,7 @@ public class GetMessagesExecutor implements ICommandExecutor {
 	}
 	
 	private static List<? extends IMessage> getMessages(IConnectionData connectionData) {
-		String id = connectionData.getRequestParameter(DefaultUiManager.SOURCE_ID);
+		String id = connectionData.getRequestParameter("sourceId");
 		if (id == null){
 			return Collections.emptyList();
 		}
@@ -61,15 +58,15 @@ public class GetMessagesExecutor implements ICommandExecutor {
 	 */
 	private static String wrapXmlMessage(Long id, String title, String link, String text) {
 		StringBuffer output = new StringBuffer();
-		output.append("<div style='padding: 10px; border:1px solid #A4BED4;' id=\"").append(id).append("\">");
+		output.append("<div class='Message' id=\"").append(id).append("\">");
 		String actualTitle = "No Title";
 		if (title != null && title.length() >= 0){
 			actualTitle = title;
 		}
-		output.append("<div style='padding: 10px;'\">");
-		output.append("<a href=\""+ link + "\" target=\"_blank\"><").append(MESSAGE_TITLE).append(">").append(actualTitle).append("</").append(MESSAGE_TITLE).append("></a>");
+		output.append("<div class='MessageTitle'>");
+		output.append("<a href=\""+ link + "\" target=\"_blank\">").append(actualTitle).append("</a>");
 		output.append("</div>");
-		output.append("<").append(MESSAGE_TEXT).append(">").append(text).append("</").append(MESSAGE_TEXT).append(">");
+		output.append(text);
 		output.append("</div>");
 		return output.toString();
 	}

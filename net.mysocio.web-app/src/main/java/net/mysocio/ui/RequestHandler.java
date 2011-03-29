@@ -70,7 +70,7 @@ public class RequestHandler extends HttpServlet {
 			logger.debug("identifier="+identifier+" identifierValue="+identifierValue);
 			user = DataManagerFactory.getDataManager().getUser(identifier, identifierValue);
 			if (user == null){
-				user = DataManagerFactory.getDataManager().createUser(identifier, identifierValue);
+				user = DataManagerFactory.getDataManager().createUser(identifier, identifierValue, connectionData.getLocale());
 			}
 			connectionData.setUser(user);
 		}

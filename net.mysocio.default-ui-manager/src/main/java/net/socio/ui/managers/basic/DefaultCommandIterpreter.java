@@ -24,7 +24,7 @@ public class DefaultCommandIterpreter implements ICommandInterpreter{
 	@Override
 	public String executeCommand(String command) {
 		if (command == null){
-			return uiManager.getStartingPage();
+			return uiManager.getStartingPage(connectionData.getUser());
 		}
 		EDefaultCommand commandObject = EDefaultCommand.valueOf(command);
 		String response = "No page set for this command";
