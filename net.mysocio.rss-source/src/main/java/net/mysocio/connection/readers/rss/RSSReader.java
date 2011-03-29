@@ -23,7 +23,7 @@ import com.sun.syndication.io.XmlReader;
  *
  */
 public class RSSReader{
-	private static final Logger logger = LoggerFactory.getLogger(JdoDataManager.class);
+	private static final Logger logger = LoggerFactory.getLogger(RSSReader.class);
 	private SyndFeed feed;
 	
 	public List<RssMessage> getMessages(String url) {
