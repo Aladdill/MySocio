@@ -3,6 +3,8 @@
  */
 package net.mysocio.data;
 
+import java.util.Locale;
+
 /**
  * @author Aladdin
  *
@@ -17,4 +19,5 @@ public interface IConnectionData {
 
 	public abstract void setUser(SocioUser user);
 
+	public abstract Locale getLocale();
 }

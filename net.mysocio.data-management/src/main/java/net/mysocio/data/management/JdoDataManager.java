@@ -4,8 +4,13 @@
 package net.mysocio.data.management;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 import javax.jdo.Extent;
 import javax.jdo.JDOHelper;
@@ -21,10 +26,14 @@ import net.mysocio.data.Contact;
 import net.mysocio.data.GeneralMessage;
 import net.mysocio.data.IMessage;
 import net.mysocio.data.ISocioObject;
+import net.mysocio.data.IUiObject;
 import net.mysocio.data.SocioUser;
+import net.mysocio.data.UiObject;
+import net.mysocio.data.UserUiObjects;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DuplicateKeyException;
 
 /**
  * @author Aladdin
@@ -32,21 +41,29 @@ import org.slf4j.LoggerFactory;
  */
 public class JdoDataManager extends AbstractDataManager {
 	private static final Logger logger = LoggerFactory.getLogger(JdoDataManager.class);
-	private PersistenceManager pm;
+	private static PersistenceManager pm;
+	private static JdoDataManager instance = new JdoDataManager();
 	
-	public JdoDataManager(){
-		// Create a PersistenceManagerFactory for this datastore
-        PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory("datanucleus.properties");
-        pm = pmf.getPersistenceManager();
+	public static JdoDataManager getInstance() {
+		if (pm == null){
+			// Create a PersistenceManagerFactory for this datastore
+	        PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory("transactions-optional");
+	        pm = pmf.getPersistenceManager();
+		}
+		return instance;
 	}
+	
+	private JdoDataManager(){}
+	
 	/* (non-Javadoc)
 	 * @see net.mysocio.data.management.IDataManager#createUser(java.lang.String, java.lang.String)
 	 */
 	@Override
-	public SocioUser createUser(String identifier, String identifierValue) {
+	public SocioUser createUser(String identifier, String identifierValue, Locale locale) {
 		SocioUser user = new SocioUser();
 		setUserIdentifier(user, identifier, identifierValue);
 		user.setName(getNameFromIdentifier(identifier, identifierValue));
+		user.setLocale(locale.getLanguage());
 		saveUser(user);
 		return user;//getUser(identifier, identifierValue);
 	}
@@ -64,12 +81,47 @@ public class JdoDataManager extends AbstractDataManager {
 		}
 		return name;
 	}
+	
+	public IUiObject getUiObject(String category, String name){
+		Transaction tx = pm.currentTransaction();
+		UiObject uiObject;
+        try
+        {
+            tx.begin();
+            Extent<UiObject> e=pm.getExtent(UiObject.class,true);
+            Query q=pm.newQuery(e, "category == " + category + " and name == " + name);
+            q.setUnique(true);
+            uiObject = (UiObject)q.execute();
+            tx.commit();
+        }
+        finally
+        {
+            if (tx.isActive())
+            {
+                tx.rollback();
+            }
+        }
+        return uiObject;
+	}
+	
+	public void saveUiObject(UiObject uiObject){
+		String category = uiObject.getCategory();
+		String name = uiObject.getName();
+		if (getUiObject(category, name) == null){
+			throw new DuplicateKeyException("UI object with name " + name + " already exists in category " + category);
+		}
+		saveObject(uiObject);
+	}
+	
+	
 	/* (non-Javadoc)
 	 * @see net.mysocio.data.management.IDataManager#saveObjects(java.util.List)
 	 */
 	@Override
 	public void saveObjects(List<? extends ISocioObject> objects) {
-
+		for (ISocioObject iSocioObject : objects) {
+			saveObject(iSocioObject);
+		}
 	}
 
 	/* (non-Javadoc)
@@ -235,4 +287,29 @@ public class JdoDataManager extends AbstractDataManager {
 		return user;
 	}
 
+	@Override
+	public Map<String, IUiObject> getUserUiObjects(SocioUser user) {
+		UserUiObjects objects;
+		Transaction tx = pm.currentTransaction();
+        try
+        {
+            tx.begin();
+            Extent<UserUiObjects> e=pm.getExtent(UserUiObjects.class,true);
+            Query q=pm.newQuery(e, "userId == " + user.getId());
+            q.setUnique(true);
+            objects = (UserUiObjects)q.execute();
+            tx.commit();
+        }
+        finally
+        {
+            if (tx.isActive())
+            {
+                tx.rollback();
+            }
+        }
+        if (objects == null){
+        	return new HashMap<String, IUiObject>();
+        }
+		return objects.getUserUiObjects();
+	}
 }

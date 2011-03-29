@@ -2,6 +2,8 @@ package net.mysocio.data.management;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 import net.mysocio.connection.readers.ISource;
 import net.mysocio.connection.readers.ISourcesGroup;
@@ -11,6 +13,7 @@ import net.mysocio.data.Contact;
 import net.mysocio.data.GeneralMessage;
 import net.mysocio.data.IMessage;
 import net.mysocio.data.ISocioObject;
+import net.mysocio.data.IUiObject;
 import net.mysocio.data.SocioUser;
 
 import org.hibernate.Criteria;
@@ -201,5 +204,16 @@ public class HibernateDataManager extends AbstractDataManager{
 		setUserIdentifier(user, identifier, identifierValue);
 		saveUser(user);
 		return user;
+	}
+	@Override
+	public SocioUser createUser(String identifier, String identifierValue,
+			Locale locale) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public Map<String, IUiObject> getUserUiObjects(SocioUser user) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

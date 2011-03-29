@@ -3,6 +3,9 @@
  */
 package net.mysocio.data;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.Inheritance;
@@ -24,6 +27,8 @@ public class SocioObject implements ISocioObject{
 	@Persistent(valueStrategy = IdGeneratorStrategy.NATIVE)
 	protected Long id;
 	
+	private List<String> tags = new ArrayList<String>();
+	
 	/**
 	 * @param id the id to set
 	 */
@@ -34,5 +39,13 @@ public class SocioObject implements ISocioObject{
 	@Override
 	public Long getId() {
 		return id;
+	}
+
+	public List<String> getTags() {
+		return tags;
+	}
+
+	public void setTags(List<String> tags) {
+		this.tags = tags;
 	}
 }

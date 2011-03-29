@@ -38,6 +38,8 @@ public class SocioUser extends Contact implements IUser {
 	@Persistent(types={SocioContact.class},mappedBy = "id")
 	private List<IContact> contacts = new ArrayList<IContact>();
 	
+	private String locale;
+	
 	public List<IContact> getContacts(){
 		return contacts;
 	}
@@ -92,5 +94,13 @@ public class SocioUser extends Contact implements IUser {
 
 	public Map<Long, UnreaddenMessages> getUnreadMessages() {
 		return unreadMessages;
+	}
+
+	public String getLocale() {
+		return locale;
+	}
+
+	public void setLocale(String locale) {
+		this.locale = locale;
 	}
 }

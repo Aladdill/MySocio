@@ -70,29 +70,29 @@
 				<configuration>
 					<filesets>
 						<fileset>
-							<directory>${basedir}/target</directory>							
+							<directory>${basedir}/target</directory>
 						</fileset>
 					</filesets>
 				</configuration>
 			</plugin>
 			<plugin>
-				<groupId>org.datanucleus</groupId>
-				<artifactId>maven-datanucleus-plugin</artifactId>
-				<version>3.0.0-m1</version>
-				<configuration>
-					<log4jConfiguration>${basedir}/../log4j.properties</log4jConfiguration>
-					<verbose>true</verbose>
-					<props>${basedir}/../datanucleus.properties</props>
-				</configuration>
-				<executions>
-					<execution>
-						<phase>compile</phase>
-						<goals>
-							<goal>enhance</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>			
+                <groupId>org.datanucleus</groupId>
+                <artifactId>maven-datanucleus-plugin</artifactId>
+                <version>3.0.0-m1</version>
+                <configuration>
+                    <log4jConfiguration>${basedir}/log4j.properties</log4jConfiguration>
+                    <verbose>true</verbose>
+                    <props>${basedir}/datanucleus.properties</props>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>enhance</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
 		</plugins>
 	</build>
 </project>

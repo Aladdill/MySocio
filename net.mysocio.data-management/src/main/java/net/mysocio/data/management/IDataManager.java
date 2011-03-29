@@ -4,12 +4,15 @@
 package net.mysocio.data.management;
 
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 import net.mysocio.connection.readers.ISource;
 import net.mysocio.connection.readers.SourcesGroup;
 import net.mysocio.data.Contact;
 import net.mysocio.data.IMessage;
 import net.mysocio.data.ISocioObject;
+import net.mysocio.data.IUiObject;
 import net.mysocio.data.SocioUser;
 
 /**
@@ -18,7 +21,7 @@ import net.mysocio.data.SocioUser;
  */
 public interface IDataManager {
 
-	public abstract SocioUser createUser(String identifier, String identifierValue);
+	public abstract SocioUser createUser(String identifier, String identifierValue, Locale locale);
 
 	public abstract void saveObjects(List<? extends ISocioObject> objects);
 
@@ -42,5 +45,7 @@ public interface IDataManager {
 	public abstract List<IMessage> getMessages(ISource source, Long firstId);
 
 	public abstract SocioUser getUser(String identifier, String identifierValue);
+
+	public abstract Map<String, IUiObject> getUserUiObjects(SocioUser user);
 
 }

@@ -9,6 +9,6 @@ package net.mysocio.data.management;
  */
 public class DataManagerFactory {
 	public static IDataManager getDataManager(){
-		return new JdoDataManager();
+		return JdoDataManager.getInstance();
 	}
 }
