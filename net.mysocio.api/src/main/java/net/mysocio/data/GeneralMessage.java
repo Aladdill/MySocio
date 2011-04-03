@@ -32,18 +32,15 @@ public abstract class GeneralMessage extends SocioObject implements IMessage{
 		super();
 	}
 
-	@Override
 	public String getTitle() {
 		return title;
 	}
-	@Override
 	public void setTitle(String title) {
 		this.title = title;
 	}
 	public String getText() {
 		return text;
 	}
-	@Override
 	public void setText(String text) {
 		String cutText = cutMessageText(text);
 		this.text = cutText;
@@ -52,14 +49,12 @@ public abstract class GeneralMessage extends SocioObject implements IMessage{
 	/**
 	 * @return the link
 	 */
-	@Override
 	public String getLink() {
 		return link;
 	}
 	/**
 	 * @param link the link to set
 	 */
-	@Override
 	public void setLink(String link) {
 		this.link = link;
 	}

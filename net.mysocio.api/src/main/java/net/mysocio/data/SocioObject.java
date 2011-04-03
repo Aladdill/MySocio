@@ -36,7 +36,6 @@ public class SocioObject implements ISocioObject{
 		this.id = id;
 	}
 
-	@Override
 	public Long getId() {
 		return id;
 	}

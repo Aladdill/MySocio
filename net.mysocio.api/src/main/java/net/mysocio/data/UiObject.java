@@ -9,8 +9,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.jdo.annotations.IdentityType;
-import javax.jdo.annotations.Inheritance;
-import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.Key;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Value;
@@ -59,7 +57,6 @@ public class UiObject extends NamedObject implements IUiObject {
 	/* (non-Javadoc)
 	 * @see net.mysocio.data.IUiObject#getCategory()
 	 */
-	@Override
 	public String getCategory() {
 		return category;
 	}
@@ -67,7 +64,6 @@ public class UiObject extends NamedObject implements IUiObject {
 	/* (non-Javadoc)
 	 * @see net.mysocio.data.IUiObject#getInnerUiOjjects()
 	 */
-	@Override
 	public Map<String, IUiObject> getInnerUiObjects() {
 		return innerObjects;
 	}
@@ -75,11 +71,9 @@ public class UiObject extends NamedObject implements IUiObject {
 	/* (non-Javadoc)
 	 * @see net.mysocio.data.IUiObject#getInnerTextLabels()
 	 */
-	@Override
 	public List<String> getInnerTextLabels() {
 		return textLabels;
 	}
 
-	@Override
 	public String getHtmlTemplate() {return "";}
 }

@@ -23,18 +23,15 @@ public class SourcesGroup extends NamedObject implements ISourcesGroup{
 	@Persistent(types={Source.class},mappedBy = "id")
 	private List<ISource> sources = new ArrayList<ISource>();
 
-	@Override
 	public List<ISource> getSources() {
 		return sources;
 	}
 
-	@Override
 	public void addSources(List<? extends ISource> sources) {
 		for (ISource source : sources) {
 			addSource(source);
 		}
 	}
-	@Override
 	public void addSource(ISource source) {
 		this.sources.add(source);
 	}

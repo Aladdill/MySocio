@@ -20,7 +20,6 @@ public class NamedObject extends SocioObject implements INamedObject{
 	@Persistent(nullValue=NullValue.DEFAULT)
 	protected String name;
 
-	@Override
 	public String getName() {
 		return name;
 	}

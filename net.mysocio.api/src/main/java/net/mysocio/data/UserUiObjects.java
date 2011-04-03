@@ -3,12 +3,9 @@
  */
 package net.mysocio.data;
 
-import java.util.List;
 import java.util.Map;
 
 import javax.jdo.annotations.IdentityType;
-import javax.jdo.annotations.Inheritance;
-import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.Join;
 import javax.jdo.annotations.Key;
 import javax.jdo.annotations.PersistenceCapable;

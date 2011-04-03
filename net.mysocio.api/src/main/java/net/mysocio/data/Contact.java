@@ -33,17 +33,14 @@ public abstract class Contact extends NamedObject implements IContact {
 	private String email;
 	
 
-	@Override
 	public String getEmail() {
 		return email;
 	}
 
-	@Override
 	public void setEmail(String email) {
 		this.email = email;
 	}
 
-	@Override
 	public void setUserpicUrl(String userpicUrl) {
 		this.userpicUrl = userpicUrl;
 	}
@@ -62,22 +59,18 @@ public abstract class Contact extends NamedObject implements IContact {
 		this.sourcesGroup = group;
 	}
 
-	@Override
 	public String getUserpicUrl() {
 		return userpicUrl;
 	}
 
-	@Override
 	public void addSource(ISource source) {
 		this.sourcesGroup.addSource(source);
 	}
 
-	@Override
 	public void addSources(List<? extends ISource> sources) {
 		this.sourcesGroup.addSources(sources);		
 	}
 
-	@Override
 	public List<ISource> getSources() {
 		return this.sourcesGroup.getSources();
 	}

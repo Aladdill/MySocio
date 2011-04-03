@@ -10,7 +10,6 @@ import java.util.Comparator;
  *
  */
 public class MessagesIdComparator implements Comparator<IMessage> {
-	@Override
 	public int compare(IMessage arg0, IMessage arg1) {
 		return arg0.getId().compareTo(arg1.getId());
 	}
