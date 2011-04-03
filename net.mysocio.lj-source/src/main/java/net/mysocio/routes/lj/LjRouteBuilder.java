@@ -16,7 +16,6 @@
  */
 package net.mysocio.routes.lj;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +23,6 @@ import net.mysocio.connection.readers.ISource;
 import net.mysocio.connection.readers.lj.LjSource;
 import net.mysocio.data.lj.LjMessage;
 import net.mysocio.data.management.DataManagerFactory;
-import net.mysocio.data.management.HibernateDataManager;
 
 import org.apache.camel.Body;
 import org.apache.camel.builder.RouteBuilder;

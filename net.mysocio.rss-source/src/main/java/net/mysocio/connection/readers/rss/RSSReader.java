@@ -7,7 +7,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.mysocio.data.management.JdoDataManager;
 import net.mysocio.data.rss.RssMessage;
 
 import org.slf4j.Logger;

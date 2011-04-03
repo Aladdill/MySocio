@@ -12,7 +12,6 @@ import net.mysocio.connection.readers.ISourcesGroup;
 import net.mysocio.data.IContact;
 import net.mysocio.data.SocioContact;
 import net.mysocio.data.management.DataManagerFactory;
-import net.mysocio.data.management.HibernateDataManager;
 
 import org.katkov.lj.ClientsFactory;
 import org.katkov.lj.ConvenientClient;

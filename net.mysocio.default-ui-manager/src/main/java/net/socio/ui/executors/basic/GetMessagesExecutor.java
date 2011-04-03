@@ -12,7 +12,6 @@ import net.mysocio.data.IConnectionData;
 import net.mysocio.data.IMessage;
 import net.mysocio.data.UnreaddenMessages;
 import net.mysocio.ui.management.ICommandExecutor;
-import net.socio.ui.managers.basic.DefaultUiManager;
 
 /**
  * @author Aladdin

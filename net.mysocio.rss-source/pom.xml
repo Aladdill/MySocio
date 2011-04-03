@@ -6,9 +6,7 @@
 		<groupId>net.mysocio</groupId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
-	<groupId>net.mysocio</groupId>
 	<artifactId>rss-source</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
 	<name>RSS Source</name>
 	<dependencies>
 		<dependency>
@@ -29,17 +27,17 @@
 		<dependency>
 			<groupId>org.datanucleus</groupId>
 			<artifactId>datanucleus-core</artifactId>
-			<version>[2.9, )</version>
+			<version>3.0.0-m3</version>
 		</dependency>
 		<dependency>
 			<groupId>org.datanucleus</groupId>
 			<artifactId>datanucleus-api-jdo</artifactId>
-			<version>[2.9, )</version>
+			<version>3.0.0-m3</version>
 		</dependency>
 		<dependency>
 			<groupId>org.datanucleus</groupId>
 			<artifactId>datanucleus-rdbms</artifactId>
-			<version>[2.9, )</version>
+			<version>3.0.0-m3</version>
 		</dependency>
 		<dependency>
 			<groupId>com.mysql.jdbc</groupId>
@@ -54,7 +52,7 @@
 		<dependency>
 			<groupId>javax.jdo</groupId>
 			<artifactId>jdo-api</artifactId>
-			<version>[3.0, )</version>
+			<version>3.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>com.sun.jdmk</groupId>
@@ -68,7 +66,6 @@
 			<plugin>
 				<groupId>org.datanucleus</groupId>
 				<artifactId>maven-datanucleus-plugin</artifactId>
-				<version>3.0.0-m1</version>
 				<configuration>
 					<log4jConfiguration>${basedir}/../log4j.properties</log4jConfiguration>
 					<verbose>true</verbose>

@@ -6,9 +6,7 @@
 		<groupId>net.mysocio</groupId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
-	<groupId>net.mysocio</groupId>
 	<artifactId>default-ui-manager</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
 	<name>MySocioDefaultUiManager</name>
 	<dependencies>
 		<dependency>
