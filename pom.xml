@@ -12,7 +12,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>				
-				<version>2.3.1</version>
+				<version>2.3.2</version>
 				<configuration>
 					<source>1.6</source>
 					<target>1.6</target>
@@ -31,11 +31,6 @@
 			<name>Camel Maven2 Repository</name>
 			<url>http://ondex.rothamsted.bbsrc.ac.uk/nexus/content/repositories/atlassian
 			</url>
-		</repository>
-		<repository>
-			<id>DataNucleus_Repos</id>
-			<name>DataNucleus Repository</name>
-			<url>http://www.datanucleus.org/downloads/maven</url>
 		</repository>
 		<repository>
 			<id>DataNucleus_Repos2</id>
@@ -62,10 +57,10 @@
 		<module>net.mysocio.rss-source</module>
 		<module>net.mysocio.web-app</module>
 		<module>org.katkov.lj-api</module>
-		<module>org.ljtoolkit.ljtoolkit</module>
+		<!-- <module>org.ljtoolkit.ljtoolkit</module> -->
 	</modules>
 	<properties>
-		<camel-version>2.5.0</camel-version>
+		<camel-version>2.7.0</camel-version>
 		<mysocio.version>0.0.1-SNAPSHOT</mysocio.version>
 	</properties>
 	<dependencies>
@@ -81,7 +76,7 @@
 			<version>1.5.11</version>
 			<scope>provided</scope>
 		</dependency>
-		<dependency>
+		<!-- <dependency>
 			<groupId>org.apache.camel</groupId>
 			<artifactId>camel-rss</artifactId>
 			<version>${camel-version}</version>
@@ -90,7 +85,7 @@
 			<groupId>org.apache.camel</groupId>
 			<artifactId>camel-spring</artifactId>
 			<version>${camel-version}</version>
-		</dependency>
+		</dependency> -->
 		<dependency>
 			<groupId>javax.persistence</groupId>
 			<artifactId>com.springsource.javax.persistence</artifactId>
