@@ -4,8 +4,6 @@
 package net.mysocio.data.management;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -33,7 +31,6 @@ import net.mysocio.data.UserUiObjects;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.dao.DuplicateKeyException;
 
 /**
  * @author Aladdin
@@ -104,11 +101,11 @@ public class JdoDataManager extends AbstractDataManager {
         return uiObject;
 	}
 	
-	public void saveUiObject(UiObject uiObject){
+	public void saveUiObject(UiObject uiObject) throws DuplicateMySocioObjectException{
 		String category = uiObject.getCategory();
 		String name = uiObject.getName();
 		if (getUiObject(category, name) == null){
-			throw new DuplicateKeyException("UI object with name " + name + " already exists in category " + category);
+			throw new DuplicateMySocioObjectException("UI object with name " + name + " already exists in category " + category);
 		}
 		saveObject(uiObject);
 	}
