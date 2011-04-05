@@ -8,20 +8,20 @@ if (window.dhtmlXGridObject){
 		var clear_url=function(url){
 			url=url.replace(/(\?|\&)connector[^\f]*/g,"");
 			return url+(url.indexOf("?")!=-1?"&":"?")+"connector=true";
-		}
+		};
 		var combine_urls=function(url){
 			return clear_url(url)+(this._connector_sorting||"")+(this._connector_filter||"");
-		}
+		};
 		var sorting_url=function(url,ind,dir){
 			this._connector_sorting="&dhx_sort["+ind+"]="+dir;
 			return combine_urls.call(this,url);
-		}
+		};
 		var filtering_url=function(url,inds,vals){
 			for (var i=0; i<inds.length; i++)
 				inds[i]="dhx_filter["+inds[i]+"]="+encodeURIComponent(vals[i]);
 			this._connector_filter="&"+inds.join("&");
 			return combine_urls.call(this,url);
-		}
+		};
 		this.attachEvent("onCollectValues",function(ind){
 			if (this._con_f_used[ind]){
 				if (typeof(this._con_f_used[ind]) == "object")
@@ -57,18 +57,18 @@ if (window.dhtmlXGridObject){
 		});
 		
 		if (this._init_point_connector) this._init_point_connector();
-	}
+	};
 	dhtmlXGridObject.prototype._con_f_used=[];
 	dhtmlXGridObject.prototype._in_header_connector_text_filter=function(t,i){
 		if (!this._con_f_used[i])
 			this._con_f_used[i]=1;
 		return this._in_header_text_filter(t,i);
-	}
+	};
 	dhtmlXGridObject.prototype._in_header_connector_select_filter=function(t,i){
 		if (!this._con_f_used[i])
 			this._con_f_used[i]=2;
 		return this._in_header_select_filter(t,i);
-	}
+	};
 	dhtmlXGridObject.prototype.load_connector=dhtmlXGridObject.prototype.load;
 	dhtmlXGridObject.prototype.load=function(url, call, type){
 		if (!this._colls_loaded && this.cellType){
@@ -79,7 +79,7 @@ if (window.dhtmlXGridObject){
 				arguments[0]+=(arguments[0].indexOf("?")!=-1?"&":"?")+"connector=true&dhx_colls="+ar.join(",");
 		}
 		return this.load_connector.apply(this,arguments);
-	}
+	};
 	dhtmlXGridObject.prototype._parseHead_connector=dhtmlXGridObject.prototype._parseHead;
 	dhtmlXGridObject.prototype._parseHead=function(url, call, type){
 		this._parseHead_connector.apply(this,arguments);
@@ -108,7 +108,7 @@ if (window.dhtmlXGridObject){
 			};
 			this._colls_loaded=true;
 		}
-	}	
+	};
 	
 	
 	
@@ -123,7 +123,7 @@ if (window.dataProcessor){
 		
 		this.setTransactionMode("POST",true);
 		this.serverProcessor+=(this.serverProcessor.indexOf("?")!=-1?"&":"?")+"editing=true";
-	}
+	};
 }
 dhtmlxError.catchError("LoadXML",function(a,b,c){
 	alert(c[0].responseText);
