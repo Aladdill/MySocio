@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.Join;
 import javax.jdo.annotations.Key;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Value;
@@ -22,6 +23,7 @@ public class UiObject extends NamedObject implements IUiObject {
 	public static final String TAG_START = "<<";
 	public static final String TAG_END = ">>";
 	private String category;
+	@Join
 	@Key(types=String.class)
     @Value(types=UiObject.class)
 	private Map<String, IUiObject> innerObjects = new HashMap<String, IUiObject>();

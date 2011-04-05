@@ -29,7 +29,7 @@ public abstract class AbstractUiManager implements IUiManager {
 			if (innerObject == null){
 				innerObject = defaultInnerUiObjects.get(key);
 			}
-			htmlTemplate.replace(key, getUiObjectHtml(innerObject, userObjects, userLocale));
+			htmlTemplate = htmlTemplate.replace(key, getUiObjectHtml(innerObject, userObjects, userLocale));
 		}
 		return htmlTemplate;
 	}

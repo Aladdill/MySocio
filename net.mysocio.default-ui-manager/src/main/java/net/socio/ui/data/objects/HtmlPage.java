@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.socio.ui.data.basic;
+package net.socio.ui.data.objects;
 
 import net.mysocio.data.UiObject;
 
@@ -15,6 +15,8 @@ public abstract class HtmlPage extends UiObject {
 	private HtmlHeader header;
 	public HtmlPage(HtmlBody body, HtmlHeader header){
 		setCategory(CATEGORY);
+		this.body = body;
+		this.header = header;
 		addInnerObject(header, 1);
 		addInnerObject(body, 1);
 	}

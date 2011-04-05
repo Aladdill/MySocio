@@ -17,11 +17,11 @@ import javax.jdo.annotations.Value;
  */
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable="true")
 public class UserUiObjects extends SocioObject {
-	Long userId;
+	private Long userId;
 	@Join
 	@Key(types=String.class)
     @Value(types=UiObject.class)
-	Map<String, IUiObject> userUiObjects;
+	private Map<String, IUiObject> userUiObjects;
 	public Long getUserId() {
 		return userId;
 	}

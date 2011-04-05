@@ -18,13 +18,15 @@ import net.mysocio.ui.management.ICommandExecutor;
  *
  */
 public class GetMessagesExecutor implements ICommandExecutor {
+	public static final String ALL_MESSAGES_PLACEHOLDER = "ALL";
+
 	/* (non-Javadoc)
 	 * @see net.mysocio.ui.management.ICommandExecutor#execute(javax.servlet.http.HttpServletRequest)
 	 */
 	@Override
-	public String execute(IConnectionData connectionManager) {
+	public String execute(IConnectionData connectionData) {
 		StringBuffer output = new StringBuffer();
-		List<? extends IMessage> messages = getMessages(connectionManager);
+		List<? extends IMessage> messages = getMessages(connectionData);
 		for (IMessage message : messages) {
 			output.append(wrapXmlMessage(message.getId(), message.getTitle(), message.getLink(), message.getText()));
 		}
@@ -36,7 +38,7 @@ public class GetMessagesExecutor implements ICommandExecutor {
 		if (id == null){
 			return Collections.emptyList();
 		}
-		if (id.equalsIgnoreCase("ALL")){
+		if (id.equalsIgnoreCase(ALL_MESSAGES_PLACEHOLDER)){
 			Collection<UnreaddenMessages> allMessages = connectionData.getUser().getUnreadMessages().values();
 			ArrayList<IMessage> messages = new ArrayList<IMessage>();
 			for (UnreaddenMessages unreaddenMessages : allMessages) {

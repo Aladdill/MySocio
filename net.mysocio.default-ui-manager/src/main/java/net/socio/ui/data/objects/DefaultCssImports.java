@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.socio.ui.data.basic;
+package net.socio.ui.data.objects;
 
 import net.mysocio.data.IUiObject;
 import net.mysocio.data.UiObject;
@@ -16,7 +16,7 @@ public class DefaultCssImports extends UiObject implements IUiObject {
 	
 	public DefaultCssImports(){
 		setName("DefaultCssimports");
-		setCategory("Imports");
+		setCategory("CssImports");
 	}
 
 	@Override

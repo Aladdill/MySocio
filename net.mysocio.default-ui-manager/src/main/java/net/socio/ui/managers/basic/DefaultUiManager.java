@@ -10,6 +10,7 @@ import net.mysocio.data.IUiObject;
 import net.mysocio.data.SocioUser;
 import net.mysocio.data.management.DataManagerFactory;
 import net.mysocio.ui.management.AbstractUiManager;
+import net.socio.ui.data.objects.DefaultLoginPage;
 
 
 
@@ -18,9 +19,14 @@ import net.mysocio.ui.management.AbstractUiManager;
  *
  */
 public class DefaultUiManager extends AbstractUiManager {
-	@Override
-	public String getStartingPage(SocioUser user){
+
+	
+	public String getPage(IUiObject page, SocioUser user) {
 		Map<String, IUiObject> userObjects = DataManagerFactory.getDataManager().getUserUiObjects(user);
-		return getUiObjectHtml(new DefaultPage(), userObjects , new Locale(user.getLocale()));
+		return getUiObjectHtml(page, userObjects , new Locale(user.getLocale()));
+	}
+
+	public String getLoginPage(SocioUser user) {
+		return getPage(new DefaultLoginPage(), user);
 	}
 }

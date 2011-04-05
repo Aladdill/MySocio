@@ -24,7 +24,7 @@ import javax.jdo.annotations.PrimaryKey;
 @Inheritance(strategy=InheritanceStrategy.SUBCLASS_TABLE)
 public class SocioObject implements ISocioObject{
 	@PrimaryKey
-	@Persistent(valueStrategy = IdGeneratorStrategy.NATIVE)
+	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
 	protected Long id;
 	
 	private List<String> tags = new ArrayList<String>();

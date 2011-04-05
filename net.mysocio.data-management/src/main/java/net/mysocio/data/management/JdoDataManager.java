@@ -291,8 +291,8 @@ public class JdoDataManager extends AbstractDataManager {
         try
         {
             tx.begin();
-            Extent<UserUiObjects> e=pm.getExtent(UserUiObjects.class,true);
-            Query q=pm.newQuery(e, "userId == " + user.getId());
+//            Extent<UserUiObjects> e=pm.getExtent(UserUiObjects.class,true);
+            Query q=pm.newQuery(UserUiObjects.class, "userId == " + user.getId());
             q.setUnique(true);
             objects = (UserUiObjects)q.execute();
             tx.commit();

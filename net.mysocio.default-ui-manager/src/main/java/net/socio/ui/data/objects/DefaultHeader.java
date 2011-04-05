@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.socio.ui.data.basic;
+package net.socio.ui.data.objects;
 
 
 /**

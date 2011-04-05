@@ -1,9 +1,8 @@
 /**
  * 
  */
-package net.socio.ui.managers.basic;
+package net.socio.ui.data.objects;
 
-import net.socio.ui.data.basic.HtmlBody;
 
 /**
  * @author Aladdin

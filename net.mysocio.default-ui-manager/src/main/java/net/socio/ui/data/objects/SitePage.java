@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.socio.ui.managers.basic;
+package net.socio.ui.data.objects;
 
 import net.mysocio.data.UiObject;
 
@@ -10,8 +10,8 @@ import net.mysocio.data.UiObject;
  *
  */
 public abstract class SitePage extends UiObject {
-private static final String CATEGORY = "SitePage";
-	
+	private static final String CATEGORY = "SitePage";
+
 	public SitePage(){
 		setCategory(CATEGORY);
 	}
