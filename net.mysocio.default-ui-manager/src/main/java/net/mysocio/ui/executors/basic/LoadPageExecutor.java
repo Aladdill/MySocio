@@ -1,12 +1,12 @@
 /**
  * 
  */
-package net.socio.ui.executors.basic;
+package net.mysocio.ui.executors.basic;
 
 import net.mysocio.data.IConnectionData;
+import net.mysocio.ui.data.objects.SiteBody;
 import net.mysocio.ui.management.ICommandExecutor;
-import net.socio.ui.data.objects.SiteBody;
-import net.socio.ui.managers.basic.DefaultUiManager;
+import net.mysocio.ui.managers.basic.DefaultUiManager;
 
 /**
  * @author gurfinke

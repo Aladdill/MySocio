@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.socio.ui.data.objects;
+package net.mysocio.ui.data.objects;
 
 /**
  * @author Aladdin

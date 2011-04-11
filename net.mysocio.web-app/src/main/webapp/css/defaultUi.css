@@ -1,18 +1,34 @@
 @CHARSET "UTF-8";
-
+body, html {
+	height: 99%;
+	border: 0px;
+	padding: 0px;
+}
+td {
+	border: 0px;
+	padding: 0px;
+}
+td.UserBox {
+	width: 100%;
+	height: 102px;
+}
+td.SourcesBox {
+	width: 100%;
+	height: 100%;
+}
 div.UserBox {
 	border: 1px solid #A4BED4;
 	background-color: white;
 	overflow: auto;
 	width: 100%;
-	height: 20%;
+	height: 100%;
 }
 div.SourcesBox {
 	border: 1px solid #A4BED4;
 	background-color: white;
 	overflow: auto;
 	width: 100%;
-	height: 80%;
+	height: 100%;
 }
 div.MessagesBox {
 	border: 1px solid #A4BED4;
@@ -36,22 +52,31 @@ div.MessageTitle{
 	padding: 10px;
 	font-weight: bold;
 }
-
-tr.PageHeader {
-	height: 10%;
+div.login {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin-left: -200px
 }
-
-tr.PageBody {
-	height: 80%;
-}
-
-tr.PageFooter {
-	height: 10%;
+td.PageHeader {
+	height: 100px;
 	width: 100%;
-	border: solid 1px;
+	border: 0px;
+}
+
+td.PageBody {
+	height: 100%;
+	width: 100%;
+}
+
+td.PageFooter {
+	height: 30px;
+	width: 100%;
+	border: 0px;
 }
 
 img.HeaderImage {
+	height: 66px;
 	padding-bottom: 15px;
 	padding-left: 40px;
 	padding-top: 15px;
@@ -59,4 +84,6 @@ img.HeaderImage {
 table.DefaultTable {
 	height: 100%;
 	width: 100%;
+	border: 0px;
+	padding: 0px;
 }

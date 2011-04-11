@@ -1,19 +1,20 @@
-package net.socio.ui.managers.basic;
+package net.mysocio.ui.managers.basic;
 
+import net.mysocio.ui.data.objects.DefaultSiteBody;
+import net.mysocio.ui.executors.basic.GetMessagesExecutor;
+import net.mysocio.ui.executors.basic.GetSourcesExecutor;
+import net.mysocio.ui.executors.basic.LoadPageExecutor;
+import net.mysocio.ui.executors.basic.LoginPageExecutor;
 import net.mysocio.ui.management.ICommandExecutor;
-import net.socio.ui.data.objects.DefaultLoginPage;
-import net.socio.ui.data.objects.DefaultSiteBody;
-import net.socio.ui.executors.basic.GetMessagesExecutor;
-import net.socio.ui.executors.basic.GetSourcesExecutor;
-import net.socio.ui.executors.basic.LoadPageExecutor;
 
 
 public enum EDefaultCommand {
 	getMessages(new GetMessagesExecutor()),
-	openStartPage(new LoadPageExecutor(new DefaultLoginPage())),
-	logout(new LoadPageExecutor(new DefaultLoginPage())),
+	openStartPage(new LoginPageExecutor()),
+	logout(new LoginPageExecutor()),
+	login(new LoadPageExecutor(new DefaultSiteBody())),
 	openMainPage(new LoadPageExecutor(new DefaultSiteBody())),
-	openSettings(new LoadPageExecutor(new DefaultLoginPage())),
+	openSettings(new LoadPageExecutor(new DefaultSiteBody())),
 	getSources(new GetSourcesExecutor(), DefaultCommandIterpreter.TEXT_XML);
 	private ICommandExecutor executor;
 	private String responseType = DefaultCommandIterpreter.TEXT_HTML;

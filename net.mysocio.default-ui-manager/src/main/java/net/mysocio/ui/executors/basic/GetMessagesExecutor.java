@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.socio.ui.executors.basic;
+package net.mysocio.ui.executors.basic;
 
 import java.util.ArrayList;
 import java.util.Collection;

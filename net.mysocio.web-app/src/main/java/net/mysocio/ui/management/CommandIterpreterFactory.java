@@ -4,14 +4,14 @@
 package net.mysocio.ui.management;
 
 import net.mysocio.data.IConnectionData;
-import net.socio.ui.managers.basic.DefaultCommandIterpreter;
+import net.mysocio.ui.managers.basic.DefaultCommandIterpreter;
 
 /**
  * @author Aladdin
  *
  */
 public class CommandIterpreterFactory {
-	static public ICommandInterpreter getCommandInterpreter(IConnectionData connectionManager){
-		return new DefaultCommandIterpreter(connectionManager);
+	static public ICommandInterpreter getCommandInterpreter(IConnectionData ConnectionData){
+		return new DefaultCommandIterpreter(ConnectionData);
 	}
 }

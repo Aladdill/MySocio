@@ -15,7 +15,6 @@ import net.mysocio.data.management.ConnectionData;
 import net.mysocio.data.management.DataManagerFactory;
 import net.mysocio.ui.management.CommandIterpreterFactory;
 import net.mysocio.ui.management.ICommandInterpreter;
-import net.socio.ui.managers.basic.DefaultCommandIterpreter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,36 +50,27 @@ public class RequestHandler extends HttpServlet {
 //		System.out.println(AUTHORIZE_URL + requestToken.getToken());
 //		response.sendRedirect(AUTHORIZE_URL + requestToken.getToken());
 		IConnectionData connectionData = new ConnectionData(request);
-		String output = ""; 
 		initUser(connectionData);
-		if (command != null && command.equals("logout")){
-			logout(connectionData, response);
-		}else {
-			PrintWriter out = response.getWriter();
-			ICommandInterpreter commandInterpreter = CommandIterpreterFactory.getCommandInterpreter(connectionData);
-			response.setContentType(commandInterpreter.getCommandResponseType(command));
-			out.print(commandInterpreter.executeCommand(command));
-		}
+		PrintWriter out = response.getWriter();
+		ICommandInterpreter commandInterpreter = CommandIterpreterFactory.getCommandInterpreter(connectionData);
+		response.setContentType(commandInterpreter.getCommandResponseType(command));
+		out.print(commandInterpreter.executeCommand(command));
 	}
 
 	private void initUser(IConnectionData connectionData) {
 		SocioUser user = connectionData.getUser();
 		if (user == null){
 			String identifier = connectionData.getRequestParameter("identifier");
-			String identifierValue = connectionData.getRequestParameter(identifier);
-			logger.debug("identifier="+identifier+" identifierValue="+identifierValue);
-			user = DataManagerFactory.getDataManager().getUser(identifier, identifierValue);
-			if (user == null){
-				user = DataManagerFactory.getDataManager().createUser(identifier, identifierValue, connectionData.getLocale());
+			if (identifier != null){
+				String identifierValue = connectionData.getRequestParameter(identifier);
+				logger.debug("identifier="+identifier+" identifierValue="+identifierValue);
+				user = DataManagerFactory.getDataManager().getUser(identifier, identifierValue);
+				if (user == null){
+					user = DataManagerFactory.getDataManager().createUser(identifier, identifierValue, connectionData.getLocale());
+				}
+				connectionData.setUser(user);
 			}
-			connectionData.setUser(user);
 		}
-	}
-
-	private void logout(IConnectionData connectionData, HttpServletResponse response) throws IOException {
-		connectionData.cleanSession();
-		PrintWriter out = response.getWriter();
-		response.setContentType(DefaultCommandIterpreter.TEXT_HTML);
 	}
 
 	/**
@@ -89,5 +79,4 @@ public class RequestHandler extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 	}
-
 }
