@@ -5,11 +5,12 @@ package net.mysocio.ui.executors.basic;
 
 import net.mysocio.data.IConnectionData;
 import net.mysocio.ui.data.objects.SiteBody;
+import net.mysocio.ui.management.CommandExecutionException;
 import net.mysocio.ui.management.ICommandExecutor;
 import net.mysocio.ui.managers.basic.DefaultUiManager;
 
 /**
- * @author gurfinke
+ * @author Aladdin
  *
  */
 public class LoadPageExecutor implements ICommandExecutor {
@@ -24,7 +25,7 @@ public class LoadPageExecutor implements ICommandExecutor {
 	 * @see net.mysocio.ui.management.ICommandExecutor#execute(net.mysocio.data.IConnectionData)
 	 */
 	@Override
-	public String execute(IConnectionData connectionData) {
+	public String execute(IConnectionData connectionData) throws CommandExecutionException{
 		DefaultUiManager uiManager = new DefaultUiManager();
 		return uiManager.getPage(page,connectionData.getUser());
 	}

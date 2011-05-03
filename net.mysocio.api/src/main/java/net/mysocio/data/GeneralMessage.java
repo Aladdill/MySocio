@@ -27,9 +27,15 @@ public abstract class GeneralMessage extends SocioObject implements IMessage{
 	private String text;
 	@Persistent(nullValue=NullValue.DEFAULT)
 	private Long sourceId;
+	
+	private Long date;
 
-	public GeneralMessage() {
-		super();
+	public Long getDate() {
+		return date;
+	}
+
+	public void setDate(Long date) {
+		this.date = date;
 	}
 
 	public String getTitle() {

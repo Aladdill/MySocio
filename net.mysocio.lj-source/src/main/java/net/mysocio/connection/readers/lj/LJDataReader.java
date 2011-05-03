@@ -37,7 +37,7 @@ public class LJDataReader {
 			int groupmask = friend.getGroupmask();
 			LjSource source = new LjSource(friend.getUsername(), friend.getFullname(), groupmask);
 			this.friends.add(source);
-			DataManagerFactory.getDataManager().saveSource(source);
+			DataManagerFactory.getDataManager().createSource(source);
 		}
 		this.friendgroups = login.getFriendgroups();
 	}
@@ -49,7 +49,7 @@ public class LJDataReader {
 			SocioContact friendContact = new SocioContact();
 			friendContact.setName(source.getName());
 			friendContact.addSource(source);
-			DataManagerFactory.getDataManager().saveContact(friendContact);
+			DataManagerFactory.getDataManager().saveObject(friendContact);
 			contacts.add(friendContact);
 		}
 		return contacts;
@@ -60,11 +60,11 @@ public class LJDataReader {
 		for (FriendGroup group : this.friendgroups){
 			int lgGroupMask = 1 << group.getId();
 			LjFriendsGroup ljGroup = new LjFriendsGroup(group.getName(), lgGroupMask);
-			DataManagerFactory.getDataManager().saveSourcesGroup(ljGroup);
+			DataManagerFactory.getDataManager().saveObject(ljGroup);
 			groups.add(ljGroup);
 		}
 		LjFriendsGroup noneGroup = new LjFriendsGroup("None", 0);
-		DataManagerFactory.getDataManager().saveSourcesGroup(noneGroup);
+		DataManagerFactory.getDataManager().saveObject(noneGroup);
 		groups.add(noneGroup);
 		for (LjSource source : this.friends) {
 			int groupmask = source.getGroupMask();

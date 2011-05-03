@@ -28,7 +28,7 @@ public class UiObject extends NamedObject implements IUiObject {
     @Value(types=UiObject.class)
 	private Map<String, IUiObject> innerObjects = new HashMap<String, IUiObject>();
 	private List<String> textLabels = new ArrayList<String>();
-
+	private String htmlTemplate = "";
 
 	public String getObjectTag(int index){
 		return getTag(this.category + "." + index);
@@ -77,5 +77,9 @@ public class UiObject extends NamedObject implements IUiObject {
 		return textLabels;
 	}
 
-	public String getHtmlTemplate() {return "";}
+	public String getHtmlTemplate() {return this.htmlTemplate;}
+	
+	public void setHtmlTemplate(String htmlTemplate) {
+		this.htmlTemplate = htmlTemplate;
+	}
 }

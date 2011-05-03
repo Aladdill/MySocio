@@ -38,6 +38,16 @@ public class SocioUser extends Contact implements IUser {
 	@Persistent(types={SocioContact.class},mappedBy = "id")
 	private List<IContact> contacts = new ArrayList<IContact>();
 	
+	private UserIdentifier userIdentifier;
+	
+	public UserIdentifier getUserIdentifier() {
+		return userIdentifier;
+	}
+
+	public void setUserIdentifier(UserIdentifier userIdentifier) {
+		this.userIdentifier = userIdentifier;
+	}
+
 	private String locale;
 	
 	public List<IContact> getContacts(){

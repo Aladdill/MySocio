@@ -4,7 +4,7 @@
 package net.mysocio.ui.data.objects;
 
 /**
- * @author gurfinke
+ * @author Aladdin
  *
  */
 public class DefaultLoginPage extends SiteBody {
@@ -20,7 +20,7 @@ public class DefaultLoginPage extends SiteBody {
 	public String getHtmlTemplate() {
 		StringBuffer output = new StringBuffer();
 		output.append("<div class='login'>");
-		output.append("<form onsubmit=\"commitForm(this); return false;\">");
+		output.append("<form onsubmit=\"commitForm(this, [getAllMessages,initSources]); return false;\">");
 		output.append("Email <input type=\"text\" name=\"email\">");
 		output.append("<input type=\"hidden\" name=\"identifier\" value=\"email\">");
 		output.append("<input type=\"hidden\" name=\"command\" value=\"login\">");

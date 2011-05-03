@@ -10,6 +10,7 @@ import net.mysocio.connection.readers.ISourcesGroup;
 import net.mysocio.data.IConnectionData;
 import net.mysocio.data.SocioUser;
 import net.mysocio.data.UnreaddenMessages;
+import net.mysocio.ui.management.CommandExecutionException;
 import net.mysocio.ui.management.ICommandExecutor;
 
 /**
@@ -21,7 +22,7 @@ public class GetSourcesExecutor implements ICommandExecutor {
 	 * @see net.mysocio.ui.management.ICommandExecutor#execute(javax.servlet.http.HttpServletRequest)
 	 */
 	@Override
-	public String execute(IConnectionData connectionManager) {
+	public String execute(IConnectionData connectionManager) throws CommandExecutionException{
 		StringBuffer out = new StringBuffer();
 		out.append("<?xml version='1.0' encoding='UTF-8'?>" +
 				"<tree id=\"0\">" +

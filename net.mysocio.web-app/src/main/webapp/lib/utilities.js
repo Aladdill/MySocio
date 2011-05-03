@@ -5,15 +5,11 @@ function openMessage(id){
 function openUrlInDiv(divId, url, functions){
 	YUI().use("io-base", "node", function(Y) {
 		function complete(id, o, args) {
-			var data = o.responseText;
-			var node = Y.one(divId);
-			node.set('innerHTML', data);
-			for (var x=0; x < functions.length; x++){
-				functions[x].call(this);
-			}
+			onSuccess(id, o, args, Y, divId);
 		};
-			Y.on("io:complete", complete, Y, []);
-			var request = Y.io(url);
+		Y.on('io:success', complete, Y, functions);
+		Y.on('io:failure', onFailure, Y, []);
+		var request = Y.io(url);
 	});
 }
 function initSources(){
@@ -22,60 +18,49 @@ function initSources(){
 	tree.loadXML("login?command=getSources", function(){});
 	tree.attachEvent("onSelect", getMessages);
 }
-function commitForm(form){
-	openUrlInDiv("#SiteBody", "login?"+buildQuery(form),[]);
+function commitForm(form, functions){
+	YUI().use("io-form", function(Y) {
+		var cfg = {
+			method: 'POST',
+			form: {
+				id: form,
+				useDisabled: true
+			}
+		};
+		function complete(id, o, args) {
+			onSuccess(id, o, args, Y, "#SiteBody");
+		};
+		Y.on('io:success', complete, Y, functions);
+		Y.on('io:failure', onFailure, Y, []);
+		var request = Y.io("login", cfg);
+	});
 }
-function buildQuery(form)
-{
-	var query = "";
-	for(var i=0; i<form.elements.length; i++)
-	{
-		var key = form.elements[i].name;
-		var value = getElementValue(form.elements[i]);
-		if(key && value)
-		{
-			query += key +"="+ value +"&";
-		}
+function onSuccess(transactionid, response, functions, Y, divId) {
+	var data = response.responseText;
+	var node = Y.one(divId);
+	node.set('innerHTML', data);
+	for (var x=0; x < functions.length; x++){
+		functions[x].call(this);
 	}
-	return query;
 }
-function getElementValue(formElement)
-{
-	if(formElement.length != null) var type = formElement[0].type;
-	if((typeof(type) == 'undefined') || (type == 0)) var type = formElement.type;
-
-	switch(type)
-	{
-		case 'undefined': return;
-
-		case 'radio':
-			for(var x=0; x < formElement.length; x++) 
-				if(formElement[x].checked == true)
-			return formElement[x].value;
-
-		case 'select-multiple':
-			var myArray = new Array();
-			for(var x=0; x < formElement.length; x++) 
-				if(formElement[x].selected == true)
-					myArray[myArray.length] = formElement[x].value;
-			return myArray;
-
-		case 'checkbox': return formElement.checked;
-	
-		default: return formElement.value;
-	}
+function onFailure(transactionid, response, arguments) {
+	var data = response.responseText;
+	window.alert(data);
 }
 function openSettings(){
-	openUrlInDiv("#SiteBody", "login?command=openSettings",[]);
+	openUrlInDiv("#SiteBody", "login?command=openSettings",[getRssFeeds]);
 }
 function openMainPage(){
-	openUrlInDiv("#SiteBody", "login?command=openMainPage",[]);
+	openUrlInDiv("#SiteBody", "login?command=openMainPage",[getAllMessages,initSources]);
 }
 function logout(){
 	openUrlInDiv("#SiteBody", "login?command=logout",[]);
 }
 function loadStartPage(){
-	openUrlInDiv("#SiteBody", "login?command=openStartPage",[getAllMessages,initSources]);
+	openUrlInDiv("#SiteBody", "login?command=openStartPage",[]);
+}
+function getRssFeeds(){
+	openUrlInDiv("#RssList", "login?command=getRssFeeds",[]);
 }
 function getMessages(id){
 	openUrlInDiv("#data_container", "login?command=getMessages&sourceId=" + id,[]);

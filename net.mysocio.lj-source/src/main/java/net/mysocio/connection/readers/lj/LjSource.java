@@ -6,21 +6,17 @@ package net.mysocio.connection.readers.lj;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
 
-import net.mysocio.connection.readers.Source;
+import net.mysocio.sources.rss.RssSource;
 
 /**
  * @author gurfinke
  *
  */
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable="true")
-public class LjSource extends Source {
+public class LjSource extends RssSource {
 	private String username;
 	private int groupMask;
-	private String url;
 	
-	public LjSource(){
-		super();
-	}
 	public LjSource(String username, String fullname,
 			int groupMask) {
 		super();
@@ -44,20 +40,5 @@ public class LjSource extends Source {
 
 	public void setGroupMask(int groupMask) {
 		this.groupMask = groupMask;
-	}
-	
-	/**
-	 * @return the url
-	 */
-	@Override
-	public String getUrl() {
-		return url;
-	}
-
-	/**
-	 * @param url the url to set
-	 */
-	public void setUrl(String url) {
-		this.url = url;
 	}
 }

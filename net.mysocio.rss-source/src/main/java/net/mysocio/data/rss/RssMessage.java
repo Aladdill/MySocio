@@ -13,7 +13,6 @@ import net.mysocio.data.GeneralMessage;
  */
 @Entity
 public class RssMessage extends GeneralMessage {
-	Long publishedDate;
 	public RssMessage() {
 		super();
 	}
@@ -21,17 +20,4 @@ public class RssMessage extends GeneralMessage {
 		super();
 		setLink(link);
 	}
-	/**
-	 * @return the publishedDate
-	 */
-	public Long getPublishedDate() {
-		return publishedDate;
-	}
-	/**
-	 * @param publishedDate the publishedDate to set
-	 */
-	public void setPublishedDate(Long publishedDate) {
-		this.publishedDate = publishedDate;
-	}
-	
 }

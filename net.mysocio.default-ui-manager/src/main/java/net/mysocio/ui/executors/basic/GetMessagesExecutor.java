@@ -11,6 +11,7 @@ import java.util.List;
 import net.mysocio.data.IConnectionData;
 import net.mysocio.data.IMessage;
 import net.mysocio.data.UnreaddenMessages;
+import net.mysocio.ui.management.CommandExecutionException;
 import net.mysocio.ui.management.ICommandExecutor;
 
 /**
@@ -24,11 +25,11 @@ public class GetMessagesExecutor implements ICommandExecutor {
 	 * @see net.mysocio.ui.management.ICommandExecutor#execute(javax.servlet.http.HttpServletRequest)
 	 */
 	@Override
-	public String execute(IConnectionData connectionData) {
+	public String execute(IConnectionData connectionData) throws CommandExecutionException{
 		StringBuffer output = new StringBuffer();
 		List<? extends IMessage> messages = getMessages(connectionData);
 		for (IMessage message : messages) {
-			output.append(wrapXmlMessage(message.getId(), message.getTitle(), message.getLink(), message.getText()));
+			output.append(wrapMessage(message.getId(), message.getTitle(), message.getLink(), message.getText()));
 		}
 		return output.toString();
 	}
@@ -57,7 +58,7 @@ public class GetMessagesExecutor implements ICommandExecutor {
 	 * @param output
 	 * @param text
 	 */
-	private static String wrapXmlMessage(Long id, String title, String link, String text) {
+	private static String wrapMessage(Long id, String title, String link, String text) {
 		StringBuffer output = new StringBuffer();
 		output.append("<div class='Message' id=\"").append(id).append("\">");
 		String actualTitle = "No Title";

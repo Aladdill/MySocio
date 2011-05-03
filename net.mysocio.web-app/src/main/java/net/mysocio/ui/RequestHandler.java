@@ -13,6 +13,7 @@ import net.mysocio.data.IConnectionData;
 import net.mysocio.data.SocioUser;
 import net.mysocio.data.management.ConnectionData;
 import net.mysocio.data.management.DataManagerFactory;
+import net.mysocio.ui.management.CommandExecutionException;
 import net.mysocio.ui.management.CommandIterpreterFactory;
 import net.mysocio.ui.management.ICommandInterpreter;
 
@@ -54,7 +55,14 @@ public class RequestHandler extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		ICommandInterpreter commandInterpreter = CommandIterpreterFactory.getCommandInterpreter(connectionData);
 		response.setContentType(commandInterpreter.getCommandResponseType(command));
-		out.print(commandInterpreter.executeCommand(command));
+		String responseString = "";
+		try {
+			responseString = commandInterpreter.executeCommand(command);
+		} catch (CommandExecutionException e) {
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+			responseString = e.getMessage();
+		}
+		out.print(responseString);
 	}
 
 	private void initUser(IConnectionData connectionData) {
@@ -77,6 +85,6 @@ public class RequestHandler extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
+		doGet(request, response);
 	}
 }

@@ -5,6 +5,7 @@ package net.mysocio.ui.managers.basic;
 
 import net.mysocio.data.IConnectionData;
 import net.mysocio.ui.executors.basic.LoginPageExecutor;
+import net.mysocio.ui.management.CommandExecutionException;
 import net.mysocio.ui.management.ICommandInterpreter;
 
 import org.slf4j.Logger;
@@ -26,7 +27,7 @@ public class DefaultCommandIterpreter implements ICommandInterpreter{
 	}
 
 	@Override
-	public String executeCommand(String command) {
+	public String executeCommand(String command) throws CommandExecutionException {
 		logger.debug("executing command:" + command);
 		if (command == null){
 			return new LoginPageExecutor().execute(connectionData);

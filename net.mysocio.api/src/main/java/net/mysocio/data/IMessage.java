@@ -25,5 +25,9 @@ public interface IMessage extends ISocioObject {
 
 	public abstract void setTitle(String title);
 
-	public abstract String getTitle(); 
+	public abstract String getTitle();
+	
+	public abstract Long getDate();
+	
+	public void setDate(Long date);
 }

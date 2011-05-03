@@ -5,12 +5,10 @@ package net.mysocio.data.management;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import javax.jdo.Extent;
 import javax.jdo.JDOHelper;
 import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
@@ -19,7 +17,6 @@ import javax.jdo.Transaction;
 
 import net.mysocio.connection.readers.ISource;
 import net.mysocio.connection.readers.Source;
-import net.mysocio.connection.readers.SourcesGroup;
 import net.mysocio.data.Contact;
 import net.mysocio.data.GeneralMessage;
 import net.mysocio.data.IMessage;
@@ -27,6 +24,7 @@ import net.mysocio.data.ISocioObject;
 import net.mysocio.data.IUiObject;
 import net.mysocio.data.SocioUser;
 import net.mysocio.data.UiObject;
+import net.mysocio.data.UserIdentifier;
 import net.mysocio.data.UserUiObjects;
 
 import org.slf4j.Logger;
@@ -56,13 +54,15 @@ public class JdoDataManager extends AbstractDataManager {
 	 * @see net.mysocio.data.management.IDataManager#createUser(java.lang.String, java.lang.String)
 	 */
 	@Override
-	public SocioUser createUser(String identifier, String identifierValue, Locale locale) {
+	public SocioUser createUser(String identifier, String identifierValue, Locale locale){
+		logger.debug("Creating user" + identifier + "==" + identifierValue);
 		SocioUser user = new SocioUser();
 		setUserIdentifier(user, identifier, identifierValue);
 		user.setName(getNameFromIdentifier(identifier, identifierValue));
 		user.setLocale(locale.getLanguage());
-		saveUser(user);
-		return user;//getUser(identifier, identifierValue);
+		createUniqueObject(SocioUser.class, identifier + " == \"" + identifierValue + "\"", user);
+		logger.debug("User created");
+		return user;
 	}
 
 	private String getNameFromIdentifier(String identifier,
@@ -80,15 +80,18 @@ public class JdoDataManager extends AbstractDataManager {
 	}
 	
 	public IUiObject getUiObject(String category, String name){
+        return getUniqueObject(UiObject.class, "category == " + category + " and name == " + name);
+	}
+	
+	public<T> T getUniqueObject(Class T, String query){
 		Transaction tx = pm.currentTransaction();
-		UiObject uiObject;
+		T object;
         try
         {
             tx.begin();
-            Extent<UiObject> e=pm.getExtent(UiObject.class,true);
-            Query q=pm.newQuery(e, "category == " + category + " and name == " + name);
+            Query q=pm.newQuery(T, query);
             q.setUnique(true);
-            uiObject = (UiObject)q.execute();
+            object = (T)q.execute();
             tx.commit();
         }
         finally
@@ -98,7 +101,27 @@ public class JdoDataManager extends AbstractDataManager {
                 tx.rollback();
             }
         }
-        return uiObject;
+        return object;
+	}
+	
+	public<T> List<T> getObjects(Class T){
+		Transaction tx = pm.currentTransaction();
+		List<T> objects;
+        try
+        {
+            tx.begin();
+            Query q=pm.newQuery(T);
+            objects = (List<T>)q.execute();
+            tx.commit();
+        }
+        finally
+        {
+            if (tx.isActive())
+            {
+                tx.rollback();
+            }
+        }
+        return objects;
 	}
 	
 	public void saveUiObject(UiObject uiObject) throws DuplicateMySocioObjectException{
@@ -141,110 +164,59 @@ public class JdoDataManager extends AbstractDataManager {
             }
         }
 	}
+	
+	public<T> T createUniqueObject(Class T, String query, T object){
+		Transaction tx=pm.currentTransaction();
+        try
+        {
+            tx.begin();
+            Query q=pm.newQuery(T, query);
+            q.setUnique(true);
+            T objectT = (T)q.execute();
+            if (objectT == null){
+            	objectT = pm.makePersistent(object);
+            }else{
+            	logger.info("Duplicate object of type: " + T.toString() + " for query: " + query);
+            }
+            tx.commit();
+            return objectT;
+        }
+        finally
+        {
+            if (tx.isActive())
+            {
+                tx.rollback();
+            }
+        }
+	}
 
 	/* (non-Javadoc)
 	 * @see net.mysocio.data.management.IDataManager#saveSource(net.mysocio.connection.readers.ISource)
 	 */
-	@Override
-	public void saveSource(ISource source) {
-		saveObject(source);
+	public Source createSource(Source source){
+		return createUniqueObject(Source.class, "url == " + source.getUrl(), source);
 	}
 
-	/* (non-Javadoc)
-	 * @see net.mysocio.data.management.IDataManager#saveSourcesGroup(net.mysocio.connection.readers.SourcesGroup)
-	 */
-	@Override
-	public void saveSourcesGroup(SourcesGroup sourcesGroup) {
-		saveObject(sourcesGroup);
-	}
 
 	/* (non-Javadoc)
 	 * @see net.mysocio.data.management.IDataManager#saveContact(net.mysocio.data.Contact)
 	 */
-	@Override
-	public void saveContact(Contact contact) {
+	public void createContact(Contact contact) {
 		saveObject(contact);
-	}
-
-	/* (non-Javadoc)
-	 * @see net.mysocio.data.management.IDataManager#saveUser(net.mysocio.data.SocioUser)
-	 */
-	@Override
-	public void saveUser(SocioUser user) {
-		saveObject(user);
-	}
-
-	/* (non-Javadoc)
-	 * @see net.mysocio.data.management.IDataManager#getSources(java.lang.Class)
-	 */
-	@Override
-	public List<ISource> getSources(Class clazz) {
-		Transaction tx = pm.currentTransaction();
-		List<ISource> sources = new ArrayList<ISource>();
-        try
-        {
-            tx.begin();
-            Extent<ISource> e = pm.getExtent(clazz, true);
-            Iterator<ISource> iter = e.iterator();
-            while (iter.hasNext())
-            {
-            	sources.add(iter.next());
-            }
-            tx.commit();
-        }
-        catch (Exception e)
-        {
-        	logger.error("Exception thrown during retrieval of Extent : ", e);
-        }
-        finally
-        {
-            if (tx.isActive())
-            {
-                tx.rollback();
-            }
-        }
-		return sources;
-	}
-
-	/* (non-Javadoc)
-	 * @see net.mysocio.data.management.IDataManager#getSource(java.lang.Long)
-	 */
-	@Override
-	public ISource getSource(Long id) {
-		Transaction tx = pm.currentTransaction();
-		Source source;
-        try
-        {
-            tx.begin();
-            Extent<Source> e=pm.getExtent(Source.class,true);
-            Query q=pm.newQuery(e, "id == " + id);
-            q.setUnique(true);
-            source = (Source)q.execute();
-            tx.commit();
-        }
-        finally
-        {
-            if (tx.isActive())
-            {
-                tx.rollback();
-            }
-        }
-		return source;
 	}
 
 	/* (non-Javadoc)
 	 * @see net.mysocio.data.management.IDataManager#getMessages(net.mysocio.connection.readers.ISource, java.lang.Long)
 	 */
 	@Override
-	public List<IMessage> getMessages(ISource source, Long firstId) {
+	public List<IMessage> getMessages(ISource source, Long date) {
 		Transaction tx = pm.currentTransaction();
 		List<IMessage> messages = new ArrayList<IMessage>();
         try
         {
             tx.begin();
-            Extent<GeneralMessage> e=pm.getExtent(GeneralMessage.class,true);
-            Query q=pm.newQuery(e, "sourceId == " + source.getId() + " and id > " + firstId);
-            q.setOrdering("id ascending");
+            Query q=pm.newQuery(GeneralMessage.class, "sourceId == " + source.getId() + " and date > " + date);
+            q.setOrdering("date ascending");
             messages = (List<IMessage>)q.execute();
             tx.commit();
         }
@@ -268,8 +240,7 @@ public class JdoDataManager extends AbstractDataManager {
         try
         {
             tx.begin();
-            Extent<SocioUser> e=pm.getExtent(SocioUser.class,true);
-            Query q=pm.newQuery(e, identifier + " == \"" + identifierValue + "\"");
+            Query q=pm.newQuery(SocioUser.class, identifier + " == \"" + identifierValue + "\"");
             q.setUnique(true);
             user = (SocioUser)q.execute();
             tx.commit();
@@ -291,7 +262,6 @@ public class JdoDataManager extends AbstractDataManager {
         try
         {
             tx.begin();
-//            Extent<UserUiObjects> e=pm.getExtent(UserUiObjects.class,true);
             Query q=pm.newQuery(UserUiObjects.class, "userId == " + user.getId());
             q.setUnique(true);
             objects = (UserUiObjects)q.execute();

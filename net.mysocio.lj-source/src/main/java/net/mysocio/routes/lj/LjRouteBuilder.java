@@ -51,7 +51,7 @@ public class LjRouteBuilder extends RouteBuilder {
     }
 
     public void configure() {
-    	List<ISource> sources = DataManagerFactory.getDataManager().getSources(LjSource.class);
+    	List<ISource> sources = DataManagerFactory.getDataManager().getObjects(LjSource.class);
     	for (ISource source : sources) {
     		from("rss:" + source.getUrl() + "?consumer.delay=100").
             bean(new SomeBean(source.getId()));
@@ -72,7 +72,7 @@ public class LjRouteBuilder extends RouteBuilder {
         	for (SyndEntryImpl entry : entries) {
         		LjMessage message = new LjMessage(entry.getLink());
         		message.setSourceId(id);
-        		message.setPublishedDate(entry.getPublishedDate().getTime());
+        		message.setDate(entry.getPublishedDate().getTime());
         		message.setTitle(entry.getTitle());
         		message.setText(entry.getDescription().getValue());
 			}

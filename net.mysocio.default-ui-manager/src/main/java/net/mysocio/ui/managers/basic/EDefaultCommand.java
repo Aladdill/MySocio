@@ -1,6 +1,8 @@
 package net.mysocio.ui.managers.basic;
 
 import net.mysocio.ui.data.objects.DefaultSiteBody;
+import net.mysocio.ui.data.objects.RssConnections;
+import net.mysocio.ui.executors.basic.AddRssFeedExecutor;
 import net.mysocio.ui.executors.basic.GetMessagesExecutor;
 import net.mysocio.ui.executors.basic.GetSourcesExecutor;
 import net.mysocio.ui.executors.basic.LoadPageExecutor;
@@ -14,7 +16,9 @@ public enum EDefaultCommand {
 	logout(new LoginPageExecutor()),
 	login(new LoadPageExecutor(new DefaultSiteBody())),
 	openMainPage(new LoadPageExecutor(new DefaultSiteBody())),
-	openSettings(new LoadPageExecutor(new DefaultSiteBody())),
+	openSettings(new LoadPageExecutor(new RssConnections())),
+	addRssFeed(new AddRssFeedExecutor()),
+	getRssFeeds(new GetRssFeedsExecutor()),
 	getSources(new GetSourcesExecutor(), DefaultCommandIterpreter.TEXT_XML);
 	private ICommandExecutor executor;
 	private String responseType = DefaultCommandIterpreter.TEXT_HTML;

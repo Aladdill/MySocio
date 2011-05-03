@@ -33,7 +33,7 @@ public class RSSReader{
 			message.setLink(entry.getUri());
 			message.setTitle(entry.getTitle());
 			message.setText(entry.getDescription().getValue());
-			message.setPublishedDate(entry.getPublishedDate().getTime());
+			message.setDate(entry.getPublishedDate().getTime());
 			messages.add(message);
 		}
 		return messages;

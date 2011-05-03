@@ -19,5 +19,10 @@
 			<artifactId>data-management</artifactId>
 			<version>${mysocio.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>net.mysocio</groupId>
+			<artifactId>rss-source</artifactId>
+			<version>${mysocio.version}</version>
+		</dependency>
 	</dependencies>
 </project>
