@@ -17,6 +17,10 @@ import net.mysocio.data.NamedObject;
  */
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable="true")
 public abstract class Source extends NamedObject implements ISource {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 133410971632390235L;
 	@Persistent(nullValue=NullValue.DEFAULT)
 	protected Long lastMessageId;
 	@NotPersistent

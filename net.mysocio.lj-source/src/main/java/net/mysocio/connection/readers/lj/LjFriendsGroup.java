@@ -5,7 +5,8 @@ package net.mysocio.connection.readers.lj;
 
 import java.util.List;
 
-import javax.persistence.Entity;
+import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.PersistenceCapable;
 
 import net.mysocio.connection.readers.ISource;
 import net.mysocio.connection.readers.SourcesGroup;
@@ -14,8 +15,12 @@ import net.mysocio.connection.readers.SourcesGroup;
  * @author Aladdin
  *
  */
-@Entity
+@PersistenceCapable(identityType = IdentityType.APPLICATION, detachable="true")
 public class LjFriendsGroup extends SourcesGroup {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4330878469313160412L;
 	private int lgGroupMask;
 	
 	public LjFriendsGroup(){

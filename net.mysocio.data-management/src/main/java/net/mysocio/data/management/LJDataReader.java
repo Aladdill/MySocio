@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.mysocio.connection.readers.lj;
+package net.mysocio.data.management;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -9,9 +9,11 @@ import java.util.List;
 import java.util.Set;
 
 import net.mysocio.connection.readers.ISourcesGroup;
+import net.mysocio.connection.readers.lj.LjFriendsGroup;
+import net.mysocio.connection.readers.lj.LjSource;
+import net.mysocio.connection.readers.lj.LjUser;
 import net.mysocio.data.IContact;
 import net.mysocio.data.SocioContact;
-import net.mysocio.data.management.DataManagerFactory;
 
 import org.katkov.lj.ClientsFactory;
 import org.katkov.lj.ConvenientClient;

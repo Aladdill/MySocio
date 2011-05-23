@@ -19,6 +19,10 @@ import net.mysocio.data.NamedObject;
  */
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable="true")
 public class SourcesGroup extends NamedObject implements ISourcesGroup{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2151644338735593132L;
 	@Join()
 	@Persistent(types={Source.class},mappedBy = "id")
 	private List<ISource> sources = new ArrayList<ISource>();

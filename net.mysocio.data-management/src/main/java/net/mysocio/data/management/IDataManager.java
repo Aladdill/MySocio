@@ -25,8 +25,10 @@ public interface IDataManager {
 	public abstract void saveObjects(List<? extends ISocioObject> objects);
 
 	public abstract void saveObject(ISocioObject object);
+	
+	public abstract void deleteObject(ISocioObject object);
 
-	public abstract void addUnreadMessages(SocioUser user, Long sourceId,
+	public abstract void addUnreadMessages(SocioUser user, String sourceId,
 			List<? extends IMessage> messages);
 
 	public abstract List<IMessage> getMessages(ISource source, Long date);

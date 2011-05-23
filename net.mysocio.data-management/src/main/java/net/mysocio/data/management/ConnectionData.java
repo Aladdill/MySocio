@@ -32,19 +32,15 @@ public class ConnectionData implements IConnectionData{
 			logger.debug("Request received from country " + locale.getCountry() + " and language " + locale.getLanguage());
 		}
 	}
-	@Override
 	public SocioUser getUser(){
 		return (SocioUser)session.getAttribute("user");
 	}
-	@Override
 	public void cleanSession() {
 		session.removeAttribute("user");
 	}
-	@Override
 	public String getRequestParameter(String parameterName){
 		return request.getParameter(parameterName);
 	}
-	@Override
 	public void setUser(SocioUser user) {
 		session.setAttribute("user", user);
 		if (logger.isDebugEnabled()){
@@ -52,7 +48,6 @@ public class ConnectionData implements IConnectionData{
 		}
 	}
 	
-	@Override
 	public Locale getLocale() {
 		return locale;
 	}

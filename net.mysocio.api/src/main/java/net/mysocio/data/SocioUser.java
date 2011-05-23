@@ -13,6 +13,7 @@ import javax.jdo.annotations.Join;
 import javax.jdo.annotations.Key;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
+import javax.jdo.annotations.Serialized;
 import javax.jdo.annotations.Value;
 
 import net.mysocio.connection.readers.ISourcesGroup;
@@ -24,10 +25,16 @@ import net.mysocio.connection.readers.SourcesGroup;
  */
 @PersistenceCapable
 public class SocioUser extends Contact implements IUser {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2886854604233072581L;
 	@Join
-	@Key(types=java.lang.Long.class)
+	@Key(types=java.lang.String.class)
     @Value(types=UnreaddenMessages.class)
-	private Map<Long, UnreaddenMessages> unreadMessages = new HashMap<Long, UnreaddenMessages>();
+    @Persistent
+    @Serialized
+	private Map<String, UnreaddenMessages> unreadMessages = new HashMap<String, UnreaddenMessages>();
 	@Join
 	@Persistent(types={Account.class},mappedBy = "id")
 	private List<Account> accounts = new ArrayList<Account>();
@@ -37,7 +44,7 @@ public class SocioUser extends Contact implements IUser {
 	@Join
 	@Persistent(types={SocioContact.class},mappedBy = "id")
 	private List<IContact> contacts = new ArrayList<IContact>();
-	
+	@Persistent
 	private UserIdentifier userIdentifier;
 	
 	public UserIdentifier getUserIdentifier() {
@@ -54,11 +61,11 @@ public class SocioUser extends Contact implements IUser {
 		return contacts;
 	}
 
-	public UnreaddenMessages getUnreadMessages(Long sourceId){
+	public UnreaddenMessages getUnreadMessages(String sourceId){
 		return unreadMessages.get(sourceId);
 	}
 	
-	public void addUnreadMessages(Long sourceId, UnreaddenMessages messages){
+	public void addUnreadMessages(String sourceId, UnreaddenMessages messages){
 		unreadMessages.put(sourceId, messages);
 	}
 
@@ -102,7 +109,7 @@ public class SocioUser extends Contact implements IUser {
 		this.contacts.add(contact);
 	}
 
-	public Map<Long, UnreaddenMessages> getUnreadMessages() {
+	public Map<String, UnreaddenMessages> getUnreadMessages() {
 		return unreadMessages;
 	}
 

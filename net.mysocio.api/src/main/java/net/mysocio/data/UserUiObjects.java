@@ -17,6 +17,10 @@ import javax.jdo.annotations.Value;
  */
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable="true")
 public class UserUiObjects extends SocioObject {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4563232180995547625L;
 	private Long userId;
 	@Join
 	@Key(types=String.class)

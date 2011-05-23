@@ -24,7 +24,7 @@
 
   <camelContext id="camel"
                 xmlns="http://camel.apache.org/schema/spring">
-    <package>net.mysocio.routes</package>
+    <package>net.mysocio.data.camel.routes</package>
     
     <!-- Default JMX connector url: "service:jmx:rmi:///jndi/rmi://localhost:1099/jmxrmi/camel">
     <jmxAgent id="agent" createConnector="true" / -->

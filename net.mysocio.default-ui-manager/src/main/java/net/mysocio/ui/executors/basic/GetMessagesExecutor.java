@@ -47,7 +47,7 @@ public class GetMessagesExecutor implements ICommandExecutor {
 			}
 			return messages;
 		}
-		UnreaddenMessages unreadMessages = connectionData.getUser().getUnreadMessages(Long.parseLong(id));
+		UnreaddenMessages unreadMessages = connectionData.getUser().getUnreadMessages(id);
 		if (unreadMessages == null){
 			return Collections.emptyList();
 		}
@@ -58,7 +58,7 @@ public class GetMessagesExecutor implements ICommandExecutor {
 	 * @param output
 	 * @param text
 	 */
-	private static String wrapMessage(Long id, String title, String link, String text) {
+	private static String wrapMessage(String id, String title, String link, String text) {
 		StringBuffer output = new StringBuffer();
 		output.append("<div class='Message' id=\"").append(id).append("\">");
 		String actualTitle = "No Title";

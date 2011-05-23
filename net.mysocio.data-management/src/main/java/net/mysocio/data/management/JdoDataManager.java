@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.jdo.Extent;
 import javax.jdo.JDOHelper;
 import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
@@ -37,9 +38,9 @@ import org.slf4j.LoggerFactory;
 public class JdoDataManager extends AbstractDataManager {
 	private static final Logger logger = LoggerFactory.getLogger(JdoDataManager.class);
 	private static PersistenceManager pm;
-	private static JdoDataManager instance = new JdoDataManager();
+	private static AbstractDataManager instance = new JdoDataManager();
 	
-	public static JdoDataManager getInstance() {
+	public static AbstractDataManager getInstance() {
 		if (pm == null){
 			// Create a PersistenceManagerFactory for this datastore
 	        PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory("transactions-optional");
@@ -53,14 +54,15 @@ public class JdoDataManager extends AbstractDataManager {
 	/* (non-Javadoc)
 	 * @see net.mysocio.data.management.IDataManager#createUser(java.lang.String, java.lang.String)
 	 */
-	@Override
 	public SocioUser createUser(String identifier, String identifierValue, Locale locale){
 		logger.debug("Creating user" + identifier + "==" + identifierValue);
 		SocioUser user = new SocioUser();
 		setUserIdentifier(user, identifier, identifierValue);
 		user.setName(getNameFromIdentifier(identifier, identifierValue));
 		user.setLocale(locale.getLanguage());
-		createUniqueObject(SocioUser.class, identifier + " == \"" + identifierValue + "\"", user);
+		saveObject(user.getSourcesGroup());
+		saveObject(user.getDestinationsGroup());
+		user = createUniqueObject(SocioUser.class, identifier + " == \"" + identifierValue + "\"", user);
 		logger.debug("User created");
 		return user;
 	}
@@ -137,7 +139,6 @@ public class JdoDataManager extends AbstractDataManager {
 	/* (non-Javadoc)
 	 * @see net.mysocio.data.management.IDataManager#saveObjects(java.util.List)
 	 */
-	@Override
 	public void saveObjects(List<? extends ISocioObject> objects) {
 		for (ISocioObject iSocioObject : objects) {
 			saveObject(iSocioObject);
@@ -147,7 +148,6 @@ public class JdoDataManager extends AbstractDataManager {
 	/* (non-Javadoc)
 	 * @see net.mysocio.data.management.IDataManager#saveObject(net.mysocio.data.ISocioObject)
 	 */
-	@Override
 	public void saveObject(ISocioObject object) {
 		Transaction tx=pm.currentTransaction();
         try
@@ -165,12 +165,30 @@ public class JdoDataManager extends AbstractDataManager {
         }
 	}
 	
+	public void deleteObject(ISocioObject object) {
+		Transaction tx=pm.currentTransaction();
+        try
+        {
+            tx.begin();
+            pm.deletePersistent(object);
+            tx.commit();
+        }
+        finally
+        {
+            if (tx.isActive())
+            {
+                tx.rollback();
+            }
+        }
+	}
+	
 	public<T> T createUniqueObject(Class T, String query, T object){
 		Transaction tx=pm.currentTransaction();
         try
         {
             tx.begin();
-            Query q=pm.newQuery(T, query);
+            Extent<T> extent = pm.getExtent (T, true);
+            Query q=pm.newQuery(extent, query);
             q.setUnique(true);
             T objectT = (T)q.execute();
             if (objectT == null){
@@ -194,7 +212,7 @@ public class JdoDataManager extends AbstractDataManager {
 	 * @see net.mysocio.data.management.IDataManager#saveSource(net.mysocio.connection.readers.ISource)
 	 */
 	public Source createSource(Source source){
-		return createUniqueObject(Source.class, "url == " + source.getUrl(), source);
+		return createUniqueObject(source.getClass(), "url == \"" + source.getUrl() + "\"", source);
 	}
 
 
@@ -208,7 +226,6 @@ public class JdoDataManager extends AbstractDataManager {
 	/* (non-Javadoc)
 	 * @see net.mysocio.data.management.IDataManager#getMessages(net.mysocio.connection.readers.ISource, java.lang.Long)
 	 */
-	@Override
 	public List<IMessage> getMessages(ISource source, Long date) {
 		Transaction tx = pm.currentTransaction();
 		List<IMessage> messages = new ArrayList<IMessage>();
@@ -233,7 +250,6 @@ public class JdoDataManager extends AbstractDataManager {
 	/* (non-Javadoc)
 	 * @see net.mysocio.data.management.IDataManager#getUser(java.lang.String, java.lang.String)
 	 */
-	@Override
 	public SocioUser getUser(String identifier, String identifierValue) {
 		Transaction tx = pm.currentTransaction();
 		SocioUser user;
@@ -255,7 +271,6 @@ public class JdoDataManager extends AbstractDataManager {
 		return user;
 	}
 
-	@Override
 	public Map<String, IUiObject> getUserUiObjects(SocioUser user) {
 		UserUiObjects objects;
 		Transaction tx = pm.currentTransaction();

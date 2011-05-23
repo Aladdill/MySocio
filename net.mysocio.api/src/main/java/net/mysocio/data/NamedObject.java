@@ -17,6 +17,10 @@ import javax.jdo.annotations.Persistent;
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable="true")
 @Inheritance(strategy=InheritanceStrategy.SUBCLASS_TABLE)
 public class NamedObject extends SocioObject implements INamedObject{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4752863295913329595L;
 	@Persistent(nullValue=NullValue.DEFAULT)
 	protected String name;
 

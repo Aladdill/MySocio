@@ -14,6 +14,10 @@ import javax.jdo.annotations.Persistent;
  */
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable="true")
 public class Account extends NamedObject {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7561557374532619473L;
 	@Persistent(nullValue=NullValue.DEFAULT)
 	private String userName;
 	@Persistent(nullValue=NullValue.DEFAULT)

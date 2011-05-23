@@ -15,9 +15,9 @@ public interface IMessage extends ISocioObject {
 
 	public abstract String getLink();
 
-	public abstract void setSourceId(Long sourceId);
+	public abstract void setSourceId(String sourceId);
 
-	public abstract Long getSourceId();
+	public abstract String getSourceId();
 
 	public abstract void setLink(String link);
 

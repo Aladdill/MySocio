@@ -14,15 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.mysocio.routes.lj;
+package net.mysocio.data.camel.routes;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import net.mysocio.connection.readers.ISource;
-import net.mysocio.connection.readers.lj.LjSource;
-import net.mysocio.data.lj.LjMessage;
 import net.mysocio.data.management.DataManagerFactory;
+import net.mysocio.data.rss.RssMessage;
+import net.mysocio.sources.rss.RssSource;
 
 import org.apache.camel.Body;
 import org.apache.camel.builder.RouteBuilder;
@@ -38,8 +37,8 @@ import com.sun.syndication.feed.synd.SyndFeed;
  *
  * @version $Revision: 813332 $
  */
-public class LjRouteBuilder extends RouteBuilder {
-	private static final Logger logger = LoggerFactory.getLogger(LjRouteBuilder.class);
+public class RssRouteBuilder extends RouteBuilder {
+	private static final Logger logger = LoggerFactory.getLogger(RssRouteBuilder.class);
     /**
      * Allow this route to be run as an application
      *
@@ -51,33 +50,44 @@ public class LjRouteBuilder extends RouteBuilder {
     }
 
     public void configure() {
-    	List<ISource> sources = DataManagerFactory.getDataManager().getObjects(LjSource.class);
-    	for (ISource source : sources) {
+    	List<RssSource> sources = DataManagerFactory.getDataManager().getObjects(RssSource.class);
+    	for (RssSource source : sources) {
+    		if (logger.isDebugEnabled()){
+    			logger.debug("Creating route for RSS feed on url" + source.getUrl());
+    		}
     		from("rss:" + source.getUrl() + "?consumer.delay=100").
-            bean(new SomeBean(source.getId()));
+            bean(new RssMessagesRidingBean(source.getId()));
 		}
         
     }
 
-    public static class SomeBean {
-    	private Long id;
+    public static class RssMessagesRidingBean {
+    	private String id;
 
-        public SomeBean(Long id) {
+        public RssMessagesRidingBean(String id) {
         	this.id = id;
 		}
 
-		public void someMethod(@Body SyndFeed feed) {
+		public void readMessages(@Body SyndFeed feed) {
         	List<SyndEntryImpl> entries = feed.getEntries();
-        	List<LjMessage> messages = new ArrayList<LjMessage>();
+        	List<RssMessage> messages = new ArrayList<RssMessage>();
+        	if (logger.isDebugEnabled()){
+    			logger.debug("Got " + entries.size() + " messages for feed: " + feed.getUri());
+    		}
         	for (SyndEntryImpl entry : entries) {
-        		LjMessage message = new LjMessage(entry.getLink());
+        		RssMessage message = new RssMessage(entry.getLink());
         		message.setSourceId(id);
         		message.setDate(entry.getPublishedDate().getTime());
-        		message.setTitle(entry.getTitle());
-        		message.setText(entry.getDescription().getValue());
+        		String title = entry.getTitle();
+				message.setTitle(title);
+        		String text = entry.getDescription().getValue();
+				message.setText(text);
+        		if (logger.isDebugEnabled()){
+        			logger.debug("Message title: " + title);
+        			logger.debug("Message text: " + text);
+        		}
 			}
-//        	DataManager.saveObjects(messages);
-        	System.out.println(id.toString());
+        	DataManagerFactory.getDataManager().saveObjects(messages);
         }
     }
 }

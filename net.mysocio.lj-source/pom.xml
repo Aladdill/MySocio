@@ -10,11 +10,6 @@
 	<name>LJ Source</name>
 	<dependencies>
 		<dependency>
-			<groupId>javax.persistence</groupId>
-			<artifactId>com.springsource.javax.persistence</artifactId>
-			<version>[2.0, )</version>
-		</dependency>
-		<dependency>
 			<groupId>net.mysocio</groupId>
 			<artifactId>api</artifactId>
 			<version>${mysocio.version}</version>
@@ -26,18 +21,89 @@
 		</dependency>
 		<dependency>
 			<groupId>net.mysocio</groupId>
-			<artifactId>data-management</artifactId>
-			<version>${mysocio.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>net.mysocio</groupId>
 			<artifactId>rss-source</artifactId>
 			<version>${mysocio.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.camel</groupId>
-			<artifactId>camel-gae</artifactId>
-			<version>${camel-version}</version>
+			<groupId>org.datanucleus</groupId>
+			<artifactId>datanucleus-core</artifactId>
+			<version>3.0.0-m4</version>
+		</dependency>
+		<dependency>
+			<groupId>org.datanucleus</groupId>
+			<artifactId>datanucleus-api-jdo</artifactId>
+			<version>3.0.0-m3</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.jdo</groupId>
+			<artifactId>jdo-api</artifactId>
+			<version>3.0.0</version>
 		</dependency>
 	</dependencies>
+	<build>
+		<plugins>
+		<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>				
+				<version>2.3.2</version>
+				<configuration>
+					<source>1.5</source>
+					<target>1.5</target>
+				</configuration>
+			</plugin>	
+			<plugin>
+				<groupId>org.datanucleus</groupId>
+				<artifactId>maven-datanucleus-plugin</artifactId>
+				<version>3.0.0-m2</version>
+				<configuration>
+					<log4jConfiguration>${basedir}/../log4j.properties</log4jConfiguration>
+					<verbose>true</verbose>
+					<props>${basedir}/../datanucleus.properties</props>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>compile</phase>
+						<goals>
+							<goal>enhance</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+		<pluginManagement>
+			<plugins>
+				<!--TODO TEXT. This plugin's configuration is used in m2e only.-->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.datanucleus
+										</groupId>
+										<artifactId>
+											maven-datanucleus-plugin
+										</artifactId>
+										<versionRange>
+											[3.0.0-m2,)
+										</versionRange>
+										<goals>
+											<goal>enhance</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
 </project>

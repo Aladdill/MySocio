@@ -18,21 +18,25 @@ import javax.jdo.annotations.Persistent;
  */
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable="true")
 public class UnreaddenMessages extends SocioObject{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3423025803744675840L;
 	@Persistent(nullValue=NullValue.DEFAULT)
-	private Long lastId;
+	private String lastId;
 	@Join
 	@Persistent(types={GeneralMessage.class},mappedBy = "id")
 	private List<IMessage> messages = new ArrayList<IMessage>();
 	/**
 	 * @return the lastId
 	 */
-	public Long getLastId() {
+	public String getLastId() {
 		return lastId;
 	}
 	/**
 	 * @param lastId the lastId to set
 	 */
-	public void setLastId(Long lastId) {
+	public void setLastId(String lastId) {
 		this.lastId = lastId;
 	}
 	/**

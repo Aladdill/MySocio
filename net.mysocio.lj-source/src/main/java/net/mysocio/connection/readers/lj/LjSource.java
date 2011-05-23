@@ -14,6 +14,10 @@ import net.mysocio.sources.rss.RssSource;
  */
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable="true")
 public class LjSource extends RssSource {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2083873860231648163L;
 	private String username;
 	private int groupMask;
 	

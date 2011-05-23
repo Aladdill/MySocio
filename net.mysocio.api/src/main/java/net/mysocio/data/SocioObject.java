@@ -13,7 +13,6 @@ import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.Join;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
-import javax.jdo.annotations.PrimaryKey;
 
 
 
@@ -24,9 +23,12 @@ import javax.jdo.annotations.PrimaryKey;
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable="true")
 @Inheritance(strategy=InheritanceStrategy.SUBCLASS_TABLE)
 public class SocioObject implements ISocioObject{
-	@PrimaryKey
-	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-	protected Long id;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1428112468244972968L;
+	@Persistent(valueStrategy = IdGeneratorStrategy.UUIDHEX, primaryKey="true")
+	protected String id;
 	@Join
 	@Persistent(types={SocioTag.class},mappedBy = "id")
 	private List<SocioTag> tags = new ArrayList<SocioTag>();
@@ -34,11 +36,11 @@ public class SocioObject implements ISocioObject{
 	/**
 	 * @param id the id to set
 	 */
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 

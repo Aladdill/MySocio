@@ -23,6 +23,10 @@ import net.mysocio.connection.writers.DestinationsGroup;
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable="true")
 @Inheritance(strategy=InheritanceStrategy.SUBCLASS_TABLE)
 public abstract class Contact extends NamedObject implements IContact {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8721056150291879634L;
 	@Persistent
 	private SourcesGroup sourcesGroup = new SourcesGroup();
 	@Persistent

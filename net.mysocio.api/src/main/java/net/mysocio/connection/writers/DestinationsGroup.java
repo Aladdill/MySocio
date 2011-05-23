@@ -18,6 +18,10 @@ import javax.jdo.annotations.Persistent;
  */
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable="true")
 public class DestinationsGroup extends Destination {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2788138343209630354L;
 	@Join
 	@Persistent(types={Destination.class},mappedBy = "id")
 	private List<IDestination> destinations = new ArrayList<IDestination>();

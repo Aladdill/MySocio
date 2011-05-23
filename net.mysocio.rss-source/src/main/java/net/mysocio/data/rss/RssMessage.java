@@ -3,7 +3,7 @@
  */
 package net.mysocio.data.rss;
 
-import javax.persistence.Entity;
+import javax.jdo.annotations.PersistenceCapable;
 
 import net.mysocio.data.GeneralMessage;
 
@@ -11,8 +11,12 @@ import net.mysocio.data.GeneralMessage;
  * @author gurfinke
  *
  */
-@Entity
+@PersistenceCapable
 public class RssMessage extends GeneralMessage {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8628206019126311936L;
 	public RssMessage() {
 		super();
 	}

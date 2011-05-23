@@ -20,6 +20,10 @@ import javax.jdo.annotations.Value;
  */
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable="true")
 public class UiObject extends NamedObject implements IUiObject {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -306328178179491034L;
 	public static final String TAG_START = "<<";
 	public static final String TAG_END = ">>";
 	private String category;

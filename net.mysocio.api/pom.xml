@@ -13,22 +13,12 @@
 		<dependency>
 			<groupId>org.datanucleus</groupId>
 			<artifactId>datanucleus-core</artifactId>
-			<version>3.0.0-m3</version>
+			<version>3.0.0-m4</version>
 		</dependency>
 		<dependency>
 			<groupId>org.datanucleus</groupId>
 			<artifactId>datanucleus-api-jdo</artifactId>
 			<version>3.0.0-m3</version>
-		</dependency>
-		<dependency>
-			<groupId>org.datanucleus</groupId>
-			<artifactId>datanucleus-rdbms</artifactId>
-			<version>3.0.0-m3</version>
-		</dependency>
-		<dependency>
-			<groupId>com.mysql.jdbc</groupId>
-			<artifactId>com.springsource.com.mysql.jdbc</artifactId>
-			<version>5.1.6</version>
 		</dependency>
 		<dependency>
 			<groupId>log4j</groupId>
@@ -85,6 +75,7 @@
 			<plugin>
                 <groupId>org.datanucleus</groupId>
                 <artifactId>maven-datanucleus-plugin</artifactId>
+                <version>3.0.0-m2</version>
                 <configuration>
                     <log4jConfiguration>${basedir}/log4j.properties</log4jConfiguration>
                     <verbose>true</verbose>
@@ -100,5 +91,40 @@
                 </executions>
             </plugin>
 		</plugins>
+		<pluginManagement>
+			<plugins>
+				<!--TODO TEXT. This plugin's configuration is used in m2e only.-->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.datanucleus
+										</groupId>
+										<artifactId>
+											maven-datanucleus-plugin
+										</artifactId>
+										<versionRange>
+											[3.0.0-m2,)
+										</versionRange>
+										<goals>
+											<goal>enhance</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 	</build>
 </project>

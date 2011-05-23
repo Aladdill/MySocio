@@ -39,7 +39,7 @@ public class GetSourcesExecutor implements ICommandExecutor {
 			StringBuffer sourcesBuffer = new StringBuffer();
 			Integer unreadMsg = 0;
 			for (ISource source : sources) {
-				Long id = source.getId();
+				String id = source.getId();
 				UnreaddenMessages unreadMessages = user.getUnreadMessages(id);
 				String style = getReadenStyle();
 				String messagesNum = new String();

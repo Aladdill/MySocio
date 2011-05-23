@@ -30,7 +30,7 @@ public abstract class AbstractDataManager implements IDataManager {
 		}
 	}
 
-	public void addUnreadMessages(SocioUser user, Long sourceId, List<? extends IMessage> messages) {
+	public void addUnreadMessages(SocioUser user, String sourceId, List<? extends IMessage> messages) {
 		if (messages.size() > 0){
 			UnreaddenMessages unreaddenMessages = user.getUnreadMessages(sourceId);
 			if (unreaddenMessages == null){

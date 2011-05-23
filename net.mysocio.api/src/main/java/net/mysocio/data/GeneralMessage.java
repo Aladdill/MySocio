@@ -19,6 +19,10 @@ import javax.jdo.annotations.Persistent;
  */
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable="true")
 public abstract class GeneralMessage extends SocioObject implements IMessage{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 352828420023827718L;
 	@Persistent(nullValue=NullValue.DEFAULT)
 	private String link;
 	@Persistent(nullValue=NullValue.DEFAULT)
@@ -26,7 +30,7 @@ public abstract class GeneralMessage extends SocioObject implements IMessage{
 	@Persistent(nullValue=NullValue.DEFAULT)
 	private String text;
 	@Persistent(nullValue=NullValue.DEFAULT)
-	private Long sourceId;
+	private String sourceId;
 	
 	private Long date;
 
@@ -68,14 +72,14 @@ public abstract class GeneralMessage extends SocioObject implements IMessage{
 	/**
 	 * @return the source
 	 */
-	public Long getSourceId() {
+	public String getSourceId() {
 		return sourceId;
 	}
 
 	/**
 	 * @param source the source to set
 	 */
-	public void setSourceId(Long sourceId) {
+	public void setSourceId(String sourceId) {
 		this.sourceId = sourceId;
 	}
 	
