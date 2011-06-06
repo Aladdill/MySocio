@@ -3,14 +3,13 @@
  */
 package net.mysocio.data;
 
-import net.mysocio.connection.readers.ISourcesGroup;
 import net.mysocio.connection.writers.IDestination;
 
 /**
  * @author Aladdin
  *
  */
-public interface IContact extends ISourcesGroup, IDestination {
+public interface IContact extends IDestination {
 	public String getUserpicUrl();
 
 	public abstract void setName(String name);

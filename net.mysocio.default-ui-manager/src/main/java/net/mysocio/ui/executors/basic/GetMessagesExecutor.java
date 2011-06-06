@@ -3,14 +3,12 @@
  */
 package net.mysocio.ui.executors.basic;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 import net.mysocio.data.IConnectionData;
 import net.mysocio.data.IMessage;
-import net.mysocio.data.UnreaddenMessages;
+import net.mysocio.data.SocioUser;
 import net.mysocio.ui.management.CommandExecutionException;
 import net.mysocio.ui.management.ICommandExecutor;
 
@@ -34,24 +32,19 @@ public class GetMessagesExecutor implements ICommandExecutor {
 		return output.toString();
 	}
 	
-	private static List<? extends IMessage> getMessages(IConnectionData connectionData) {
+	private static List<IMessage> getMessages(IConnectionData connectionData) {
 		String id = connectionData.getRequestParameter("sourceId");
 		if (id == null){
 			return Collections.emptyList();
 		}
+		List<IMessage> unreadMessages;
+		SocioUser user = connectionData.getUser();
 		if (id.equalsIgnoreCase(ALL_MESSAGES_PLACEHOLDER)){
-			Collection<UnreaddenMessages> allMessages = connectionData.getUser().getUnreadMessages().values();
-			ArrayList<IMessage> messages = new ArrayList<IMessage>();
-			for (UnreaddenMessages unreaddenMessages : allMessages) {
-				messages.addAll(unreaddenMessages.getMessages());
-			}
-			return messages;
+			unreadMessages = user.getAllUnreadMessages();
+		}else{
+			unreadMessages = user.getUnreadMessages(user.getSortedSources().get(id));
 		}
-		UnreaddenMessages unreadMessages = connectionData.getUser().getUnreadMessages(id);
-		if (unreadMessages == null){
-			return Collections.emptyList();
-		}
-		return unreadMessages.getMessages();
+		return unreadMessages;
 	}
 	
 	/**

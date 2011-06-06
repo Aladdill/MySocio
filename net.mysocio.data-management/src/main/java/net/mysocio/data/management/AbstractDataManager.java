@@ -3,13 +3,10 @@
  */
 package net.mysocio.data.management;
 
-import java.util.Collections;
 import java.util.List;
 
 import net.mysocio.data.IMessage;
-import net.mysocio.data.MessagesIdComparator;
 import net.mysocio.data.SocioUser;
-import net.mysocio.data.UnreaddenMessages;
 import net.mysocio.data.UserIdentifier;
 
 /**
@@ -30,17 +27,10 @@ public abstract class AbstractDataManager implements IDataManager {
 		}
 	}
 
-	public void addUnreadMessages(SocioUser user, String sourceId, List<? extends IMessage> messages) {
+	public void addUnreadMessages(SocioUser user, String sourceId, List<IMessage> messages) {
 		if (messages.size() > 0){
-			UnreaddenMessages unreaddenMessages = user.getUnreadMessages(sourceId);
-			if (unreaddenMessages == null){
-				unreaddenMessages = new UnreaddenMessages();
-			}
-			Collections.sort(messages, new MessagesIdComparator());
-			unreaddenMessages.setLastId(messages.get(0).getId());
-			unreaddenMessages.addMessages(messages);
-			saveObject(unreaddenMessages);
-			user.addUnreadMessages(sourceId, unreaddenMessages);
+			user.addUnreadMessages(sourceId, messages);
+			saveObject(user);
 		}
 	}
 }

@@ -30,7 +30,7 @@ public class SocioObject implements ISocioObject{
 	@Persistent(valueStrategy = IdGeneratorStrategy.UUIDHEX, primaryKey="true")
 	protected String id;
 	@Join
-	@Persistent(types={SocioTag.class},mappedBy = "id")
+	@Persistent(types={SocioTag.class},mappedBy = "value")
 	private List<SocioTag> tags = new ArrayList<SocioTag>();
 	
 	/**
@@ -50,5 +50,9 @@ public class SocioObject implements ISocioObject{
 
 	public void setTags(List<SocioTag> tags) {
 		this.tags = tags;
+	}
+
+	public void addTag(SocioTag tag) {
+		this.tags.add(tag);
 	}
 }

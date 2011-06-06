@@ -11,7 +11,6 @@ import net.mysocio.data.IUiObject;
 import net.mysocio.data.SocioUser;
 import net.mysocio.data.management.DataManagerFactory;
 import net.mysocio.ui.data.objects.DefaultLoginPage;
-import net.mysocio.ui.management.AbstractUiManager;
 
 
 

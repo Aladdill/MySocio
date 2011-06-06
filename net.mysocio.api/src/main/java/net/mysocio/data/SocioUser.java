@@ -7,21 +7,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.jdo.annotations.Join;
-import javax.jdo.annotations.Key;
+import javax.jdo.annotations.NotPersistent;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
-import javax.jdo.annotations.Serialized;
-import javax.jdo.annotations.Value;
 
-import net.mysocio.connection.readers.ISourcesGroup;
-import net.mysocio.connection.readers.SourcesGroup;
+import net.mysocio.connection.readers.ISource;
 
 /**
  * @author Aladdin
- *
+ * Although User is subclass of MySocio object, tags list is private list of tags usable by this user and not object tags.
  */
 @PersistenceCapable
 public class SocioUser extends Contact implements IUser {
@@ -30,22 +26,18 @@ public class SocioUser extends Contact implements IUser {
 	 */
 	private static final long serialVersionUID = -2886854604233072581L;
 	@Join
-	@Key(types=java.lang.String.class)
-    @Value(types=UnreaddenMessages.class)
     @Persistent
-    @Serialized
-	private Map<String, UnreaddenMessages> unreadMessages = new HashMap<String, UnreaddenMessages>();
+	private Map<String, List<IMessage>> unreadMessages = new HashMap<String, List<IMessage>>();
 	@Join
 	@Persistent(types={Account.class},mappedBy = "id")
 	private List<Account> accounts = new ArrayList<Account>();
-	@Join
-	@Persistent(types={SourcesGroup.class},mappedBy = "id")
-	private List<ISourcesGroup> sourcesGroups = new ArrayList<ISourcesGroup>();
 	@Join
 	@Persistent(types={SocioContact.class},mappedBy = "id")
 	private List<IContact> contacts = new ArrayList<IContact>();
 	@Persistent
 	private UserIdentifier userIdentifier;
+	@NotPersistent
+	private Map<String, List<ISource>> sortedSources;
 	
 	public UserIdentifier getUserIdentifier() {
 		return userIdentifier;
@@ -55,30 +47,70 @@ public class SocioUser extends Contact implements IUser {
 		this.userIdentifier = userIdentifier;
 	}
 
+	/**
+	 * @return the sortedSources
+	 */
+	public Map<String, List<ISource>> getSortedSources() {
+		if (sortedSources == null){
+			sortedSources = new HashMap<String, List<ISource>>();
+			sortedSources = initSortedSources();
+		}
+		return sortedSources;
+	}
+
+	private Map<String, List<ISource>> initSortedSources() {
+		for (ISource source : getSources()) {
+			addSourceToSortedSources(source);
+		}
+		return sortedSources;
+	}
+
+	/**
+	 * @param source
+	 */
+	private void addSourceToSortedSources(ISource source) {
+		List<SocioTag> tags = source.getTags();
+		for (SocioTag tag : tags) {
+			List<ISource> sources = sortedSources.get(tag);
+			if (sources == null){
+				sources = new ArrayList<ISource>();
+				sortedSources.put(tag.getValue(), sources);
+			}
+			sources.add(source);
+		}
+		if (tags.isEmpty()){
+			List<ISource> sources = new ArrayList<ISource>();
+			sources.add(source);
+			sortedSources.put(source.getId(), sources);
+		}
+	}
+
 	private String locale;
 	
 	public List<IContact> getContacts(){
 		return contacts;
 	}
 
-	public UnreaddenMessages getUnreadMessages(String sourceId){
-		return unreadMessages.get(sourceId);
+	public List<IMessage> getUnreadMessages(List<ISource> sources){
+		List<IMessage> unreaddenMessages = new ArrayList<IMessage>();
+		for (ISource source : sources) {
+			List<IMessage> messages = this.unreadMessages.get(source.getId());
+			if (messages != null){
+				unreaddenMessages.addAll(messages);
+			}
+		}
+		return unreaddenMessages;
+	}
+	public Integer getUnreadMessagesNum(String id){
+		List<IMessage> messages = this.unreadMessages.get(id);
+		if (messages == null || messages.isEmpty()){
+			return 0;
+		}
+		return messages.size();
 	}
 	
-	public void addUnreadMessages(String sourceId, UnreaddenMessages messages){
+	public void addUnreadMessages(String sourceId, List<IMessage> messages){
 		unreadMessages.put(sourceId, messages);
-	}
-
-	public void addSourceGroups(Set<? extends ISourcesGroup> sourcesGroups) {
-		this.sourcesGroups.addAll(sourcesGroups);		
-	}
-
-	public void addSourcesGroups(ISourcesGroup SourcesGroup) {
-		this.sourcesGroups.add(SourcesGroup);		
-	}
-
-	public List<ISourcesGroup> getSourcesGroups() {
-		return this.sourcesGroups;
 	}
 
 	/**
@@ -109,8 +141,8 @@ public class SocioUser extends Contact implements IUser {
 		this.contacts.add(contact);
 	}
 
-	public Map<String, UnreaddenMessages> getUnreadMessages() {
-		return unreadMessages;
+	public List<IMessage> getAllUnreadMessages() {
+		return getUnreadMessages(getSources());
 	}
 
 	public String getLocale() {

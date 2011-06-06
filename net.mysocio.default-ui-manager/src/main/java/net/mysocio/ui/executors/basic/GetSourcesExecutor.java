@@ -4,12 +4,12 @@
 package net.mysocio.ui.executors.basic;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import net.mysocio.connection.readers.ISource;
-import net.mysocio.connection.readers.ISourcesGroup;
 import net.mysocio.data.IConnectionData;
 import net.mysocio.data.SocioUser;
-import net.mysocio.data.UnreaddenMessages;
 import net.mysocio.ui.management.CommandExecutionException;
 import net.mysocio.ui.management.ICommandExecutor;
 
@@ -33,23 +33,23 @@ public class GetSourcesExecutor implements ICommandExecutor {
 	}
 
 	private void addSourcesTree(SocioUser user, StringBuffer output){
-		List<ISourcesGroup> sourcesGroups = user.getSourcesGroups();
-		for (ISourcesGroup sourcesGroup : sourcesGroups) {
-			List<ISource> sources = sourcesGroup.getSources();
-			StringBuffer sourcesBuffer = new StringBuffer();
+		Map<String, List<ISource>> sortedSources = user.getSortedSources();
+		Set<String> keySet = sortedSources.keySet();
+		for (String key : keySet) {
+			List<ISource> sources = sortedSources.get(key);
 			Integer unreadMsg = 0;
+			StringBuffer sourcesBuffer = new StringBuffer();
 			for (ISource source : sources) {
+				sourcesBuffer.append("<item text=\"").append(stripNonValidXMLCharacters(source.getName()));
 				String id = source.getId();
-				UnreaddenMessages unreadMessages = user.getUnreadMessages(id);
+				Integer messagesNum = user.getUnreadMessagesNum(id);
 				String style = getReadenStyle();
-				String messagesNum = new String();
-				if (unreadMessages != null){
+				if (messagesNum > 0){
 					style = getUnreadenStyle();
-					int size = unreadMessages.getMessages().size();
-					unreadMsg+=size;
-					messagesNum = "(" + size + ")";
+					unreadMsg+=messagesNum;
+					sourcesBuffer.append("(").append(messagesNum).append(")");
 				}
-				sourcesBuffer.append("<item text=\"").append(stripNonValidXMLCharacters(source.getName())).append(messagesNum).append("\" id=\"" + id +"\"").append(style).append("/>");
+				sourcesBuffer.append("\" id=\"" + id +"\"").append(style).append("/>");
 			}
 			String messagesNum = new String();
 			String style = getReadenStyle();
@@ -57,8 +57,13 @@ public class GetSourcesExecutor implements ICommandExecutor {
 				style = getUnreadenStyle();
 				messagesNum = "(" + unreadMsg + ")";
 			}
-			output.append("<item text=\"").append(stripNonValidXMLCharacters(sourcesGroup.getName())).append(messagesNum).append("\" id=\"" + sourcesGroup.getId() +"\"").append(style).append(">");
-			output.append(sourcesBuffer).append("</item>");
+			String folderName = key;
+			if (sources.size() == 1 && sources.get(0).getId().equals(key)){
+				output.append(sourcesBuffer);
+			}else{
+				output.append("<item text=\"").append(stripNonValidXMLCharacters(folderName)).append(messagesNum).append("\" id=\"" + key +"\"").append(style).append(">");
+				output.append(sourcesBuffer).append("</item>");
+			}
 		}
 	}
 

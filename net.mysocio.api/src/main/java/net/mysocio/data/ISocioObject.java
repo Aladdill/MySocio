@@ -4,6 +4,7 @@
 package net.mysocio.data;
 
 import java.io.Serializable;
+import java.util.List;
 
 
 
@@ -13,4 +14,6 @@ import java.io.Serializable;
  */
 public interface ISocioObject extends Serializable{
 	public String getId();
+
+	public List<SocioTag> getTags();
 }

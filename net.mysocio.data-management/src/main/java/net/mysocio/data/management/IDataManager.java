@@ -12,6 +12,7 @@ import net.mysocio.connection.readers.Source;
 import net.mysocio.data.IMessage;
 import net.mysocio.data.ISocioObject;
 import net.mysocio.data.IUiObject;
+import net.mysocio.data.SocioTag;
 import net.mysocio.data.SocioUser;
 
 /**
@@ -28,8 +29,7 @@ public interface IDataManager {
 	
 	public abstract void deleteObject(ISocioObject object);
 
-	public abstract void addUnreadMessages(SocioUser user, String sourceId,
-			List<? extends IMessage> messages);
+	public abstract void addUnreadMessages(SocioUser user, String sourceId, List<IMessage> messages);
 
 	public abstract List<IMessage> getMessages(ISource source, Long date);
 
@@ -40,4 +40,6 @@ public interface IDataManager {
 	public abstract Source createSource(Source source);
 	
 	public<T> List<T> getObjects(Class T);
+
+	public abstract SocioTag createTag(SocioTag tag);
 }

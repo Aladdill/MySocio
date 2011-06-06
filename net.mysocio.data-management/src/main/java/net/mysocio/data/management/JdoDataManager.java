@@ -23,6 +23,7 @@ import net.mysocio.data.GeneralMessage;
 import net.mysocio.data.IMessage;
 import net.mysocio.data.ISocioObject;
 import net.mysocio.data.IUiObject;
+import net.mysocio.data.SocioTag;
 import net.mysocio.data.SocioUser;
 import net.mysocio.data.UiObject;
 import net.mysocio.data.UserIdentifier;
@@ -55,13 +56,11 @@ public class JdoDataManager extends AbstractDataManager {
 	 * @see net.mysocio.data.management.IDataManager#createUser(java.lang.String, java.lang.String)
 	 */
 	public SocioUser createUser(String identifier, String identifierValue, Locale locale){
-		logger.debug("Creating user" + identifier + "==" + identifierValue);
+		logger.debug("Creating user" + identifier + "==\"" + identifierValue + "\"");
 		SocioUser user = new SocioUser();
 		setUserIdentifier(user, identifier, identifierValue);
 		user.setName(getNameFromIdentifier(identifier, identifierValue));
 		user.setLocale(locale.getLanguage());
-		saveObject(user.getSourcesGroup());
-		saveObject(user.getDestinationsGroup());
 		user = createUniqueObject(SocioUser.class, identifier + " == \"" + identifierValue + "\"", user);
 		logger.debug("User created");
 		return user;
@@ -82,7 +81,7 @@ public class JdoDataManager extends AbstractDataManager {
 	}
 	
 	public IUiObject getUiObject(String category, String name){
-        return getUniqueObject(UiObject.class, "category == " + category + " and name == " + name);
+        return getUniqueObject(UiObject.class, "category == \"" + category + "\" and name == \"" + name + "\"");
 	}
 	
 	public<T> T getUniqueObject(Class T, String query){
@@ -232,7 +231,7 @@ public class JdoDataManager extends AbstractDataManager {
         try
         {
             tx.begin();
-            Query q=pm.newQuery(GeneralMessage.class, "sourceId == " + source.getId() + " and date > " + date);
+            Query q=pm.newQuery(GeneralMessage.class, "sourceId == \"" + source.getId() + "\" and date > " + date);
             q.setOrdering("date ascending");
             messages = (List<IMessage>)q.execute();
             tx.commit();
@@ -277,7 +276,7 @@ public class JdoDataManager extends AbstractDataManager {
         try
         {
             tx.begin();
-            Query q=pm.newQuery(UserUiObjects.class, "userId == " + user.getId());
+            Query q=pm.newQuery(UserUiObjects.class, "userId == \"" + user.getId()+"\"");
             q.setUnique(true);
             objects = (UserUiObjects)q.execute();
             tx.commit();
@@ -293,5 +292,10 @@ public class JdoDataManager extends AbstractDataManager {
         	return new HashMap<String, IUiObject>();
         }
 		return objects.getUserUiObjects();
+	}
+
+	@Override
+	public SocioTag createTag(SocioTag tag) {
+		return createUniqueObject(tag.getClass(), "value == \"" + tag.getValue() + "\"", tag);
 	}
 }

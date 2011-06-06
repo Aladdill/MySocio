@@ -9,6 +9,10 @@ package net.mysocio.ui.data.objects;
  *
  */
 public class DefaultHeader extends HtmlHeader {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -38644699924533126L;
 	private static final String NAME = "DefaultHtmlHeader";
 	private static final String TITLE = "default.title";
 	private DefaultCssImports cssImports = new DefaultCssImports();

@@ -4,16 +4,17 @@
 package net.mysocio.data.management;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
-import net.mysocio.connection.readers.ISourcesGroup;
-import net.mysocio.connection.readers.lj.LjFriendsGroup;
 import net.mysocio.connection.readers.lj.LjSource;
 import net.mysocio.connection.readers.lj.LjUser;
 import net.mysocio.data.IContact;
 import net.mysocio.data.SocioContact;
+import net.mysocio.data.SocioTag;
 
 import org.katkov.lj.ClientsFactory;
 import org.katkov.lj.ConvenientClient;
@@ -42,6 +43,7 @@ public class LJDataReader {
 			DataManagerFactory.getDataManager().createSource(source);
 		}
 		this.friendgroups = login.getFriendgroups();
+		tagSources();
 	}
 	
 	public Set<IContact> getLJFriends(){
@@ -56,28 +58,25 @@ public class LJDataReader {
 		}
 		return contacts;
 	}
-	public Set<ISourcesGroup> getSources(){
-		Set<ISourcesGroup> groups = new HashSet<ISourcesGroup>();
+	private void tagSources(){
+		Map<Integer, SocioTag> tags = new HashMap<Integer, SocioTag>();
 		//Get user friends groups
 		for (FriendGroup group : this.friendgroups){
-			int lgGroupMask = 1 << group.getId();
-			LjFriendsGroup ljGroup = new LjFriendsGroup(group.getName(), lgGroupMask);
-			DataManagerFactory.getDataManager().saveObject(ljGroup);
-			groups.add(ljGroup);
+			Integer lgGroupMask = 1 << group.getId();
+			SocioTag tag = new SocioTag();
+			tag.setValue(group.getName());
+			tag = DataManagerFactory.getDataManager().createTag(tag);
+			tags.put(lgGroupMask, tag);
 		}
-		LjFriendsGroup noneGroup = new LjFriendsGroup("None", 0);
-		DataManagerFactory.getDataManager().saveObject(noneGroup);
-		groups.add(noneGroup);
 		for (LjSource source : this.friends) {
 			int groupmask = source.getGroupMask();
 			// Maximum size of groups is 32, so it's bearable run.
-			for (ISourcesGroup group : groups) {
-				LjFriendsGroup ljGroup = (LjFriendsGroup)group;
-				if ((groupmask&ljGroup.getLgGroupMask()) != 0){
-					ljGroup.addFriend(source);
+			for (Integer group : tags.keySet()) {
+				if ((groupmask&group) != 0){
+					source.addTag(tags.get(group));
 				}
 			}
+			DataManagerFactory.getDataManager().saveObject(source);
 		}
-		return groups;
 	}
 }

@@ -3,11 +3,12 @@
  */
 package net.mysocio.ui.managers.basic;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import net.mysocio.connection.readers.ISource;
 import net.mysocio.data.IConnectionData;
-import net.mysocio.data.management.DataManagerFactory;
-import net.mysocio.data.management.IDataManager;
+import net.mysocio.data.SocioUser;
 import net.mysocio.sources.rss.RssSource;
 import net.mysocio.ui.management.CommandExecutionException;
 import net.mysocio.ui.management.ICommandExecutor;
@@ -23,9 +24,15 @@ public class GetRssFeedsExecutor implements ICommandExecutor {
 	 */
 	@Override
 	public String execute(IConnectionData connectionData)
-			throws CommandExecutionException {
-		IDataManager dataManager = DataManagerFactory.getDataManager();
-		List<RssSource> rssSources = dataManager.getObjects(RssSource.class);
+	throws CommandExecutionException {
+		SocioUser user = connectionData.getUser();
+		List<ISource> sources = user.getSources();
+		List<RssSource> rssSources = new ArrayList<RssSource>();
+		for (ISource source : sources) {
+			if (source instanceof RssSource){
+				rssSources.add((RssSource)source);
+			}
+		}
 		return wrapRssSources(rssSources);
 	}
 

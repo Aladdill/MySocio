@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.mysocio.ui.management;
+package net.mysocio.ui.managers.basic;
 
 import java.util.List;
 import java.util.Locale;
@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.Set;
 
 import net.mysocio.data.IUiObject;
+import net.mysocio.data.management.DefaultResourcesManager;
+import net.mysocio.ui.management.IUiManager;
 
 /**
  * @author Aladdin
@@ -34,7 +36,7 @@ public abstract class AbstractUiManager implements IUiManager {
 		return htmlTemplate;
 	}
 	
-	public String getLocalizedString(String string, Locale locale){
-		return string;
+	public String getLocalizedString(String resource, Locale locale){
+		return DefaultResourcesManager.getResource(locale, resource);
 	}
 }
