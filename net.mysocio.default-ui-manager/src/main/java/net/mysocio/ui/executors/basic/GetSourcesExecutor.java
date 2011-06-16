@@ -10,6 +10,7 @@ import java.util.Set;
 import net.mysocio.connection.readers.ISource;
 import net.mysocio.data.IConnectionData;
 import net.mysocio.data.SocioUser;
+import net.mysocio.data.management.DataManagerFactory;
 import net.mysocio.ui.management.CommandExecutionException;
 import net.mysocio.ui.management.ICommandExecutor;
 
@@ -23,11 +24,13 @@ public class GetSourcesExecutor implements ICommandExecutor {
 	 */
 	@Override
 	public String execute(IConnectionData connectionManager) throws CommandExecutionException{
+		SocioUser user = connectionManager.getUser();
+		DataManagerFactory.getDataManager().updateUnreaddenMessages(user);
 		StringBuffer out = new StringBuffer();
 		out.append("<?xml version='1.0' encoding='UTF-8'?>" +
 				"<tree id=\"0\">" +
-		"<item text=\"All\" id=\"All\">");
-		addSourcesTree(connectionManager.getUser(), out);
+		"<item text=\""+SocioUser.ALL_SOURCES+"\" id=\""+ SocioUser.ALL_SOURCES+"\">");
+		addSourcesTree(user, out);
 		out.append("</item></tree>");
 		return out.toString();
 	}

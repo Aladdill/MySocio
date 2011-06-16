@@ -9,6 +9,7 @@ import java.util.List;
 import net.mysocio.data.IConnectionData;
 import net.mysocio.data.IMessage;
 import net.mysocio.data.SocioUser;
+import net.mysocio.data.management.DataManagerFactory;
 import net.mysocio.ui.management.CommandExecutionException;
 import net.mysocio.ui.management.ICommandExecutor;
 
@@ -17,8 +18,6 @@ import net.mysocio.ui.management.ICommandExecutor;
  *
  */
 public class GetMessagesExecutor implements ICommandExecutor {
-	public static final String ALL_MESSAGES_PLACEHOLDER = "ALL";
-
 	/* (non-Javadoc)
 	 * @see net.mysocio.ui.management.ICommandExecutor#execute(javax.servlet.http.HttpServletRequest)
 	 */
@@ -37,14 +36,10 @@ public class GetMessagesExecutor implements ICommandExecutor {
 		if (id == null){
 			return Collections.emptyList();
 		}
-		List<IMessage> unreadMessages;
 		SocioUser user = connectionData.getUser();
-		if (id.equalsIgnoreCase(ALL_MESSAGES_PLACEHOLDER)){
-			unreadMessages = user.getAllUnreadMessages();
-		}else{
-			unreadMessages = user.getUnreadMessages(user.getSortedSources().get(id));
-		}
-		return unreadMessages;
+		user.setSelectedSource(id);
+		DataManagerFactory.getDataManager().saveObject(user);
+		return user.getUnreadMessages();
 	}
 	
 	/**

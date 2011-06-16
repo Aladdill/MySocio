@@ -42,4 +42,8 @@ public interface IDataManager {
 	public<T> List<T> getObjects(Class T);
 
 	public abstract SocioTag createTag(SocioTag tag);
+
+	public abstract void updateUnreaddenMessages(SocioUser user);
+
+	public abstract List<IMessage> getMessages(List<ISource> sources, Long date);
 }

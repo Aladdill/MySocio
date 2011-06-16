@@ -33,4 +33,12 @@ public abstract class AbstractDataManager implements IDataManager {
 			saveObject(user);
 		}
 	}
+
+	@Override
+	public void updateUnreaddenMessages(SocioUser user) {
+		List<IMessage> messages = getMessages(user.getSources(), user.getLastUpdate());
+		for (IMessage message : messages) {
+			user.addUnreadMessage(message);
+		}
+	}
 }

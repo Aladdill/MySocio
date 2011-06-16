@@ -21,6 +21,7 @@ import net.mysocio.connection.readers.ISource;
  */
 @PersistenceCapable
 public class SocioUser extends Contact implements IUser {
+	public static final String ALL_SOURCES = "All";
 	/**
 	 * 
 	 */
@@ -38,6 +39,26 @@ public class SocioUser extends Contact implements IUser {
 	private UserIdentifier userIdentifier;
 	@NotPersistent
 	private Map<String, List<ISource>> sortedSources;
+	@Persistent
+	private Long lastUpdate;
+	public Long getLastUpdate() {
+		return lastUpdate;
+	}
+
+	public void setLastUpdate(Long lastUpdate) {
+		this.lastUpdate = lastUpdate;
+	}
+
+	public String getSelectedSource() {
+		return selectedSource;
+	}
+
+	public void setSelectedSource(String selectedSource) {
+		this.selectedSource = selectedSource;
+	}
+
+	@Persistent
+	private String selectedSource = ALL_SOURCES;
 	
 	public UserIdentifier getUserIdentifier() {
 		return userIdentifier;
@@ -101,6 +122,7 @@ public class SocioUser extends Contact implements IUser {
 		}
 		return unreaddenMessages;
 	}
+	
 	public Integer getUnreadMessagesNum(String id){
 		List<IMessage> messages = this.unreadMessages.get(id);
 		if (messages == null || messages.isEmpty()){
@@ -110,7 +132,31 @@ public class SocioUser extends Contact implements IUser {
 	}
 	
 	public void addUnreadMessages(String sourceId, List<IMessage> messages){
-		unreadMessages.put(sourceId, messages);
+		List<IMessage> list = unreadMessages.get(sourceId);
+		if (list == null){
+			list = new ArrayList<IMessage>();
+		}
+		list.addAll(messages);
+		unreadMessages.put(sourceId, list);
+	}
+	
+	public void addUnreadMessage(IMessage message){
+		String sourceId = message.getSourceId();
+		List<IMessage> list = unreadMessages.get(sourceId);
+		if (list == null){
+			list = new ArrayList<IMessage>();
+		}
+		list.add(message);
+		unreadMessages.put(sourceId, list);
+	}
+	
+	public void setMessageReadden(IMessage message) throws CorruptedDataException{
+		String sourceId = message.getSourceId();
+		List<IMessage> list = unreadMessages.get(sourceId);
+		if (list == null){
+			throw new CorruptedDataException();
+		}
+		list.remove(message);
 	}
 
 	/**
@@ -151,5 +197,13 @@ public class SocioUser extends Contact implements IUser {
 
 	public void setLocale(String locale) {
 		this.locale = locale;
+	}
+
+	public List<IMessage> getUnreadMessages() {
+		if (selectedSource.equalsIgnoreCase(SocioUser.ALL_SOURCES)){
+			return getAllUnreadMessages();
+		}
+		
+		return getUnreadMessages(getSortedSources().get(selectedSource));
 	}
 }

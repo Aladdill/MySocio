@@ -245,6 +245,33 @@ public class JdoDataManager extends AbstractDataManager {
         }
 		return messages;
 	}
+	
+	public List<IMessage> getMessages(List<ISource> sources, Long date) {
+		Transaction tx = pm.currentTransaction();
+		List<IMessage> messages = new ArrayList<IMessage>();
+        try
+        {
+        	List<String> ids = new ArrayList<String>();
+    		for (ISource source : sources) {
+    			ids.add(source.getId());
+    		}
+            tx.begin();
+            Query q=pm.newQuery(GeneralMessage.class);
+            q.declareParameters("Collection sourcesIds");
+    		q.setFilter("sourcesIds.contains(sourceId) and date >= " + date);
+            q.setOrdering("date ascending");
+            messages = (List<IMessage>)q.execute(ids);
+            tx.commit();
+        }
+        finally
+        {
+            if (tx.isActive())
+            {
+                tx.rollback();
+            }
+        }
+		return messages;
+	}
 
 	/* (non-Javadoc)
 	 * @see net.mysocio.data.management.IDataManager#getUser(java.lang.String, java.lang.String)
