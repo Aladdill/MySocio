@@ -247,8 +247,11 @@ public class JdoDataManager extends AbstractDataManager {
 	}
 	
 	public List<IMessage> getMessages(List<ISource> sources, Long date) {
-		Transaction tx = pm.currentTransaction();
 		List<IMessage> messages = new ArrayList<IMessage>();
+		if (sources.isEmpty()){
+			return messages;
+		}
+		Transaction tx = pm.currentTransaction();
         try
         {
         	List<String> ids = new ArrayList<String>();
@@ -257,8 +260,9 @@ public class JdoDataManager extends AbstractDataManager {
     		}
             tx.begin();
             Query q=pm.newQuery(GeneralMessage.class);
+            q.declareImports("import java.util.Collection");
             q.declareParameters("Collection sourcesIds");
-    		q.setFilter("sourcesIds.contains(sourceId) and date >= " + date);
+    		q.setFilter("sourcesIds.contains(sourceId) and date >= " + (date != null ? date : 0));
             q.setOrdering("date ascending");
             messages = (List<IMessage>)q.execute(ids);
             tx.commit();

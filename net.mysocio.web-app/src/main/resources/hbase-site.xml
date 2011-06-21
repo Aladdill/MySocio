@@ -15,7 +15,7 @@
 <configuration>
 	<property>
 		<name>hbase.zookeeper.quorum</name>
-		<value>oslocomp</value>
+		<value>domU-12-31-39-07-19-32.compute-1.internal</value>
 	</property>
 	<property>
 		<name>hbase.zookeeper.property.clientPort</name>
@@ -23,6 +23,6 @@
 	</property>
 	<property>
 		<name>hbase.master</name>
-		<value>oslocomp:6000</value>
+		<value>domU-12-31-39-07-19-32.compute-1.internal:6000</value>
 	</property>
 </configuration>

@@ -55,7 +55,7 @@ public class RssRouteBuilder extends RouteBuilder {
     		if (logger.isDebugEnabled()){
     			logger.debug("Creating route for RSS feed on url" + source.getUrl());
     		}
-    		from("rss:" + source.getUrl() + "?consumer.delay=100").
+    		from("rss:" + source.getUrl() + "?consumer.delay=2000").
             bean(new RssMessagesRidingBean(source.getId()));
 		}
         

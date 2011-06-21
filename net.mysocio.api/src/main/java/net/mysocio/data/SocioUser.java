@@ -40,7 +40,7 @@ public class SocioUser extends Contact implements IUser {
 	@NotPersistent
 	private Map<String, List<ISource>> sortedSources;
 	@Persistent
-	private Long lastUpdate;
+	private Long lastUpdate = 0l;
 	public Long getLastUpdate() {
 		return lastUpdate;
 	}
