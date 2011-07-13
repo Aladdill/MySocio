@@ -34,11 +34,10 @@ public abstract class Contact extends NamedObject implements IContact {
 	@Join
 	@Persistent
 	private List<IDestination> destinations = new ArrayList<IDestination>();
-
-	@Persistent(nullValue=NullValue.DEFAULT)
-	private String userpicUrl;
-	@Persistent(nullValue=NullValue.DEFAULT)
-	private String email;
+	@Persistent
+	private String userpicUrl =  new String();
+	@Persistent
+	private String email =  new String();
 	
 
 	public String getEmail() {

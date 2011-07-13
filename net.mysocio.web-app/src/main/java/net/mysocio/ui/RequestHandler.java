@@ -3,6 +3,7 @@ package net.mysocio.ui;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -13,6 +14,7 @@ import net.mysocio.data.IConnectionData;
 import net.mysocio.data.SocioUser;
 import net.mysocio.data.management.ConnectionData;
 import net.mysocio.data.management.DataManagerFactory;
+import net.mysocio.data.management.DefaultResourcesManager;
 import net.mysocio.ui.management.CommandExecutionException;
 import net.mysocio.ui.management.CommandIterpreterFactory;
 import net.mysocio.ui.management.ICommandInterpreter;
@@ -40,7 +42,7 @@ public class RequestHandler extends HttpServlet {
 		// Set the session valid for 15 minutes
 		session.setMaxInactiveInterval(15*60);
 		
-//		response.setCharacterEncoding("UTF-8");
+		response.setCharacterEncoding("UTF-8");
 //		OAuthService service = new ServiceBuilder()
 //        .provider(GoogleApi.class)
 //        .apiKey("anonymous")
@@ -51,6 +53,8 @@ public class RequestHandler extends HttpServlet {
 //		System.out.println(AUTHORIZE_URL + requestToken.getToken());
 //		response.sendRedirect(AUTHORIZE_URL + requestToken.getToken());
 		IConnectionData connectionData = new ConnectionData(request);
+		ServletContext servletContext = getServletContext();
+		DefaultResourcesManager.init(servletContext.getRealPath(""));
 		initUser(connectionData);
 		PrintWriter out = response.getWriter();
 		ICommandInterpreter commandInterpreter = CommandIterpreterFactory.getCommandInterpreter(connectionData);
@@ -65,13 +69,16 @@ public class RequestHandler extends HttpServlet {
 		out.print(responseString);
 	}
 
-	private void initUser(IConnectionData connectionData) {
+	private void initUser(IConnectionData connectionData) throws IOException {
 		SocioUser user = connectionData.getUser();
 		if (user == null){
 			String identifier = connectionData.getRequestParameter("identifier");
 			if (identifier != null){
 				String identifierValue = connectionData.getRequestParameter(identifier);
 				logger.debug("identifier="+identifier+" identifierValue="+identifierValue);
+				if (!DefaultResourcesManager.isMailInList(identifierValue)){
+					throw new IOException("This email is not in the list");
+				}
 				user = DataManagerFactory.getDataManager().getUser(identifier, identifierValue);
 				if (user == null){
 					user = DataManagerFactory.getDataManager().createUser(identifier, identifierValue, connectionData.getLocale());
@@ -80,7 +87,7 @@ public class RequestHandler extends HttpServlet {
 			}
 		}
 	}
-
+	
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */

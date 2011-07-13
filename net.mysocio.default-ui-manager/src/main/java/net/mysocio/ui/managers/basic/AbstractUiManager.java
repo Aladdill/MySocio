@@ -22,7 +22,7 @@ public abstract class AbstractUiManager implements IUiManager {
 		String htmlTemplate = uiObject.getHtmlTemplate();
 		List<String> innerTextLabels = uiObject.getInnerTextLabels();
 		for (String textLable : innerTextLabels) {
-			htmlTemplate.replace(textLable, getLocalizedString(textLable, userLocale));
+			htmlTemplate = htmlTemplate.replace(textLable, getLocalizedString(textLable, userLocale));
 		}
 		Map<String, IUiObject> defaultInnerUiObjects = uiObject.getInnerUiObjects();
 		Set<String> innerObjectsTags = defaultInnerUiObjects.keySet();

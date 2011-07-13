@@ -44,6 +44,7 @@ public class JdoDataManager extends AbstractDataManager {
 	public static AbstractDataManager getInstance() {
 		if (pm == null){
 			// Create a PersistenceManagerFactory for this datastore
+			System.setProperty("sun.net.http.allowRestrictedHeaders", "true");
 	        PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory("transactions-optional");
 	        pm = pmf.getPersistenceManager();
 		}

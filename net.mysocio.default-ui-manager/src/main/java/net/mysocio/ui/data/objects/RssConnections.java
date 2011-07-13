@@ -8,6 +8,10 @@ package net.mysocio.ui.data.objects;
  *
  */
 public class RssConnections extends SiteBody {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8815419229256440884L;
 	private static final String NAME = "RssConnectionsPage";
 	/**
 	 * 

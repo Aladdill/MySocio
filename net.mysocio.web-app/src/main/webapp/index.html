@@ -14,33 +14,10 @@
 <script src="lib/dhtmlxDataView/codebase/dhtmlxdataview.js"
 	type="text/javascript"></script>
 <script src="http://yui.yahooapis.com/3.2.0/build/yui/yui-min.js"></script>
+<script src="http://code.jquery.com/jquery-latest.js"></script>
 <script src="lib/utilities.js"></script>
 </head>
 <body onload="loadStartPage()">
-	<table class='DefaultTable' cellpadding="0px" cellspacing="0px">
-		<!-- header -->
-		<tr>
-			<td class='PageHeader'><img class='HeaderImage'
-				alt="Hungry Octopus Devouring the Net"
-				title="Hungry Octopus Devouring the Net"
-				src="images/socio-logo-small.png"></td>
-			<td>
-			<img class="Settings" alt="Settings" title="Settings" src="images/shesterenka25px.png" onclick="openSettings()">
-			<img class="Logout" alt="Logout" title="Logout" src="images/Power-Button-25px.png" onclick="logout()">
-			<img class="Home" alt="Home" title="Home" src="images/home.jpg" onclick="openMainPage()">
-			</td>
-		</tr>
-		<!-- body -->
-		<tr>
-			<td class='PageBody'>
-				<div id="SiteBody" class="fullSize">
-				</div>
-			</td>
-		</tr>
-		<!-- footer -->
-		<tr>
-			<td class='PageFooter'>footer</td>
-		</tr>
-	</table>
+	<div id="SiteBody" class="fullSize"></div>
 </body>
 </html>

@@ -76,6 +76,7 @@
 	</modules>
 	<properties>
 		<camel-version>2.7.0</camel-version>
+		<datanucleus-version>3.0.0-m5</datanucleus-version>
 		<mysocio.version>0.0.1-SNAPSHOT</mysocio.version>
 	</properties>
 	<dependencies>
@@ -84,6 +85,11 @@
 			<artifactId>slf4j-api</artifactId>
 			<version>1.5.11</version>
 			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.datanucleus</groupId>
+			<artifactId>datanucleus-core</artifactId>
+			<version>${datanucleus-version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>

@@ -21,8 +21,8 @@ public class NamedObject extends SocioObject implements INamedObject{
 	 * 
 	 */
 	private static final long serialVersionUID = 4752863295913329595L;
-	@Persistent(nullValue=NullValue.DEFAULT)
-	protected String name;
+	@Persistent
+	protected String name =  new String();
 
 	public String getName() {
 		return name;

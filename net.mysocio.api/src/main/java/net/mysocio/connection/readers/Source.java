@@ -21,8 +21,6 @@ public abstract class Source extends NamedObject implements ISource {
 	 * 
 	 */
 	private static final long serialVersionUID = 133410971632390235L;
-	@Persistent(nullValue=NullValue.DEFAULT)
-	protected Long lastMessageId;
 	@NotPersistent
 	private boolean visible = true;
 	
@@ -30,20 +28,6 @@ public abstract class Source extends NamedObject implements ISource {
 	
 	public Source() {
 		super();
-	}
-
-	/**
-	 * @return the lastMessageId
-	 */
-	public Long getLastMessageId() {
-		return lastMessageId;
-	}
-
-	/**
-	 * @param lastMessageId the lastMessageId to set
-	 */
-	public void setLastMessageId(Long lastMessageId) {
-		this.lastMessageId = lastMessageId;
 	}
 
 	/**

@@ -4,7 +4,6 @@
 package net.mysocio.data;
 
 import javax.jdo.annotations.IdentityType;
-import javax.jdo.annotations.NullValue;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 
@@ -18,10 +17,10 @@ public class Account extends NamedObject {
 	 * 
 	 */
 	private static final long serialVersionUID = 7561557374532619473L;
-	@Persistent(nullValue=NullValue.DEFAULT)
-	private String userName;
-	@Persistent(nullValue=NullValue.DEFAULT)
-	private String password;
+	@Persistent
+	private String userName =  new String();
+	@Persistent
+	private String password =  new String();
 	
 	public String getUserName() {
 		return userName;

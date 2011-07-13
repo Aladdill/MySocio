@@ -23,14 +23,14 @@ public abstract class GeneralMessage extends SocioObject implements IMessage{
 	 * 
 	 */
 	private static final long serialVersionUID = 352828420023827718L;
-	@Persistent(nullValue=NullValue.DEFAULT)
-	private String link;
-	@Persistent(nullValue=NullValue.DEFAULT)
-	private String title;
-	@Persistent(nullValue=NullValue.DEFAULT)
-	private String text;
-	@Persistent(nullValue=NullValue.DEFAULT)
-	private String sourceId;
+	@Persistent
+	private String link =  new String();
+	@Persistent
+	private String title =  new String();
+	@Persistent
+	private String text =  new String();
+	@Persistent
+	private String sourceId =  new String();
 	
 	private Long date;
 
