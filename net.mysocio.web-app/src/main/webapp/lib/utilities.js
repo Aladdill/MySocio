@@ -23,6 +23,11 @@ function resizeTabs(){
 	$("#contacts_tab_span").css("left",$("#contacts_tab_span").innerHeight()*-1);
 	$("#feeds_tab_span").css("left",$("#feeds_tab_span").innerHeight()*-1-3);
 }
+function centerLoginCircle(){
+	$("#AuthCircle").css("top",$("#AuthCell").innerHeight()/2 - $("#AuthCircle").innerHeight()/2);
+	$("#AuthCircle").css("left",$("#AuthCell").innerWidth()/2 - $("#AuthCircle").innerWidth()/2);
+	$("#promo_div").css("left",$("#promo_cell").innerWidth()/2 - $("#promo_div").innerWidth()/2);
+}
 function initSources(){
 	var messageContainer = $("#data_container");
 	messageContainer.css("height",$("body").innerHeight() - 81);

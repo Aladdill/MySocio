@@ -10,6 +10,12 @@ td {
 	padding: 0px;
 	vertical-align: top;
 }
+a {
+	border: none;
+}
+img {
+	border: none;
+}
 td.UserBox {
 	width: 100%;
 	height: 102px;
@@ -128,12 +134,6 @@ span.tab {
 	color: white;
 	float: left;
 }
-span.Contacts {
-}
-span.Accounts {
-}
-span.Feeds {
-}
 div.MiddleHeaderLine {
 	margin-bottom: 18px;
 }
@@ -204,16 +204,83 @@ div.MessageTitle{
 	padding: 10px;
 	font-weight: bold;
 }
-div.login {
-	position: absolute;
+div.LoginPage {
+	background: url("../images/darker-texture-login.jpg");
+}
+div.AuthCircle {
+	position: relative;
 	top: 50%;
 	left: 50%;
-	margin-left: -200px
+	background: url("../images/big-circle.png");
+	float: left;
+	height: 340px;
+	width: 340px;
+}
+div.LoginOctopus {
+	position: relative;
+	top: 15px;
+	left: 132px;
+	float: left;
+}
+div.LoginGoogle {
+	position: relative;
+	top: 29px;
+	left: 166px;
+	float: none;
+}
+div.LoginFacebook {
+	position: relative;
+	top: -60px;
+	left: 76px;
+	float: none;
+}
+div.LoginTwitter {
+	position: relative;
+	top: -55px;
+	left: 164px;
+	float: none;
+}
+div.LoginLJ {
+	position: relative;
+	top: 100px;
+	left: 23px;
+	float: none;
+}
+div.LoginBaloon {
+	position: relative;
+	top: -57px;
+	left: 44px;
+	float: none;
+	width: 100px;
+	height: 78px;
+	background: url("../images/baloon.jpg") no-repeat 0 0;
+}
+span.Baloon {
+	width: 80px;
+	height: 78px;
+	position: relative;
+	float: left;
+	top: -70px;
+	left: 17px;
+	font: 12px Verdana;
+	color: #7d4d8b;
+}
+div.LoginVkontakte {
+	position: relative;
+	top: -104px;
+	left: 179px;
+	float: none;
+}
+div.LoginLinkedin {
+	position: relative;
+	top: -96px;
+	left: 165px;
+	float: none;
 }
 td.PageHeader {
 	height: 100px;
 	width: 100%;
-	border: 0px;
+	border: 0px; 
 }
 
 td.PageBody {
@@ -243,5 +310,78 @@ table.DefaultTable {
 div.message {
 	margin-bottom: 10px;
 }
+tr.Auth {
+	height: auto;
+}
+tr.Promo {
+	height: 222px;
+}
+td.Auth {
+	width: 100%;
+}
+td.Promo {
+	width: 100%;
+}
+div.Promo {
+	position: relative;
+	width: 691px;
+	height: 100px;
+}
+div.PromoGeneral {
+	position: relative;
+	width: 207px;
+	height: 100px;
+	margin-right: 35px;
+	float: left;
+}
+span.PromoGeneral {
+	position: relative;
+	float: left;
+	margin-top: 8px;
+	font: 18px Verdana;
+	color: #7d4d8b;
+}
+div.PromoAbout {
+	position: relative;
+	width: 207px;
+	height: 100px;
+	margin-right: 35px;
+	margin-top: 18px;
+	float: left;
+}
+div.PromoYourLook {
+	position: relative;
+	margin-top: 18px;
+	width: 207px;
+	height: 100px;
+	float: left;
+}
+span.PromoHeader {
+	position: relative;
+	float: left;
+	width: 207px;
+	margin-bottom: 7px;
+	font: 18px Verdana;
+	color: #00aeef;
+}
+span.PromoText {
+	position: relative;
+	float: left;
+	width: 207px;
+	font: 11px Verdana;
+	color: #444444;
+}
 a#search_button img {background: url("../images/search-idle.png") no-repeat 0 0;}
 a#search_button:HOVER img {background: url("../images/search-rollover.png") no-repeat 0 0;}
+a#login_google img {background: url("../images/google-idle.png") no-repeat 0 0;}
+a#login_google:HOVER img {background: url("../images/google-rollover.png") no-repeat 0 0;}
+a#login_facebook img {background: url("../images/facebook-idle.png") no-repeat 0 0;}
+a#login_facebook:HOVER img {background: url("../images/facebook-rollover.png") no-repeat 0 0;}
+a#login_lj img {background: url("../images/LJ-idle.png") no-repeat 0 0;}
+a#login_lj:HOVER img {background: url("../images/LJ-rollover.png") no-repeat 0 0;}
+a#login_linkedin img {background: url("../images/linkedin-idle.png") no-repeat 0 0;}
+a#login_linkedin:HOVER img {background: url("../images/linkedin-rollover.png") no-repeat 0 0;}
+a#login_twitter img {background: url("../images/twitter-idle.png") no-repeat 0 0;}
+a#login_twitter:HOVER img {background: url("../images/twitter-rollover.png") no-repeat 0 0;}
+a#login_vkontakte img {background: url("../images/vkontakte-idle.png") no-repeat 0 0;}
+a#login_vkontakte:HOVER img {background: url("../images/vkontakte-rollover.png") no-repeat 0 0;}
