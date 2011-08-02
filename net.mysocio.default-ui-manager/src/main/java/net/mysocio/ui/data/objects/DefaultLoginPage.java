@@ -3,7 +3,7 @@
  */
 package net.mysocio.ui.data.objects;
 
-import net.mysocio.data.management.DefaultResourcesManager;
+import net.mysocio.ui.managers.basic.DefaultResourcesManager;
 
 /**
  * @author Aladdin
@@ -21,7 +21,12 @@ public class DefaultLoginPage extends SiteBody {
 	public DefaultLoginPage() {
 		super();
 		setName(NAME);
-		addTextLabel("label.email");
+		addTextLabel("login.page.baloon.text");
+		addTextLabel("login.page.promo.general.text");
+		addTextLabel("login.page.promo.about.header.text");
+		addTextLabel("login.page.promo.about.text");
+		addTextLabel("login.page.promo.your.look.header.text");
+		addTextLabel("login.page.promo.your.look.text");
 	}
 	@Override
 	public String getHtmlTemplate() {

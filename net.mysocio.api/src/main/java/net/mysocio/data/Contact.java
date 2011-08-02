@@ -10,7 +10,6 @@ import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.Join;
-import javax.jdo.annotations.NullValue;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 
@@ -36,18 +35,7 @@ public abstract class Contact extends NamedObject implements IContact {
 	private List<IDestination> destinations = new ArrayList<IDestination>();
 	@Persistent
 	private String userpicUrl =  new String();
-	@Persistent
-	private String email =  new String();
 	
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
 	public void setUserpicUrl(String userpicUrl) {
 		this.userpicUrl = userpicUrl;
 	}

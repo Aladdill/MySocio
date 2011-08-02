@@ -5,7 +5,7 @@ function openMessage(id){
 function openUrlInDiv(divId, url, functions){
 	YUI().use("io-base", "node", function(Y) {
 		function complete(id, o, args) {
-			onSuccess(id, o, args, Y, divId);
+			onSuccess(id, o, args, divId);
 		};
 		Y.on('io:success', complete, Y, functions);
 		Y.on('io:failure', onFailure, Y, []);
@@ -45,56 +45,84 @@ function initSources(){
 	});
 	var tree = new dhtmlXTreeObject("sources_tree","100%","100%",0);
 	tree.setImagePath("lib/dhtmlxTree/codebase/imgs/");
-	tree.loadXML("login?command=getSources", function(){});
+	tree.loadXML("execute?command=getSources", function(){});
 	tree.attachEvent("onSelect", getMessages);
 }
-function commitForm(form, functions){
+function commitLoginForm(form){
 	YUI().use("io-form", function(Y) {
 		var cfg = {
-			method: 'POST',
+			method: "POST",
 			form: {
-				id: form,
+				id: "LoginForm",
 				useDisabled: true
 			}
 		};
 		function complete(id, o, args) {
-			onSuccess(id, o, args, Y, "#SiteBody");
+			window.open(o.responseText,"name","height=500,width=500");
 		};
 		Y.on('io:success', complete, Y, functions);
 		Y.on('io:failure', onFailure, Y, []);
 		var request = Y.io("login", cfg);
 	});
 }
-function onSuccess(transactionid, response, functions, Y, divId) {
-	var data = response.responseText;
-	var node = Y.one(divId);
-	node.set('innerHTML', data);
+function onSuccess(transactionid, response, functions, divId) {
+	$(divId).html(response.responseText);
 	for (var x=0; x < functions.length; x++){
 		functions[x].call(this);
 	}
+}
+function login(identifier){
+	$("#identifier").attr("value",identifier);
+	commitLoginForm();
+}
+function hideTabs(){
+	hideDiv("tabs");
+}
+function showTabs(){
+	showDiv("tabs");
+}
+function hideSources(){
+	hideDiv("sources_tree");
+}
+function showSources(){
+	showDiv("sources_tree");
+}
+function hideDiv(id){
+	$("#"+id).css("display", "none");
+}
+function showDiv(id){
+	$("#"+id).css("display", "block");
 }
 function onFailure(transactionid, response, arguments) {
 	var data = response.responseText;
 	window.alert(data);
 }
-function openSettings(){
-	openUrlInDiv("#SiteBody", "login?command=openSettings",[getRssFeeds]);
+function showSettings(){
+	hideSources();
+	showTabs();
+	getRssFeeds();
 }
-function openMainPage(){
-	openUrlInDiv("#SiteBody", "login?command=openMainPage",[initSources]);
+function showMainPage(){
+	hideTabs();
+	resizeTabs();
+	showSources();
+	initSources();
+}
+function loadMainPage(){
+	openUrlInDiv("#SiteBody", "execute?command=openMainPage",[showMainPage]);
 }
 function logout(){
-	openUrlInDiv("#SiteBody", "login?command=logout",[]);
+	openUrlInDiv("#SiteBody", "execute?command=logout",[centerLoginCircle]);
 }
 function loadStartPage(){
-	openUrlInDiv("#SiteBody", "login?command=openStartPage",[]);
+	openUrlInDiv("#SiteBody", "execute?command=openStartPage",[centerLoginCircle]);
 }
 function getRssFeeds(){
-	openUrlInDiv("#RssList", "login?command=getRssFeeds",[]);
+	openUrlInDiv("#data_container", "execute?command=getRssFeeds",[]);
 }
 function getMessages(id){
-	openUrlInDiv("#data_container", "login?command=getMessages&sourceId=" + id,[]);
+	openUrlInDiv("#data_container", "execute?command=getMessages&sourceId=" + id,[]);
 }
 function getAllMessages(){
-	openUrlInDiv("#data_container", "login?command=getMessages&sourceId=all",[]);
+	openUrlInDiv("#data_container", "execute?command=getMessages&sourceId=all",[]);
 }

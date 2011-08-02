@@ -44,7 +44,7 @@ public class ConnectionData implements IConnectionData{
 	public void setUser(SocioUser user) {
 		session.setAttribute("user", user);
 		if (logger.isDebugEnabled()){
-			logger.debug("User was inserted into session with name " + user.getName() + " and email " + user.getEmail());
+			logger.debug("User was inserted into session with name " + user.getName());
 		}
 	}
 	

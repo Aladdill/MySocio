@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.mysocio.data.management;
+package net.mysocio.ui.managers.basic;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -9,6 +9,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Locale;
 import java.util.Properties;
+import java.util.ResourceBundle;
 
 import net.mysocio.data.SocioUser;
 
@@ -22,23 +23,31 @@ import org.slf4j.LoggerFactory;
 public class DefaultResourcesManager {
 	private static final Logger logger = LoggerFactory.getLogger(DefaultResourcesManager.class);
 	private static String servletContextPath;
+	private static ResourceBundle resources;
 	public static void init(String contextPath){
 		if (servletContextPath == null){
 			servletContextPath = contextPath;
 		}
+		if (resources == null){
+			resources = ResourceBundle.getBundle("textResources", Locale.ENGLISH);
+		}
 	}
 	public static String getResource(Locale locale, String resource){
-		String filepath = servletContextPath + "/resources/default.properties";
-		Properties resources = new Properties();
-		try {
-			resources.load(new FileReader(new File(filepath)));
-		} catch (Exception e) {
-			logger.error("Resources file is missing.", e);
-		}
-		String resourceValue = resources.getProperty(resource);
+		String resourceValue = resources.getString(resource);
 		if (resourceValue == null){
 			resourceValue = resource;
 			logger.error("Resource " + resource + " is missing. For locale " + locale.getDisplayLanguage());
+		}
+		return resourceValue;
+	}
+	public static String getResource(Locale locale, String resource, String[] insertions){
+		String resourceValue = resources.getString(resource);
+		if (resourceValue == null){
+			resourceValue = resource;
+			logger.error("Resource " + resource + " is missing. For locale " + locale.getDisplayLanguage());
+		}
+		for (int i = 0; i < insertions.length; i++) {
+			resourceValue = resourceValue.replace("{" + i + "}", insertions[i]);
 		}
 		return resourceValue;
 	}

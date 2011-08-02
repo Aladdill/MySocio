@@ -35,8 +35,6 @@ public class SocioUser extends Contact implements IUser {
 	@Join
 	@Persistent(types={SocioContact.class},mappedBy = "id")
 	private List<IContact> contacts = new ArrayList<IContact>();
-	@Persistent
-	private UserIdentifier userIdentifier;
 	@NotPersistent
 	private Map<String, List<ISource>> sortedSources;
 	@Persistent
@@ -60,14 +58,6 @@ public class SocioUser extends Contact implements IUser {
 	@Persistent
 	private String selectedSource = ALL_SOURCES;
 	
-	public UserIdentifier getUserIdentifier() {
-		return userIdentifier;
-	}
-
-	public void setUserIdentifier(UserIdentifier userIdentifier) {
-		this.userIdentifier = userIdentifier;
-	}
-
 	/**
 	 * @return the sortedSources
 	 */

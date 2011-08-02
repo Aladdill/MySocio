@@ -52,6 +52,14 @@
 			<name>DataNucleus Repository</name>
 			<url>http://www.datanucleus.org/downloads/maven2</url>
 		</repository>
+		<repository>
+			<id>google-api-services</id>
+			<url>http://mavenrepo.google-api-java-client.googlecode.com/hg</url>
+		</repository>
+		<repository>
+			<id>mandubian-mvn</id>
+			<url>http://mandubian-mvn.googlecode.com/svn/trunk/mandubian-mvn/repository</url>
+		</repository>
 	</repositories>
 	<pluginRepositories>
 		<pluginRepository>
@@ -67,6 +75,7 @@
 	<modules>
 		<module>net.mysocio.api</module>
 		<module>net.mysocio.data-management</module>
+		<module>net.mysocio.authentication-management</module>
 		<module>net.mysocio.default-ui-manager</module>
 		<module>net.mysocio.lj-source</module>
 		<module>net.mysocio.rss-source</module>
@@ -76,7 +85,7 @@
 	</modules>
 	<properties>
 		<camel-version>2.7.0</camel-version>
-		<datanucleus-version>3.0.0-m5</datanucleus-version>
+		<datanucleus-version>3.0.0-release</datanucleus-version>
 		<mysocio.version>0.0.1-SNAPSHOT</mysocio.version>
 	</properties>
 	<dependencies>

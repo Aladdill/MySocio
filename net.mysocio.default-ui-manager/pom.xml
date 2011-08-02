@@ -21,6 +21,11 @@
 		</dependency>
 		<dependency>
 			<groupId>net.mysocio</groupId>
+			<artifactId>authentication-management</artifactId>
+			<version>${mysocio.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>net.mysocio</groupId>
 			<artifactId>rss-source</artifactId>
 			<version>${mysocio.version}</version>
 		</dependency>

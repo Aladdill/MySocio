@@ -18,6 +18,7 @@ import javax.jdo.Transaction;
 
 import net.mysocio.connection.readers.ISource;
 import net.mysocio.connection.readers.Source;
+import net.mysocio.data.Account;
 import net.mysocio.data.Contact;
 import net.mysocio.data.GeneralMessage;
 import net.mysocio.data.IMessage;
@@ -26,7 +27,6 @@ import net.mysocio.data.IUiObject;
 import net.mysocio.data.SocioTag;
 import net.mysocio.data.SocioUser;
 import net.mysocio.data.UiObject;
-import net.mysocio.data.UserIdentifier;
 import net.mysocio.data.UserUiObjects;
 
 import org.slf4j.Logger;
@@ -56,31 +56,19 @@ public class JdoDataManager extends AbstractDataManager {
 	/* (non-Javadoc)
 	 * @see net.mysocio.data.management.IDataManager#createUser(java.lang.String, java.lang.String)
 	 */
-	public SocioUser createUser(String identifier, String identifierValue, Locale locale){
-		logger.debug("Creating user" + identifier + "==\"" + identifierValue + "\"");
+	public SocioUser createUser(Account account, Locale locale){
+		String userName = account.getUserName();
+		logger.debug("Creating user " + userName + " for " + account.getAccountType());
 		SocioUser user = new SocioUser();
-		setUserIdentifier(user, identifier, identifierValue);
-		user.setName(getNameFromIdentifier(identifier, identifierValue));
+		user.setName(userName);
 		user.setLocale(locale.getLanguage());
-		user = createUniqueObject(SocioUser.class, identifier + " == \"" + identifierValue + "\"", user);
+		user.addAccount(account);
+		saveObject(user);
+		account.setUserId(user.getId());
 		logger.debug("User created");
 		return user;
 	}
 
-	private String getNameFromIdentifier(String identifier,
-			String identifierValue) {
-		UserIdentifier userIdentifier = UserIdentifier.valueOf(identifier);
-		String name = "";
-		switch (userIdentifier) {
-		case email:
-			name = identifierValue.split("@")[0];
-			break;
-		default:
-			break;
-		}
-		return name;
-	}
-	
 	public IUiObject getUiObject(String category, String name){
         return getUniqueObject(UiObject.class, "category == \"" + category + "\" and name == \"" + name + "\"");
 	}

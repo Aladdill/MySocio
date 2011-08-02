@@ -4,7 +4,6 @@
 package net.mysocio.ui.managers.basic;
 
 import net.mysocio.data.IConnectionData;
-import net.mysocio.ui.executors.basic.LoginPageExecutor;
 import net.mysocio.ui.management.CommandExecutionException;
 import net.mysocio.ui.management.ICommandInterpreter;
 
@@ -29,22 +28,38 @@ public class DefaultCommandIterpreter implements ICommandInterpreter{
 	@Override
 	public String executeCommand(String command) throws CommandExecutionException {
 		logger.debug("executing command:" + command);
-		if (command == null){
-			return new LoginPageExecutor().execute(connectionData);
-		}
-		EDefaultCommand commandObject = EDefaultCommand.valueOf(command);
+		EDefaultCommand commandObject = getCommandValue(command);
 		String response = "No page set for this command";
-		response = commandObject.getExecutor().execute(connectionData);
+		try {
+			response = commandObject.getExecutor().execute(connectionData);
+		} catch (Exception e) {
+			throw new CommandExecutionException(e);
+		}
 		return response;
+	}
+
+	/**
+	 * @param command
+	 * @return
+	 * @throws CommandExecutionException 
+	 */
+	private EDefaultCommand getCommandValue(String command) throws CommandExecutionException {
+		logger.debug("parsing command:" + command);
+		EDefaultCommand commandObject = null;
+		if (command == null){
+			throw new CommandExecutionException("Received null command.");
+		}
+		try {
+			commandObject = EDefaultCommand.valueOf(command);
+		} catch (IllegalArgumentException e) {
+			throw new CommandExecutionException(e);
+		}
+		return commandObject;
 	}
 	
 	@Override
-	public String getCommandResponseType(String command){
-		if (command == null){
-			logger.debug("Command response type:" + TEXT_HTML);
-			return TEXT_HTML;
-		}
-		EDefaultCommand commandObject = EDefaultCommand.valueOf(command);
+	public String getCommandResponseType(String command) throws CommandExecutionException{
+		EDefaultCommand commandObject = getCommandValue(command);
 		String responseType = commandObject.getResponseType();
 		logger.debug("Command response type:" + responseType);
 		return responseType;

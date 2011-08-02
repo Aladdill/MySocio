@@ -1,8 +1,62 @@
-<div class='login'>
-	<a href="#" onclick="commitForm('LoginForm', [initSources]);"><img alt="" src="images/Logo.png"></a>
+<div class="LoginPage fullSize">
+	<table class="DefaultTable">
+		<tr class="Auth">
+			<td id="AuthCell" class="Auth">
+				<div id="AuthCircle" class="AuthCircle">
+					<div class="LoginGoogle">
+						<a id="login_google" href="#" onclick="login('google')"> <img alt="Google"
+							src="images/google-idle.png"> </a>
+					</div>
+					<div class="LoginLJ">
+						<a id="login_lj" href="#" onclick="login('lj')"> <img alt="LJ"
+							src="images/LJ-idle.png"> </a>
+					</div>
+					<div class="LoginOctopus">
+						<img alt="Octopus" src="images/octopus.jpg" onclick="loadMainPage()">
+					</div>
+					<div class="LoginBaloon">
+						<span class="Baloon">login.page.baloon.text</span>
+					</div>
+					<div class="LoginLinkedin">
+						<a id="login_linkedin" href="#" onclick="login('linkedin')"> <img alt="Linkedin"
+							src="images/linkedin-idle.png"> </a>
+					</div>
+					<div class="LoginTwitter">
+						<a id="login_twitter" href="#" onclick="login('twitter')"> <img alt="Twitter"
+							src="images/twitter-idle.png"> </a>
+					</div>
+					<div class="LoginFacebook">
+						<a id="login_facebook" href="#" onclick="login('facebook')"> <img alt="Facebook"
+							src="images/facebook-idle.png"> </a>
+					</div>
+					<div class="LoginVkontakte">
+						<a id="login_vkontakte" href="#" onclick="login('vkontakte')"> <img alt="Vkontakte"
+							src="images/vkontakte-idle.png"> </a>
+					</div>
+				</div>
+			</td>
+		</tr>
+		<tr class="Promo">
+			<td id="promo_cell" class="Promo">
+				<div id="promo_div" class="Promo">
+					<div class="PromoGeneral">
+						<img alt="Octopus" src="images/Logo.png"> <span
+							class="PromoGeneral">login.page.promo.general.text</span>
+					</div>
+					<div class="PromoAbout">
+						<span class="PromoHeader">login.page.promo.about.header.text</span> <span
+							class="PromoText">login.page.promo.about.text</span>
+					</div>
+					<div class="PromoYourLook">
+						<span class="PromoHeader">login.page.promo.your.look.header.text</span>
+						<span class="PromoText">login.page.promo.your.look.text</span>
+					</div>
+				</div>
+			</td>
+		</tr>
+	</table>
 	<form id="LoginForm">
 		<input type="hidden" name="email" value="test@test.com"> 
-		<input type="hidden" name="identifier" value="email">
-		<input type="hidden" name="command" value="login">
+		<input id="identifier" type="hidden" name="identifier" value="">
 	</form>
 </div>

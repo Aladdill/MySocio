@@ -9,6 +9,7 @@ import java.util.Map;
 
 import net.mysocio.connection.readers.ISource;
 import net.mysocio.connection.readers.Source;
+import net.mysocio.data.Account;
 import net.mysocio.data.IMessage;
 import net.mysocio.data.ISocioObject;
 import net.mysocio.data.IUiObject;
@@ -21,7 +22,7 @@ import net.mysocio.data.SocioUser;
  */
 public interface IDataManager {
 
-	public abstract SocioUser createUser(String identifier, String identifierValue, Locale locale);
+	public abstract SocioUser createUser(Account account, Locale locale);
 
 	public abstract void saveObjects(List<? extends ISocioObject> objects);
 

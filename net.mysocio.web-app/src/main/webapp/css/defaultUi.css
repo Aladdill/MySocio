@@ -49,6 +49,13 @@ a.InnerLink {
 	color: #525152;
 	float: none;
 }
+div.LoginDiv {
+	display: none;
+	height: 400px;
+	width: 400px;
+	top: 100px;;
+	left: 100px;
+}
 div.Settings {
 	margin-top: 12px;
 }

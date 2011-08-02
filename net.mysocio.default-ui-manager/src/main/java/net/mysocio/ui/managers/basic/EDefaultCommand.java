@@ -14,7 +14,6 @@ public enum EDefaultCommand {
 	getMessages(new GetMessagesExecutor()),
 	openStartPage(new LoginPageExecutor()),
 	logout(new LoginPageExecutor()),
-	login(new LoadPageExecutor(new DefaultSiteBody())),
 	openMainPage(new LoadPageExecutor(new DefaultSiteBody())),
 	openSettings(new LoadPageExecutor(new RssConnections())),
 	addRssFeed(new AddRssFeedExecutor()),

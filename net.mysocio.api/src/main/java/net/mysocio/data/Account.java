@@ -12,7 +12,7 @@ import javax.jdo.annotations.Persistent;
  *
  */
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable="true")
-public class Account extends NamedObject {
+public abstract class Account extends SocioObject{
 	/**
 	 * 
 	 */
@@ -20,21 +20,42 @@ public class Account extends NamedObject {
 	@Persistent
 	private String userName =  new String();
 	@Persistent
-	private String password =  new String();
+	private String accountUniqueId = new String();
+	@Persistent
+	private String accountType = new String();
+	@Persistent
+	private String userId = new String();
 	
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+
+	public String getAccountType() {
+		return accountType;
+	}
+
+	public void setAccountType(String accountType) {
+		this.accountType = accountType;
+	}
+
+	public String getAccountUniqueId() {
+		return accountUniqueId;
+	}
+
+	public void setAccountUniqueId(String accountUniqueId) {
+		this.accountUniqueId = accountUniqueId;
+	}
+
 	public String getUserName() {
 		return userName;
 	}
 
 	public void setUserName(String userName) {
 		this.userName = userName;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
 	}
 }

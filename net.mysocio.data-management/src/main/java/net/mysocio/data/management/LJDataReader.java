@@ -11,7 +11,6 @@ import java.util.Map;
 import java.util.Set;
 
 import net.mysocio.connection.readers.lj.LjSource;
-import net.mysocio.connection.readers.lj.LjUser;
 import net.mysocio.data.IContact;
 import net.mysocio.data.SocioContact;
 import net.mysocio.data.SocioTag;
@@ -32,9 +31,9 @@ public class LJDataReader {
 	private List<LjSource> friends = new ArrayList<LjSource>();
 	private FriendGroup[] friendgroups;
 	
-	public void init(LjUser user){
+	public void init(String userName, String password){
 		ConvenientClient ljConvenientClient = ClientsFactory.getLJConvenientClient();
-		this.login = ljConvenientClient.login(user.getUserName(), user.getPassword(), TIMEOUT);
+		this.login = ljConvenientClient.login(userName,password, TIMEOUT);
 		Friend[] friends = ljConvenientClient.getFriends(TIMEOUT);
 		for (Friend friend : friends) {
 			int groupmask = friend.getGroupmask();
