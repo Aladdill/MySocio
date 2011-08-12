@@ -5,7 +5,7 @@ package net.mysocio.data.rss;
 
 import javax.jdo.annotations.PersistenceCapable;
 
-import net.mysocio.data.GeneralMessage;
+import net.mysocio.data.messages.GeneralMessage;
 
 /**
  * @author gurfinke

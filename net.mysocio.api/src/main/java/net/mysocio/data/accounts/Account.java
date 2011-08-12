@@ -1,11 +1,13 @@
 /**
  * 
  */
-package net.mysocio.data;
+package net.mysocio.data.accounts;
 
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
+
+import net.mysocio.data.SocioObject;
 
 /**
  * @author Aladdin
@@ -22,8 +24,6 @@ public abstract class Account extends SocioObject{
 	@Persistent
 	private String accountUniqueId = new String();
 	@Persistent
-	private String accountType = new String();
-	@Persistent
 	private String userId = new String();
 	
 
@@ -35,13 +35,7 @@ public abstract class Account extends SocioObject{
 		this.userId = userId;
 	}
 
-	public String getAccountType() {
-		return accountType;
-	}
-
-	public void setAccountType(String accountType) {
-		this.accountType = accountType;
-	}
+	public abstract String getAccountType();
 
 	public String getAccountUniqueId() {
 		return accountUniqueId;

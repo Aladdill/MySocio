@@ -48,7 +48,7 @@ function initSources(){
 	tree.loadXML("execute?command=getSources", function(){});
 	tree.attachEvent("onSelect", getMessages);
 }
-function commitLoginForm(form){
+function commitLoginForm(){
 	YUI().use("io-form", function(Y) {
 		var cfg = {
 			method: "POST",
@@ -60,7 +60,7 @@ function commitLoginForm(form){
 		function complete(id, o, args) {
 			window.open(o.responseText,"name","height=500,width=500");
 		};
-		Y.on('io:success', complete, Y, functions);
+		Y.on('io:success', complete, Y, []);
 		Y.on('io:failure', onFailure, Y, []);
 		var request = Y.io("login", cfg);
 	});

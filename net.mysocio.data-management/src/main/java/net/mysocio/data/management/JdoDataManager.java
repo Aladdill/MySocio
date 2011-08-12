@@ -18,16 +18,16 @@ import javax.jdo.Transaction;
 
 import net.mysocio.connection.readers.ISource;
 import net.mysocio.connection.readers.Source;
-import net.mysocio.data.Account;
 import net.mysocio.data.Contact;
-import net.mysocio.data.GeneralMessage;
-import net.mysocio.data.IMessage;
 import net.mysocio.data.ISocioObject;
 import net.mysocio.data.IUiObject;
 import net.mysocio.data.SocioTag;
 import net.mysocio.data.SocioUser;
 import net.mysocio.data.UiObject;
 import net.mysocio.data.UserUiObjects;
+import net.mysocio.data.accounts.Account;
+import net.mysocio.data.messages.GeneralMessage;
+import net.mysocio.data.messages.IMessage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,15 +56,23 @@ public class JdoDataManager extends AbstractDataManager {
 	/* (non-Javadoc)
 	 * @see net.mysocio.data.management.IDataManager#createUser(java.lang.String, java.lang.String)
 	 */
-	public SocioUser createUser(Account account, Locale locale){
+	public SocioUser getUser(Account account, Locale locale){
 		String userName = account.getUserName();
-		logger.debug("Creating user " + userName + " for " + account.getAccountType());
+		logger.debug("Getting user " + userName + " for " + account.getAccountType());
+		Account existingAccount = getUniqueObject(account.getClass(), "accountUniqueId == " + account.getAccountUniqueId());
+		if (existingAccount != null){
+			logger.debug("Account found");
+			return getUniqueObject(SocioUser.class, "id == " + account.getUserId());
+		}
+		logger.debug("Creating user");
 		SocioUser user = new SocioUser();
 		user.setName(userName);
 		user.setLocale(locale.getLanguage());
+		saveObject(account);
 		user.addAccount(account);
 		saveObject(user);
 		account.setUserId(user.getId());
+		saveObject(account);
 		logger.debug("User created");
 		return user;
 	}
@@ -264,30 +272,6 @@ public class JdoDataManager extends AbstractDataManager {
             }
         }
 		return messages;
-	}
-
-	/* (non-Javadoc)
-	 * @see net.mysocio.data.management.IDataManager#getUser(java.lang.String, java.lang.String)
-	 */
-	public SocioUser getUser(String identifier, String identifierValue) {
-		Transaction tx = pm.currentTransaction();
-		SocioUser user;
-        try
-        {
-            tx.begin();
-            Query q=pm.newQuery(SocioUser.class, identifier + " == \"" + identifierValue + "\"");
-            q.setUnique(true);
-            user = (SocioUser)q.execute();
-            tx.commit();
-        }
-        finally
-        {
-            if (tx.isActive())
-            {
-                tx.rollback();
-            }
-        }
-		return user;
 	}
 
 	public Map<String, IUiObject> getUserUiObjects(SocioUser user) {

@@ -7,9 +7,9 @@ import java.util.Collections;
 import java.util.List;
 
 import net.mysocio.data.IConnectionData;
-import net.mysocio.data.IMessage;
 import net.mysocio.data.SocioUser;
 import net.mysocio.data.management.DataManagerFactory;
+import net.mysocio.data.messages.IMessage;
 import net.mysocio.ui.management.CommandExecutionException;
 import net.mysocio.ui.management.ICommandExecutor;
 

@@ -6,7 +6,6 @@
 		<groupId>net.mysocio</groupId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
-	<groupId>net.mysocio</groupId>
 	<artifactId>authentication-management</artifactId>
 	<name>Oauth Authentication Management</name>
 	<dependencies>
@@ -23,7 +22,7 @@
 		<dependency>
 			<groupId>org.scribe</groupId>
 			<artifactId>scribe</artifactId>
-			<version>1.2.1</version>
+			<version>${scribe-version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.codehaus.jackson</groupId>

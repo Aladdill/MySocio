@@ -1,7 +1,9 @@
 /**
  * 
  */
-package net.mysocio.data;
+package net.mysocio.data.messages;
+
+import net.mysocio.data.ISocioObject;
 
 
 

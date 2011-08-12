@@ -9,20 +9,18 @@ import java.util.Map;
 
 import net.mysocio.connection.readers.ISource;
 import net.mysocio.connection.readers.Source;
-import net.mysocio.data.Account;
-import net.mysocio.data.IMessage;
 import net.mysocio.data.ISocioObject;
 import net.mysocio.data.IUiObject;
 import net.mysocio.data.SocioTag;
 import net.mysocio.data.SocioUser;
+import net.mysocio.data.accounts.Account;
+import net.mysocio.data.messages.IMessage;
 
 /**
  * @author Aladdin
  *
  */
 public interface IDataManager {
-
-	public abstract SocioUser createUser(Account account, Locale locale);
 
 	public abstract void saveObjects(List<? extends ISocioObject> objects);
 
@@ -34,7 +32,7 @@ public interface IDataManager {
 
 	public abstract List<IMessage> getMessages(ISource source, Long date);
 
-	public abstract SocioUser getUser(String identifier, String identifierValue);
+	public abstract SocioUser getUser(Account account, Locale locale);
 
 	public abstract Map<String, IUiObject> getUserUiObjects(SocioUser user);
 

@@ -54,7 +54,7 @@
 			<plugin>
 				<groupId>org.datanucleus</groupId>
 				<artifactId>maven-datanucleus-plugin</artifactId>
-				<version>3.0.0-m2</version>
+				<version>${datanucleus-plugin-version}</version>
 				<configuration>
 					<log4jConfiguration>${basedir}/../log4j.properties</log4jConfiguration>
 					<verbose>true</verbose>
@@ -89,7 +89,7 @@
 											maven-datanucleus-plugin
 										</artifactId>
 										<versionRange>
-											[3.0.0-m2,)
+											${datanucleus-plugin-version}
 										</versionRange>
 										<goals>
 											<goal>enhance</goal>

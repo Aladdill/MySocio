@@ -3,8 +3,8 @@
  */
 package net.mysocio.authentication;
 
-import net.mysocio.data.Account;
 import net.mysocio.data.IConnectionData;
+import net.mysocio.data.accounts.Account;
 
 /**
  * @author Aladdin

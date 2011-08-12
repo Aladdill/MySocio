@@ -33,24 +33,6 @@
 	</dependencies>
 	<build>
 		<sourceDirectory>src/main/java</sourceDirectory>
-
-		<resources>
-			<resource>
-				<directory>${basedir}/src/main/java</directory>
-				<includes>
-					<include>**/*.jdo</include>
-					<include>**/*.orm</include>
-					<include>**/*.properties</include>
-				</includes>
-			</resource>
-			<resource>
-				<directory>${basedir}</directory>
-				<includes>
-					<include>datanucleus.properties</include>
-				</includes>
-			</resource>
-		</resources>
-
 		<plugins>
 			<plugin>
 				<artifactId>maven-clean-plugin</artifactId>
@@ -75,11 +57,10 @@
 			<plugin>
                 <groupId>org.datanucleus</groupId>
                 <artifactId>maven-datanucleus-plugin</artifactId>
-                <version>3.0.0-m2</version>
+                <version>${datanucleus-plugin-version}</version>
                 <configuration>
                     <log4jConfiguration>${basedir}/log4j.properties</log4jConfiguration>
                     <verbose>true</verbose>
-                    <props>${basedir}/datanucleus.properties</props>
                 </configuration>
                 <executions>
                     <execution>
@@ -110,7 +91,7 @@
 											maven-datanucleus-plugin
 										</artifactId>
 										<versionRange>
-											[3.0.0-m2,)
+											${datanucleus-plugin-version}
 										</versionRange>
 										<goals>
 											<goal>enhance</goal>

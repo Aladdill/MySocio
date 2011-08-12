@@ -14,6 +14,8 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 
 import net.mysocio.connection.readers.ISource;
+import net.mysocio.data.accounts.Account;
+import net.mysocio.data.messages.IMessage;
 
 /**
  * @author Aladdin

@@ -5,8 +5,8 @@ package net.mysocio.data.management;
 
 import java.util.List;
 
-import net.mysocio.data.IMessage;
 import net.mysocio.data.SocioUser;
+import net.mysocio.data.messages.IMessage;
 
 /**
  * @author Aladdin

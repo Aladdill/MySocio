@@ -3,17 +3,14 @@
  */
 package net.mysocio.authentication;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
-
-import net.mysocio.data.Account;
 import net.mysocio.data.IConnectionData;
+import net.mysocio.data.accounts.Account;
 
+import org.scribe.builder.ServiceBuilder;
+import org.scribe.builder.api.Api;
+import org.scribe.model.Token;
+import org.scribe.model.Verifier;
+import org.scribe.oauth.OAuthService;
 import org.slf4j.Logger;
 
 
@@ -41,14 +38,26 @@ public abstract class AbstractOauth2Manager implements IAuthenticationManager {
 		return AuthenticationResourcesManager.getAuthenticationScope(getUserIdentifier());
 	}
 
-	@Override
 	public String getRequestUrl() {
-		return getBasicRequestUrl() +
-		"client_id=" + getMysocioId()+ "&" +
-		"redirect_uri=" + getMysocioRedirect() + "&" +
-		"scope=" + getScope() + "&" +
-		"response_type=code";
+		OAuthService service = getService();
+		return service.getAuthorizationUrl(null);
 	}
+
+	/**
+	 * @return
+	 */
+	protected OAuthService getService() {
+		OAuthService service = new ServiceBuilder()
+        .provider(getApiClass())
+        .apiKey(getMysocioId())
+        .apiSecret(getMySocioSecret())
+        .callback(getMysocioRedirect())
+        .scope(getScope())
+        .build();
+		return service;
+	}
+
+	protected abstract Class<? extends Api> getApiClass();
 
 	protected String getMySocioSecret(){
 		return AuthenticationResourcesManager.getAuthenticationSecret(getUserIdentifier());
@@ -58,55 +67,24 @@ public abstract class AbstractOauth2Manager implements IAuthenticationManager {
 		return AuthenticationResourcesManager.getAuthenticationTokenUrl(getUserIdentifier());
 	}
 
-	protected abstract Account getAccount(String tokenResponce);
+	protected abstract Account getAccount(OAuthService service, Token accessToken) throws Exception;
 
 	protected abstract Logger getLogger();
 
-	@Override
 	public Account login(IConnectionData connectionData) throws Exception {
-		URL url = new URL(getTokenUrl());
-		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-		connection.setRequestMethod("POST");
-		connection.setRequestProperty("Content-Type", 
-		"application/x-www-form-urlencoded");
-	
 		String code = connectionData.getRequestParameter("code");
-		String urlParameters = "code=" + URLEncoder.encode(code , "UTF-8") +
-	    "&client_id=" + URLEncoder.encode(getMysocioId(), "UTF-8") +
-	    "&redirect_uri=" + URLEncoder.encode(getMysocioRedirect(), "UTF-8") + 
-	    "&client_secret=" + URLEncoder.encode(getMySocioSecret(), "UTF-8") + 
-	    "&grant_type=" + URLEncoder.encode("authorization_code", "UTF-8");
-		connection.setRequestProperty("Content-Length", "" + 
-				Integer.toString(urlParameters.getBytes().length));
-		connection.setRequestProperty("Content-Language", "en-US");  
-	
-		connection.setUseCaches (false);
-		connection.setDoInput(true);
-		connection.setDoOutput(true);
-	
-		//Send request
-		DataOutputStream wr = new DataOutputStream (
-				connection.getOutputStream ());
-		wr.writeBytes (urlParameters);
-		wr.flush ();
-		wr.close ();
-	
-		//Get Response	
-		InputStream is = connection.getInputStream();
-		BufferedReader rd = new BufferedReader(new InputStreamReader(is));
-		String line;
-		StringBuffer response = new StringBuffer(); 
-		while((line = rd.readLine()) != null) {
-			response.append(line);
-			response.append('\r');
-		}
-		rd.close();
-		String tokenResponce = response.toString();
-		getLogger().debug(tokenResponce);
-		if(connection != null) {
-			connection.disconnect(); 
-		}
-		return getAccount(tokenResponce);
+		Verifier verifier = new Verifier(code);
+		OAuthService service = getService();
+		Token accessToken = service.getAccessToken(null, verifier);
+		return getAccount(service, accessToken);
 	}
 
+//	private void addUrlParameter(StringBuffer parameters, String parameter,
+//			String value) throws UnsupportedEncodingException {
+//		parameters.append(parameter).append("=").append(URLEncoder.encode(value , "UTF-8")).append("&");
+//	}
+//	private void addLastUrlParameter(StringBuffer parameters, String parameter,
+//			String value) throws UnsupportedEncodingException {
+//		parameters.append(parameter).append("=").append(URLEncoder.encode(value , "UTF-8"));
+//	}
 }
