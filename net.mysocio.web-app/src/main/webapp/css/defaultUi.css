@@ -33,11 +33,15 @@ div.UserBox {
 }
 div.UserPic {
 	margin-left: 34px;
-	margin-right: 18px;
-	width: 54px;
-	height: 54px;
+	margin-right: 22px;
+	width: 50px;
+	height: 50px;
 	border: 3px solid #d1c2d4;
 	float: left;
+}
+img.Userpic {
+	width: 50px;
+	height: 50px;
 }
 div.UserName {
 	font: 14px Calibri;

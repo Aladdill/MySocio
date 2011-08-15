@@ -3,14 +3,9 @@ function openMessage(id){
 }
 
 function openUrlInDiv(divId, url, functions){
-	YUI().use("io-base", "node", function(Y) {
-		function complete(id, o, args) {
-			onSuccess(id, o, args, divId);
-		};
-		Y.on('io:success', complete, Y, functions);
-		Y.on('io:failure', onFailure, Y, []);
-		var request = Y.io(url);
-	});
+	var jqxhr = $.post(url).success(function(data) { $(divId).html(data); })
+	    .error(onFailure)
+	    .complete(functions);	
 }
 function resizeTabs(){
 	$("#accounts_tab_div").css("height",$("#accounts_tab_span").innerWidth() + 10);
@@ -48,32 +43,12 @@ function initSources(){
 	tree.loadXML("execute?command=getSources", function(){});
 	tree.attachEvent("onSelect", getMessages);
 }
-function commitLoginForm(){
-	YUI().use("io-form", function(Y) {
-		var cfg = {
-			method: "POST",
-			form: {
-				id: "LoginForm",
-				useDisabled: true
-			}
-		};
-		function complete(id, o, args) {
-			window.open(o.responseText,"name","height=500,width=500");
-		};
-		Y.on('io:success', complete, Y, []);
-		Y.on('io:failure', onFailure, Y, []);
-		var request = Y.io("login", cfg);
-	});
-}
-function onSuccess(transactionid, response, functions, divId) {
-	$(divId).html(response.responseText);
-	for (var x=0; x < functions.length; x++){
-		functions[x].call(this);
-	}
-}
-function login(identifier){
-	$("#identifier").attr("value",identifier);
-	commitLoginForm();
+function login(identifierValue){
+	var jqxhr = $.post("login",{
+		identifier : identifierValue,
+		email : "test@test.com"
+	}).success(function(data) { window.open(data,"name","height=500,width=500");})
+    .error(onFailure)
 }
 function hideTabs(){
 	hideDiv("tabs");
@@ -93,8 +68,7 @@ function hideDiv(id){
 function showDiv(id){
 	$("#"+id).css("display", "block");
 }
-function onFailure(transactionid, response, arguments) {
-	var data = response.responseText;
+function onFailure(data) {
 	window.alert(data);
 }
 function showSettings(){

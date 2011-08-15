@@ -25,6 +25,8 @@ public abstract class Account extends SocioObject{
 	private String accountUniqueId = new String();
 	@Persistent
 	private String userId = new String();
+	@Persistent
+	private String userpicUrl = new String();
 	
 
 	public String getUserId() {
@@ -51,5 +53,13 @@ public abstract class Account extends SocioObject{
 
 	public void setUserName(String userName) {
 		this.userName = userName;
+	}
+
+	public String getUserpicUrl() {
+		return userpicUrl;
+	}
+
+	public void setUserpicUrl(String userpicUrl) {
+		this.userpicUrl = userpicUrl;
 	}
 }

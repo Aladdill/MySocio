@@ -59,14 +59,15 @@ public class JdoDataManager extends AbstractDataManager {
 	public SocioUser getUser(Account account, Locale locale){
 		String userName = account.getUserName();
 		logger.debug("Getting user " + userName + " for " + account.getAccountType());
-		Account existingAccount = getUniqueObject(account.getClass(), "accountUniqueId == " + account.getAccountUniqueId());
+		Account existingAccount = getUniqueObject(account.getClass(), getEqualsExpression("accountUniqueId", account.getAccountUniqueId()));
 		if (existingAccount != null){
 			logger.debug("Account found");
-			return getUniqueObject(SocioUser.class, "id == " + account.getUserId());
+			return getUniqueObject(SocioUser.class, getEqualsExpression("id", existingAccount.getUserId()));
 		}
 		logger.debug("Creating user");
 		SocioUser user = new SocioUser();
 		user.setName(userName);
+		user.setUserpicUrl(account.getUserpicUrl());
 		user.setLocale(locale.getLanguage());
 		saveObject(account);
 		user.addAccount(account);
@@ -76,9 +77,13 @@ public class JdoDataManager extends AbstractDataManager {
 		logger.debug("User created");
 		return user;
 	}
+	
+	private String getEqualsExpression(String fieldName, String value){
+		return fieldName + " == \"" + value + "\"";
+	}
 
 	public IUiObject getUiObject(String category, String name){
-        return getUniqueObject(UiObject.class, "category == \"" + category + "\" and name == \"" + name + "\"");
+        return getUniqueObject(UiObject.class, getEqualsExpression("category", category) + " and " + getEqualsExpression("name",name));
 	}
 	
 	public<T> T getUniqueObject(Class T, String query){
@@ -208,7 +213,7 @@ public class JdoDataManager extends AbstractDataManager {
 	 * @see net.mysocio.data.management.IDataManager#saveSource(net.mysocio.connection.readers.ISource)
 	 */
 	public Source createSource(Source source){
-		return createUniqueObject(source.getClass(), "url == \"" + source.getUrl() + "\"", source);
+		return createUniqueObject(source.getClass(), getEqualsExpression("url", source.getUrl()), source);
 	}
 
 
@@ -228,7 +233,7 @@ public class JdoDataManager extends AbstractDataManager {
         try
         {
             tx.begin();
-            Query q=pm.newQuery(GeneralMessage.class, "sourceId == \"" + source.getId() + "\" and date > " + date);
+            Query q=pm.newQuery(GeneralMessage.class, getEqualsExpression("sourceId", source.getId()) + " and date > " + date);
             q.setOrdering("date ascending");
             messages = (List<IMessage>)q.execute();
             tx.commit();
@@ -280,7 +285,7 @@ public class JdoDataManager extends AbstractDataManager {
         try
         {
             tx.begin();
-            Query q=pm.newQuery(UserUiObjects.class, "userId == \"" + user.getId()+"\"");
+            Query q=pm.newQuery(UserUiObjects.class, getEqualsExpression("userId", user.getId()));
             q.setUnique(true);
             objects = (UserUiObjects)q.execute();
             tx.commit();
@@ -300,6 +305,6 @@ public class JdoDataManager extends AbstractDataManager {
 
 	@Override
 	public SocioTag createTag(SocioTag tag) {
-		return createUniqueObject(tag.getClass(), "value == \"" + tag.getValue() + "\"", tag);
+		return createUniqueObject(tag.getClass(), getEqualsExpression("value", tag.getValue()), tag);
 	}
 }

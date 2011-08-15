@@ -22,7 +22,9 @@ public class DefaultSiteBody extends SiteBody{
 		setName(NAME);
 		addTextLabel("link.settings");
 		addTextLabel("link.logout");
-		
+		addTextLabel("tab.account");
+		addTextLabel("tab.contacts");
+		addTextLabel("tab.rss.feeds");
 	}
 	@Override
 	public String getHtmlTemplate() {

@@ -12,6 +12,7 @@ import net.mysocio.authentication.UserIdentifier;
 import net.mysocio.data.IConnectionData;
 import net.mysocio.data.SocioUser;
 import net.mysocio.data.accounts.Account;
+import net.mysocio.data.accounts.FacebookAccount;
 import net.mysocio.data.management.ConnectionData;
 import net.mysocio.data.management.DataManagerFactory;
 import net.mysocio.ui.management.CommandExecutionException;
@@ -48,6 +49,9 @@ public class LoginHandler extends AbstractHandler {
 		DefaultResourcesManager.init(servletContext.getRealPath(""));
 		AuthenticationResourcesManager.init(servletContext.getRealPath(""));
 		String identifierString = connectionData.getRequestParameter("identifier");
+		if ("test".equals(identifierString)){
+			return handleTestRequest(connectionData);
+		}
 		if (identifierString != null){
 			UserIdentifier identifier = UserIdentifier.valueOf(identifierString);
 			if (identifier != null){
@@ -76,6 +80,16 @@ public class LoginHandler extends AbstractHandler {
 			responseString = DefaultResourcesManager.getPage("closingWindow.html");
 		}
 		return responseString;
+	}
+
+	private String handleTestRequest(IConnectionData connectionData) {
+		Account account = new FacebookAccount();
+		account.setAccountUniqueId("test@test.com");
+		account.setUserName("Vasya Pupkin");
+		account.setUserpicUrl("images/portrait.jpg");
+		SocioUser user = DataManagerFactory.getDataManager().getUser(account, connectionData.getLocale());
+		connectionData.setUser(user);
+		return "pages/closingWindow.html";
 	}
 
 	@Override

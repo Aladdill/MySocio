@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 
 import net.mysocio.data.IUiObject;
+import net.mysocio.ui.data.objects.SiteBody;
 import net.mysocio.ui.management.IUiManager;
 
 /**

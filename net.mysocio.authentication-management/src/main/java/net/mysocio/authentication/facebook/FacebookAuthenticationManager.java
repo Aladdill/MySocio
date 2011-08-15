@@ -76,6 +76,8 @@ public class FacebookAuthenticationManager extends AbstractOauth2Manager{
 				account.setAccountUniqueId(entry.getValue().getValueAsText());
 			}else if ("name".equals(entry.getKey())){
 				account.setUserName(entry.getValue().getValueAsText());
+			}else if ("username".equals(entry.getKey())){
+				account.setUserpicUrl("http://graph.facebook.com/" + entry.getValue().getValueAsText() + "/picture");
 			}
 		}
 	}
