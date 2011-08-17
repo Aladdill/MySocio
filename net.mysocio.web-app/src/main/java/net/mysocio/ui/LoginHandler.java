@@ -44,10 +44,6 @@ public class LoginHandler extends AbstractHandler {
 			HttpServletResponse response) throws CommandExecutionException {
 		IConnectionData connectionData = new ConnectionData(request);
 		String responseString = "";
-		//TODO move initialization to spring 
-		ServletContext servletContext = getServletContext();
-		DefaultResourcesManager.init(servletContext.getRealPath(""));
-		AuthenticationResourcesManager.init(servletContext.getRealPath(""));
 		String identifierString = connectionData.getRequestParameter("identifier");
 		if ("test".equals(identifierString)){
 			return handleTestRequest(connectionData);

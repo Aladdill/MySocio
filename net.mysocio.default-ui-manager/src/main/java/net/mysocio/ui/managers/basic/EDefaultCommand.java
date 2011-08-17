@@ -4,6 +4,7 @@ import net.mysocio.ui.data.objects.DefaultSiteBody;
 import net.mysocio.ui.data.objects.RssConnections;
 import net.mysocio.ui.executors.basic.AddRssFeedExecutor;
 import net.mysocio.ui.executors.basic.GetMessagesExecutor;
+import net.mysocio.ui.executors.basic.GetRssFeedsExecutor;
 import net.mysocio.ui.executors.basic.GetSourcesExecutor;
 import net.mysocio.ui.executors.basic.LoadPageExecutor;
 import net.mysocio.ui.executors.basic.LoginPageExecutor;

@@ -32,9 +32,6 @@ public class RequestHandler extends AbstractHandler {
 			throws CommandExecutionException {
 		String command = request.getParameter("command");
 		IConnectionData connectionData = new ConnectionData(request);
-		//TODO move initialization to spring 
-		ServletContext servletContext = getServletContext();
-		DefaultResourcesManager.init(servletContext.getRealPath(""));
 		ICommandInterpreter commandInterpreter = CommandIterpreterFactory.getCommandInterpreter(connectionData);
 		response.setContentType(commandInterpreter.getCommandResponseType(command));
 		return commandInterpreter.executeCommand(command);

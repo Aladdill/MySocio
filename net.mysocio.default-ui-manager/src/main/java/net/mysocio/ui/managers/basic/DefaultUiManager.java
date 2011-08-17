@@ -27,4 +27,13 @@ public class DefaultUiManager extends AbstractUiManager {
 	public String getLoginPage(Locale locale) {
 		return getUiObjectHtml(new DefaultLoginPage(), Collections.EMPTY_MAP, locale);
 	}
+	
+	@Override
+	public String getSourceIcon(Class<?> source){
+		return source.getName() + "-icon.jpg";
+	}
+
+	public String getTagIcon(String tag) {
+		return null;
+	}
 }

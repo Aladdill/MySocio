@@ -48,6 +48,19 @@ div.UserName {
 	color: #7d4089;
 	float: none;
 }
+div.Subsciptions {
+	font: 14px Calibri;
+	color: #00aeef;
+	margin-left: 34px;
+	margin-top: 35px;
+}
+div.SubsciptionsUnderline {
+	margin-left:34px;
+	margin-bottom: 9px;
+	height: 1px;
+	width: 182px;
+	background: #d1c2d4;
+}
 a.InnerLink {
 	font: 12px Calibri;
 	color: #525152;
@@ -190,10 +203,10 @@ tr.Footer {
 	padding: 0px;
 }
 div.SourcesBox {
-	position: absolute;
-	top: 286px;
-	left: 32px;
+	margin-left: 32px;
 	overflow: auto;
+	width: 150px;
+	height: 580px;
 }
 div.MessagesBox {
 	overflow: auto;

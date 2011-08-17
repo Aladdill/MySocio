@@ -39,16 +39,24 @@ import org.slf4j.LoggerFactory;
 public class JdoDataManager extends AbstractDataManager {
 	private static final Logger logger = LoggerFactory.getLogger(JdoDataManager.class);
 	private static PersistenceManager pm;
+	private static PersistenceManagerFactory pmf;
 	private static AbstractDataManager instance = new JdoDataManager();
 	
 	public static AbstractDataManager getInstance() {
 		if (pm == null){
 			// Create a PersistenceManagerFactory for this datastore
 			System.setProperty("sun.net.http.allowRestrictedHeaders", "true");
-	        PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory("transactions-optional");
+	        pmf = JDOHelper.getPersistenceManagerFactory("transactions-optional");
 	        pm = pmf.getPersistenceManager();
 		}
 		return instance;
+	}
+	
+	public static void closeDataConnection(){
+		if (pm != null){
+			pm.close();
+			pmf.close();
+		}
 	}
 	
 	private JdoDataManager(){}

@@ -8,6 +8,7 @@ import net.mysocio.data.SocioUser;
 import net.mysocio.ui.data.objects.SiteBody;
 import net.mysocio.ui.management.CommandExecutionException;
 import net.mysocio.ui.management.ICommandExecutor;
+import net.mysocio.ui.managers.basic.AbstractUiManager;
 import net.mysocio.ui.managers.basic.DefaultUiManager;
 
 /**
@@ -27,7 +28,7 @@ public class LoadPageExecutor implements ICommandExecutor {
 	 */
 	@Override
 	public String execute(IConnectionData connectionData) throws CommandExecutionException{
-		DefaultUiManager uiManager = new DefaultUiManager();
+		AbstractUiManager uiManager = new DefaultUiManager();
 		String pageHtml = uiManager.getPage(page,connectionData.getUser());
 		SocioUser user = connectionData.getUser();
 		pageHtml = pageHtml.replace("userpic.url", user.getUserpicUrl());

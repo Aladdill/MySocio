@@ -3,9 +3,10 @@
  */
 package net.mysocio.ui.executors.basic;
 
+import java.io.IOException;
+import java.io.StringWriter;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import net.mysocio.connection.readers.ISource;
 import net.mysocio.data.IConnectionData;
@@ -13,12 +14,18 @@ import net.mysocio.data.SocioUser;
 import net.mysocio.data.management.DataManagerFactory;
 import net.mysocio.ui.management.CommandExecutionException;
 import net.mysocio.ui.management.ICommandExecutor;
+import net.mysocio.ui.managers.basic.DefaultUiManager;
+
+import org.codehaus.jackson.JsonFactory;
+import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.JsonGenerator;
 
 /**
  * @author Aladdin
  *
  */
 public class GetSourcesExecutor implements ICommandExecutor {
+	private DefaultUiManager uiManager = new DefaultUiManager();
 	/* (non-Javadoc)
 	 * @see net.mysocio.ui.management.ICommandExecutor#execute(javax.servlet.http.HttpServletRequest)
 	 */
@@ -26,56 +33,87 @@ public class GetSourcesExecutor implements ICommandExecutor {
 	public String execute(IConnectionData connectionManager) throws CommandExecutionException{
 		SocioUser user = connectionManager.getUser();
 		DataManagerFactory.getDataManager().updateUnreaddenMessages(user);
-		StringBuffer out = new StringBuffer();
-		out.append("<?xml version='1.0' encoding='UTF-8'?>" +
-				"<tree id=\"0\">" +
-		"<item text=\""+SocioUser.ALL_SOURCES+"\" id=\""+ SocioUser.ALL_SOURCES+"\">");
-		addSourcesTree(user, out);
-		out.append("</item></tree>");
-		return out.toString();
+		JsonFactory f = new JsonFactory();
+		StringWriter writer = new StringWriter();
+		JsonGenerator jsonGenerator;
+		try {
+			jsonGenerator = f.createJsonGenerator(writer);
+			addRootNode(jsonGenerator, user);
+			jsonGenerator.flush();
+		} catch (Exception e) {
+			throw new CommandExecutionException(e);
+		}
+		return jsonGenerator.toString();
 	}
 
-	private void addSourcesTree(SocioUser user, StringBuffer output){
-		Map<String, List<ISource>> sortedSources = user.getSortedSources();
-		Set<String> keySet = sortedSources.keySet();
-		for (String key : keySet) {
-			List<ISource> sources = sortedSources.get(key);
-			Integer unreadMsg = 0;
-			StringBuffer sourcesBuffer = new StringBuffer();
-			for (ISource source : sources) {
-				sourcesBuffer.append("<item text=\"").append(stripNonValidXMLCharacters(source.getName()));
-				String id = source.getId();
-				Integer messagesNum = user.getUnreadMessagesNum(id);
-				String style = getReadenStyle();
-				if (messagesNum > 0){
-					style = getUnreadenStyle();
-					unreadMsg+=messagesNum;
-					sourcesBuffer.append("(").append(messagesNum).append(")");
-				}
-				sourcesBuffer.append("\" id=\"" + id +"\"").append(style).append("/>");
-			}
-			String messagesNum = new String();
-			String style = getReadenStyle();
-			if (unreadMsg > 0){
-				style = getUnreadenStyle();
-				messagesNum = "(" + unreadMsg + ")";
-			}
-			String folderName = key;
-			if (sources.size() == 1 && sources.get(0).getId().equals(key)){
-				output.append(sourcesBuffer);
-			}else{
-				output.append("<item text=\"").append(stripNonValidXMLCharacters(folderName)).append(messagesNum).append("\" id=\"" + key +"\"").append(style).append(">");
-				output.append(sourcesBuffer).append("</item>");
-			}
+	/**
+	 * @param jsonGenerator
+	 * @param name
+	 * @param id
+	 * @param icon
+	 * @param unreaden
+	 * @throws IOException
+	 * @throws JsonGenerationException
+	 */
+	private void addNodeData(JsonGenerator jsonGenerator, String name,
+			String id, String icon, int unreadMessagesNum) throws IOException,
+			JsonGenerationException {
+		jsonGenerator.writeObjectFieldStart("data");
+		if (unreadMessagesNum > 0){
+			jsonGenerator.writeObjectFieldStart("attr");
+			jsonGenerator.writeStringField("style", "font-weight: bold;");
+			jsonGenerator.writeEndObject();// for field 'data'
+			jsonGenerator.writeStringField("title", name + "(" + unreadMessagesNum + ")");
+		}else{
+			jsonGenerator.writeStringField("title", name);
+		}
+		jsonGenerator.writeEndObject();// for field 'data'
+		jsonGenerator.writeObjectFieldStart("metadata");
+		jsonGenerator.writeStringField("id", id);
+		jsonGenerator.writeEndObject(); // for field 'metadata'
+		if (icon != null){
+			jsonGenerator.writeStringField("icon", "images/" + icon);
 		}
 	}
-
-	private String getUnreadenStyle() {
-		return " style=\"font-weight: bold;\" ";
+	private void addRootNode(JsonGenerator jsonGenerator, SocioUser user) throws Exception{
+		jsonGenerator.writeStartObject();
+		int unreadMessagesNum = addNodeChildren(jsonGenerator, user.getSortedSources(), user);
+		addNodeData(jsonGenerator, SocioUser.ALL_SOURCES, SocioUser.ALL_SOURCES, null, unreadMessagesNum );
+		jsonGenerator.writeEndObject();
 	}
-
-	private String getReadenStyle() {
-		return "";
+	
+	private int addTagNode(JsonGenerator jsonGenerator, String tag, List<ISource> sources, SocioUser user) throws Exception{
+		jsonGenerator.writeStartObject();
+		int unreadMessagesNum = addNodeChildren(jsonGenerator, sources, user);
+		addNodeData(jsonGenerator, tag, "tag_" + tag, uiManager.getTagIcon(tag), unreadMessagesNum );
+		jsonGenerator.writeEndObject();
+		return unreadMessagesNum;
+	}
+	private int addSourceNode(JsonGenerator jsonGenerator, ISource source, SocioUser user) throws Exception{
+		jsonGenerator.writeStartObject();
+		Integer unreadMessagesNum = user.getUnreadMessagesNum(source.getId());
+		addNodeData(jsonGenerator, source.getName(), source.getId(), uiManager.getSourceIcon(source.getClass()), unreadMessagesNum);
+		jsonGenerator.writeEndObject();
+		return unreadMessagesNum;
+	}
+	
+	private int addNodeChildren(JsonGenerator jsonGenerator, List<ISource> sources, SocioUser user) throws Exception{
+		jsonGenerator.writeArrayFieldStart("children");
+		Integer unreadMessagesNum = 0;
+		for (ISource source : sources) {
+			unreadMessagesNum += addSourceNode(jsonGenerator, source, user);
+		}
+		jsonGenerator.writeEndArray(); // for field 'children'
+		return unreadMessagesNum;
+	}
+	private int addNodeChildren(JsonGenerator jsonGenerator, Map<String, List<ISource>> sortedSources, SocioUser user) throws Exception{
+		jsonGenerator.writeArrayFieldStart("children");
+		Integer unreadMessagesNum = 0;
+		for (String tag : sortedSources.keySet()) {
+			unreadMessagesNum += addTagNode(jsonGenerator, tag, sortedSources.get(tag), user);
+		}
+		jsonGenerator.writeEndArray(); // for field 'children'
+		return unreadMessagesNum;
 	}
 
 	/**

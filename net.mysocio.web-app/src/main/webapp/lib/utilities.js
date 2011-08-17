@@ -3,7 +3,7 @@ function openMessage(id){
 }
 
 function openUrlInDiv(divId, url, functions){
-	var jqxhr = $.post(url).success(function(data) { $(divId).html(data); })
+	$.post(url).success(function(data) { $(divId).html(data); })
 	    .error(onFailure)
 	    .complete(functions);	
 }
@@ -24,31 +24,24 @@ function centerLoginCircle(){
 	$("#promo_div").css("left",$("#promo_cell").innerWidth()/2 - $("#promo_div").innerWidth()/2);
 }
 function initSources(){
-	var messageContainer = $("#data_container");
-	messageContainer.css("height",$("body").innerHeight() - 81);
-	$("#filler").css("height",messageContainer.innerHeight() - 10);
-    messageContainer.scroll(function () {
-    	var previous = 0;
-    	$.each($("#data_container").find("div"), function(index, value) {
-    		var message = $("#" + value.id);
-    		var current = message.position().top - 48;
-    		if ((previous < 0 && current >= 0 && value.id != "filler") || (current == 0 && index ==0)){
-    			message.css("border","3px solid #7d4089");
-    	}else{message.css("border","none");}
-    		previous = message.position().top - 48;
-	});
-	});
-	var tree = new dhtmlXTreeObject("sources_tree","100%","100%",0);
-	tree.setImagePath("lib/dhtmlxTree/codebase/imgs/");
-	tree.loadXML("execute?command=getSources", function(){});
-	tree.attachEvent("onSelect", getMessages);
+	$.jstree._themes = "../treeThemes";
+    $.post("execute?command=getSources").success(function(data) { $("#sources_tree")
+    	.jstree({
+    		"json_data" : {"data" : [data]},
+			"themes" : {"theme" : "default", "dots" : false, "icons" : true},
+    		"plugins" : ["themes","json_data","ui","crrm"],
+    		"core" : { "initially_open" : [ "All" ]}
+    	})
+    	.bind("loaded.jstree", function (event, data) {
+    	}).bind("select_node.jstree", function (e, data) { getMessages(jQuery.data(data.rslt.obj[0], "id")); }); })
+    .error(onFailure);
 }
 function login(identifierValue){
-	var jqxhr = $.post("login",{
+	$.post("login",{
 		identifier : identifierValue,
 		email : "test@test.com"
 	}).success(function(data) { window.open(data,"name","height=500,width=500");})
-    .error(onFailure)
+    .error(onFailure);
 }
 function hideTabs(){
 	hideDiv("tabs");
@@ -79,8 +72,25 @@ function showSettings(){
 function showMainPage(){
 	hideTabs();
 	resizeTabs();
+	initMessagesContainer();
 	showSources();
 	initSources();
+}
+function initMessagesContainer(){
+	var messageContainer = $("#data_container");
+	messageContainer.css("height",$("body").innerHeight() - 81);
+	$("#filler").css("height",messageContainer.innerHeight() - 10);
+    messageContainer.scroll(function () {
+    	var previous = 0;
+    	$.each($("#data_container").find("div"), function(index, value) {
+    		var message = $("#" + value.id);
+    		var current = message.position().top - 48;
+    		if ((previous < 0 && current >= 0 && value.id != "filler") || (current == 0 && index ==0)){
+    			message.css("border","3px solid #7d4089");
+    	}else{message.css("border","none");}
+    		previous = message.position().top - 48;
+	});
+	});
 }
 function loadMainPage(){
 	openUrlInDiv("#SiteBody", "execute?command=openMainPage",[showMainPage]);

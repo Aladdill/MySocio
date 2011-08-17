@@ -13,6 +13,7 @@ import net.mysocio.sources.rss.RssSource;
 import net.mysocio.ui.data.objects.RssConnections;
 import net.mysocio.ui.management.CommandExecutionException;
 import net.mysocio.ui.management.ICommandExecutor;
+import net.mysocio.ui.managers.basic.AbstractUiManager;
 import net.mysocio.ui.managers.basic.DefaultUiManager;
 
 import org.slf4j.Logger;
@@ -50,7 +51,7 @@ public class AddRssFeedExecutor implements ICommandExecutor {
 		SocioUser user = connectionData.getUser();
 		user.addSource(source);
 		dataManager.saveObject(user);
-		DefaultUiManager uiManager = new DefaultUiManager();
+		AbstractUiManager uiManager = new DefaultUiManager();
 		return uiManager.getPage(new RssConnections(),user);
 	}
 }
