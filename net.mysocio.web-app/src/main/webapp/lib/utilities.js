@@ -24,17 +24,17 @@ function centerLoginCircle(){
 	$("#promo_div").css("left",$("#promo_cell").innerWidth()/2 - $("#promo_div").innerWidth()/2);
 }
 function initSources(){
-	$.jstree._themes = "../treeThemes";
-    $.post("execute?command=getSources").success(function(data) { $("#sources_tree")
-    	.jstree({
-    		"json_data" : {"data" : [data]},
-			"themes" : {"theme" : "default", "dots" : false, "icons" : true},
-    		"plugins" : ["themes","json_data","ui","crrm"],
-    		"core" : { "initially_open" : [ "All" ]}
-    	})
-    	.bind("loaded.jstree", function (event, data) {
-    	}).bind("select_node.jstree", function (e, data) { getMessages(jQuery.data(data.rslt.obj[0], "id")); }); })
+    $.post("execute?command=getSources",{},initSourcesData,"json")
     .error(onFailure);
+}
+function initSourcesData(data) { 
+		$("#sources_tree").jstree({
+		"json_data" : {"data" : [data]},
+		"themes" : {"theme" : "default", "dots" : false, "icons" : true},
+		"plugins" : ["themes","json_data","ui","crrm"],
+		"core" : { "initially_open" : [ "All" ]}})
+    	.bind("loaded.jstree", function (event, data) {
+    	}).bind("select_node.jstree", function (e, data) { getMessages(jQuery.data(data.rslt.obj[0], "id")); });
 }
 function login(identifierValue){
 	$.post("login",{
@@ -62,7 +62,7 @@ function showDiv(id){
 	$("#"+id).css("display", "block");
 }
 function onFailure(data) {
-	window.alert(data);
+	window.alert(data.responseText);
 }
 function showSettings(){
 	hideSources();

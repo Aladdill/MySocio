@@ -1,10 +1,11 @@
 /**
  * 
  */
-package net.mysocio.data;
+package net.mysocio.data.contacts;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.Inheritance;
@@ -15,6 +16,7 @@ import javax.jdo.annotations.Persistent;
 
 import net.mysocio.connection.readers.ISource;
 import net.mysocio.connection.writers.IDestination;
+import net.mysocio.data.NamedObject;
 
 /**
  * @author Aladdin
@@ -29,10 +31,10 @@ public abstract class Contact extends NamedObject implements IContact {
 	private static final long serialVersionUID = 8721056150291879634L;
 	@Join
 	@Persistent
-	private List<ISource> sources = new ArrayList<ISource>();
+	private Set<ISource> sources = new HashSet<ISource>();
 	@Join
 	@Persistent
-	private List<IDestination> destinations = new ArrayList<IDestination>();
+	private Set<IDestination> destinations = new HashSet<IDestination>();
 	@Persistent
 	private String userpicUrl =  new String();
 	
@@ -52,11 +54,11 @@ public abstract class Contact extends NamedObject implements IContact {
 		this.sources.addAll(sources);		
 	}
 
-	public List<ISource> getSources() {
+	public Set<ISource> getSources() {
 		return this.sources;
 	}
 	
-	public List<IDestination> getDestinations() {
+	public Set<IDestination> getDestinations() {
 		return destinations;
 	}
 	

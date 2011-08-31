@@ -6,6 +6,9 @@ package net.mysocio.data;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
 
+import net.mysocio.data.contacts.Contact;
+import net.mysocio.data.contacts.IContact;
+
 
 
 /**

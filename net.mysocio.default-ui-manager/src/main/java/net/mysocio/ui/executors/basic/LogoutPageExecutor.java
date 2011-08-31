@@ -13,7 +13,7 @@ import net.mysocio.ui.managers.basic.DefaultUiManager;
  * @author Aladdin
  *
  */
-public class logoutPageExecutor implements ICommandExecutor {
+public class LogoutPageExecutor implements ICommandExecutor {
 
 	@Override
 	public String execute(IConnectionData connectionData)

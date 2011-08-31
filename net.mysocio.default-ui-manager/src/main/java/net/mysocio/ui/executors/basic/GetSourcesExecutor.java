@@ -5,8 +5,8 @@ package net.mysocio.ui.executors.basic;
 
 import java.io.IOException;
 import java.io.StringWriter;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import net.mysocio.connection.readers.ISource;
 import net.mysocio.data.IConnectionData;
@@ -43,7 +43,7 @@ public class GetSourcesExecutor implements ICommandExecutor {
 		} catch (Exception e) {
 			throw new CommandExecutionException(e);
 		}
-		return jsonGenerator.toString();
+		return writer.toString();
 	}
 
 	/**
@@ -82,7 +82,7 @@ public class GetSourcesExecutor implements ICommandExecutor {
 		jsonGenerator.writeEndObject();
 	}
 	
-	private int addTagNode(JsonGenerator jsonGenerator, String tag, List<ISource> sources, SocioUser user) throws Exception{
+	private int addTagNode(JsonGenerator jsonGenerator, String tag, Set<ISource> sources, SocioUser user) throws Exception{
 		jsonGenerator.writeStartObject();
 		int unreadMessagesNum = addNodeChildren(jsonGenerator, sources, user);
 		addNodeData(jsonGenerator, tag, "tag_" + tag, uiManager.getTagIcon(tag), unreadMessagesNum );
@@ -97,7 +97,7 @@ public class GetSourcesExecutor implements ICommandExecutor {
 		return unreadMessagesNum;
 	}
 	
-	private int addNodeChildren(JsonGenerator jsonGenerator, List<ISource> sources, SocioUser user) throws Exception{
+	private int addNodeChildren(JsonGenerator jsonGenerator, Set<ISource> sources, SocioUser user) throws Exception{
 		jsonGenerator.writeArrayFieldStart("children");
 		Integer unreadMessagesNum = 0;
 		for (ISource source : sources) {
@@ -106,7 +106,7 @@ public class GetSourcesExecutor implements ICommandExecutor {
 		jsonGenerator.writeEndArray(); // for field 'children'
 		return unreadMessagesNum;
 	}
-	private int addNodeChildren(JsonGenerator jsonGenerator, Map<String, List<ISource>> sortedSources, SocioUser user) throws Exception{
+	private int addNodeChildren(JsonGenerator jsonGenerator, Map<String, Set<ISource>> sortedSources, SocioUser user) throws Exception{
 		jsonGenerator.writeArrayFieldStart("children");
 		Integer unreadMessagesNum = 0;
 		for (String tag : sortedSources.keySet()) {

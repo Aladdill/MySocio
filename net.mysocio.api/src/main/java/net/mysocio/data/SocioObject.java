@@ -3,14 +3,14 @@
  */
 package net.mysocio.data;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
+import java.util.Set;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.InheritanceStrategy;
-import javax.jdo.annotations.Join;
+import javax.jdo.annotations.NotPersistent;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 
@@ -22,16 +22,15 @@ import javax.jdo.annotations.Persistent;
  */
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable="true")
 @Inheritance(strategy=InheritanceStrategy.SUBCLASS_TABLE)
-public class SocioObject implements ISocioObject{
+public abstract class SocioObject implements ISocioObject{
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1428112468244972968L;
 	@Persistent(valueStrategy = IdGeneratorStrategy.UUIDHEX, primaryKey="true")
 	protected String id;
-	@Join
-	@Persistent(types={SocioTag.class},mappedBy = "value")
-	private List<SocioTag> tags = new ArrayList<SocioTag>();
+	@NotPersistent
+	private SocioObjectTags tags = new SocioObjectTags();
 	
 	/**
 	 * @param id the id to set
@@ -44,15 +43,28 @@ public class SocioObject implements ISocioObject{
 		return id;
 	}
 
-	public List<SocioTag> getTags() {
-		return tags;
+	public Set<SocioTag> getTags() {
+		if (tags == null){
+			return Collections.emptySet();
+		}
+		return tags.getTags();
 	}
 
-	public void setTags(List<SocioTag> tags) {
+	public void setTags(SocioObjectTags tags) {
 		this.tags = tags;
 	}
 
 	public void addTag(SocioTag tag) {
 		this.tags.add(tag);
+	}
+
+	@Override
+	public int hashCode() {
+		return getId().hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		return getId().equals(((SocioObject)obj).getId());
 	}
 }

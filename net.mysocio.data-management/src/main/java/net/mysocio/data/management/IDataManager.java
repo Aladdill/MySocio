@@ -6,6 +6,7 @@ package net.mysocio.data.management;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import net.mysocio.connection.readers.ISource;
 import net.mysocio.connection.readers.Source;
@@ -14,6 +15,7 @@ import net.mysocio.data.IUiObject;
 import net.mysocio.data.SocioTag;
 import net.mysocio.data.SocioUser;
 import net.mysocio.data.accounts.Account;
+import net.mysocio.data.messages.GeneralMessage;
 import net.mysocio.data.messages.IMessage;
 
 /**
@@ -22,27 +24,29 @@ import net.mysocio.data.messages.IMessage;
  */
 public interface IDataManager {
 
-	public abstract void saveObjects(List<? extends ISocioObject> objects);
+	public void saveObjects(List<? extends Object> objects);
 
-	public abstract void saveObject(ISocioObject object);
+	public void saveObject(Object object);
 	
-	public abstract void deleteObject(ISocioObject object);
+	public void deleteObject(Object object);
 
-	public abstract void addUnreadMessages(SocioUser user, String sourceId, List<IMessage> messages);
+	public SocioUser getUser(Account account, Locale locale);
 
-	public abstract List<IMessage> getMessages(ISource source, Long date);
+	public Map<String, IUiObject> getUserUiObjects(SocioUser user);
 
-	public abstract SocioUser getUser(Account account, Locale locale);
-
-	public abstract Map<String, IUiObject> getUserUiObjects(SocioUser user);
-
-	public abstract Source createSource(Source source);
+	public Source createSource(Source source, SocioUser user);
 	
-	public<T> List<T> getObjects(Class T);
+	public GeneralMessage createMessage(GeneralMessage message);
+	
+	public<T extends ISocioObject> List<T> getObjects(Class<?> T, SocioUser user);
 
-	public abstract SocioTag createTag(SocioTag tag);
+	public SocioTag createTag(SocioTag tag, SocioUser user);
 
-	public abstract void updateUnreaddenMessages(SocioUser user);
+	public void updateUnreaddenMessages(SocioUser user);
 
-	public abstract List<IMessage> getMessages(List<ISource> sources, Long date);
+	public Set<IMessage> getMessages(Set<ISource> sources, SocioUser user);
+
+	public<T extends Object> List<T> getObjectsWithoutTags(Class<?> T);
+
+	public<T extends Object> T getUniqueObjectWithoutTags(Class<?> T, String query);
 }

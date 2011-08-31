@@ -1,27 +1,26 @@
 /**
  * 
  */
-package net.mysocio.sources.rss;
+package net.mysocio.connection.readers;
 
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
 
-import net.mysocio.connection.readers.Source;
-import net.mysocio.data.rss.RssMessage;
+import net.mysocio.data.messages.FacebookMessage;
 
 /**
  * @author Aladdin
  *
  */
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable="true")
-public class RssSource extends Source {
+public class FacebookSource extends Source {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -3623303809928356829L;
+	private static final long serialVersionUID = 4679653964230964105L;
 
 	public Class<?> getMessageClass() {
-		return RssMessage.class;
+		return FacebookMessage.class;
 	}
 }

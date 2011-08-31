@@ -1,6 +1,5 @@
 package net.mysocio.ui;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -9,7 +8,6 @@ import net.mysocio.data.management.ConnectionData;
 import net.mysocio.ui.management.CommandExecutionException;
 import net.mysocio.ui.management.CommandIterpreterFactory;
 import net.mysocio.ui.management.ICommandInterpreter;
-import net.mysocio.ui.managers.basic.DefaultResourcesManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

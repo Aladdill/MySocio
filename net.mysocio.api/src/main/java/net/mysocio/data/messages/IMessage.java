@@ -29,7 +29,7 @@ public interface IMessage extends ISocioObject {
 
 	public abstract String getTitle();
 	
-	public abstract Long getDate();
+	public abstract long getDate();
 	
-	public void setDate(Long date);
+	public void setDate(long date);
 }

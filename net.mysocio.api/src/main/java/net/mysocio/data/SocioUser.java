@@ -3,18 +3,19 @@
  */
 package net.mysocio.data;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
-import javax.jdo.annotations.Join;
 import javax.jdo.annotations.NotPersistent;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 
 import net.mysocio.connection.readers.ISource;
 import net.mysocio.data.accounts.Account;
+import net.mysocio.data.contacts.Contact;
+import net.mysocio.data.contacts.IContact;
 import net.mysocio.data.messages.IMessage;
 
 /**
@@ -28,19 +29,19 @@ public class SocioUser extends Contact implements IUser {
 	 * 
 	 */
 	private static final long serialVersionUID = -2886854604233072581L;
-	@Join
     @Persistent
-	private Map<String, List<IMessage>> unreadMessages = new HashMap<String, List<IMessage>>();
-	@Join
-	@Persistent(types={Account.class},mappedBy = "id")
-	private List<Account> accounts = new ArrayList<Account>();
-	@Join
-	@Persistent(types={SocioContact.class},mappedBy = "id")
-	private List<IContact> contacts = new ArrayList<IContact>();
-	@NotPersistent
-	private Map<String, List<ISource>> sortedSources;
+	private Map<String, Set<IMessage>> unreadMessages = new HashMap<String, Set<IMessage>>();
+	@Persistent
+	private Set<Account> accounts = new HashSet<Account>();
+	@Persistent
+	private Set<IContact> contacts = new HashSet<IContact>();
+	@Persistent
+	private Map<String, SocioTag> userTags = new HashMap<String, SocioTag>();
 	@Persistent
 	private Long lastUpdate = 0l;
+	@NotPersistent
+	private Map<String, Set<ISource>> sortedSources;
+	
 	public Long getLastUpdate() {
 		return lastUpdate;
 	}
@@ -63,15 +64,15 @@ public class SocioUser extends Contact implements IUser {
 	/**
 	 * @return the sortedSources
 	 */
-	public Map<String, List<ISource>> getSortedSources() {
+	public Map<String, Set<ISource>> getSortedSources() {
 		if (sortedSources == null){
-			sortedSources = new HashMap<String, List<ISource>>();
+			sortedSources = new HashMap<String, Set<ISource>>();
 			sortedSources = initSortedSources();
 		}
 		return sortedSources;
 	}
 
-	private Map<String, List<ISource>> initSortedSources() {
+	private Map<String, Set<ISource>> initSortedSources() {
 		for (ISource source : getSources()) {
 			addSourceToSortedSources(source);
 		}
@@ -82,32 +83,27 @@ public class SocioUser extends Contact implements IUser {
 	 * @param source
 	 */
 	private void addSourceToSortedSources(ISource source) {
-		List<SocioTag> tags = source.getTags();
+		Set<SocioTag> tags = source.getTags();
 		for (SocioTag tag : tags) {
-			List<ISource> sources = sortedSources.get(tag);
+			Set<ISource> sources = sortedSources.get(tag);
 			if (sources == null){
-				sources = new ArrayList<ISource>();
+				sources = new HashSet<ISource>();
 				sortedSources.put(tag.getValue(), sources);
 			}
 			sources.add(source);
-		}
-		if (tags.isEmpty()){
-			List<ISource> sources = new ArrayList<ISource>();
-			sources.add(source);
-			sortedSources.put(source.getId(), sources);
 		}
 	}
 
 	private String locale;
 	
-	public List<IContact> getContacts(){
+	public Set<IContact> getContacts(){
 		return contacts;
 	}
 
-	public List<IMessage> getUnreadMessages(List<ISource> sources){
-		List<IMessage> unreaddenMessages = new ArrayList<IMessage>();
+	public Set<IMessage> getUnreadMessages(Set<ISource> sources){
+		Set<IMessage> unreaddenMessages = new HashSet<IMessage>();
 		for (ISource source : sources) {
-			List<IMessage> messages = this.unreadMessages.get(source.getId());
+			Set<IMessage> messages = this.unreadMessages.get(source.getId());
 			if (messages != null){
 				unreaddenMessages.addAll(messages);
 			}
@@ -116,17 +112,17 @@ public class SocioUser extends Contact implements IUser {
 	}
 	
 	public Integer getUnreadMessagesNum(String id){
-		List<IMessage> messages = this.unreadMessages.get(id);
+		Set<IMessage> messages = this.unreadMessages.get(id);
 		if (messages == null || messages.isEmpty()){
 			return 0;
 		}
 		return messages.size();
 	}
 	
-	public void addUnreadMessages(String sourceId, List<IMessage> messages){
-		List<IMessage> list = unreadMessages.get(sourceId);
+	public void addUnreadMessages(String sourceId, Set<IMessage> messages){
+		Set<IMessage> list = unreadMessages.get(sourceId);
 		if (list == null){
-			list = new ArrayList<IMessage>();
+			list = new HashSet<IMessage>();
 		}
 		list.addAll(messages);
 		unreadMessages.put(sourceId, list);
@@ -134,9 +130,9 @@ public class SocioUser extends Contact implements IUser {
 	
 	public void addUnreadMessage(IMessage message){
 		String sourceId = message.getSourceId();
-		List<IMessage> list = unreadMessages.get(sourceId);
+		Set<IMessage> list = unreadMessages.get(sourceId);
 		if (list == null){
-			list = new ArrayList<IMessage>();
+			list = new HashSet<IMessage>();
 		}
 		list.add(message);
 		unreadMessages.put(sourceId, list);
@@ -144,7 +140,7 @@ public class SocioUser extends Contact implements IUser {
 	
 	public void setMessageReadden(IMessage message) throws CorruptedDataException{
 		String sourceId = message.getSourceId();
-		List<IMessage> list = unreadMessages.get(sourceId);
+		Set<IMessage> list = unreadMessages.get(sourceId);
 		if (list == null){
 			throw new CorruptedDataException();
 		}
@@ -154,14 +150,14 @@ public class SocioUser extends Contact implements IUser {
 	/**
 	 * @return the accounts
 	 */
-	public List<Account> getAccounts() {
+	public Set<Account> getAccounts() {
 		return accounts;
 	}
 
 	/**
 	 * @param accounts the accounts to set
 	 */
-	public void setAccounts(List<Account> accounts) {
+	public void setAccounts(Set<Account> accounts) {
 		this.accounts = accounts;
 	}
 	
@@ -172,14 +168,14 @@ public class SocioUser extends Contact implements IUser {
 	/**
 	 * @param contacts the contacts to set
 	 */
-	public void setContacts(List<IContact> contacts) {
+	public void setContacts(Set<IContact> contacts) {
 		this.contacts = contacts;
 	}
 	public void addContact(IContact contact) {
 		this.contacts.add(contact);
 	}
 
-	public List<IMessage> getAllUnreadMessages() {
+	public Set<IMessage> getAllUnreadMessages() {
 		return getUnreadMessages(getSources());
 	}
 
@@ -191,11 +187,23 @@ public class SocioUser extends Contact implements IUser {
 		this.locale = locale;
 	}
 
-	public List<IMessage> getUnreadMessages() {
+	public Set<IMessage> getUnreadMessages() {
 		if (selectedSource.equalsIgnoreCase(SocioUser.ALL_SOURCES)){
 			return getAllUnreadMessages();
 		}
 		
 		return getUnreadMessages(getSortedSources().get(selectedSource));
+	}
+
+	public Map<String, SocioTag> getUserTags() {
+		return userTags;
+	}
+	
+	public SocioTag getTag(String value) {
+		return userTags.get(value);
+	}
+	
+	public void addTag(SocioTag tag){
+		userTags.put(tag.getValue(), tag);
 	}
 }

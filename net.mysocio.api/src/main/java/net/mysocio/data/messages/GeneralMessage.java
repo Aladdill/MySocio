@@ -6,7 +6,8 @@ package net.mysocio.data.messages;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.Inheritance;
+import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 
@@ -18,7 +19,8 @@ import net.mysocio.data.SocioObject;
  * @author Aladdin
  *
  */
-@PersistenceCapable(identityType = IdentityType.APPLICATION, detachable="true")
+@PersistenceCapable
+@Inheritance(strategy=InheritanceStrategy.SUBCLASS_TABLE)
 public abstract class GeneralMessage extends SocioObject implements IMessage{
 	/**
 	 * 
@@ -33,13 +35,13 @@ public abstract class GeneralMessage extends SocioObject implements IMessage{
 	@Persistent
 	private String sourceId =  new String();
 	
-	private Long date;
+	private long date;
 
-	public Long getDate() {
+	public long getDate() {
 		return date;
 	}
 
-	public void setDate(Long date) {
+	public void setDate(long date) {
 		this.date = date;
 	}
 

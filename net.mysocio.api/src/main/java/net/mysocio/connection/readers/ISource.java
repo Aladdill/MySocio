@@ -13,4 +13,6 @@ public interface ISource extends ISocioObject{
 	public String getName();
 
 	public abstract String getUrl();
+
+	public Class getMessageClass();
 }

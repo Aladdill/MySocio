@@ -8,18 +8,19 @@ import net.mysocio.ui.executors.basic.GetRssFeedsExecutor;
 import net.mysocio.ui.executors.basic.GetSourcesExecutor;
 import net.mysocio.ui.executors.basic.LoadPageExecutor;
 import net.mysocio.ui.executors.basic.LoginPageExecutor;
+import net.mysocio.ui.executors.basic.LogoutPageExecutor;
 import net.mysocio.ui.management.ICommandExecutor;
 
 
 public enum EDefaultCommand {
 	getMessages(new GetMessagesExecutor()),
 	openStartPage(new LoginPageExecutor()),
-	logout(new LoginPageExecutor()),
+	logout(new LogoutPageExecutor()),
 	openMainPage(new LoadPageExecutor(new DefaultSiteBody())),
 	openSettings(new LoadPageExecutor(new RssConnections())),
 	addRssFeed(new AddRssFeedExecutor()),
 	getRssFeeds(new GetRssFeedsExecutor()),
-	getSources(new GetSourcesExecutor(), DefaultCommandIterpreter.TEXT_XML);
+	getSources(new GetSourcesExecutor(), DefaultCommandIterpreter.JSON);
 	private ICommandExecutor executor;
 	private String responseType = DefaultCommandIterpreter.TEXT_HTML;
 	private EDefaultCommand(ICommandExecutor executor){

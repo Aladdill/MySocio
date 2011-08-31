@@ -4,7 +4,7 @@
 package net.mysocio.ui.executors.basic;
 
 import java.util.Collections;
-import java.util.List;
+import java.util.Set;
 
 import net.mysocio.data.IConnectionData;
 import net.mysocio.data.SocioUser;
@@ -24,17 +24,17 @@ public class GetMessagesExecutor implements ICommandExecutor {
 	@Override
 	public String execute(IConnectionData connectionData) throws CommandExecutionException{
 		StringBuffer output = new StringBuffer();
-		List<? extends IMessage> messages = getMessages(connectionData);
+		Set<? extends IMessage> messages = getMessages(connectionData);
 		for (IMessage message : messages) {
 			output.append(wrapMessage(message.getId(), message.getTitle(), message.getLink(), message.getText()));
 		}
 		return output.toString();
 	}
 	
-	private static List<IMessage> getMessages(IConnectionData connectionData) {
+	private static Set<IMessage> getMessages(IConnectionData connectionData) {
 		String id = connectionData.getRequestParameter("sourceId");
 		if (id == null){
-			return Collections.emptyList();
+			return Collections.emptySet();
 		}
 		SocioUser user = connectionData.getUser();
 		user.setSelectedSource(id);

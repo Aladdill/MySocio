@@ -11,9 +11,9 @@ import java.util.Map;
 import java.util.Set;
 
 import net.mysocio.connection.readers.lj.LjSource;
-import net.mysocio.data.IContact;
 import net.mysocio.data.SocioContact;
 import net.mysocio.data.SocioTag;
+import net.mysocio.data.contacts.IContact;
 
 import org.katkov.lj.ClientsFactory;
 import org.katkov.lj.ConvenientClient;
@@ -39,7 +39,7 @@ public class LJDataReader {
 			int groupmask = friend.getGroupmask();
 			LjSource source = new LjSource(friend.getUsername(), friend.getFullname(), groupmask);
 			this.friends.add(source);
-			DataManagerFactory.getDataManager().createSource(source);
+//			DataManagerFactory.getDataManager().createSource(source);
 		}
 		this.friendgroups = login.getFriendgroups();
 		tagSources();
@@ -58,12 +58,12 @@ public class LJDataReader {
 		return contacts;
 	}
 	private void tagSources(){
-		Map<Integer, SocioTag> tags = new HashMap<Integer, SocioTag>();
+/*		Map<Integer, SocioTag> tags = new HashMap<Integer, SocioTag>();
 		//Get user friends groups
 		for (FriendGroup group : this.friendgroups){
 			Integer lgGroupMask = 1 << group.getId();
 			SocioTag tag = new SocioTag();
-			tag.setValue(group.getName());
+			tag.setName(group.getName());
 			tag = DataManagerFactory.getDataManager().createTag(tag);
 			tags.put(lgGroupMask, tag);
 		}
@@ -76,6 +76,6 @@ public class LJDataReader {
 				}
 			}
 			DataManagerFactory.getDataManager().saveObject(source);
-		}
+		}*/
 	}
 }

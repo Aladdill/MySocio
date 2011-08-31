@@ -18,6 +18,7 @@ public class DefaultCommandIterpreter implements ICommandInterpreter{
 	private static final Logger logger = LoggerFactory.getLogger(DefaultCommandIterpreter.class);
 	public static final String TEXT_XML = "text/xml";
 	public static final String TEXT_HTML = "text/html";
+	public static final String JSON = "json";
 	private IConnectionData connectionData;
 	
 	public DefaultCommandIterpreter(IConnectionData connectionData) {

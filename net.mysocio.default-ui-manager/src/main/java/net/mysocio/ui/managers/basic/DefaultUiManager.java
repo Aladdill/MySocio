@@ -30,7 +30,7 @@ public class DefaultUiManager extends AbstractUiManager {
 	
 	@Override
 	public String getSourceIcon(Class<?> source){
-		return source.getName() + "-icon.jpg";
+		return source.getSimpleName() + "-icon.jpg";
 	}
 
 	public String getTagIcon(String tag) {

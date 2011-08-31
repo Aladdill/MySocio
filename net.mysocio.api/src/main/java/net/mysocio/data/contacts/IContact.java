@@ -1,9 +1,10 @@
 /**
  * 
  */
-package net.mysocio.data;
+package net.mysocio.data.contacts;
 
 import net.mysocio.connection.writers.IDestination;
+import net.mysocio.data.INamedObject;
 
 /**
  * @author Aladdin

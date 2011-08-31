@@ -3,6 +3,8 @@
  */
 package net.mysocio.data;
 
+import net.mysocio.data.contacts.IContact;
+
 
 
 /**

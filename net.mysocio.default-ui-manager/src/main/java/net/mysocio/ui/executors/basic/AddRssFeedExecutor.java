@@ -47,8 +47,8 @@ public class AddRssFeedExecutor implements ICommandExecutor {
 		source.setUrl(url);
 		source.setName(feed.getTitle());
 		IDataManager dataManager = DataManagerFactory.getDataManager();
-		source = (RssSource)dataManager.createSource(source);
 		SocioUser user = connectionData.getUser();
+		source = (RssSource)dataManager.createSource(source, user);
 		user.addSource(source);
 		dataManager.saveObject(user);
 		AbstractUiManager uiManager = new DefaultUiManager();

@@ -50,7 +50,7 @@ public class RssRouteBuilder extends RouteBuilder {
     }
 
     public void configure() {
-    	List<RssSource> sources = DataManagerFactory.getDataManager().getObjects(RssSource.class);
+    	List<RssSource> sources = DataManagerFactory.getDataManager().getObjectsWithoutTags(RssSource.class);
     	for (RssSource source : sources) {
     		if (logger.isDebugEnabled()){
     			logger.debug("Creating route for RSS feed on url" + source.getUrl());
