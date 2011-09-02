@@ -1,29 +1,36 @@
 @CHARSET "UTF-8";
-body, html {
+
+body,html {
 	height: 100%;
 	border: 0px;
 	padding: 0px;
 	margin: 0px;
 }
+
 td {
 	border: none;
 	padding: 0px;
 	vertical-align: top;
 }
+
 a {
 	border: none;
 }
+
 img {
 	border: none;
 }
+
 td.UserBox {
 	width: 100%;
 	height: 102px;
 }
+
 td.SourcesBox {
 	width: 100%;
 	height: 100%;
 }
+
 div.UserBox {
 	position: relative;
 	background: transparent;
@@ -31,6 +38,7 @@ div.UserBox {
 	width: 211px;
 	float: none;
 }
+
 div.UserPic {
 	margin-left: 34px;
 	margin-right: 22px;
@@ -39,113 +47,141 @@ div.UserPic {
 	border: 3px solid #d1c2d4;
 	float: left;
 }
+
 img.Userpic {
 	width: 50px;
 	height: 50px;
 }
+
 div.UserName {
 	font: 14px Calibri;
 	color: #7d4089;
 	float: none;
 }
+
 div.Subsciptions {
 	font: 14px Calibri;
 	color: #00aeef;
 	margin-left: 34px;
 	margin-top: 35px;
 }
+
 div.SubsciptionsUnderline {
-	margin-left:34px;
+	margin-left: 34px;
 	margin-bottom: 9px;
 	height: 1px;
 	width: 182px;
 	background: #d1c2d4;
 }
+
 a.InnerLink {
 	font: 12px Calibri;
 	color: #525152;
 	float: none;
 }
-div.LoginDiv {
-	display: none;
-	height: 400px;
-	width: 400px;
-	top: 100px;;
-	left: 100px;
+
+div.LoginCenterDiv {
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: auto;
+	margin-top: auto;
+	width: 691px;
+	height: 616px;
+	position: relative;
 }
+
 div.Settings {
 	margin-top: 12px;
 }
-div.LogOut {
+
+div.HiddenDiv {
+	display: none;
 }
+
+div.LogOut {
+	
+}
+
 div.HeaderLine {
 	height: 4px;
 	width: 100%;
 	background: #00aeef;
 }
+
 div.HeaderMiddleColumn {
 	height: 44px;
 	width: 100%;
 	background-image: url("../images/light-texture.jpg");
 	background-repeat: repeat;
 }
+
 div.HeaderMiddleColumnWithShade {
 	height: 63px;
 	width: 100%;
 	background-image: url("../images/paper-light-part.jpg");
 	background-repeat: repeat;
 }
+
 div.LogoBox {
 	height: 107px;
 	width: 100%;
 	background-image: url("../images/light-texture.jpg");
 	background-repeat: repeat;
 }
+
 div.ContentLine {
 	height: 4px;
 	width: 100%;
 	background: #7d4089;
 }
+
 div.ContentHeader {
 	height: 44px;
 	width: 100%;
 	background-image: url("../images/light-texture2.jpg");
 	background-repeat: repeat;
 }
+
 div.BlueButtonTop {
 	height: 10px;
 	background-image: url('../images/blue_idle_right.png');
 	background-repeat: no-repeat;
 }
+
 div.BlueButtonCenter {
 	width: 22px;
 	background-image: url('../images/blue_idle_center.png');
 	background-repeat: repeat;
 	float: none;
 }
+
 div.BlueButtonBottom {
 	height: 10px;
 	background-image: url('../images/blue_idle_left.png');
 	background-repeat: no-repeat;
 	margin-bottom: 3px;
 }
+
 div.GrayButtonTop {
 	height: 10px;
 	background-image: url('../images/gray_idle_right.png');
 	background-repeat: no-repeat;
 }
+
 div.GrayButtonCenter {
 	width: 22px;
 	background-image: url('../images/gray_idle_center.png');
 	background-repeat: repeat;
 	float: none;
 }
+
 div.GrayButtonBottom {
 	height: 10px;
 	background-image: url('../images/gray_idle_left.png');
 	background-repeat: no-repeat;
 	margin-bottom: 3px;
 }
+
 span.tab {
 	writing-mode: tb-rl;
 	-webkit-transform: rotate(-90deg);
@@ -153,18 +189,21 @@ span.tab {
 	-o-transform: rotate(-90deg);
 	white-space: nowrap;
 	display: block;
-	position:relative;
+	position: relative;
 	font: 18px Calibri;
 	color: white;
 	float: left;
 }
+
 div.MiddleHeaderLine {
 	margin-bottom: 18px;
 }
+
 td.MiddleColumn {
 	background-image: url("../images/paper-dark-side-part.jpg");
 	background-repeat: repeat;
 }
+
 input.Search {
 	margin-top: 18px;
 	height: 20px;
@@ -172,28 +211,34 @@ input.Search {
 	margin-left: 34px;
 	border: 1px solid #d1c2d4;
 }
+
 img.Logo {
 	margin-bottom: 24px;
 	margin-top: 33px;
 	margin-left: 34px;
 	margin-right: 51px;
 }
+
 a.Search {
 	position: relative;
 	top: 12px;
-	left: 5px;	
+	left: 5px;
 }
+
 td.FirstColumn {
 	background-image: url("../images/dark-texture.jpg");
 	background-repeat: repeat;
 	width: 249px;
 }
+
 td.SecondColumn {
 	width: 22px;
 }
+
 td.ThirdColumn {
 	width: auto;
 }
+
 tr.Footer {
 	height: 33px;
 	width: 100%;
@@ -202,74 +247,125 @@ tr.Footer {
 	border: none;
 	padding: 0px;
 }
+
 div.SourcesBox {
 	margin-left: 32px;
-	overflow: auto;
-	width: 150px;
-	height: 580px;
+	overflow: hidden;
+	width: 183px;
+	height: auto;
 }
+
 div.MessagesBox {
 	overflow: auto;
 }
-div.fullSize {
-	width: 100%;
-	height: 100%;
-}
+
 div.Tabs {
 	float: left;
 }
+
 div.Message {
-	padding: 10px;
-	border: 1px solid #A4BED4;
-	font-style: italic;
+	height: 115px;
+	width: 680px;
+	margin-top: 52px;
+	margin-left: 28px;
+	border: 0px;
 }
 
-div.MessageTitle{
-	padding: 10px;
-	font-weight: bold;
+div.MessageButtons {
+	height: 27px;
+	background-color: #dedede;
+	font: 12px Calibri;
+	color: #82478e;
 }
+
+span.MessageButton {
+	margin-top: 3px;
+	margin-left: 6px;
+	margin-right: 6px;
+}
+
+img.MessageButton {
+	margin-right: 5px;
+}
+
+div.MessageText {
+	height: 28px;
+	font: 13px Calibri;
+	overflow: hidden;
+	color: #292929;
+}
+
+div.MessageExpand {
+	height: 20px;
+	font: 10px Calibri;
+	color: #82478e;
+	text-align: right;
+}
+
+div.MessageTitle {
+	height: 20px;
+	margin-bottom: 20px;
+}
+
+a.MessageTitle {
+	text-decoration: none;
+	font: 19px Calibri;
+	color: #292929;
+}
+
+a.Undecorated {
+	text-decoration: none;
+	color: inherit;
+}
+
 div.LoginPage {
 	background: url("../images/darker-texture-login.jpg");
+	vertical-align: middle;
 }
+
 div.AuthCircle {
-	position: relative;
-	top: 50%;
-	left: 50%;
 	background: url("../images/big-circle.png");
-	float: left;
 	height: 340px;
 	width: 340px;
+	margin-bottom: 54px;
+	margin-left: 168px;
 }
+
 div.LoginOctopus {
 	position: relative;
 	top: 15px;
 	left: 132px;
 	float: left;
 }
+
 div.LoginGoogle {
 	position: relative;
 	top: 29px;
 	left: 166px;
 	float: none;
 }
+
 div.LoginFacebook {
 	position: relative;
 	top: -60px;
 	left: 76px;
 	float: none;
 }
+
 div.LoginTwitter {
 	position: relative;
 	top: -55px;
 	left: 164px;
 	float: none;
 }
+
 div.LoginLJ {
 	position: relative;
 	top: 100px;
 	left: 23px;
 	float: none;
 }
+
 div.LoginBaloon {
 	position: relative;
 	top: -57px;
@@ -279,6 +375,7 @@ div.LoginBaloon {
 	height: 78px;
 	background: url("../images/baloon.jpg") no-repeat 0 0;
 }
+
 span.Baloon {
 	width: 80px;
 	height: 78px;
@@ -289,22 +386,25 @@ span.Baloon {
 	font: 12px Verdana;
 	color: #7d4d8b;
 }
+
 div.LoginVkontakte {
 	position: relative;
 	top: -104px;
 	left: 179px;
 	float: none;
 }
+
 div.LoginLinkedin {
 	position: relative;
 	top: -96px;
 	left: 165px;
 	float: none;
 }
+
 td.PageHeader {
 	height: 100px;
 	width: 100%;
-	border: 0px; 
+	border: 0px;
 }
 
 td.PageBody {
@@ -323,34 +423,45 @@ img.HeaderImage {
 	padding-left: 40px;
 	padding-top: 15px;
 }
-table.DefaultTable {
+
+.FullSize {
 	height: 100%;
 	width: 100%;
+}
+
+table.DefaultTable {
 	border: 0px;
 	padding: 0px;
 	border-spacing: 0px;
 	border-collapse: collapse;
 }
+
 div.message {
 	margin-bottom: 10px;
 }
+
 tr.Auth {
 	height: auto;
 }
+
 tr.Promo {
 	height: 222px;
 }
+
 td.Auth {
 	width: 100%;
 }
+
 td.Promo {
 	width: 100%;
 }
+
 div.Promo {
 	position: relative;
 	width: 691px;
 	height: 100px;
 }
+
 div.PromoGeneral {
 	position: relative;
 	width: 207px;
@@ -358,6 +469,7 @@ div.PromoGeneral {
 	margin-right: 35px;
 	float: left;
 }
+
 span.PromoGeneral {
 	position: relative;
 	float: left;
@@ -365,6 +477,7 @@ span.PromoGeneral {
 	font: 18px Verdana;
 	color: #7d4d8b;
 }
+
 div.PromoAbout {
 	position: relative;
 	width: 207px;
@@ -373,6 +486,7 @@ div.PromoAbout {
 	margin-top: 18px;
 	float: left;
 }
+
 div.PromoYourLook {
 	position: relative;
 	margin-top: 18px;
@@ -380,6 +494,7 @@ div.PromoYourLook {
 	height: 100px;
 	float: left;
 }
+
 span.PromoHeader {
 	position: relative;
 	float: left;
@@ -388,6 +503,7 @@ span.PromoHeader {
 	font: 18px Verdana;
 	color: #00aeef;
 }
+
 span.PromoText {
 	position: relative;
 	float: left;
@@ -395,17 +511,59 @@ span.PromoText {
 	font: 11px Verdana;
 	color: #444444;
 }
-a#search_button img {background: url("../images/search-idle.png") no-repeat 0 0;}
-a#search_button:HOVER img {background: url("../images/search-rollover.png") no-repeat 0 0;}
-a#login_google img {background: url("../images/google-idle.png") no-repeat 0 0;}
-a#login_google:HOVER img {background: url("../images/google-rollover.png") no-repeat 0 0;}
-a#login_facebook img {background: url("../images/facebook-idle.png") no-repeat 0 0;}
-a#login_facebook:HOVER img {background: url("../images/facebook-rollover.png") no-repeat 0 0;}
-a#login_lj img {background: url("../images/LJ-idle.png") no-repeat 0 0;}
-a#login_lj:HOVER img {background: url("../images/LJ-rollover.png") no-repeat 0 0;}
-a#login_linkedin img {background: url("../images/linkedin-idle.png") no-repeat 0 0;}
-a#login_linkedin:HOVER img {background: url("../images/linkedin-rollover.png") no-repeat 0 0;}
-a#login_twitter img {background: url("../images/twitter-idle.png") no-repeat 0 0;}
-a#login_twitter:HOVER img {background: url("../images/twitter-rollover.png") no-repeat 0 0;}
-a#login_vkontakte img {background: url("../images/vkontakte-idle.png") no-repeat 0 0;}
-a#login_vkontakte:HOVER img {background: url("../images/vkontakte-rollover.png") no-repeat 0 0;}
+
+a#search_button img {
+	background: url("../images/search-idle.png") no-repeat 0 0;
+}
+
+a#search_button:HOVER img {
+	background: url("../images/search-rollover.png") no-repeat 0 0;
+}
+
+a#login_google img {
+	background: url("../images/google-idle.png") no-repeat 0 0;
+}
+
+a#login_google:HOVER img {
+	background: url("../images/google-rollover.png") no-repeat 0 0;
+}
+
+a#login_facebook img {
+	background: url("../images/facebook-idle.png") no-repeat 0 0;
+}
+
+a#login_facebook:HOVER img {
+	background: url("../images/facebook-rollover.png") no-repeat 0 0;
+}
+
+a#login_lj img {
+	background: url("../images/LJ-idle.png") no-repeat 0 0;
+}
+
+a#login_lj:HOVER img {
+	background: url("../images/LJ-rollover.png") no-repeat 0 0;
+}
+
+a#login_linkedin img {
+	background: url("../images/linkedin-idle.png") no-repeat 0 0;
+}
+
+a#login_linkedin:HOVER img {
+	background: url("../images/linkedin-rollover.png") no-repeat 0 0;
+}
+
+a#login_twitter img {
+	background: url("../images/twitter-idle.png") no-repeat 0 0;
+}
+
+a#login_twitter:HOVER img {
+	background: url("../images/twitter-rollover.png") no-repeat 0 0;
+}
+
+a#login_vkontakte img {
+	background: url("../images/vkontakte-idle.png") no-repeat 0 0;
+}
+
+a#login_vkontakte:HOVER img {
+	background: url("../images/vkontakte-rollover.png") no-repeat 0 0;
+}

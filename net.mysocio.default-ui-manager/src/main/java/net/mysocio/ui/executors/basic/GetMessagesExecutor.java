@@ -10,8 +10,11 @@ import net.mysocio.data.IConnectionData;
 import net.mysocio.data.SocioUser;
 import net.mysocio.data.management.DataManagerFactory;
 import net.mysocio.data.messages.IMessage;
+import net.mysocio.ui.data.objects.DefaultMessage;
 import net.mysocio.ui.management.CommandExecutionException;
 import net.mysocio.ui.management.ICommandExecutor;
+import net.mysocio.ui.managers.basic.AbstractUiManager;
+import net.mysocio.ui.managers.basic.DefaultUiManager;
 
 /**
  * @author Aladdin
@@ -26,7 +29,13 @@ public class GetMessagesExecutor implements ICommandExecutor {
 		StringBuffer output = new StringBuffer();
 		Set<? extends IMessage> messages = getMessages(connectionData);
 		for (IMessage message : messages) {
-			output.append(wrapMessage(message.getId(), message.getTitle(), message.getLink(), message.getText()));
+			AbstractUiManager uiManager = new DefaultUiManager();
+			String pageHtml = uiManager.getPage(new DefaultMessage(),connectionData.getUser());
+			pageHtml = pageHtml.replace("message.title", message.getTitle());
+			pageHtml = pageHtml.replace("message.id", message.getId());
+			pageHtml = pageHtml.replace("message.text", message.getText());
+			pageHtml = pageHtml.replace("message.link", message.getLink());
+			output.append(pageHtml);
 		}
 		return output.toString();
 	}
@@ -40,24 +49,5 @@ public class GetMessagesExecutor implements ICommandExecutor {
 		user.setSelectedSource(id);
 		DataManagerFactory.getDataManager().saveObject(user);
 		return user.getUnreadMessages();
-	}
-	
-	/**
-	 * @param output
-	 * @param text
-	 */
-	private static String wrapMessage(String id, String title, String link, String text) {
-		StringBuffer output = new StringBuffer();
-		output.append("<div class='Message' id=\"").append(id).append("\">");
-		String actualTitle = "No Title";
-		if (title != null && title.length() >= 0){
-			actualTitle = title;
-		}
-		output.append("<div class='MessageTitle'>");
-		output.append("<a href=\""+ link + "\" target=\"_blank\">").append(actualTitle).append("</a>");
-		output.append("</div>");
-		output.append(text);
-		output.append("</div>");
-		return output.toString();
 	}
 }

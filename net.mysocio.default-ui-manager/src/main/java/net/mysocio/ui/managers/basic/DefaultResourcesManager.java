@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Locale;
+import java.util.MissingResourceException;
 import java.util.Properties;
 import java.util.ResourceBundle;
 
@@ -33,19 +34,17 @@ public class DefaultResourcesManager {
 		}
 	}
 	public static String getResource(Locale locale, String resource){
-		String resourceValue = resources.getString(resource);
-		if (resourceValue == null){
+		String resourceValue;
+		try {
+			resourceValue = resources.getString(resource);
+		} catch (MissingResourceException e) {
 			resourceValue = resource;
-			logger.error("Resource " + resource + " is missing. For locale " + locale.getDisplayLanguage());
+			logger.warn("Resource missing.", e);
 		}
 		return resourceValue;
 	}
 	public static String getResource(Locale locale, String resource, String[] insertions){
-		String resourceValue = resources.getString(resource);
-		if (resourceValue == null){
-			resourceValue = resource;
-			logger.error("Resource " + resource + " is missing. For locale " + locale.getDisplayLanguage());
-		}
+		String resourceValue = getResource(locale, resource);
 		for (int i = 0; i < insertions.length; i++) {
 			resourceValue = resourceValue.replace("{" + i + "}", insertions[i]);
 		}

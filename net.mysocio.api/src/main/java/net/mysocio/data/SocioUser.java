@@ -24,6 +24,7 @@ import net.mysocio.data.messages.IMessage;
  */
 @PersistenceCapable
 public class SocioUser extends Contact implements IUser {
+	private static final String TAG_PREFIX = "tag_";
 	public static final String ALL_SOURCES = "All";
 	/**
 	 * 
@@ -191,8 +192,10 @@ public class SocioUser extends Contact implements IUser {
 		if (selectedSource.equalsIgnoreCase(SocioUser.ALL_SOURCES)){
 			return getAllUnreadMessages();
 		}
-		
-		return getUnreadMessages(getSortedSources().get(selectedSource));
+		if (selectedSource.startsWith(TAG_PREFIX)){
+			return getUnreadMessages(getSortedSources().get(selectedSource.substring(TAG_PREFIX.length())));
+		}
+		return unreadMessages.get(selectedSource);
 	}
 
 	public Map<String, SocioTag> getUserTags() {

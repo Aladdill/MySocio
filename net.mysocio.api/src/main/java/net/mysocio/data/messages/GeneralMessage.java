@@ -3,9 +3,6 @@
  */
 package net.mysocio.data.messages;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
@@ -55,8 +52,7 @@ public abstract class GeneralMessage extends SocioObject implements IMessage{
 		return text;
 	}
 	public void setText(String text) {
-		String cutText = cutMessageText(text);
-		this.text = cutText;
+		this.text = text;
 	}
 	
 	/**
@@ -84,19 +80,5 @@ public abstract class GeneralMessage extends SocioObject implements IMessage{
 	 */
 	public void setSourceId(String sourceId) {
 		this.sourceId = sourceId;
-	}
-	
-	/**
-	 * Cleans text from HTML tags and cuts it to 250 symbols
-	 * @param text
-	 * @return
-	 */
-	private static String cutMessageText(String text) {
-		Pattern p = Pattern.compile("<(.|\n)+?>");
-		Matcher matcher = p.matcher(text);
-		String cutText = matcher.replaceAll("");
-		int textLength = Math.min(cutText.length(), 250);
-		cutText = cutText.substring(0,textLength) + " ...";
-		return cutText;
 	}
 }

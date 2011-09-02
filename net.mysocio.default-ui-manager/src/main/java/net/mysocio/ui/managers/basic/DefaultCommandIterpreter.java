@@ -34,6 +34,7 @@ public class DefaultCommandIterpreter implements ICommandInterpreter{
 		try {
 			response = commandObject.getExecutor().execute(connectionData);
 		} catch (Exception e) {
+			logger.error("Command execution failed", e);
 			throw new CommandExecutionException(e);
 		}
 		return response;
@@ -53,6 +54,7 @@ public class DefaultCommandIterpreter implements ICommandInterpreter{
 		try {
 			commandObject = EDefaultCommand.valueOf(command);
 		} catch (IllegalArgumentException e) {
+			logger.error("Unknown command");
 			throw new CommandExecutionException(e);
 		}
 		return commandObject;

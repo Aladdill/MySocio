@@ -19,9 +19,7 @@ function resizeTabs(){
 	$("#feeds_tab_span").css("left",$("#feeds_tab_span").innerHeight()*-1-3);
 }
 function centerLoginCircle(){
-	$("#AuthCircle").css("top",$("#AuthCell").innerHeight()/2 - $("#AuthCircle").innerHeight()/2);
-	$("#AuthCircle").css("left",$("#AuthCell").innerWidth()/2 - $("#AuthCircle").innerWidth()/2);
-	$("#promo_div").css("left",$("#promo_cell").innerWidth()/2 - $("#promo_div").innerWidth()/2);
+	$("#login_center_div").css("top",$("#login_page_div").innerHeight()/2 - $("#login_center_div").innerHeight()/2);
 }
 function initSources(){
     $.post("execute?command=getSources",{},initSourcesData,"json")
@@ -51,9 +49,13 @@ function showTabs(){
 }
 function hideSources(){
 	hideDiv("sources_tree");
+	hideDiv("subscriptions_underline");
+	hideDiv("subscriptions_title");
 }
 function showSources(){
 	showDiv("sources_tree");
+	showDiv("subscriptions_underline");
+	showDiv("subscriptions_title");
 }
 function hideDiv(id){
 	$("#"+id).css("display", "none");
@@ -67,11 +69,16 @@ function onFailure(data) {
 function showSettings(){
 	hideSources();
 	showTabs();
-	getRssFeeds();
+	$("#upper_link").html($("#back_to_main_link").html());
 }
 function showMainPage(){
 	hideTabs();
+	showSources();
+	$("#upper_link").html($("#settings_link").html());
+}
+function openMainPage(){
 	resizeTabs();
+	hideTabs();
 	initMessagesContainer();
 	showSources();
 	initSources();
@@ -82,30 +89,39 @@ function initMessagesContainer(){
 	$("#filler").css("height",messageContainer.innerHeight() - 10);
     messageContainer.scroll(function () {
     	var previous = 0;
-    	$.each($("#data_container").find("div"), function(index, value) {
-    		var message = $("#" + value.id);
-    		var current = message.position().top - 48;
-    		if ((previous < 0 && current >= 0 && value.id != "filler") || (current == 0 && index ==0)){
-    			message.css("border","3px solid #7d4089");
-    	}else{message.css("border","none");}
-    		previous = message.position().top - 48;
+    	$.each($("#data_container").find("div"), messageScroll);
 	});
-	});
+}
+function messageScroll(index, value) {
+	var message = $("#" + value.id);
+	var current = message.position().top - 48;
+	if ((previous < 0 && current >= 0 && value.id != "filler") || (current == 0 && index ==0)){
+		message.css("border","3px solid #7d4089");
+}else{message.css("border","none");}
+	previous = message.position().top - 48;
+}
+function initPage(){
+	if ($("#login_center_div").size() != 0){
+		centerLoginCircle();
+	}else{
+		openMainPage();
+	}
 }
 function loadMainPage(){
-	openUrlInDiv("#SiteBody", "execute?command=openMainPage",[showMainPage]);
+	openUrlInDiv("#SiteBody", "execute?command=openMainPage",[initPage]);
 }
 function logout(){
-	openUrlInDiv("#SiteBody", "execute?command=logout",[centerLoginCircle]);
+	openUrlInDiv("#SiteBody", "execute?command=logout",[initPage]);
 }
 function loadStartPage(){
-	openUrlInDiv("#SiteBody", "execute?command=openStartPage",[centerLoginCircle]);
+	openUrlInDiv("#SiteBody", "execute?command=openStartPage",[initPage]);
 }
 function getRssFeeds(){
 	openUrlInDiv("#data_container", "execute?command=getRssFeeds",[]);
 }
 function getMessages(id){
-	openUrlInDiv("#data_container", "execute?command=getMessages&sourceId=" + id,[]);
+	$.post("execute?command=getMessages&sourceId=" + id).success(function(data) { $("#filler").before(data); })
+    .error(onFailure);
 }
 function getAllMessages(){
 	openUrlInDiv("#data_container", "execute?command=getMessages&sourceId=all",[]);
