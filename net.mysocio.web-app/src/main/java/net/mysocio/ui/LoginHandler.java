@@ -17,7 +17,6 @@ import net.mysocio.data.accounts.Account;
 import net.mysocio.data.accounts.FacebookAccount;
 import net.mysocio.data.management.ConnectionData;
 import net.mysocio.data.management.DataManagerFactory;
-import net.mysocio.data.management.IDataManager;
 import net.mysocio.data.management.JdoDataManager;
 import net.mysocio.data.messages.FacebookMessage;
 import net.mysocio.ui.management.CommandExecutionException;
@@ -89,7 +88,7 @@ public class LoginHandler extends AbstractHandler {
 		account.setUserName("Vasya Pupkin");
 		account.setUserpicUrl("images/portrait.jpg");
 		JdoDataManager dataManager = (JdoDataManager)DataManagerFactory.getDataManager();
-		SocioUser user = dataManager.getUser(account, Locale.ENGLISH);
+		SocioUser user = dataManager.getUser(account, new Locale("ru"));
 		FacebookSource fs = new FacebookSource();
 		fs.setName("Test Facebook account");
 		fs.setUrl("testSourceId");
