@@ -5,11 +5,16 @@ package net.mysocio.ui.managers.basic;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.Properties;
+import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
 import net.mysocio.data.SocioUser;
@@ -24,16 +29,44 @@ import org.slf4j.LoggerFactory;
 public class DefaultResourcesManager {
 	private static final Logger logger = LoggerFactory.getLogger(DefaultResourcesManager.class);
 	private static String servletContextPath;
-	private static ResourceBundle resources;
+	private static Map<Locale, ResourceBundle> bundles;
 	public static void init(String contextPath){
 		if (servletContextPath == null){
 			servletContextPath = contextPath;
 		}
-		if (resources == null){
-			resources = ResourceBundle.getBundle("textResources", Locale.ENGLISH);
+		if (bundles == null){
+			bundles = new HashMap<Locale, ResourceBundle>();
+			createBundle(Locale.ENGLISH);
 		}
 	}
+	/**
+	 * @param locale 
+	 * @return
+	 */
+	private static PropertyResourceBundle createBundle(Locale locale){
+		PropertyResourceBundle propertyResourceBundle = createDefaultBundle();
+		try {
+			propertyResourceBundle = new PropertyResourceBundle(new InputStreamReader(new FileInputStream(servletContextPath + "/properties/textResources_" + locale.getLanguage() + ".properties"), "UTF8"));
+		} catch (Exception e) {
+			logger.error("Coudn't get bundle for locale " + locale.getLanguage());
+		}
+		bundles.put(locale, propertyResourceBundle);
+		return propertyResourceBundle;
+	}
+	private static PropertyResourceBundle createDefaultBundle(){
+		PropertyResourceBundle propertyResourceBundle = null;
+		try {
+			propertyResourceBundle = new PropertyResourceBundle(new InputStreamReader(new FileInputStream(servletContextPath + "/properties/textResources.properties"), "UTF8"));
+		} catch (Exception e) {
+			logger.error("Coudn't get bundle for default locale.");
+		}
+		return propertyResourceBundle;
+	}
 	public static String getResource(Locale locale, String resource){
+		ResourceBundle resources = bundles.get(locale);
+		if (resources == null){
+			resources = createBundle(locale);
+		}
 		String resourceValue;
 		try {
 			resourceValue = resources.getString(resource);

@@ -20,7 +20,8 @@ public enum EDefaultCommand {
 	openSettings(new LoadPageExecutor(new RssConnections())),
 	addRssFeed(new AddRssFeedExecutor()),
 	getRssFeeds(new GetRssFeedsExecutor()),
-	getSources(new GetSourcesExecutor(), DefaultCommandIterpreter.JSON);
+	getSources(new GetSourcesExecutor(), DefaultCommandIterpreter.JSON),
+	markMessageReaden(new MarkMessageReadenExecutor(), DefaultCommandIterpreter.JSON);
 	private ICommandExecutor executor;
 	private String responseType = DefaultCommandIterpreter.TEXT_HTML;
 	private EDefaultCommand(ICommandExecutor executor){

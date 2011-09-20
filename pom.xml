@@ -81,8 +81,8 @@
 	</modules>
 	<properties>
 		<camel-version>2.7.0</camel-version>
-		<scribe-version>1.2.1</scribe-version>
-		<datanucleus-version>3.0.0-release</datanucleus-version>
+		<scribe-version>1.2.2</scribe-version>
+		<datanucleus-version>3.0.1</datanucleus-version>
 		<datanucleus-plugin-version>3.0.0-release</datanucleus-plugin-version>
 		<mysocio.version>0.0.1-SNAPSHOT</mysocio.version>
 	</properties>

@@ -3,6 +3,7 @@
  */
 package net.mysocio.data.management;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -268,8 +269,8 @@ public class JdoDataManager extends AbstractDataManager {
 	}
 	
 	
-	public Set<IMessage> getMessages(Set<ISource> sources, SocioUser user) {
-		Set<IMessage> messages = new HashSet<IMessage>();
+	public List<IMessage> getMessages(Set<ISource> sources, SocioUser user) {
+		List<IMessage> messages = new ArrayList<IMessage>();
 		if (sources.isEmpty()){
 			return messages;
 		}

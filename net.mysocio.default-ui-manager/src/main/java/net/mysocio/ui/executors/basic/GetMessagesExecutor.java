@@ -4,7 +4,7 @@
 package net.mysocio.ui.executors.basic;
 
 import java.util.Collections;
-import java.util.Set;
+import java.util.List;
 
 import net.mysocio.data.IConnectionData;
 import net.mysocio.data.SocioUser;
@@ -27,7 +27,7 @@ public class GetMessagesExecutor implements ICommandExecutor {
 	@Override
 	public String execute(IConnectionData connectionData) throws CommandExecutionException{
 		StringBuffer output = new StringBuffer();
-		Set<? extends IMessage> messages = getMessages(connectionData);
+		List<? extends IMessage> messages = getMessages(connectionData);
 		for (IMessage message : messages) {
 			AbstractUiManager uiManager = new DefaultUiManager();
 			String pageHtml = uiManager.getPage(new DefaultMessage(),connectionData.getUser());
@@ -40,10 +40,10 @@ public class GetMessagesExecutor implements ICommandExecutor {
 		return output.toString();
 	}
 	
-	private static Set<IMessage> getMessages(IConnectionData connectionData) {
+	private static List<IMessage> getMessages(IConnectionData connectionData) {
 		String id = connectionData.getRequestParameter("sourceId");
 		if (id == null){
-			return Collections.emptySet();
+			return Collections.emptyList();
 		}
 		SocioUser user = connectionData.getUser();
 		user.setSelectedSource(id);

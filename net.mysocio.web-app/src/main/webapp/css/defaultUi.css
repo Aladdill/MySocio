@@ -53,6 +53,18 @@ img.Userpic {
 	height: 50px;
 }
 
+img.MessageUserpic {
+	width: 50px;
+	height: 50px;
+	border: 2px solid #00aeef;
+}
+
+div.MessageUserpic {
+	float: left;
+	padding-right: 15px;
+	padding-top: 4px;
+}
+
 div.UserName {
 	font: 14px Calibri;
 	color: #7d4089;
@@ -264,35 +276,69 @@ div.Tabs {
 }
 
 div.Message {
-	height: 115px;
+	height: 162px;
 	width: 680px;
-	margin-top: 52px;
 	margin-left: 28px;
+	margin-top: 2px;
 	border: 0px;
+}
+
+div.SelectedMessage {
+	
 }
 
 div.MessageButtons {
 	height: 27px;
-	background-color: #dedede;
+	background-color: #ececec;
 	font: 12px Calibri;
 	color: #82478e;
 }
 
-span.MessageButton {
-	margin-top: 3px;
-	margin-left: 6px;
+div.MessageButtonsSelected {
+	background-color: #dedede;
+}
+
+div.MessageButton {
+	margin-top: 7px;
 	margin-right: 6px;
+	float: left;
 }
 
 img.MessageButton {
+	margin-top: 5px;
 	margin-right: 5px;
+	margin-left: 6px;
+	float: left;
 }
 
 div.MessageText {
-	height: 28px;
+	height: 60px;
 	font: 13px Calibri;
 	overflow: hidden;
 	color: #292929;
+}
+div.Expand {
+	height: auto;
+}
+div.MessageTextSelected {
+	color: #292929;
+	background: #f3f3f3;
+}
+
+img.NetworkIcon {
+	
+}
+
+img.NetworkIconReaden {
+	
+}
+
+.Invisible {
+	display: none;
+}
+
+div.MessageTextReaden {
+	color: #a3a3a3;
 }
 
 div.MessageExpand {
@@ -300,17 +346,45 @@ div.MessageExpand {
 	font: 10px Calibri;
 	color: #82478e;
 	text-align: right;
+	margin-bottom: 2px;
+}
+
+div.MessageCollapse {
+	height: 20px;
+	font: 10px Calibri;
+	color: #82478e;
+	text-align: right;
+	margin-bottom: 2px;
+}
+
+div.MessageCollapseSelected {
+	background: #f3f3f3;
+}
+
+div.MessageExpandSelected {
+	background: #f3f3f3;
 }
 
 div.MessageTitle {
 	height: 20px;
-	margin-bottom: 20px;
+	padding-top: 17px;
+	padding-bottom: 20px;
+	color: #00aeef;
+}
+
+div.MessageTitleReaden {
+	color: #a3a3a3;
+}
+
+div.MessageTitleSelected {
+	color: #00aeef;
+	background: #f3f3f3;
 }
 
 a.MessageTitle {
 	text-decoration: none;
+	color: inherit;
 	font: 19px Calibri;
-	color: #292929;
 }
 
 a.Undecorated {

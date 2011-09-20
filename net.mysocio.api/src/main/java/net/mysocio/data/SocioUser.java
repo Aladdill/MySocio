@@ -3,8 +3,11 @@
  */
 package net.mysocio.data;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -31,7 +34,7 @@ public class SocioUser extends Contact implements IUser {
 	 */
 	private static final long serialVersionUID = -2886854604233072581L;
     @Persistent
-	private Map<String, Set<IMessage>> unreadMessages = new HashMap<String, Set<IMessage>>();
+	private Map<String, List<IMessage>> unreadMessages = new HashMap<String, List<IMessage>>();
 	@Persistent
 	private Set<Account> accounts = new HashSet<Account>();
 	@Persistent
@@ -101,10 +104,10 @@ public class SocioUser extends Contact implements IUser {
 		return contacts;
 	}
 
-	public Set<IMessage> getUnreadMessages(Set<ISource> sources){
-		Set<IMessage> unreaddenMessages = new HashSet<IMessage>();
+	public List<IMessage> getUnreadMessages(Set<ISource> sources){
+		List<IMessage> unreaddenMessages = new ArrayList<IMessage>();
 		for (ISource source : sources) {
-			Set<IMessage> messages = this.unreadMessages.get(source.getId());
+			List<IMessage> messages = this.unreadMessages.get(source.getId());
 			if (messages != null){
 				unreaddenMessages.addAll(messages);
 			}
@@ -113,39 +116,52 @@ public class SocioUser extends Contact implements IUser {
 	}
 	
 	public Integer getUnreadMessagesNum(String id){
-		Set<IMessage> messages = this.unreadMessages.get(id);
+		List<IMessage> messages = this.unreadMessages.get(id);
 		if (messages == null || messages.isEmpty()){
 			return 0;
 		}
 		return messages.size();
 	}
 	
-	public void addUnreadMessages(String sourceId, Set<IMessage> messages){
-		Set<IMessage> list = unreadMessages.get(sourceId);
+	public void addUnreadMessages(String sourceId, List<IMessage> messages){
+		List<IMessage> list = unreadMessages.get(sourceId);
 		if (list == null){
-			list = new HashSet<IMessage>();
+			list = new ArrayList<IMessage>();
 		}
+		messages.removeAll(list);
 		list.addAll(messages);
 		unreadMessages.put(sourceId, list);
 	}
 	
 	public void addUnreadMessage(IMessage message){
 		String sourceId = message.getSourceId();
-		Set<IMessage> list = unreadMessages.get(sourceId);
+		List<IMessage> list = unreadMessages.get(sourceId);
 		if (list == null){
-			list = new HashSet<IMessage>();
+			list = new ArrayList<IMessage>();
 		}
-		list.add(message);
+		if (!list.contains(message)){
+			list.add(message);
+		}
 		unreadMessages.put(sourceId, list);
 	}
 	
-	public void setMessageReadden(IMessage message) throws CorruptedDataException{
-		String sourceId = message.getSourceId();
-		Set<IMessage> list = unreadMessages.get(sourceId);
+	public void setMessageReadden(String messageId) throws CorruptedDataException{
+		List<IMessage> list = getUnreadMessages();
 		if (list == null){
 			throw new CorruptedDataException();
 		}
-		list.remove(message);
+		Iterator<IMessage> iterator = list.iterator();
+		IMessage message = null;
+		while(iterator.hasNext()) {
+			message = iterator.next();
+			if (message.getId().equals(messageId)){
+				break;
+			}
+		}
+		if (message != null){
+			List<IMessage> sourceList = unreadMessages.get(message.getSourceId());
+			sourceList.remove(message);
+		}
 	}
 
 	/**
@@ -176,7 +192,7 @@ public class SocioUser extends Contact implements IUser {
 		this.contacts.add(contact);
 	}
 
-	public Set<IMessage> getAllUnreadMessages() {
+	public List<IMessage> getAllUnreadMessages() {
 		return getUnreadMessages(getSources());
 	}
 
@@ -188,7 +204,7 @@ public class SocioUser extends Contact implements IUser {
 		this.locale = locale;
 	}
 
-	public Set<IMessage> getUnreadMessages() {
+	public List<IMessage> getUnreadMessages() {
 		if (selectedSource.equalsIgnoreCase(SocioUser.ALL_SOURCES)){
 			return getAllUnreadMessages();
 		}

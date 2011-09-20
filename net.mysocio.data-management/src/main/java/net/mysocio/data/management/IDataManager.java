@@ -44,7 +44,7 @@ public interface IDataManager {
 
 	public void updateUnreaddenMessages(SocioUser user);
 
-	public Set<IMessage> getMessages(Set<ISource> sources, SocioUser user);
+	public List<IMessage> getMessages(Set<ISource> sources, SocioUser user);
 
 	public<T extends Object> List<T> getObjectsWithoutTags(Class<?> T);
 
