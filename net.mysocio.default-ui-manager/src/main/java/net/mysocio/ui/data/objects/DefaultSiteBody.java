@@ -21,6 +21,7 @@ public class DefaultSiteBody extends SiteBody{
 		super();
 		setName(NAME);
 		addTextLabel("link.settings");
+		addTextLabel("link.back.to.main.page");
 		addTextLabel("link.logout");
 		addTextLabel("tab.accounts");
 		addTextLabel("tab.contacts");

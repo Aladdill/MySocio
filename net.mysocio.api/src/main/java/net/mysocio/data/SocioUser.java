@@ -4,6 +4,7 @@
 package net.mysocio.data;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -27,7 +28,6 @@ import net.mysocio.data.messages.IMessage;
  */
 @PersistenceCapable
 public class SocioUser extends Contact implements IUser {
-	private static final String TAG_PREFIX = "tag_";
 	public static final String ALL_SOURCES = "All";
 	/**
 	 * 
@@ -44,7 +44,7 @@ public class SocioUser extends Contact implements IUser {
 	@Persistent
 	private Long lastUpdate = 0l;
 	@NotPersistent
-	private Map<String, Set<ISource>> sortedSources;
+	private Map<SocioTag, Set<ISource>> sortedSources;
 	
 	public Long getLastUpdate() {
 		return lastUpdate;
@@ -68,15 +68,15 @@ public class SocioUser extends Contact implements IUser {
 	/**
 	 * @return the sortedSources
 	 */
-	public Map<String, Set<ISource>> getSortedSources() {
+	public Map<SocioTag, Set<ISource>> getSortedSources() {
 		if (sortedSources == null){
-			sortedSources = new HashMap<String, Set<ISource>>();
+			sortedSources = new HashMap<SocioTag, Set<ISource>>();
 			sortedSources = initSortedSources();
 		}
 		return sortedSources;
 	}
 
-	private Map<String, Set<ISource>> initSortedSources() {
+	private Map<SocioTag, Set<ISource>> initSortedSources() {
 		for (ISource source : getSources()) {
 			addSourceToSortedSources(source);
 		}
@@ -92,7 +92,7 @@ public class SocioUser extends Contact implements IUser {
 			Set<ISource> sources = sortedSources.get(tag);
 			if (sources == null){
 				sources = new HashSet<ISource>();
-				sortedSources.put(tag.getValue(), sources);
+				sortedSources.put(tag, sources);
 			}
 			sources.add(source);
 		}
@@ -208,21 +208,47 @@ public class SocioUser extends Contact implements IUser {
 		if (selectedSource.equalsIgnoreCase(SocioUser.ALL_SOURCES)){
 			return getAllUnreadMessages();
 		}
-		if (selectedSource.startsWith(TAG_PREFIX)){
-			return getUnreadMessages(getSortedSources().get(selectedSource.substring(TAG_PREFIX.length())));
+		List<IMessage> messages = null; 
+		SocioTag tag = getTag(selectedSource);
+		if (tag != null){
+			messages = getUnreadMessages(getSortedSources().get(tag));
+		}else{
+			messages = unreadMessages.get(selectedSource);
 		}
-		return unreadMessages.get(selectedSource);
+		if (messages == null){
+			return Collections.emptyList();
+		}
+		return messages;
 	}
 
 	public Map<String, SocioTag> getUserTags() {
 		return userTags;
 	}
 	
-	public SocioTag getTag(String value) {
-		return userTags.get(value);
+	public SocioTag getTag(String id) {
+		return userTags.get(id);
 	}
 	
 	public void addTag(SocioTag tag){
-		userTags.put(tag.getValue(), tag);
+		userTags.put(tag.getId(), tag);
+	}
+	
+	public void addTags(Set<SocioTag> tags){
+		for (SocioTag tag : tags) {
+			addTag(tag);
+		}
+	}
+
+	@Override
+	public void addSource(ISource source) {
+		addTags(source.getTags());
+		super.addSource(source);
+	}
+
+	@Override
+	public void addSources(List<? extends ISource> sources) {
+		for (ISource source : sources) {
+			addSource(source);
+		}
 	}
 }

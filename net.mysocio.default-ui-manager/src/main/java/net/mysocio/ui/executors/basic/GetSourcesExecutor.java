@@ -10,6 +10,7 @@ import java.util.Set;
 
 import net.mysocio.connection.readers.ISource;
 import net.mysocio.data.IConnectionData;
+import net.mysocio.data.SocioTag;
 import net.mysocio.data.SocioUser;
 import net.mysocio.data.management.DataManagerFactory;
 import net.mysocio.ui.management.CommandExecutionException;
@@ -38,7 +39,34 @@ public class GetSourcesExecutor implements ICommandExecutor {
 		JsonGenerator jsonGenerator;
 		try {
 			jsonGenerator = f.createJsonGenerator(writer);
+			jsonGenerator.writeStartObject();
+			jsonGenerator.writeObjectFieldStart("json_data");
+			jsonGenerator.writeArrayFieldStart("data");
 			addRootNode(jsonGenerator, user);
+			jsonGenerator.writeEndArray();//for data
+			jsonGenerator.writeEndObject();//for json_data
+			jsonGenerator.writeArrayFieldStart("plugins");
+			jsonGenerator.writeString("themes");
+			jsonGenerator.writeString("json_data");
+			jsonGenerator.writeString("ui");
+			jsonGenerator.writeString("crrm");
+			jsonGenerator.writeEndArray();//for plugins
+			jsonGenerator.writeObjectFieldStart("themes");
+			jsonGenerator.writeStringField("theme", "default");
+			jsonGenerator.writeBooleanField("dots", false);
+			jsonGenerator.writeBooleanField("icons", true);
+			jsonGenerator.writeEndObject();//for themes
+			jsonGenerator.writeObjectFieldStart("core");
+			jsonGenerator.writeArrayFieldStart("initially_open");
+			jsonGenerator.writeString(user.getSelectedSource());
+			jsonGenerator.writeEndArray();//for initially_open
+			jsonGenerator.writeEndObject();//for core
+			jsonGenerator.writeObjectFieldStart("ui");
+			jsonGenerator.writeArrayFieldStart("initially_select");
+			jsonGenerator.writeString(user.getSelectedSource());
+			jsonGenerator.writeEndArray();//for initially_select
+			jsonGenerator.writeEndObject();//for ui
+			jsonGenerator.writeEndObject();//final
 			jsonGenerator.flush();
 		} catch (Exception e) {
 			throw new CommandExecutionException(e);
@@ -58,19 +86,17 @@ public class GetSourcesExecutor implements ICommandExecutor {
 	private void addNodeData(JsonGenerator jsonGenerator, String name,
 			String id, String icon, int unreadMessagesNum) throws IOException,
 			JsonGenerationException {
-		jsonGenerator.writeObjectFieldStart("data");
-		if (unreadMessagesNum > 0){
-			jsonGenerator.writeObjectFieldStart("attr");
-			jsonGenerator.writeStringField("style", "font-weight: bold;");
-			jsonGenerator.writeEndObject();// for field 'data'
-			jsonGenerator.writeStringField("title", name + "(" + unreadMessagesNum + ")");
-		}else{
-			jsonGenerator.writeStringField("title", name);
-		}
-		jsonGenerator.writeEndObject();// for field 'data'
-		jsonGenerator.writeObjectFieldStart("metadata");
+		jsonGenerator.writeObjectFieldStart("attr");
 		jsonGenerator.writeStringField("id", id);
-		jsonGenerator.writeEndObject(); // for field 'metadata'
+		String title = name;
+		if (unreadMessagesNum > 0){
+			jsonGenerator.writeStringField("style", "font-weight: bold;");
+			title += "(" + unreadMessagesNum + ")";
+		}
+		jsonGenerator.writeEndObject();// for field 'attr'
+		jsonGenerator.writeObjectFieldStart("data");
+		jsonGenerator.writeStringField("title", title);
+		jsonGenerator.writeEndObject();// for field 'data'
 		if (icon != null){
 			jsonGenerator.writeStringField("icon", "images/" + icon);
 		}
@@ -79,13 +105,17 @@ public class GetSourcesExecutor implements ICommandExecutor {
 		jsonGenerator.writeStartObject();
 		int unreadMessagesNum = addNodeChildren(jsonGenerator, user.getSortedSources(), user);
 		addNodeData(jsonGenerator, SocioUser.ALL_SOURCES, SocioUser.ALL_SOURCES, null, unreadMessagesNum );
+		jsonGenerator.writeStringField("state", "open");
 		jsonGenerator.writeEndObject();
 	}
 	
-	private int addTagNode(JsonGenerator jsonGenerator, String tag, Set<ISource> sources, SocioUser user) throws Exception{
+	private int addTagNode(JsonGenerator jsonGenerator, SocioTag tag, Set<ISource> sources, SocioUser user) throws Exception{
 		jsonGenerator.writeStartObject();
 		int unreadMessagesNum = addNodeChildren(jsonGenerator, sources, user);
-		addNodeData(jsonGenerator, tag, "tag_" + tag, uiManager.getTagIcon(tag), unreadMessagesNum );
+		addNodeData(jsonGenerator, tag.getValue(), tag.getId(), uiManager.getTagIcon(tag.getId()), unreadMessagesNum );
+		if (user.getSelectedSource().equals(tag.getId())){
+			jsonGenerator.writeStringField("state", "open");
+		}
 		jsonGenerator.writeEndObject();
 		return unreadMessagesNum;
 	}
@@ -106,10 +136,10 @@ public class GetSourcesExecutor implements ICommandExecutor {
 		jsonGenerator.writeEndArray(); // for field 'children'
 		return unreadMessagesNum;
 	}
-	private int addNodeChildren(JsonGenerator jsonGenerator, Map<String, Set<ISource>> sortedSources, SocioUser user) throws Exception{
+	private int addNodeChildren(JsonGenerator jsonGenerator, Map<SocioTag, Set<ISource>> sortedSources, SocioUser user) throws Exception{
 		jsonGenerator.writeArrayFieldStart("children");
 		Integer unreadMessagesNum = 0;
-		for (String tag : sortedSources.keySet()) {
+		for (SocioTag tag : sortedSources.keySet()) {
 			unreadMessagesNum += addTagNode(jsonGenerator, tag, sortedSources.get(tag), user);
 		}
 		jsonGenerator.writeEndArray(); // for field 'children'

@@ -1,169 +1,201 @@
-function openMessage(id){
+function openMessage(id) {
 	window.alert(id);
 }
-function expandMessage(id){
-	$("#"+id).children(".MessageText").addClass("Expand");
-	$("#"+id).children(".MessageExpand").addClass("Invisible");
-	$("#"+id).children(".MessageCollapse").removeClass("Invisible");
-	$("#"+id).addClass("Expand");
+function expandMessage(id) {
+	$("#" + id).children(".MessageText").addClass("Expand");
+	$("#" + id).children(".MessageExpand").addClass("Invisible");
+	$("#" + id).children(".MessageCollapse").removeClass("Invisible");
+	$("#" + id).addClass("Expand");
 }
-function collapseMessage(id){
-	$("#"+id).children(".MessageText").removeClass("Expand");
-	$("#"+id).children(".MessageExpand").removeClass("Invisible");
-	$("#"+id).children(".MessageCollapse").addClass("Invisible");
-	$("#"+id).removeClass("Expand");
+function collapseMessage(id) {
+	$("#" + id).children(".MessageText").removeClass("Expand");
+	$("#" + id).children(".MessageExpand").removeClass("Invisible");
+	$("#" + id).children(".MessageCollapse").addClass("Invisible");
+	$("#" + id).removeClass("Expand");
 }
-function openUrlInDiv(divId, url, functions){
-	$.post(url).success(function(data) { $(divId).html(data); })
-	    .error(onFailure)
-	    .complete(functions);	
+function openUrlInDiv(divId, url, functions) {
+	$.post(url).success(function(data) {
+		$(divId).html(data);
+	}).error(onFailure).complete(functions);
 }
-function resizeTabs(){
-	$("#accounts_tab_div").css("height",$("#accounts_tab_span").innerWidth() + 10);
-	$("#contacts_tab_div").css("height",$("#contacts_tab_span").innerWidth() + 10);
-	$("#feeds_tab_div").css("height",$("#feeds_tab_span").innerWidth() + 10);
-	$("#accounts_tab_span").css("bottom",$("#accounts_tab_span").innerWidth()/2*-1 + 5);
-	$("#contacts_tab_span").css("bottom",$("#contacts_tab_span").innerWidth()/2*-1 + 5);
-	$("#feeds_tab_span").css("bottom",$("#feeds_tab_span").innerWidth()/2*-1 + 5);
-	$("#accounts_tab_span").css("left",$("#accounts_tab_span").innerHeight()*-1-2);
-	$("#contacts_tab_span").css("left",$("#contacts_tab_span").innerHeight()*-1);
-	$("#feeds_tab_span").css("left",$("#feeds_tab_span").innerHeight()*-1-3);
+function resizeTabs() {
+	$("#accounts_tab_div").css("height",
+			$("#accounts_tab_span").innerWidth() + 10);
+	$("#contacts_tab_div").css("height",
+			$("#contacts_tab_span").innerWidth() + 10);
+	$("#feeds_tab_div").css("height", $("#feeds_tab_span").innerWidth() + 10);
+	$("#accounts_tab_span").css("bottom",
+			$("#accounts_tab_span").innerWidth() / 2 * -1 + 5);
+	$("#contacts_tab_span").css("bottom",
+			$("#contacts_tab_span").innerWidth() / 2 * -1 + 5);
+	$("#feeds_tab_span").css("bottom",
+			$("#feeds_tab_span").innerWidth() / 2 * -1 + 5);
+	$("#accounts_tab_span").css("left",
+			$("#accounts_tab_span").innerHeight() * -1 - 2);
+	$("#contacts_tab_span").css("left",
+			$("#contacts_tab_span").innerHeight() * -1);
+	$("#feeds_tab_span").css("left",
+			$("#feeds_tab_span").innerHeight() * -1 - 3);
 }
-function centerLoginCircle(){
-	$("#login_center_div").css("top",$("#login_page_div").innerHeight()/2 - $("#login_center_div").innerHeight()/2);
+function centerLoginCircle() {
+	$("#login_center_div").css(
+			"top",
+			$("#login_page_div").innerHeight() / 2
+					- $("#login_center_div").innerHeight() / 2);
 }
-function initSources(){
-    $.post("execute?command=getSources",{},initSourcesData,"json")
-    .error(onFailure);
+function initSources() {
+	$.post("execute?command=getSources", {}, initSourcesData, "json").error(
+			onFailure);
 }
-function initSourcesData(data) { 
-		$("#sources_tree").jstree({
-		"json_data" : {"data" : [data]},
-		"themes" : {"theme" : "default", "dots" : false, "icons" : true},
-		"plugins" : ["themes","json_data","ui","crrm"],
-		"core" : { "initially_open" : [ "All" ]}})
-    	.bind("loaded.jstree", function (event, data) {
-    	}).bind("select_node.jstree", function (e, data) { getMessages(jQuery.data(data.rslt.obj[0], "id")); });
+function initSourcesData(data) {
+	$("#sources_tree").jstree(data).bind("loaded.jstree",
+			function(event, data) {
+			}).bind("select_node.jstree", function(e, data) {
+		if (!$("#sources_tree").data("treeRefreshInitiated")) {
+			getMessages(data.rslt.obj[0].id);
+		} else {
+			$("#sources_tree").data("treeRefreshInitiated", false);
+		}
+	});
 }
-function login(identifierValue){
-	$.post("login",{
+function login(identifierValue) {
+	$.post("login", {
 		identifier : identifierValue,
 		email : "test@test.com"
-	}).success(function(data) { window.open(data,"name","height=500,width=500");})
-    .error(onFailure);
+	}).success(function(data) {
+		window.open(data, "name", "height=500,width=500");
+	}).error(onFailure);
 }
-function hideTabs(){
+function hideTabs() {
 	hideDiv("tabs");
 }
-function showTabs(){
+function showTabs() {
 	showDiv("tabs");
 }
-function hideSources(){
+function hideSources() {
 	hideDiv("sources_tree");
 	hideDiv("subscriptions_underline");
 	hideDiv("subscriptions_title");
 }
-function showSources(){
+function showSources() {
 	showDiv("sources_tree");
 	showDiv("subscriptions_underline");
 	showDiv("subscriptions_title");
 }
-function hideDiv(id){
-	$("#"+id).css("display", "none");
+function hideDiv(id) {
+	$("#" + id).css("display", "none");
 }
-function showDiv(id){
-	$("#"+id).css("display", "block");
+function showDiv(id) {
+	$("#" + id).css("display", "block");
 }
 function onFailure(data) {
 	window.alert(data.responseText);
 }
-function showSettings(){
+function showSettings() {
 	hideSources();
 	showTabs();
 	$("#upper_link").html($("#back_to_main_link").html());
 }
-function showMainPage(){
+function showMainPage() {
 	hideTabs();
 	showSources();
 	$("#upper_link").html($("#settings_link").html());
 }
-function openMainPage(){
+function openMainPage() {
 	resizeTabs();
 	hideTabs();
 	initMessagesContainer();
 	showSources();
 	initSources();
 }
-function initMessagesContainer(){
+function initMessagesContainer() {
 	var messageContainer = $("#data_container");
-	messageContainer.css("height",$("body").innerHeight() - 81);
-	$("#filler").css("height",messageContainer.innerHeight() - 10);
-    messageContainer.scroll(messageScroll);
+	messageContainer.css("height", $("body").innerHeight() - 81);
+	$("#filler").css("height", messageContainer.innerHeight() - 10);
+	messageContainer.scroll(messageScroll);
 }
 function messageScroll() {
-    	var previous = 0;
-    	$.each($(".Message"), function (index, value) {
-	var message = $("#" + value.id);
-	var current = message.position().top + 100;
-	if ((previous * current <= 0 && value.id != "filler")){
-		message.addClass("SelectedMessage");
-		message.children(".MessageTitle").addClass("MessageTitleSelected");
-		message.children(".MessageTitle").children(".NetworkIconReaden").addClass("Invisible");
-		message.children(".MessageTitle").children(".NetworkIcon").removeClass("Invisible");
-		message.children(".MessageText").removeClass("MessageTextReaden");
-		message.children(".MessageText").addClass("MessageTextSelected");
-		message.children(".MessageButtons").addClass("MessageButtonsSelected");
-		message.children(".MessageExpand").addClass("MessageExpandSelected");
-		message.children(".MessageCollapse").addClass("MessageCollapseSelected");
-		if (message.data("wasSelected") == undefined){
-			markMessageReadden(value.id);
-			message.data("wasSelected","true");
-			message.children(".MessageTitle").addClass("MessageTitleReaden");
+	var previous = 0;
+	$.each($(".Message"), function(index, value) {
+		var message = $("#" + value.id);
+		var current = message.position().top + 100;
+		if ((previous * current <= 0 && value.id != "filler")) {
+			message.addClass("SelectedMessage");
+			message.children(".MessageTitle").addClass("MessageTitleSelected");
+			message.children(".MessageTitle").children(".NetworkIconReaden")
+					.addClass("Invisible");
+			message.children(".MessageTitle").children(".NetworkIcon")
+					.removeClass("Invisible");
+			message.children(".MessageText").removeClass("MessageTextReaden");
+			message.children(".MessageText").addClass("MessageTextSelected");
+			message.children(".MessageButtons").addClass(
+					"MessageButtonsSelected");
+			message.children(".MessageExpand")
+					.addClass("MessageExpandSelected");
+			message.children(".MessageCollapse").addClass(
+					"MessageCollapseSelected");
+			if (message.data("wasSelected") == undefined) {
+				markMessageReadden(value.id);
+				message.data("wasSelected", "true");
+				message.children(".MessageTitle")
+						.addClass("MessageTitleReaden");
+			}
+		} else {
+			if (message.hasClass("SelectedMessage")) {
+				message.removeClass("SelectedMessage");
+				message.children(".MessageTitle").removeClass(
+						"MessageTitleSelected");
+				message.children(".MessageTitle")
+						.children(".NetworkIconReaden")
+						.removeClass("Invisible");
+				message.children(".MessageTitle").children(".NetworkIcon")
+						.addClass("Invisible");
+				message.children(".MessageText").addClass("MessageTextReaden");
+				message.children(".MessageText").removeClass(
+						"MessageTextSelected");
+				message.children(".MessageButtons").removeClass(
+						"MessageButtonsSelected");
+				message.children(".MessageExpand").removeClass(
+						"MessageExpandSelected");
+				message.children(".MessageCollapse").removeClass(
+						"MessageCollapseSelected");
+			}
 		}
-	}else{
-		if (message.hasClass("SelectedMessage")){
-			message.removeClass("SelectedMessage");
-			message.children(".MessageTitle").removeClass("MessageTitleSelected");
-			message.children(".MessageTitle").children(".NetworkIconReaden").removeClass("Invisible");
-			message.children(".MessageTitle").children(".NetworkIcon").addClass("Invisible");
-			message.children(".MessageText").addClass("MessageTextReaden");
-			message.children(".MessageText").removeClass("MessageTextSelected");
-			message.children(".MessageButtons").removeClass("MessageButtonsSelected");
-			message.children(".MessageExpand").removeClass("MessageExpandSelected");
-			message.children(".MessageCollapse").removeClass("MessageCollapseSelected");
-		}
-	}
-	previous = current;
+		previous = current;
 	});
 }
-function markMessageReadden(id){
-	$.post("execute?command=markMessageReaden&messageId=" + id,{},initSourcesData,"json")
-    .error(onFailure);
+function markMessageReadden(id) {
+	$("#sources_tree").data("treeRefreshInitiated", true);
+	$.post("execute?command=markMessageReaden&messageId=" + id, {},
+			initSourcesData, "json").error(onFailure);
 }
-function initPage(){
-	if ($("#login_center_div").size() != 0){
+function initPage() {
+	if ($("#login_center_div").size() != 0) {
 		centerLoginCircle();
-	}else{
+	} else {
 		openMainPage();
 	}
 }
-function loadMainPage(){
-	openUrlInDiv("#SiteBody", "execute?command=openMainPage",[initPage]);
+function loadMainPage() {
+	openUrlInDiv("#SiteBody", "execute?command=openMainPage", [ initPage ]);
 }
-function logout(){
-	openUrlInDiv("#SiteBody", "execute?command=logout",[initPage]);
+function logout() {
+	openUrlInDiv("#SiteBody", "execute?command=logout", [ initPage ]);
 }
-function loadStartPage(){
-	openUrlInDiv("#SiteBody", "execute?command=openStartPage",[initPage]);
+function loadStartPage() {
+	openUrlInDiv("#SiteBody", "execute?command=openStartPage", [ initPage ]);
 }
-function getRssFeeds(){
-	openUrlInDiv("#data_container", "execute?command=getRssFeeds",[]);
+function getRssFeeds() {
+	openUrlInDiv("#data_container", "execute?command=getRssFeeds", []);
 }
-function getMessages(id){
-	$(".Message").empty();
-	$.post("execute?command=getMessages&sourceId=" + id).success(function(data) { $("#filler").before(data); })
-    .error(onFailure);
+function getMessages(id) {
+	$(".Message").remove();
+	$.post("execute?command=getMessages&sourceId=" + id).success(
+			function(data) {
+				$("#filler").before(data);
+			}).error(onFailure);
 }
-function getAllMessages(){
-	openUrlInDiv("#data_container", "execute?command=getMessages&sourceId=all",[]);
+function getAllMessages() {
+	openUrlInDiv("#data_container", "execute?command=getMessages&sourceId=all",
+			[]);
 }

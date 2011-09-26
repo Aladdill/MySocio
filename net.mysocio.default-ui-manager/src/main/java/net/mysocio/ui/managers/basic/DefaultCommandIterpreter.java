@@ -28,8 +28,8 @@ public class DefaultCommandIterpreter implements ICommandInterpreter{
 
 	@Override
 	public String executeCommand(String command) throws CommandExecutionException {
-		logger.debug("executing command:" + command);
 		EDefaultCommand commandObject = getCommandValue(command);
+		logger.debug("executing command:" + command);
 		String response = "No page set for this command";
 		try {
 			response = commandObject.getExecutor().execute(connectionData);

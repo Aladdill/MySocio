@@ -51,6 +51,7 @@ public class JdoDataManager extends AbstractDataManager {
 			System.setProperty("sun.net.http.allowRestrictedHeaders", "true");
 	        pmf = JDOHelper.getPersistenceManagerFactory("transactions-optional");
 	        pm = pmf.getPersistenceManager();
+	        pm.setMultithreaded(true);
 		}
 		return instance;
 	}
