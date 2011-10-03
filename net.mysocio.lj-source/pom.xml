@@ -15,6 +15,11 @@
 			<version>${mysocio.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>net.mysocio</groupId>
+			<artifactId>data-management</artifactId>
+			<version>${mysocio.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>org.katkov</groupId>
 			<artifactId>lj-api</artifactId>
 			<version>${mysocio.version}</version>
@@ -42,15 +47,15 @@
 	</dependencies>
 	<build>
 		<plugins>
-		<plugin>
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>				
+				<artifactId>maven-compiler-plugin</artifactId>
 				<version>2.3.2</version>
 				<configuration>
 					<source>1.5</source>
 					<target>1.5</target>
 				</configuration>
-			</plugin>	
+			</plugin>
 			<plugin>
 				<groupId>org.datanucleus</groupId>
 				<artifactId>maven-datanucleus-plugin</artifactId>
@@ -72,7 +77,7 @@
 		</plugins>
 		<pluginManagement>
 			<plugins>
-				<!--TODO TEXT. This plugin's configuration is used in m2e only.-->
+				<!--TODO TEXT. This plugin's configuration is used in m2e only. -->
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>
 					<artifactId>lifecycle-mapping</artifactId>

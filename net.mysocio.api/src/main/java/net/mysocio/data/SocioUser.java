@@ -159,8 +159,9 @@ public class SocioUser extends Contact implements IUser {
 			}
 		}
 		if (message != null){
-			List<IMessage> sourceList = unreadMessages.get(message.getSourceId());
+			List<IMessage> sourceList = unreadMessages.remove(message.getSourceId());
 			sourceList.remove(message);
+			unreadMessages.put(message.getSourceId(), sourceList);
 		}
 	}
 

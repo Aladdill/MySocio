@@ -15,40 +15,14 @@
 			<version>${mysocio.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>net.mysocio</groupId>
-			<artifactId>rss-source</artifactId>
-			<version>${mysocio.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>net.mysocio</groupId>
-			<artifactId>lj-source</artifactId>
-			<version>${mysocio.version}</version>
-		</dependency>
-		<dependency>
 			<groupId>org.datanucleus</groupId>
 			<artifactId>datanucleus-core</artifactId>
 			<version>${datanucleus-version}</version>
 		</dependency>
 		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
-			<version>2.5</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
 			<groupId>javax.jdo</groupId>
 			<artifactId>jdo-api</artifactId>
 			<version>3.0.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.camel</groupId>
-			<artifactId>camel-rss</artifactId>
-			<version>${camel-version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.camel</groupId>
-			<artifactId>camel-spring</artifactId>
-			<version>${camel-version}</version>
 		</dependency>
 	</dependencies>
 </project>

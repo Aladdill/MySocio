@@ -15,7 +15,6 @@ import net.mysocio.data.IConnectionData;
 import net.mysocio.data.SocioUser;
 import net.mysocio.data.accounts.Account;
 import net.mysocio.data.accounts.FacebookAccount;
-import net.mysocio.data.management.ConnectionData;
 import net.mysocio.data.management.DataManagerFactory;
 import net.mysocio.data.management.JdoDataManager;
 import net.mysocio.data.messages.FacebookMessage;

@@ -4,7 +4,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.mysocio.data.IConnectionData;
-import net.mysocio.data.management.ConnectionData;
 import net.mysocio.ui.management.CommandExecutionException;
 import net.mysocio.ui.management.CommandIterpreterFactory;
 import net.mysocio.ui.management.ICommandInterpreter;
