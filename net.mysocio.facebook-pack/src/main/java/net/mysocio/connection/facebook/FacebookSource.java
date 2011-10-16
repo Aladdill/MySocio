@@ -8,6 +8,7 @@ import javax.jdo.annotations.PersistenceCapable;
 
 import net.mysocio.connection.readers.ISourceManager;
 import net.mysocio.connection.readers.Source;
+import net.mysocio.data.accounts.facebook.FacebookAccount;
 import net.mysocio.data.messages.facebook.FacebookMessage;
 
 /**
@@ -16,6 +17,7 @@ import net.mysocio.data.messages.facebook.FacebookMessage;
  */
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable="true")
 public class FacebookSource extends Source {
+	private FacebookAccount account; 
 
 	/**
 	 * 
@@ -28,6 +30,14 @@ public class FacebookSource extends Source {
 
 	@Override
 	public ISourceManager getManager() {
-		return null;
+		return FacebookSourceManager.getInstance();
+	}
+
+	public FacebookAccount getAccount() {
+		return account;
+	}
+
+	public void setAccount(FacebookAccount account) {
+		this.account = account;
 	}
 }

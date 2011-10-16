@@ -12,7 +12,6 @@ import net.mysocio.connection.readers.ISource;
 import net.mysocio.data.IConnectionData;
 import net.mysocio.data.SocioTag;
 import net.mysocio.data.SocioUser;
-import net.mysocio.data.management.DataManagerFactory;
 import net.mysocio.data.management.MessagesManager;
 import net.mysocio.ui.management.CommandExecutionException;
 import net.mysocio.ui.management.ICommandExecutor;
@@ -21,12 +20,15 @@ import net.mysocio.ui.managers.basic.DefaultUiManager;
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.JsonGenerator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Aladdin
  *
  */
 public class GetSourcesExecutor implements ICommandExecutor {
+	private static final Logger logger = LoggerFactory.getLogger(GetSourcesExecutor.class);
 	private DefaultUiManager uiManager = new DefaultUiManager();
 	/* (non-Javadoc)
 	 * @see net.mysocio.ui.management.ICommandExecutor#execute(javax.servlet.http.HttpServletRequest)
@@ -34,7 +36,12 @@ public class GetSourcesExecutor implements ICommandExecutor {
 	@Override
 	public String execute(IConnectionData connectionManager) throws CommandExecutionException{
 		SocioUser user = connectionManager.getUser();
-		MessagesManager.getInstance().updateUnreaddenMessages(user);
+		try {
+			MessagesManager.getInstance().updateUnreaddenMessages(user);
+		} catch (Exception e1) {
+			logger.error("Can't get user messages",e1);
+			throw new CommandExecutionException(e1);
+		}
 		JsonFactory f = new JsonFactory();
 		StringWriter writer = new StringWriter();
 		JsonGenerator jsonGenerator;
@@ -70,6 +77,7 @@ public class GetSourcesExecutor implements ICommandExecutor {
 			jsonGenerator.writeEndObject();//final
 			jsonGenerator.flush();
 		} catch (Exception e) {
+			logger.error("Can't create user sources tree.",e);
 			throw new CommandExecutionException(e);
 		}
 		return writer.toString();

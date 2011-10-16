@@ -3,8 +3,6 @@
  */
 package net.mysocio.authentication.facebook;
 
-import java.util.Iterator;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import net.mysocio.authentication.AbstractOauth2Manager;
@@ -49,35 +47,36 @@ public class FacebookAuthenticationManager extends AbstractOauth2Manager{
 	@Override
 	protected Account getAccount(OAuthService service, Token accessToken)
 			throws Exception {
-		 OAuthRequest request = new OAuthRequest(Verb.GET, "https://graph.facebook.com/me");
+		String response = callUrl(service, accessToken, "https://graph.facebook.com/me");
+		return initAccount(response, accessToken.getToken(), accessToken.getSecret());
+	}
+	
+	public String callUrl(OAuthService service, Token accessToken, String url){
+		 OAuthRequest request = new OAuthRequest(Verb.GET, url);
 		    service.signRequest(accessToken, request);
 		Response response = request.send();
-		FacebookAccount account = new FacebookAccount();
-		account.setToken(accessToken.getToken());
 		if (response.getCode() != 200){
-			logger.error("Error getting Facebook account data.");
+			logger.error("Error getting Facebook data for url: " + url);
 			Set<String> headers = response.getHeaders().keySet();
 			for (String name : headers) {
 				logger.error(response.getHeader(name));
 			}
 		}
-		initAccount(response.getBody(), account);
-		return account;
+		return response.getBody();
 	}
 	
-	private void initAccount(String response, FacebookAccount account) throws Exception{
+	private FacebookAccount initAccount(String response, String token, String secret) throws Exception{
+		FacebookAccount account =new FacebookAccount();
+		account.setToken(token);
 		ObjectMapper mapper = new ObjectMapper(new JsonFactory());
 		JsonNode root = mapper.readTree(response);
-		Iterator<Entry<String, JsonNode>> fields = root.getFields();
-		while(fields.hasNext()){
-			Entry<String, JsonNode> entry = fields.next();
-			if ("id".equals(entry.getKey())){
-				account.setAccountUniqueId(entry.getValue().getValueAsText());
-			}else if ("name".equals(entry.getKey())){
-				account.setUserName(entry.getValue().getValueAsText());
-			}else if ("username".equals(entry.getKey())){
-				account.setUserpicUrl("http://graph.facebook.com/" + entry.getValue().getValueAsText() + "/picture");
-			}
-		}
+		account.setAccountUniqueId(root.get("id").getValueAsText());
+		account.setUserName(root.get("name").getValueAsText());
+		account.setUserpicUrl("http://graph.facebook.com/" + root.get("username").getValueAsText() + "/picture");
+		return account;
+	}
+
+	public String callUrl(String token, String url) {
+		return callUrl(getService(), new Token(token, getMySocioSecret()), url);
 	}
 }

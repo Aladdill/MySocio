@@ -31,7 +31,7 @@ public class MessagesManager implements IMessagesManager {
 		destination.postMessage(message);
 	}
 
-	public void updateUnreaddenMessages(SocioUser user) {
+	public void updateUnreaddenMessages(SocioUser user) throws Exception {
 		List<IMessage> messages = getLastMessages(user);
 		storeMessages(messages);
 		for (IMessage message : messages) {
@@ -40,7 +40,7 @@ public class MessagesManager implements IMessagesManager {
 		DataManagerFactory.getDataManager().saveObject(user);
 	}
 
-	public List<IMessage> getLastMessages(SocioUser user) {
+	public List<IMessage> getLastMessages(SocioUser user) throws Exception {
 		long checkTime = System.currentTimeMillis();
 		Long lastUpdate = user.getLastUpdate();
 		Set<ISource> sources = user.getSources();

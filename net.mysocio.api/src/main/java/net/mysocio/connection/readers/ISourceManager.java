@@ -12,5 +12,5 @@ import net.mysocio.data.messages.IMessage;
  *
  */
 public interface ISourceManager {
-	public List<IMessage> getLastMessages(ISource source, Long from, Long to);
+	public List<IMessage> getLastMessages(ISource source, Long from, Long to) throws Exception;
 }
