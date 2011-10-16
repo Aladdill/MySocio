@@ -8,7 +8,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import net.mysocio.data.IUiObject;
+import net.mysocio.data.management.DefaultResourcesManager;
+import net.mysocio.data.ui.IUiObject;
 import net.mysocio.ui.management.IUiManager;
 
 /**

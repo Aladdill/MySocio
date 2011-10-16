@@ -30,7 +30,7 @@ public class RSSReader{
 		List<RssMessage> messages = new ArrayList<RssMessage>();
 		for (SyndEntryImpl entry : entries) {
 			RssMessage message = new RssMessage();
-			message.setLink(entry.getUri());
+			message.setUniqueId(entry.getUri());
 			message.setTitle(entry.getTitle());
 			message.setText(entry.getDescription().getValue());
 			message.setDate(entry.getPublishedDate().getTime());

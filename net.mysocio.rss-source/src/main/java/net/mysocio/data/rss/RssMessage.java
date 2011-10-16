@@ -22,6 +22,6 @@ public class RssMessage extends GeneralMessage {
 	}
 	public RssMessage(String link) {
 		super();
-		setLink(link);
+		setUniqueId(link);
 	}
 }

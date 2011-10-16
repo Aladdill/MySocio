@@ -13,6 +13,7 @@ import net.mysocio.data.IConnectionData;
 import net.mysocio.data.SocioTag;
 import net.mysocio.data.SocioUser;
 import net.mysocio.data.management.DataManagerFactory;
+import net.mysocio.data.management.MessagesManager;
 import net.mysocio.ui.management.CommandExecutionException;
 import net.mysocio.ui.management.ICommandExecutor;
 import net.mysocio.ui.managers.basic.DefaultUiManager;
@@ -33,7 +34,7 @@ public class GetSourcesExecutor implements ICommandExecutor {
 	@Override
 	public String execute(IConnectionData connectionManager) throws CommandExecutionException{
 		SocioUser user = connectionManager.getUser();
-		DataManagerFactory.getDataManager().updateUnreaddenMessages(user);
+		MessagesManager.getInstance().updateUnreaddenMessages(user);
 		JsonFactory f = new JsonFactory();
 		StringWriter writer = new StringWriter();
 		JsonGenerator jsonGenerator;

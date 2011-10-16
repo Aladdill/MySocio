@@ -3,8 +3,8 @@
  */
 package net.mysocio.ui.data.objects;
 
-import net.mysocio.data.UiObject;
-import net.mysocio.ui.managers.basic.DefaultResourcesManager;
+import net.mysocio.data.management.DefaultResourcesManager;
+import net.mysocio.data.ui.UiObject;
 
 /**
  * @author Aladdin

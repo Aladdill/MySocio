@@ -20,6 +20,21 @@
 			<version>${mysocio.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>net.mysocio</groupId>
+			<artifactId>facebook-pack</artifactId>
+			<version>${mysocio.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>net.mysocio</groupId>
+			<artifactId>google-pack</artifactId>
+			<version>${mysocio.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>net.mysocio</groupId>
+			<artifactId>test-pack</artifactId>
+			<version>${mysocio.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
 			<version>2.5</version>

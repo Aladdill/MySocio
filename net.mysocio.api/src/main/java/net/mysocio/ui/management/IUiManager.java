@@ -3,8 +3,8 @@
  */
 package net.mysocio.ui.management;
 
-import net.mysocio.data.IUiObject;
 import net.mysocio.data.SocioUser;
+import net.mysocio.data.ui.IUiObject;
 
 /**
  * @author Aladdin

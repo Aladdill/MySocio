@@ -9,6 +9,7 @@ import java.util.List;
 import net.mysocio.data.IConnectionData;
 import net.mysocio.data.SocioUser;
 import net.mysocio.data.management.DataManagerFactory;
+import net.mysocio.data.management.MessagesManager;
 import net.mysocio.data.messages.IMessage;
 import net.mysocio.ui.data.objects.DefaultMessage;
 import net.mysocio.ui.management.CommandExecutionException;
@@ -31,10 +32,7 @@ public class GetMessagesExecutor implements ICommandExecutor {
 		for (IMessage message : messages) {
 			AbstractUiManager uiManager = new DefaultUiManager();
 			String pageHtml = uiManager.getPage(new DefaultMessage(),connectionData.getUser());
-			pageHtml = pageHtml.replace("message.title", message.getTitle());
-			pageHtml = pageHtml.replace("message.id", message.getId());
-			pageHtml = pageHtml.replace("message.text", message.getText());
-			pageHtml = pageHtml.replace("message.link", message.getLink());
+			pageHtml = message.replacePlaceholders(pageHtml);
 			output.append(pageHtml);
 		}
 		return output.toString();
@@ -48,6 +46,6 @@ public class GetMessagesExecutor implements ICommandExecutor {
 		SocioUser user = connectionData.getUser();
 		user.setSelectedSource(id);
 		DataManagerFactory.getDataManager().saveObject(user);
-		return user.getUnreadMessages();
+		return MessagesManager.getInstance().getMessagesForSelectedSource(user);
 	}
 }

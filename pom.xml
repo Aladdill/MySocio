@@ -72,17 +72,20 @@
 		<module>net.mysocio.api</module>
 		<module>net.mysocio.data-management</module>
 		<module>net.mysocio.authentication-management</module>
+		<module>net.mysocio.facebook-pack</module>
+		<module>net.mysocio.google-pack</module>
+		<module>net.mysocio.test-pack</module>
 		<module>net.mysocio.default-ui-manager</module>
-		<module>net.mysocio.lj-source</module>
+		<!-- <module>org.katkov.lj-api</module>
+		<module>net.mysocio.lj-source</module> -->
 		<module>net.mysocio.rss-source</module>
 		<module>net.mysocio.web-app</module>
-		<module>org.katkov.lj-api</module>
 		<!-- <module>org.ljtoolkit.ljtoolkit</module> -->
 	</modules>
 	<properties>
 		<camel-version>2.7.0</camel-version>
-		<scribe-version>1.2.2</scribe-version>
-		<datanucleus-version>3.0.1</datanucleus-version>
+		<scribe-version>1.2.3</scribe-version>
+		<datanucleus-version>3.0.2</datanucleus-version>
 		<datanucleus-plugin-version>3.0.0-release</datanucleus-plugin-version>
 		<mysocio.version>0.0.1-SNAPSHOT</mysocio.version>
 	</properties>

@@ -15,21 +15,23 @@ public interface IMessage extends ISocioObject {
 
 	public String getText();
 
-	public abstract String getLink();
+	public String getUniqueId();
 
-	public abstract void setSourceId(String sourceId);
+	public void setSourceId(String sourceId);
 
-	public abstract String getSourceId();
+	public String getSourceId();
 
-	public abstract void setLink(String link);
+	public void setUniqueId(String uniqueId);
 
-	public abstract void setText(String text);
+	public void setText(String text);
 
-	public abstract void setTitle(String title);
-
-	public abstract String getTitle();
+	public void setTitle(String title);
 	
-	public abstract long getDate();
+	public String replacePlaceholders(String template);
+
+	public String getTitle();
+	
+	public long getDate();
 	
 	public void setDate(long date);
 }

@@ -3,13 +3,10 @@
  */
 package net.mysocio.data.management;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 
 import javax.jdo.Extent;
 import javax.jdo.JDOHelper;
@@ -18,19 +15,19 @@ import javax.jdo.PersistenceManagerFactory;
 import javax.jdo.Query;
 import javax.jdo.Transaction;
 
-import net.mysocio.connection.readers.ISource;
 import net.mysocio.connection.readers.Source;
+import net.mysocio.data.IDataManager;
 import net.mysocio.data.ISocioObject;
-import net.mysocio.data.IUiObject;
 import net.mysocio.data.SocioObjectTags;
 import net.mysocio.data.SocioTag;
 import net.mysocio.data.SocioUser;
-import net.mysocio.data.UiObject;
-import net.mysocio.data.UserUiObjects;
 import net.mysocio.data.accounts.Account;
 import net.mysocio.data.contacts.Contact;
 import net.mysocio.data.messages.GeneralMessage;
 import net.mysocio.data.messages.IMessage;
+import net.mysocio.data.ui.IUiObject;
+import net.mysocio.data.ui.UiObject;
+import net.mysocio.data.ui.UserUiObjects;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,13 +36,13 @@ import org.slf4j.LoggerFactory;
  * @author Aladdin
  *
  */
-public class JdoDataManager extends AbstractDataManager {
+public class JdoDataManager implements IDataManager {
 	private static final Logger logger = LoggerFactory.getLogger(JdoDataManager.class);
 	private static PersistenceManager pm;
 	private static PersistenceManagerFactory pmf;
-	private static AbstractDataManager instance = new JdoDataManager();
+	private static IDataManager instance = new JdoDataManager();
 	
-	public static AbstractDataManager getInstance() {
+	public static IDataManager getInstance() {
 		if (pm == null){
 			// Create a PersistenceManagerFactory for this datastore
 			System.setProperty("sun.net.http.allowRestrictedHeaders", "true");
@@ -88,6 +85,10 @@ public class JdoDataManager extends AbstractDataManager {
 		saveObject(account);
 		logger.debug("User created");
 		return user;
+	}
+	
+	public ISocioObject getObject(Class<?> clazz, String id){
+		return getUniqueObjectWithoutTags(clazz, getEqualsExpression("id", id));
 	}
 	
 	private String getEqualsExpression(String fieldName, String value){
@@ -232,8 +233,8 @@ public class JdoDataManager extends AbstractDataManager {
 		return createdSource;
 	}
 	
-	public GeneralMessage createMessage(GeneralMessage message){
-		GeneralMessage createdMessage = createUniqueObject(message.getClass(), getEqualsExpression("link", message.getLink()), message);
+	public IMessage createMessage(IMessage message){
+		IMessage createdMessage = createUniqueObject(message.getClass(), getEqualsExpression("uniqueId", message.getUniqueId()), message);
 		return createdMessage;
 	}
 
@@ -243,42 +244,6 @@ public class JdoDataManager extends AbstractDataManager {
 	 */
 	public void createContact(Contact contact) {
 		saveObject(contact);
-	}
-
-	/* 
-	 * For testing purposes only!
-	 */
-	public Set<IMessage> getMessages(ISource source, SocioUser user) {
-		Set<IMessage> messages = new HashSet<IMessage>();
-		messages = getMessagesForOneSource(source, user);
-		return messages;
-	}
-
-	/**
-	 * @param source
-	 * @param date
-	 * @return
-	 */
-	private Set<IMessage> getMessagesForOneSource(ISource source, SocioUser user) {
-		List<IMessage> messages;
-		Query q=pm.newQuery(source.getMessageClass(), getEqualsExpression("sourceId", source.getId()) + " && date >= lastDate");
-		q.declareParameters("long lastDate");
-		q.setOrdering("date ascending");
-		messages = (List<IMessage>)q.execute(user.getLastUpdate()); 
-		retreiveTags(messages, user);
-		return new HashSet<IMessage>(messages);
-	}
-	
-	
-	public List<IMessage> getMessages(Set<ISource> sources, SocioUser user) {
-		List<IMessage> messages = new ArrayList<IMessage>();
-		if (sources.isEmpty()){
-			return messages;
-		}
-		for (ISource source : sources) {
-			messages.addAll(getMessagesForOneSource(source, user));
-		}
-		return messages;
 	}
 
 	public Map<String, IUiObject> getUserUiObjects(SocioUser user) {
@@ -319,5 +284,14 @@ public class JdoDataManager extends AbstractDataManager {
 			ISocioObject object = objectsMap.get(socioObjectTags.getId());
 			object.setTags(socioObjectTags);
 		}
+	}
+	
+	public List<IMessage> getMessages(List<String> ids){
+		Query q=pm.newQuery(GeneralMessage.class);
+		q.declareImports("import java.util.Collection");
+		q.declareParameters("Collection objectsIds");
+		q.setFilter("objectsIds.contains(id)");
+		q.setOrdering("date ascending");
+		return (List<IMessage>)q.execute(ids);
 	}
 }

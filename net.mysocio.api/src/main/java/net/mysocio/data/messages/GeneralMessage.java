@@ -24,7 +24,7 @@ public abstract class GeneralMessage extends SocioObject implements IMessage{
 	 */
 	private static final long serialVersionUID = 352828420023827718L;
 	@Persistent
-	private String link =  new String();
+	private String uniqueId =  new String();
 	@Persistent
 	private String title =  new String();
 	@Persistent
@@ -58,14 +58,14 @@ public abstract class GeneralMessage extends SocioObject implements IMessage{
 	/**
 	 * @return the link
 	 */
-	public String getLink() {
-		return link;
+	public String getUniqueId() {
+		return uniqueId;
 	}
 	/**
 	 * @param link the link to set
 	 */
-	public void setLink(String link) {
-		this.link = link;
+	public void setUniqueId(String uniqueId) {
+		this.uniqueId = uniqueId;
 	}
 
 	/**
@@ -81,4 +81,14 @@ public abstract class GeneralMessage extends SocioObject implements IMessage{
 	public void setSourceId(String sourceId) {
 		this.sourceId = sourceId;
 	}
+
+	public String replacePlaceholders(String template) {
+		String message = template.replace("message.title", getTitle());
+		message = message.replace("message.id", getId());
+		message = message.replace("message.text", getText());
+		message = message.replace("message.link", getUniqueId());
+		return message;
+	}
+	
+	
 }

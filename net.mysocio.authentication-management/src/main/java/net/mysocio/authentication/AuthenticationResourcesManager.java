@@ -16,19 +16,19 @@ public class AuthenticationResourcesManager {
 			authentication = ResourceBundle.getBundle("authentication");
 		}
 	}
-	public static String getAuthenticationId(UserIdentifier identifier){
-		return authentication.getString(identifier.name() + ".id");
+	public static String getAuthenticationId(String identifier){
+		return authentication.getString(identifier + ".id");
 	}
-	public static String getAuthenticationSecret(UserIdentifier identifier){
-		return authentication.getString(identifier.name() + ".secret");
+	public static String getAuthenticationSecret(String identifier){
+		return authentication.getString(identifier + ".secret");
 	}
-	public static String getAuthenticationRequestUrl(UserIdentifier identifier){
-		return authentication.getString(identifier.name() + ".request.url");
+	public static String getAuthenticationRequestUrl(String identifier){
+		return authentication.getString(identifier + ".request.url");
 	}
-	public static String getAuthenticationTokenUrl(UserIdentifier identifier){
-		return authentication.getString(identifier.name() + ".token.url");
+	public static String getAuthenticationTokenUrl(String identifier){
+		return authentication.getString(identifier + ".token.url");
 	}
-	public static String getAuthenticationScope(UserIdentifier identifier){
-		return authentication.getString(identifier.name() + ".scope");
+	public static String getAuthenticationScope(String identifier){
+		return authentication.getString(identifier + ".scope");
 	}
 }

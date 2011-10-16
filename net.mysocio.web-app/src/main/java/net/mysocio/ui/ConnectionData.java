@@ -51,4 +51,12 @@ public class ConnectionData implements IConnectionData{
 	public Locale getLocale() {
 		return locale;
 	}
+	@Override
+	public String getSessionAttribute(String attributeName) {
+		return (String)session.getAttribute(attributeName);
+	}
+	@Override
+	public void removeSessionAttribute(String attributeName) {
+		session.removeAttribute(attributeName);
+	}
 }

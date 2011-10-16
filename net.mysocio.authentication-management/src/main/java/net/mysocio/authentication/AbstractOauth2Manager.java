@@ -3,8 +3,14 @@
  */
 package net.mysocio.authentication;
 
+import java.rmi.AccessException;
+
+import net.mysocio.data.IAuthenticationManager;
 import net.mysocio.data.IConnectionData;
+import net.mysocio.data.SocioUser;
 import net.mysocio.data.accounts.Account;
+import net.mysocio.data.management.DataManagerFactory;
+import net.mysocio.data.management.DefaultResourcesManager;
 
 import org.scribe.builder.ServiceBuilder;
 import org.scribe.builder.api.Api;
@@ -12,6 +18,7 @@ import org.scribe.model.Token;
 import org.scribe.model.Verifier;
 import org.scribe.oauth.OAuthService;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -19,12 +26,13 @@ import org.slf4j.Logger;
  *
  */
 public abstract class AbstractOauth2Manager implements IAuthenticationManager {
+	private static final Logger logger = LoggerFactory.getLogger(AbstractOauth2Manager.class);
 
 	protected String getBasicRequestUrl(){
 		return AuthenticationResourcesManager.getAuthenticationRequestUrl(getUserIdentifier());
 	}
 	
-	protected abstract UserIdentifier getUserIdentifier();
+	protected abstract String getUserIdentifier();
 
 	protected String getMysocioId(){
 		return AuthenticationResourcesManager.getAuthenticationId(getUserIdentifier());
@@ -78,6 +86,26 @@ public abstract class AbstractOauth2Manager implements IAuthenticationManager {
 		Token accessToken = service.getAccessToken(null, verifier);
 		return getAccount(service, accessToken);
 	}
+
+	@Override
+	public String authenticate(IConnectionData connectionData) throws Exception {
+		String error = connectionData.getRequestParameter("error");
+		if (error != null && error.equals("access_denied")){
+			logger.error("Access to user account wasn't granted.");
+			throw new AccessException("Are you sure you want to log in?");
+		}
+		String responseString = getRequestUrl();
+		String code = connectionData.getRequestParameter("code");
+		if (code != null){
+			Account account = login(connectionData);
+			SocioUser user = DataManagerFactory.getDataManager().getUser(account, connectionData.getLocale());
+			connectionData.setUser(user);
+			connectionData.removeSessionAttribute("identifier");
+			responseString = DefaultResourcesManager.getPage("closingWindow.html");
+		}
+		return responseString;
+	}
+	
 
 //	private void addUrlParameter(StringBuffer parameters, String parameter,
 //			String value) throws UnsupportedEncodingException {

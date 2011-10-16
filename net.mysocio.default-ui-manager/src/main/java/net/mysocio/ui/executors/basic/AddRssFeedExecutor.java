@@ -6,9 +6,9 @@ package net.mysocio.ui.executors.basic;
 import java.net.URL;
 
 import net.mysocio.data.IConnectionData;
+import net.mysocio.data.IDataManager;
 import net.mysocio.data.SocioUser;
 import net.mysocio.data.management.DataManagerFactory;
-import net.mysocio.data.management.IDataManager;
 import net.mysocio.sources.rss.RssSource;
 import net.mysocio.ui.data.objects.RssConnections;
 import net.mysocio.ui.management.CommandExecutionException;

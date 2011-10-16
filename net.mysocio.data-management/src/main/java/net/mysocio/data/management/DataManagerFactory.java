@@ -3,6 +3,8 @@
  */
 package net.mysocio.data.management;
 
+import net.mysocio.data.IDataManager;
+
 /**
  * @author Aladdin
  *

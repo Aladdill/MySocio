@@ -3,7 +3,7 @@
  */
 package net.mysocio.ui.data.objects;
 
-import net.mysocio.ui.managers.basic.DefaultResourcesManager;
+import net.mysocio.data.management.DefaultResourcesManager;
 
 
 /**

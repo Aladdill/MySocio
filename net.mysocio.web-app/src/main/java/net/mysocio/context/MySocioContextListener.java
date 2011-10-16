@@ -8,8 +8,8 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 import net.mysocio.authentication.AuthenticationResourcesManager;
+import net.mysocio.data.management.DefaultResourcesManager;
 import net.mysocio.data.management.JdoDataManager;
-import net.mysocio.ui.managers.basic.DefaultResourcesManager;
 
 /**
  * @author Aladdin

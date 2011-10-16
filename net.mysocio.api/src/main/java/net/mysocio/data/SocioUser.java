@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -20,7 +19,6 @@ import net.mysocio.connection.readers.ISource;
 import net.mysocio.data.accounts.Account;
 import net.mysocio.data.contacts.Contact;
 import net.mysocio.data.contacts.IContact;
-import net.mysocio.data.messages.IMessage;
 
 /**
  * @author Aladdin
@@ -34,7 +32,7 @@ public class SocioUser extends Contact implements IUser {
 	 */
 	private static final long serialVersionUID = -2886854604233072581L;
     @Persistent
-	private Map<String, List<IMessage>> unreadMessages = new HashMap<String, List<IMessage>>();
+	private Map<String, List<String>> unreadMessages = new HashMap<String, List<String>>();
 	@Persistent
 	private Set<Account> accounts = new HashSet<Account>();
 	@Persistent
@@ -104,10 +102,10 @@ public class SocioUser extends Contact implements IUser {
 		return contacts;
 	}
 
-	public List<IMessage> getUnreadMessages(Set<ISource> sources){
-		List<IMessage> unreaddenMessages = new ArrayList<IMessage>();
+	public List<String> getUnreadMessages(Set<ISource> sources){
+		List<String> unreaddenMessages = new ArrayList<String>();
 		for (ISource source : sources) {
-			List<IMessage> messages = this.unreadMessages.get(source.getId());
+			List<String> messages = this.unreadMessages.get(source.getId());
 			if (messages != null){
 				unreaddenMessages.addAll(messages);
 			}
@@ -116,53 +114,38 @@ public class SocioUser extends Contact implements IUser {
 	}
 	
 	public Integer getUnreadMessagesNum(String id){
-		List<IMessage> messages = this.unreadMessages.get(id);
+		List<String> messages = this.unreadMessages.get(id);
 		if (messages == null || messages.isEmpty()){
 			return 0;
 		}
 		return messages.size();
 	}
 	
-	public void addUnreadMessages(String sourceId, List<IMessage> messages){
-		List<IMessage> list = unreadMessages.get(sourceId);
+	public void addUnreadMessages(String sourceId, List<String> messages){
+		List<String> list = unreadMessages.get(sourceId);
 		if (list == null){
-			list = new ArrayList<IMessage>();
+			list = new ArrayList<String>();
 		}
 		messages.removeAll(list);
 		list.addAll(messages);
 		unreadMessages.put(sourceId, list);
 	}
 	
-	public void addUnreadMessage(IMessage message){
-		String sourceId = message.getSourceId();
-		List<IMessage> list = unreadMessages.get(sourceId);
+	public void addUnreadMessage(String sourceId, String messageId){
+		List<String> list = unreadMessages.get(sourceId);
 		if (list == null){
-			list = new ArrayList<IMessage>();
+			list = new ArrayList<String>();
 		}
-		if (!list.contains(message)){
-			list.add(message);
+		if (!list.contains(messageId)){
+			list.add(messageId);
 		}
 		unreadMessages.put(sourceId, list);
 	}
 	
-	public void setMessageReadden(String messageId) throws CorruptedDataException{
-		List<IMessage> list = getUnreadMessages();
-		if (list == null){
-			throw new CorruptedDataException();
-		}
-		Iterator<IMessage> iterator = list.iterator();
-		IMessage message = null;
-		while(iterator.hasNext()) {
-			message = iterator.next();
-			if (message.getId().equals(messageId)){
-				break;
-			}
-		}
-		if (message != null){
-			List<IMessage> sourceList = unreadMessages.remove(message.getSourceId());
-			sourceList.remove(message);
-			unreadMessages.put(message.getSourceId(), sourceList);
-		}
+	public void setMessageReadden(String sourceId, String messageId){
+		List<String> sourceList = unreadMessages.remove(sourceId);
+		sourceList.remove(messageId);
+		unreadMessages.put(sourceId, sourceList);
 	}
 
 	/**
@@ -193,7 +176,7 @@ public class SocioUser extends Contact implements IUser {
 		this.contacts.add(contact);
 	}
 
-	public List<IMessage> getAllUnreadMessages() {
+	public List<String> getAllUnreadMessages() {
 		return getUnreadMessages(getSources());
 	}
 
@@ -205,11 +188,11 @@ public class SocioUser extends Contact implements IUser {
 		this.locale = locale;
 	}
 
-	public List<IMessage> getUnreadMessages() {
+	public List<String> getUnreadMessages() {
 		if (selectedSource.equalsIgnoreCase(SocioUser.ALL_SOURCES)){
 			return getAllUnreadMessages();
 		}
-		List<IMessage> messages = null; 
+		List<String> messages = null; 
 		SocioTag tag = getTag(selectedSource);
 		if (tag != null){
 			messages = getUnreadMessages(getSortedSources().get(tag));

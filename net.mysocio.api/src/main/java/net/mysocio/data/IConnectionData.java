@@ -12,6 +12,8 @@ import java.util.Locale;
 public interface IConnectionData {
 
 	public abstract String getRequestParameter(String parameterName);
+	
+	public abstract String getSessionAttribute(String attributeName);
 
 	public abstract SocioUser getUser();
 
@@ -20,4 +22,6 @@ public interface IConnectionData {
 	public abstract void setUser(SocioUser user);
 
 	public abstract Locale getLocale();
+
+	public void removeSessionAttribute(String attributeName);
 }

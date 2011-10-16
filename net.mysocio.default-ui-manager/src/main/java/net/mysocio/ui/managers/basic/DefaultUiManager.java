@@ -7,9 +7,9 @@ import java.util.Collections;
 import java.util.Locale;
 import java.util.Map;
 
-import net.mysocio.data.IUiObject;
 import net.mysocio.data.SocioUser;
 import net.mysocio.data.management.DataManagerFactory;
+import net.mysocio.data.ui.IUiObject;
 import net.mysocio.ui.data.objects.DefaultLoginPage;
 
 
