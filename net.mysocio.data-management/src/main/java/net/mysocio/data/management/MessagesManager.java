@@ -33,7 +33,7 @@ public class MessagesManager implements IMessagesManager {
 
 	public void updateUnreaddenMessages(SocioUser user) throws Exception {
 		List<IMessage> messages = getLastMessages(user);
-		storeMessages(messages);
+		messages = storeMessages(messages);
 		for (IMessage message : messages) {
 			user.addUnreadMessage(message.getSourceId(), message.getId());
 		}
@@ -56,10 +56,12 @@ public class MessagesManager implements IMessagesManager {
 		return instance;
 	}
 
-	private void storeMessages(List<IMessage> messages) {
+	private List<IMessage> storeMessages(List<IMessage> messages) {
+		List<IMessage> stored = new ArrayList<IMessage>();
 		for (IMessage message : messages) {
-			DataManagerFactory.getDataManager().createMessage(message);
+			stored.add(DataManagerFactory.getDataManager().createMessage(message));
 		}
+		return stored;
 	}
 
 	public List<IMessage> getMessagesForSelectedSource(SocioUser user) {

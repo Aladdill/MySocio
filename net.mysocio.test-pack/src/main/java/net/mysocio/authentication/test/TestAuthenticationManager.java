@@ -27,7 +27,6 @@ public class TestAuthenticationManager implements IAuthenticationManager{
 		return logger;
 	}
 
-	@Override
 	public String authenticate(IConnectionData connectionData) throws Exception {
 		Account account = new TestAccount();
 		account.setAccountUniqueId("test@test.com");
@@ -35,18 +34,9 @@ public class TestAuthenticationManager implements IAuthenticationManager{
 		account.setUserpicUrl("images/portrait.jpg");
 		JdoDataManager dataManager = (JdoDataManager)DataManagerFactory.getDataManager();
 		SocioUser user = dataManager.getUser(account, new Locale("ru"));
-		TestSource fs = new TestSource();
-		fs.setName("Test account");
-		fs.setUrl("testSourceId");
-		fs = (TestSource)dataManager.createSource(fs, user);
-		user.addSource(fs);
-		TestSource fs1 = new TestSource();
-		fs1.setName("Test Facebook account1");
-		fs1.setUrl("testSourceId1");
-		fs1 = (TestSource)dataManager.createSource(fs1, user);
-		user.addSource(fs1);
 		MessagesManager.getInstance().updateUnreaddenMessages(user);
 		connectionData.setUser(user);
+		connectionData.removeSessionAttribute("identifier");
 		return "pages/closingWindow.html";
 	}
 }

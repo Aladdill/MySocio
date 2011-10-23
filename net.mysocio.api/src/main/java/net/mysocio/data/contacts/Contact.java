@@ -23,19 +23,13 @@ import net.mysocio.data.NamedObject;
  *
  */
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable="true")
-@Inheritance(strategy=InheritanceStrategy.SUBCLASS_TABLE)
 public abstract class Contact extends NamedObject implements IContact {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 8721056150291879634L;
-	@Join
-	@Persistent
 	private Set<ISource> sources = new HashSet<ISource>();
-	@Join
-	@Persistent
 	private Set<IDestination> destinations = new HashSet<IDestination>();
-	@Persistent
 	private String userpicUrl =  new String();
 	
 	public void setUserpicUrl(String userpicUrl) {

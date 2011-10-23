@@ -15,7 +15,7 @@ import javax.jdo.PersistenceManagerFactory;
 import javax.jdo.Query;
 import javax.jdo.Transaction;
 
-import net.mysocio.connection.readers.Source;
+import net.mysocio.connection.readers.ISource;
 import net.mysocio.data.IDataManager;
 import net.mysocio.data.ISocioObject;
 import net.mysocio.data.SocioObjectTags;
@@ -56,7 +56,11 @@ public class JdoDataManager implements IDataManager {
 	public static void closeDataConnection(){
 		if (pm != null){
 			pm.close();
+			pm = null;
 			pmf.close();
+			pmf = null;
+			Runtime r = Runtime.getRuntime();
+	        r.gc();
 		}
 	}
 	
@@ -68,10 +72,10 @@ public class JdoDataManager implements IDataManager {
 	public SocioUser getUser(Account account, Locale locale){
 		String userName = account.getUserName();
 		logger.debug("Getting user " + userName + " for " + account.getAccountType());
-		Account existingAccount = getUniqueObjectWithoutTags(account.getClass(), getEqualsExpression("accountUniqueId", account.getAccountUniqueId()));
-		if (existingAccount != null){
+		String userId = account.getUserId();
+		if (userId != null && !userId.isEmpty()){
 			logger.debug("Account found");
-			return getUniqueObjectWithoutTags(SocioUser.class, getEqualsExpression("id", existingAccount.getUserId()));
+			return getUniqueObjectWithoutTags(SocioUser.class, getEqualsExpression("id", userId));
 		}
 		logger.debug("Creating user");
 		SocioUser user = new SocioUser();
@@ -79,12 +83,25 @@ public class JdoDataManager implements IDataManager {
 		user.setUserpicUrl(account.getUserpicUrl());
 		user.setLocale(locale.getLanguage());
 		saveObject(account);
+		List<ISource> sources = account.getSources();
+		for (ISource source : sources) {
+			source = createSource(source, user);
+			user.addSource(source);
+		}
 		user.addAccount(account);
 		saveObject(user);
 		account.setUserId(user.getId());
 		saveObject(account);
 		logger.debug("User created");
 		return user;
+	}
+
+	/**
+	 * @param account
+	 * @return
+	 */
+	public Account getAccount(Class clazz, String accountUniqueId) {
+		return getUniqueObjectWithoutTags(clazz, getEqualsExpression("accountUniqueId", accountUniqueId));
 	}
 	
 	public ISocioObject getObject(Class<?> clazz, String id){
@@ -216,8 +233,8 @@ public class JdoDataManager implements IDataManager {
 	/* (non-Javadoc)
 	 * @see net.mysocio.data.management.IDataManager#saveSource(net.mysocio.connection.readers.ISource)
 	 */
-	public Source createSource(Source source, SocioUser user){
-		Source createdSource = createUniqueObject(source.getClass(), getEqualsExpression("url", source.getUrl()), source);
+	public ISource createSource(ISource source, SocioUser user){
+		ISource createdSource = createUniqueObject(source.getClass(), getEqualsExpression("url", source.getUrl()), source);
 		SocioObjectTags tags = new SocioObjectTags();
 		tags.setId(getTagsId(createdSource, user));
 		tags = createUniqueObject(tags.getClass(), getEqualsExpression("id", tags.getId()), tags);

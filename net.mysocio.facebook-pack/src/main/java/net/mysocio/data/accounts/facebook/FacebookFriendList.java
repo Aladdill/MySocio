@@ -1,23 +1,20 @@
 /**
  * 
  */
-package net.mysocio.authentication.test;
+package net.mysocio.data.accounts.facebook;
 
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
 
-import net.mysocio.data.messages.GeneralMessage;
 
 /**
  * @author Aladdin
  *
  */
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable="true")
-public class TestMessage extends GeneralMessage {
-
+public class FacebookFriendList extends NamedFacebookObject{
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1343088110385165921L;
-
+	private static final long serialVersionUID = 3949039036481784242L;
 }

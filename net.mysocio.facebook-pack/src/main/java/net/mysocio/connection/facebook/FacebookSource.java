@@ -28,7 +28,6 @@ public class FacebookSource extends Source {
 		return FacebookMessage.class;
 	}
 
-	@Override
 	public ISourceManager getManager() {
 		return FacebookSourceManager.getInstance();
 	}

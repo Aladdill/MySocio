@@ -3,9 +3,12 @@
  */
 package net.mysocio.data.accounts.google;
 
+import java.util.List;
+
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
 
+import net.mysocio.connection.readers.ISource;
 import net.mysocio.data.accounts.Oauth2Account;
 
 /**
@@ -36,5 +39,11 @@ public class GoogleAccount extends Oauth2Account{
 	@Override
 	public String getAccountType() {
 		return ACCOUNT_TYPE;
+	}
+
+	@Override
+	public List<ISource> getSources() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

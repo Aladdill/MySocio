@@ -21,7 +21,6 @@ public class TestSourceManager implements ISourceManager {
 	/* (non-Javadoc)
 	 * @see net.mysocio.connection.readers.ISourceManager#getLastMessages(net.mysocio.connection.readers.ISource, java.lang.Long, java.lang.Long)
 	 */
-	@Override
 	public List<IMessage> getLastMessages(ISource source, Long from, Long to) {
 		List<IMessage> messages = new ArrayList<IMessage>();
 		for (int i = 1; i <= 10; i++){

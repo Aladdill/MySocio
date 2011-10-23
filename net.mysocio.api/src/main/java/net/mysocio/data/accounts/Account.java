@@ -3,10 +3,13 @@
  */
 package net.mysocio.data.accounts;
 
+import java.util.List;
+
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 
+import net.mysocio.connection.readers.ISource;
 import net.mysocio.data.SocioObject;
 
 /**
@@ -27,6 +30,8 @@ public abstract class Account extends SocioObject{
 	private String userId = new String();
 	@Persistent
 	private String userpicUrl = new String();
+	@Persistent
+	private String email = new String();
 	
 
 	public String getUserId() {
@@ -61,5 +66,15 @@ public abstract class Account extends SocioObject{
 
 	public void setUserpicUrl(String userpicUrl) {
 		this.userpicUrl = userpicUrl;
+	}
+	
+	public abstract List<ISource> getSources();
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 }

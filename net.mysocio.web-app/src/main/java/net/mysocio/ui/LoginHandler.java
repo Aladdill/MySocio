@@ -35,25 +35,25 @@ public class LoginHandler extends AbstractHandler {
 			HttpServletResponse response) throws CommandExecutionException {
 		IConnectionData connectionData = new ConnectionData(request);
 		String responseString = "";
-		UserIdentifier identifier;
+		UserIdentifier identifier = UserIdentifier.test;
 		Object identifierAttr = request.getSession().getAttribute("identifier");
 		try {
 			if (identifierAttr != null){
 				identifier = (UserIdentifier)identifierAttr;
-				responseString = identifier.getAuthManager().authenticate(connectionData);
+				connectionData.removeSessionAttribute("identifier");
 			}else{
 				String identifierString = connectionData.getRequestParameter("identifier");
 				if (identifierString != null){
 					identifier = UserIdentifier.valueOf(identifierString);
 					if (identifier != null){
-						logger.debug("Getting request url  for " + identifier.name());
-						responseString = identifier.getAuthManager().authenticate(connectionData);
 						request.getSession().setAttribute("identifier", identifier);
+						logger.debug("Getting request url  for " + identifier.name());
 					}else{
 						throw new  CommandExecutionException("No login medium was defined");
 					}
 				}
 			}
+			responseString = identifier.getAuthManager().authenticate(connectionData);
 		} catch (Exception e) {
 			logger.error("Login error",e);
 			throw new CommandExecutionException(e);

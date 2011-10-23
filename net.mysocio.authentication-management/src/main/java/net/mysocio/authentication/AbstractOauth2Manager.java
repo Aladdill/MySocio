@@ -11,6 +11,7 @@ import net.mysocio.data.SocioUser;
 import net.mysocio.data.accounts.Account;
 import net.mysocio.data.management.DataManagerFactory;
 import net.mysocio.data.management.DefaultResourcesManager;
+import net.mysocio.data.management.MessagesManager;
 
 import org.scribe.builder.ServiceBuilder;
 import org.scribe.builder.api.Api;
@@ -100,7 +101,7 @@ public abstract class AbstractOauth2Manager implements IAuthenticationManager {
 			Account account = login(connectionData);
 			SocioUser user = DataManagerFactory.getDataManager().getUser(account, connectionData.getLocale());
 			connectionData.setUser(user);
-			connectionData.removeSessionAttribute("identifier");
+			MessagesManager.getInstance().updateUnreaddenMessages(user);
 			responseString = DefaultResourcesManager.getPage("closingWindow.html");
 		}
 		return responseString;
