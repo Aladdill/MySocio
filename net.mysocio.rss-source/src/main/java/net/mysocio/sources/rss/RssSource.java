@@ -3,11 +3,14 @@
  */
 package net.mysocio.sources.rss;
 
+import java.util.List;
+
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
 
 import net.mysocio.connection.readers.ISourceManager;
 import net.mysocio.connection.readers.Source;
+import net.mysocio.data.SocioTag;
 import net.mysocio.data.rss.RssMessage;
 
 /**
@@ -27,6 +30,11 @@ public class RssSource extends Source {
 	}
 
 	public ISourceManager getManager() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public List<SocioTag> getDefaultTags() {
 		// TODO Auto-generated method stub
 		return null;
 	}

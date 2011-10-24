@@ -30,19 +30,11 @@ public interface IDataManager {
 
 	public Map<String, IUiObject> getUserUiObjects(SocioUser user);
 
-	public ISource createSource(ISource source, SocioUser user);
+	public ISource createSource(ISource source);
 	
 	public IMessage createMessage(IMessage message);
 	
 	public List<IMessage> getMessages(List<String> ids);
-	
-	public<T extends ISocioObject> List<T> getObjects(Class<?> T, SocioUser user);
-
-	public SocioTag createTag(SocioTag tag, SocioUser user);
-
-	public<T extends Object> List<T> getObjectsWithoutTags(Class<?> T);
-
-	public<T extends Object> T getUniqueObjectWithoutTags(Class<?> T, String query);
 	
 	public ISocioObject getObject(Class<?> clazz, String id);
 }

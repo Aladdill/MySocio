@@ -7,31 +7,28 @@ import java.util.List;
 
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
-import javax.jdo.annotations.Persistent;
 
 import net.mysocio.connection.readers.ISource;
+import net.mysocio.data.ITagedObject;
 import net.mysocio.data.SocioObject;
+import net.mysocio.data.SocioTag;
 
 /**
  * @author Aladdin
  *
  */
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable="true")
-public abstract class Account extends SocioObject{
+public abstract class Account extends SocioObject implements ITagedObject{
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 7561557374532619473L;
-	@Persistent
 	private String userName =  new String();
-	@Persistent
 	private String accountUniqueId = new String();
-	@Persistent
 	private String userId = new String();
-	@Persistent
 	private String userpicUrl = new String();
-	@Persistent
 	private String email = new String();
+	private List<SocioTag> tags;
 	
 
 	public String getUserId() {
@@ -76,5 +73,13 @@ public abstract class Account extends SocioObject{
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public List<SocioTag> getTags() {
+		return tags;
+	}
+
+	public void setTags(List<SocioTag> tags) {
+		this.tags = tags;
 	}
 }

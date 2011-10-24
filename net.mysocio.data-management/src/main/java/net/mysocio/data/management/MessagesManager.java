@@ -11,6 +11,7 @@ import net.mysocio.connection.readers.ISource;
 import net.mysocio.connection.writers.IDestination;
 import net.mysocio.data.IMessagesManager;
 import net.mysocio.data.ISocioObject;
+import net.mysocio.data.SocioTag;
 import net.mysocio.data.SocioUser;
 import net.mysocio.data.messages.GeneralMessage;
 import net.mysocio.data.messages.IMessage;
@@ -32,34 +33,28 @@ public class MessagesManager implements IMessagesManager {
 	}
 
 	public void updateUnreaddenMessages(SocioUser user) throws Exception {
-		List<IMessage> messages = getLastMessages(user);
-		messages = storeMessages(messages);
-		for (IMessage message : messages) {
-			user.addUnreadMessage(message.getSourceId(), message.getId());
-		}
-		DataManagerFactory.getDataManager().saveObject(user);
-	}
-
-	public List<IMessage> getLastMessages(SocioUser user) throws Exception {
 		long checkTime = System.currentTimeMillis();
 		Long lastUpdate = user.getLastUpdate();
 		Set<ISource> sources = user.getSources();
-		List<IMessage> messages = new ArrayList<IMessage>();
 		for (ISource source : sources) {
-			messages.addAll(source.getManager().getLastMessages(source, lastUpdate, checkTime));
+			List<String> storedMessages = storeMessages(source.getManager().getLastMessages(source, lastUpdate, checkTime));
+			List<SocioTag> tags = source.getTags();
+			for (SocioTag tag : tags) {
+				user.addUnreadMessages(tag.getId(),storedMessages);
+			}
 		}
 		user.setLastUpdate(checkTime);
-		return messages;
+		DataManagerFactory.getDataManager().saveObject(user);
 	}
 
 	public static IMessagesManager getInstance() {
 		return instance;
 	}
 
-	private List<IMessage> storeMessages(List<IMessage> messages) {
-		List<IMessage> stored = new ArrayList<IMessage>();
+	private List<String> storeMessages(List<IMessage> messages) {
+		List<String> stored = new ArrayList<String>();
 		for (IMessage message : messages) {
-			stored.add(DataManagerFactory.getDataManager().createMessage(message));
+			stored.add(DataManagerFactory.getDataManager().createMessage(message).getId());
 		}
 		return stored;
 	}

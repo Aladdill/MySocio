@@ -11,6 +11,7 @@ import javax.jdo.annotations.PersistenceCapable;
 
 import net.mysocio.connection.facebook.FacebookSource;
 import net.mysocio.connection.readers.ISource;
+import net.mysocio.data.SocioTag;
 import net.mysocio.data.accounts.Oauth2Account;
 
 /**
@@ -61,5 +62,18 @@ public class FacebookAccount extends Oauth2Account {
 		source.setName(getUserName());
 		sources.add(source);
 		return sources;
+	}
+
+	public List<SocioTag> getDefaultTags() {
+		List<SocioTag> tags = new ArrayList<SocioTag>();
+		SocioTag tag = new SocioTag();
+		tag.setValue("facebook.tag");
+		tag.setIconType("facebook.icon.general");
+		tags.add(tag);
+		SocioTag accTag = new SocioTag();
+		accTag.setValue(getUserName());
+		accTag.setIconType("facebook.icon.account");
+		tags.add(accTag);
+		return tags;
 	}
 }

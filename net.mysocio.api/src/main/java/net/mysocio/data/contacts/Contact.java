@@ -8,15 +8,12 @@ import java.util.List;
 import java.util.Set;
 
 import javax.jdo.annotations.IdentityType;
-import javax.jdo.annotations.Inheritance;
-import javax.jdo.annotations.InheritanceStrategy;
-import javax.jdo.annotations.Join;
 import javax.jdo.annotations.PersistenceCapable;
-import javax.jdo.annotations.Persistent;
 
 import net.mysocio.connection.readers.ISource;
 import net.mysocio.connection.writers.IDestination;
 import net.mysocio.data.NamedObject;
+import net.mysocio.data.SocioTag;
 
 /**
  * @author Aladdin
@@ -31,6 +28,7 @@ public abstract class Contact extends NamedObject implements IContact {
 	private Set<ISource> sources = new HashSet<ISource>();
 	private Set<IDestination> destinations = new HashSet<IDestination>();
 	private String userpicUrl =  new String();
+	private List<SocioTag> tags;
 	
 	public void setUserpicUrl(String userpicUrl) {
 		this.userpicUrl = userpicUrl;
@@ -62,5 +60,13 @@ public abstract class Contact extends NamedObject implements IContact {
 
 	public void addDestinations(List<? extends IDestination> destinations) {
 		this.destinations.addAll(destinations);		
+	}
+
+	public List<SocioTag> getTags() {
+		return tags;
+	}
+
+	public void setTags(List<SocioTag> tags) {
+		this.tags = tags;
 	}
 }

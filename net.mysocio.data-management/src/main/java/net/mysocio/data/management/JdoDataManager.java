@@ -18,7 +18,7 @@ import javax.jdo.Transaction;
 import net.mysocio.connection.readers.ISource;
 import net.mysocio.data.IDataManager;
 import net.mysocio.data.ISocioObject;
-import net.mysocio.data.SocioObjectTags;
+import net.mysocio.data.ITagedObject;
 import net.mysocio.data.SocioTag;
 import net.mysocio.data.SocioUser;
 import net.mysocio.data.accounts.Account;
@@ -75,7 +75,7 @@ public class JdoDataManager implements IDataManager {
 		String userId = account.getUserId();
 		if (userId != null && !userId.isEmpty()){
 			logger.debug("Account found");
-			return getUniqueObjectWithoutTags(SocioUser.class, getEqualsExpression("id", userId));
+			return getUniqueObject(SocioUser.class, getEqualsExpression("id", userId));
 		}
 		logger.debug("Creating user");
 		SocioUser user = new SocioUser();
@@ -83,9 +83,14 @@ public class JdoDataManager implements IDataManager {
 		user.setUserpicUrl(account.getUserpicUrl());
 		user.setLocale(locale.getLanguage());
 		saveObject(account);
+		List<SocioTag> accTags = account.getTags();
+		user.addTags(accTags);
 		List<ISource> sources = account.getSources();
 		for (ISource source : sources) {
-			source = createSource(source, user);
+			source = createSource(source);
+			user.addTags(source.getTags());
+			source.getTags().addAll(accTags);
+			saveObject(source);
 			user.addSource(source);
 		}
 		user.addAccount(account);
@@ -101,11 +106,11 @@ public class JdoDataManager implements IDataManager {
 	 * @return
 	 */
 	public Account getAccount(Class clazz, String accountUniqueId) {
-		return getUniqueObjectWithoutTags(clazz, getEqualsExpression("accountUniqueId", accountUniqueId));
+		return getUniqueObject(clazz, getEqualsExpression("accountUniqueId", accountUniqueId));
 	}
 	
 	public ISocioObject getObject(Class<?> clazz, String id){
-		return getUniqueObjectWithoutTags(clazz, getEqualsExpression("id", id));
+		return getUniqueObject(clazz, getEqualsExpression("id", id));
 	}
 	
 	private String getEqualsExpression(String fieldName, String value){
@@ -113,39 +118,15 @@ public class JdoDataManager implements IDataManager {
 	}
 
 	public IUiObject getUiObject(String category, String name){
-        return getUniqueObjectWithoutTags(UiObject.class, getEqualsExpression("category", category) + " && " + getEqualsExpression("name",name));
+        return getUniqueObject(UiObject.class, getEqualsExpression("category", category) + " && " + getEqualsExpression("name",name));
 	}
 	
-	public<T extends ISocioObject> T getUniqueObject(Class<?> T, String query, SocioUser user){
-		T object;
-		Query q=pm.newQuery(T, query);
-		q.setUnique(true);
-		object = (T)q.execute();
-		retreiveTags(object, user);
-		return object;
-	}
-	
-	public<T extends Object> T getUniqueObjectWithoutTags(Class<?> T, String query){
+	public<T extends ISocioObject> T getUniqueObject(Class<?> T, String query){
 		T object;
 		Query q=pm.newQuery(T, query);
 		q.setUnique(true);
 		object = (T)q.execute();
 		return object;
-	}
-	
-	public<T extends ISocioObject> List<T> getObjects(Class<?> T, SocioUser user){
-		List<T> objects;
-		Query q=pm.newQuery(T);
-		objects = (List<T>)q.execute();
-		retreiveTags(objects, user);
-		return objects;
-	}
-	
-	public<T extends Object> List<T> getObjectsWithoutTags(Class<?> T){
-		List<T> objects;
-		Query q=pm.newQuery(T);
-		objects = (List<T>)q.execute();
-		return objects;
 	}
 	
 	public void saveUiObject(UiObject uiObject) throws DuplicateMySocioObjectException{
@@ -175,6 +156,10 @@ public class JdoDataManager implements IDataManager {
         try
         {
             tx.begin();
+            if (object instanceof ITagedObject) {
+				ITagedObject tagedObj = (ITagedObject) object;
+				tagedObj.getTags().addAll(createTags(tagedObj));
+			}
             pm.makePersistent(object);
             tx.commit();
         }
@@ -214,6 +199,10 @@ public class JdoDataManager implements IDataManager {
             q.setUnique(true);
             T objectT = (T)q.execute();
             if (objectT == null){
+            	if (objectT instanceof ITagedObject) {
+					ITagedObject tagedObj = (ITagedObject) objectT;
+					tagedObj.getTags().addAll(createTags(tagedObj));
+				}
             	objectT = pm.makePersistent(object);
             }else{
             	logger.info("Duplicate object of type: " + T.toString() + " for query: " + query);
@@ -233,21 +222,16 @@ public class JdoDataManager implements IDataManager {
 	/* (non-Javadoc)
 	 * @see net.mysocio.data.management.IDataManager#saveSource(net.mysocio.connection.readers.ISource)
 	 */
-	public ISource createSource(ISource source, SocioUser user){
-		ISource createdSource = createUniqueObject(source.getClass(), getEqualsExpression("url", source.getUrl()), source);
-		SocioObjectTags tags = new SocioObjectTags();
-		tags.setId(getTagsId(createdSource, user));
-		tags = createUniqueObject(tags.getClass(), getEqualsExpression("id", tags.getId()), tags);
-		if (tags.getTags().isEmpty()){
-			SocioTag tag = new SocioTag();
-			tag.setOwnerId(user.getId());
-			tag.setValue(createdSource.getName());
-			tag = createTag(tag , user);
-			tags.add(tag);
-			saveObject(tags);
+	public ISource createSource(ISource source){
+		return createUniqueObject(source.getClass(), getEqualsExpression("url", source.getUrl()), source);
+	}
+	
+	private List<SocioTag> createTags(ITagedObject object){
+		List<SocioTag> tags = object.getDefaultTags();
+		for (SocioTag tag : tags) {
+			saveObject(tag);
 		}
-		createdSource.setTags(tags);
-		return createdSource;
+		return tags;
 	}
 	
 	public IMessage createMessage(IMessage message){
@@ -274,34 +258,6 @@ public class JdoDataManager implements IDataManager {
 		return objects.getUserUiObjects();
 	}
 
-	@Override
-	public SocioTag createTag(SocioTag tag, SocioUser user) {
-		return createUniqueObject(tag.getClass(), getEqualsExpression("value", tag.getValue()) + " && " + getEqualsExpression("ownerId", tag.getOwnerId()), tag);
-	}
-	
-	private String getTagsId(ISocioObject object, SocioUser user){
-		return user.getId() + object.getId();
-	}
-	private void retreiveTags(ISocioObject object, SocioUser user){
-			SocioObjectTags tags = getUniqueObjectWithoutTags(SocioObjectTags.class, getEqualsExpression("id", getTagsId(object, user)));
-	        object.setTags(tags);
-	}
-	private void retreiveTags(List<? extends ISocioObject> objects, SocioUser user){
-		Map<String, ISocioObject> objectsMap = new HashMap<String, ISocioObject>();
-		for (ISocioObject object : objects) {
-			objectsMap.put(getTagsId(object, user),object);
-		}
-		Query q=pm.newQuery(SocioObjectTags.class);
-		q.declareImports("import java.util.Collection");
-		q.declareParameters("Collection objectsIds");
-		q.setFilter("objectsIds.contains(id)");
-		q.setOrdering("date ascending");
-		List<SocioObjectTags> tagsList = (List<SocioObjectTags>)q.execute(objectsMap.keySet());
-		for (SocioObjectTags socioObjectTags : tagsList) {
-			ISocioObject object = objectsMap.get(socioObjectTags.getId());
-			object.setTags(socioObjectTags);
-		}
-	}
 	
 	public List<IMessage> getMessages(List<String> ids){
 		Query q=pm.newQuery(GeneralMessage.class);

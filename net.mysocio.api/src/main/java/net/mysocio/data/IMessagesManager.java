@@ -13,7 +13,6 @@ import net.mysocio.data.messages.IMessage;
  *
  */
 public interface IMessagesManager {
-	public List<IMessage> getLastMessages(SocioUser user) throws Exception;
 	public void postMessage(IMessage message, IDestination destination);
 	public void updateUnreaddenMessages(SocioUser user) throws Exception;
 	public List<IMessage> getMessagesForSelectedSource(SocioUser user);

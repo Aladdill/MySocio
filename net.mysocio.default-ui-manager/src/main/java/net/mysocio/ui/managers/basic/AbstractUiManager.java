@@ -39,6 +39,4 @@ public abstract class AbstractUiManager implements IUiManager {
 	public String getLocalizedString(String resource, Locale locale){
 		return DefaultResourcesManager.getResource(locale, resource);
 	}
-
-	public abstract String getSourceIcon(Class<?> source);
 }

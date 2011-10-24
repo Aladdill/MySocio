@@ -10,6 +10,7 @@ import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
 
 import net.mysocio.connection.readers.ISource;
+import net.mysocio.data.SocioTag;
 import net.mysocio.data.accounts.Account;
 
 /**
@@ -44,6 +45,19 @@ public class TestAccount extends Account {
 		ts1.setUrl("testSourceId1");
 		sources.add(ts1);
 		return sources;
+	}
+	
+	public List<SocioTag> getDefaultTags() {
+		List<SocioTag> tags = new ArrayList<SocioTag>();
+		SocioTag tag = new SocioTag();
+		tag.setValue("test.tag");
+		tag.setIconType("test.icon.general");
+		tags.add(tag);
+		SocioTag accTag = new SocioTag();
+		accTag.setValue(getUserName());
+		accTag.setIconType("test.icon.account");
+		tags.add(accTag);
+		return tags;
 	}
 
 }

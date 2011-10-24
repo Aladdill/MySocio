@@ -5,14 +5,13 @@ package net.mysocio.ui.executors.basic;
 
 import java.io.IOException;
 import java.io.StringWriter;
-import java.util.Map;
-import java.util.Set;
+import java.util.Collection;
+import java.util.Locale;
 
-import net.mysocio.connection.readers.ISource;
 import net.mysocio.data.IConnectionData;
 import net.mysocio.data.SocioTag;
 import net.mysocio.data.SocioUser;
-import net.mysocio.data.management.MessagesManager;
+import net.mysocio.data.management.DefaultResourcesManager;
 import net.mysocio.ui.management.CommandExecutionException;
 import net.mysocio.ui.management.ICommandExecutor;
 import net.mysocio.ui.managers.basic.DefaultUiManager;
@@ -112,44 +111,26 @@ public class GetSourcesExecutor implements ICommandExecutor {
 	}
 	private void addRootNode(JsonGenerator jsonGenerator, SocioUser user) throws Exception{
 		jsonGenerator.writeStartObject();
-		int unreadMessagesNum = addNodeChildren(jsonGenerator, user.getSortedSources(), user);
+		int unreadMessagesNum = addNodeChildren(jsonGenerator, user.getUserTags().values(), user);
 		addNodeData(jsonGenerator, SocioUser.ALL_SOURCES, SocioUser.ALL_SOURCES, null, unreadMessagesNum );
 		jsonGenerator.writeStringField("state", "open");
 		jsonGenerator.writeEndObject();
 	}
 	
-	private int addTagNode(JsonGenerator jsonGenerator, SocioTag tag, Set<ISource> sources, SocioUser user) throws Exception{
+	private int addTagNode(JsonGenerator jsonGenerator, SocioTag tag, SocioUser user) throws Exception{
 		jsonGenerator.writeStartObject();
-		int unreadMessagesNum = addNodeChildren(jsonGenerator, sources, user);
-		addNodeData(jsonGenerator, tag.getValue(), tag.getId(), uiManager.getTagIcon(tag.getId()), unreadMessagesNum );
-		if (user.getSelectedSource().equals(tag.getId())){
-			jsonGenerator.writeStringField("state", "open");
-		}
-		jsonGenerator.writeEndObject();
-		return unreadMessagesNum;
-	}
-	private int addSourceNode(JsonGenerator jsonGenerator, ISource source, SocioUser user) throws Exception{
-		jsonGenerator.writeStartObject();
-		Integer unreadMessagesNum = user.getUnreadMessagesNum(source.getId());
-		addNodeData(jsonGenerator, source.getName(), source.getId(), uiManager.getSourceIcon(source.getClass()), unreadMessagesNum);
+		String tagId = tag.getId();
+		int unreadMessagesNum = user.getUnreadMessagesNum(tagId);
+		addNodeData(jsonGenerator, tag.getValue(), tagId, DefaultResourcesManager.getResource(new Locale(user.getLocale()), (tag.getIconType())), unreadMessagesNum);
 		jsonGenerator.writeEndObject();
 		return unreadMessagesNum;
 	}
 	
-	private int addNodeChildren(JsonGenerator jsonGenerator, Set<ISource> sources, SocioUser user) throws Exception{
+	private int addNodeChildren(JsonGenerator jsonGenerator, Collection<SocioTag> collection, SocioUser user) throws Exception{
 		jsonGenerator.writeArrayFieldStart("children");
 		Integer unreadMessagesNum = 0;
-		for (ISource source : sources) {
-			unreadMessagesNum += addSourceNode(jsonGenerator, source, user);
-		}
-		jsonGenerator.writeEndArray(); // for field 'children'
-		return unreadMessagesNum;
-	}
-	private int addNodeChildren(JsonGenerator jsonGenerator, Map<SocioTag, Set<ISource>> sortedSources, SocioUser user) throws Exception{
-		jsonGenerator.writeArrayFieldStart("children");
-		Integer unreadMessagesNum = 0;
-		for (SocioTag tag : sortedSources.keySet()) {
-			unreadMessagesNum += addTagNode(jsonGenerator, tag, sortedSources.get(tag), user);
+		for (SocioTag tag : collection) {
+			unreadMessagesNum += addTagNode(jsonGenerator, tag, user);
 		}
 		jsonGenerator.writeEndArray(); // for field 'children'
 		return unreadMessagesNum;
