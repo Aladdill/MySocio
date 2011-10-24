@@ -26,7 +26,7 @@ import org.codehaus.jackson.map.ObjectMapper;
  */
 public class FacebookSourceManager implements ISourceManager {
 	private static final FacebookSourceManager instance = new FacebookSourceManager();
-	private static final long MONTH = 30*24*3600*1000;
+	private static final long MONTH = 30*24*3600l;
 
 	/**
 	 * 
@@ -44,11 +44,13 @@ public class FacebookSourceManager implements ISourceManager {
 	public List<IMessage> getLastMessages(ISource source, Long from, Long to) throws Exception {
 		FacebookSource fs = (FacebookSource) source;
 		FacebookAccount fa = fs.getAccount();
-		String url = "https://graph.facebook.com/me/home?format=json&until="+to;
-		if (from == 0 || (to - from) > MONTH){
-			from = to - MONTH;
+		long toInSec = to/1000;
+		long fromInSec = from/1000;
+		String url = "https://graph.facebook.com/me/home?format=json&until="+toInSec;
+		if (fromInSec == 0 || (to - from) > MONTH){
+			fromInSec = toInSec - MONTH;
 		}
-		url += "&since="+ from;
+		url += "&since="+ fromInSec;
 		String response = new FacebookAuthenticationManager().callUrl(fa.getToken(), url);
 		ObjectMapper mapper = new ObjectMapper(new JsonFactory());
 		JsonNode root = mapper.readTree(response);

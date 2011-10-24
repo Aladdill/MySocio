@@ -55,6 +55,7 @@ public class JdoDataManager implements IDataManager {
 	
 	public static void closeDataConnection(){
 		if (pm != null){
+			pm.flush();
 			pm.close();
 			pm = null;
 			pmf.close();

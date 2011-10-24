@@ -109,29 +109,26 @@ public class GetSourcesExecutor implements ICommandExecutor {
 	}
 	private void addRootNode(JsonGenerator jsonGenerator, SocioUser user) throws Exception{
 		jsonGenerator.writeStartObject();
-		int unreadMessagesNum = addNodeChildren(jsonGenerator, user.getUserTags().values(), user);
-		addNodeData(jsonGenerator, SocioUser.ALL_SOURCES, SocioUser.ALL_SOURCES, null, unreadMessagesNum );
+		addNodeChildren(jsonGenerator, user.getUserTags().values(), user);
+		addNodeData(jsonGenerator, SocioUser.ALL_SOURCES, SocioUser.ALL_SOURCES, null, user.getTotalUnreadmessages());
 		jsonGenerator.writeStringField("state", "open");
 		jsonGenerator.writeEndObject();
 	}
 	
-	private int addTagNode(JsonGenerator jsonGenerator, SocioTag tag, SocioUser user) throws Exception{
+	private void addTagNode(JsonGenerator jsonGenerator, SocioTag tag, SocioUser user) throws Exception{
 		jsonGenerator.writeStartObject();
 		String tagId = tag.getId();
 		int unreadMessagesNum = user.getUnreadMessagesNum(tagId);
 		addNodeData(jsonGenerator, tag.getValue(), tagId, DefaultResourcesManager.getResource(new Locale(user.getLocale()), (tag.getIconType())), unreadMessagesNum);
 		jsonGenerator.writeEndObject();
-		return unreadMessagesNum;
 	}
 	
-	private int addNodeChildren(JsonGenerator jsonGenerator, Collection<SocioTag> collection, SocioUser user) throws Exception{
+	private void addNodeChildren(JsonGenerator jsonGenerator, Collection<SocioTag> collection, SocioUser user) throws Exception{
 		jsonGenerator.writeArrayFieldStart("children");
-		Integer unreadMessagesNum = 0;
 		for (SocioTag tag : collection) {
-			unreadMessagesNum += addTagNode(jsonGenerator, tag, user);
+			addTagNode(jsonGenerator, tag, user);
 		}
 		jsonGenerator.writeEndArray(); // for field 'children'
-		return unreadMessagesNum;
 	}
 
 	/**

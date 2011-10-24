@@ -6,8 +6,10 @@ package net.mysocio.data;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
@@ -28,16 +30,12 @@ public class SocioUser extends Contact implements IUser {
 	 * 
 	 */
 	private static final long serialVersionUID = -2886854604233072581L;
-    @Persistent
 	private Map<String, List<String>> unreadMessages = new HashMap<String, List<String>>();
-	@Persistent
 	private List<Account> accounts = new ArrayList<Account>();
-	@Persistent
 	private List<IContact> contacts = new ArrayList<IContact>();
-	@Persistent
 	private Map<String, SocioTag> userTags = new HashMap<String, SocioTag>();
-	@Persistent
 	private Long lastUpdate = 0l;
+	private Integer totalUnreadmessages = 0;	
 	
 	public Long getLastUpdate() {
 		return lastUpdate;
@@ -64,15 +62,16 @@ public class SocioUser extends Contact implements IUser {
 		return contacts;
 	}
 
-	public List<String> getUnreadMessages(List<ISource> sources){
-		List<String> unreaddenMessages = new ArrayList<String>();
-		for (ISource source : sources) {
-			List<String> messages = this.unreadMessages.get(source.getId());
+	public List<String> getUnreadMessages(Set<String> tagsIds){
+		Set<String> unreaddenMessages = new HashSet<String>();
+		for (String tagId : tagsIds) {
+			List<String> messages = this.unreadMessages.get(tagId);
 			if (messages != null){
+				
 				unreaddenMessages.addAll(messages);
 			}
 		}
-		return unreaddenMessages;
+		return new ArrayList<String>(unreaddenMessages);
 	}
 	
 	public Integer getUnreadMessagesNum(String id){
@@ -104,10 +103,14 @@ public class SocioUser extends Contact implements IUser {
 		unreadMessages.put(sourceId, list);
 	}
 	
-	public void setMessageReadden(String sourceId, String messageId){
-		List<String> sourceList = unreadMessages.remove(sourceId);
-		sourceList.remove(messageId);
-		unreadMessages.put(sourceId, sourceList);
+	public void setMessageReadden(String messageId){
+		Set<String> tags = unreadMessages.keySet();
+		for (String tagId : tags) {
+			List<String> messages = unreadMessages.get(tagId);
+			messages.remove(messageId);
+			unreadMessages.put(tagId, messages);
+		}
+		totalUnreadmessages--;
 	}
 
 	/**
@@ -139,7 +142,7 @@ public class SocioUser extends Contact implements IUser {
 	}
 
 	public List<String> getAllUnreadMessages() {
-		return getUnreadMessages(getSources());
+		return getUnreadMessages(userTags.keySet());
 	}
 
 	public String getLocale() {
@@ -194,5 +197,13 @@ public class SocioUser extends Contact implements IUser {
 
 	public List<SocioTag> getDefaultTags() {
 		return Collections.emptyList();
+	}
+
+	public Integer getTotalUnreadmessages() {
+		return totalUnreadmessages;
+	}
+	
+	public void addTotalUnreadmessages(int num) {
+		totalUnreadmessages += num;
 	}
 }

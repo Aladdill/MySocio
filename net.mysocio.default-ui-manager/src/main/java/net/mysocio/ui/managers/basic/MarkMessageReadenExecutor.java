@@ -22,9 +22,8 @@ public class MarkMessageReadenExecutor implements ICommandExecutor{
 	public String execute(IConnectionData connectionData)
 			throws CommandExecutionException {
 		String messageId = connectionData.getRequestParameter("messageId");
-		String[] ids = messageId.split("_");
-		logger.debug("Marking readen message with id: " + ids[1] + " from source with id: " + ids[0]);
-		MessagesManager.getInstance().setMessageReadden(connectionData.getUser(), ids[0], ids[1]);
+		logger.debug("Marking readen message with id: " + messageId);
+		MessagesManager.getInstance().setMessageReadden(connectionData.getUser(), messageId);
 		return new GetSourcesExecutor().execute(connectionData);
 	}
 

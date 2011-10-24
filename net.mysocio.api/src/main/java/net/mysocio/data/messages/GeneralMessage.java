@@ -84,7 +84,7 @@ public abstract class GeneralMessage extends SocioObject implements IMessage{
 
 	public String replacePlaceholders(String template) {
 		String message = template.replace("message.title", getTitle());
-		message = message.replace("message.id", getSourceId() + "_" + getId());
+		message = message.replace("message.id", getId());
 		message = message.replace("message.text", getText());
 		message = message.replace("message.link", getUniqueId());
 		return message;

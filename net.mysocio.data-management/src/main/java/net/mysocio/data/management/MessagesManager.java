@@ -37,6 +37,7 @@ public class MessagesManager implements IMessagesManager {
 		List<ISource> sources = user.getSources();
 		for (ISource source : sources) {
 			List<String> storedMessages = storeMessages(source.getManager().getLastMessages(source, lastUpdate, checkTime));
+			user.addTotalUnreadmessages(storedMessages.size());
 			List<SocioTag> tags = source.getTags();
 			for (SocioTag tag : tags) {
 				user.addUnreadMessages(tag.getId(),storedMessages);
@@ -62,8 +63,8 @@ public class MessagesManager implements IMessagesManager {
 		return DataManagerFactory.getDataManager().getMessages(user.getUnreadMessages());
 	}
 	
-	public void setMessageReadden(SocioUser user, String sourceId, String messageId){
-		user.setMessageReadden(sourceId, messageId);
+	public void setMessageReadden(SocioUser user, String messageId){
+		user.setMessageReadden(messageId);
 		DataManagerFactory.getDataManager().saveObject(user);
 		ISocioObject object = DataManagerFactory.getDataManager().getObject(GeneralMessage.class, messageId);
 		DataManagerFactory.getDataManager().deleteObject(object);
