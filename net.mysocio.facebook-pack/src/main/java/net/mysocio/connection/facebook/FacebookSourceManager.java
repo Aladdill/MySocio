@@ -26,7 +26,7 @@ import org.codehaus.jackson.map.ObjectMapper;
  */
 public class FacebookSourceManager implements ISourceManager {
 	private static final FacebookSourceManager instance = new FacebookSourceManager();
-	private static final int MONTH = 30*24*3600*1000;
+	private static final long MONTH = 30*24*3600*1000;
 
 	/**
 	 * 

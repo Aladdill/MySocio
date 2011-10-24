@@ -8,6 +8,10 @@ package net.mysocio.ui.data.objects;
  *
  */
 public class DefaultSitePage extends SitePage {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3768494662798972463L;
 	private static final String NAME = "DefaultSitePage";
 	private SiteHeader siteHeader = new DefaultSiteHeader();
 	private SiteBody siteBody = new DefaultSiteBody();

@@ -5,9 +5,7 @@
     <groupId>net.mysocio</groupId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
-  <groupId>net.mysocio</groupId>
   <artifactId>google-pack</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
   <name>Google integration pack</name>
   <description>Package for handling google integration</description>
   <dependencies>

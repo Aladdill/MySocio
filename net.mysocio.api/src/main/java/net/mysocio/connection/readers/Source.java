@@ -3,6 +3,7 @@
  */
 package net.mysocio.connection.readers;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.jdo.annotations.Inheritance;
@@ -24,7 +25,7 @@ public abstract class Source extends NamedObject implements ISource {
 	 */
 	private static final long serialVersionUID = 133410971632390235L;
 	private String url;
-	private List<SocioTag> tags;
+	private List<SocioTag> tags = new ArrayList<SocioTag>();
 	
 	public Source() {
 		super();

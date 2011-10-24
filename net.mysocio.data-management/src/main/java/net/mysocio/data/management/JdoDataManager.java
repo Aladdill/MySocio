@@ -226,10 +226,15 @@ public class JdoDataManager implements IDataManager {
 		return createUniqueObject(source.getClass(), getEqualsExpression("url", source.getUrl()), source);
 	}
 	
+	/**
+	 * We assume, that tags are always created as part of object transaction
+	 * @param object
+	 * @return
+	 */
 	private List<SocioTag> createTags(ITagedObject object){
 		List<SocioTag> tags = object.getDefaultTags();
 		for (SocioTag tag : tags) {
-			saveObject(tag);
+			pm.makePersistent(tag);
 		}
 		return tags;
 	}

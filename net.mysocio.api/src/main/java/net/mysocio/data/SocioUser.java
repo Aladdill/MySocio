@@ -6,10 +6,8 @@ package net.mysocio.data;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
@@ -33,9 +31,9 @@ public class SocioUser extends Contact implements IUser {
     @Persistent
 	private Map<String, List<String>> unreadMessages = new HashMap<String, List<String>>();
 	@Persistent
-	private Set<Account> accounts = new HashSet<Account>();
+	private List<Account> accounts = new ArrayList<Account>();
 	@Persistent
-	private Set<IContact> contacts = new HashSet<IContact>();
+	private List<IContact> contacts = new ArrayList<IContact>();
 	@Persistent
 	private Map<String, SocioTag> userTags = new HashMap<String, SocioTag>();
 	@Persistent
@@ -62,11 +60,11 @@ public class SocioUser extends Contact implements IUser {
 	
 	private String locale;
 	
-	public Set<IContact> getContacts(){
+	public List<IContact> getContacts(){
 		return contacts;
 	}
 
-	public List<String> getUnreadMessages(Set<ISource> sources){
+	public List<String> getUnreadMessages(List<ISource> sources){
 		List<String> unreaddenMessages = new ArrayList<String>();
 		for (ISource source : sources) {
 			List<String> messages = this.unreadMessages.get(source.getId());
@@ -115,14 +113,14 @@ public class SocioUser extends Contact implements IUser {
 	/**
 	 * @return the accounts
 	 */
-	public Set<Account> getAccounts() {
+	public List<Account> getAccounts() {
 		return accounts;
 	}
 
 	/**
 	 * @param accounts the accounts to set
 	 */
-	public void setAccounts(Set<Account> accounts) {
+	public void setAccounts(List<Account> accounts) {
 		this.accounts = accounts;
 	}
 	
@@ -133,7 +131,7 @@ public class SocioUser extends Contact implements IUser {
 	/**
 	 * @param contacts the contacts to set
 	 */
-	public void setContacts(Set<IContact> contacts) {
+	public void setContacts(List<IContact> contacts) {
 		this.contacts = contacts;
 	}
 	public void addContact(IContact contact) {

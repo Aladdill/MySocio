@@ -11,6 +11,10 @@ import net.mysocio.data.ui.UiObject;
  *
  */
 public class DefaultJSImports extends UiObject implements IUiObject {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8204779782469121506L;
 	private static final String LIB_DHTMLX_TREE_CODE_BASE = "lib/dhtmlxTree/codebase/";
 	private static final String LIB_DHTMLX_DATA_VIEW_CODE_BASE = "lib/dhtmlxDataView/codebase/";
 

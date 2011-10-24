@@ -10,6 +10,10 @@ import net.mysocio.data.ui.UiObject;
  *
  */
 public abstract class HtmlPage extends UiObject {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1091785907896685234L;
 	private static final String CATEGORY = "HtmlPage";
 	private HtmlBody body;
 	private HtmlHeader header;

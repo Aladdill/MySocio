@@ -3,10 +3,8 @@
  */
 package net.mysocio.data.contacts;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
 
@@ -25,10 +23,10 @@ public abstract class Contact extends NamedObject implements IContact {
 	 * 
 	 */
 	private static final long serialVersionUID = 8721056150291879634L;
-	private Set<ISource> sources = new HashSet<ISource>();
-	private Set<IDestination> destinations = new HashSet<IDestination>();
+	private List<ISource> sources = new ArrayList<ISource>();
+	private List<IDestination> destinations = new ArrayList<IDestination>();
 	private String userpicUrl =  new String();
-	private List<SocioTag> tags;
+	private List<SocioTag> tags = new ArrayList<SocioTag>();
 	
 	public void setUserpicUrl(String userpicUrl) {
 		this.userpicUrl = userpicUrl;
@@ -46,11 +44,11 @@ public abstract class Contact extends NamedObject implements IContact {
 		this.sources.addAll(sources);		
 	}
 
-	public Set<ISource> getSources() {
+	public List<ISource> getSources() {
 		return this.sources;
 	}
 	
-	public Set<IDestination> getDestinations() {
+	public List<IDestination> getDestinations() {
 		return destinations;
 	}
 	

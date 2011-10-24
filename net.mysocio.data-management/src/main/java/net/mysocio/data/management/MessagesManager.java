@@ -5,7 +5,6 @@ package net.mysocio.data.management;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import net.mysocio.connection.readers.ISource;
 import net.mysocio.connection.writers.IDestination;
@@ -35,7 +34,7 @@ public class MessagesManager implements IMessagesManager {
 	public void updateUnreaddenMessages(SocioUser user) throws Exception {
 		long checkTime = System.currentTimeMillis();
 		Long lastUpdate = user.getLastUpdate();
-		Set<ISource> sources = user.getSources();
+		List<ISource> sources = user.getSources();
 		for (ISource source : sources) {
 			List<String> storedMessages = storeMessages(source.getManager().getLastMessages(source, lastUpdate, checkTime));
 			List<SocioTag> tags = source.getTags();

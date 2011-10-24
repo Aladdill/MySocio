@@ -14,7 +14,6 @@ import net.mysocio.data.SocioUser;
 import net.mysocio.data.management.DefaultResourcesManager;
 import net.mysocio.ui.management.CommandExecutionException;
 import net.mysocio.ui.management.ICommandExecutor;
-import net.mysocio.ui.managers.basic.DefaultUiManager;
 
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonGenerationException;
@@ -28,7 +27,6 @@ import org.slf4j.LoggerFactory;
  */
 public class GetSourcesExecutor implements ICommandExecutor {
 	private static final Logger logger = LoggerFactory.getLogger(GetSourcesExecutor.class);
-	private DefaultUiManager uiManager = new DefaultUiManager();
 	/* (non-Javadoc)
 	 * @see net.mysocio.ui.management.ICommandExecutor#execute(javax.servlet.http.HttpServletRequest)
 	 */

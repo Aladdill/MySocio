@@ -3,6 +3,7 @@
  */
 package net.mysocio.data.accounts;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.jdo.annotations.IdentityType;
@@ -28,7 +29,7 @@ public abstract class Account extends SocioObject implements ITagedObject{
 	private String userId = new String();
 	private String userpicUrl = new String();
 	private String email = new String();
-	private List<SocioTag> tags;
+	private List<SocioTag> tags = new ArrayList<SocioTag>();
 	
 
 	public String getUserId() {

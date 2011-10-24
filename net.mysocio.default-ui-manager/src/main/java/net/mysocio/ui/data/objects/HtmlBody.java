@@ -10,6 +10,10 @@ import net.mysocio.data.ui.UiObject;
  *
  */
 public abstract class HtmlBody extends UiObject {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1238597016903959900L;
 	private static final String CATEGORY = "HtmlBody";
 	
 	public HtmlBody(){
