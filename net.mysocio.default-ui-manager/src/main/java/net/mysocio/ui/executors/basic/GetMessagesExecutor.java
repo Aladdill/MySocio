@@ -45,7 +45,6 @@ public class GetMessagesExecutor implements ICommandExecutor {
 		}
 		SocioUser user = connectionData.getUser();
 		user.setSelectedSource(id);
-		DataManagerFactory.getDataManager().saveObject(user);
 		return MessagesManager.getInstance().getMessagesForSelectedSource(user);
 	}
 }

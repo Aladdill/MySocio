@@ -65,6 +65,10 @@ public class JdoDataManager implements IDataManager {
 		}
 	}
 	
+	public synchronized void flush(){
+		pm.flush();
+	}
+	
 	private JdoDataManager(){}
 	
 	/* (non-Javadoc)
@@ -97,7 +101,6 @@ public class JdoDataManager implements IDataManager {
 		user.addAccount(account);
 		saveObject(user);
 		account.setUserId(user.getId());
-		saveObject(account);
 		logger.debug("User created");
 		return user;
 	}
@@ -161,7 +164,7 @@ public class JdoDataManager implements IDataManager {
 				ITagedObject tagedObj = (ITagedObject) object;
 				tagedObj.getTags().addAll(createTags(tagedObj));
 			}
-            pm.makePersistent(object);
+            object = pm.makePersistent(object);
             tx.commit();
         }
         finally

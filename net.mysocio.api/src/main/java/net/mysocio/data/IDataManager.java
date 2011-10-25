@@ -37,4 +37,6 @@ public interface IDataManager {
 	public List<IMessage> getMessages(List<String> ids);
 	
 	public ISocioObject getObject(Class<?> clazz, String id);
+	
+	public void flush();
 }

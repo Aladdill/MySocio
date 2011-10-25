@@ -4,6 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.mysocio.data.IConnectionData;
+import net.mysocio.data.management.DataManagerFactory;
 import net.mysocio.ui.management.CommandExecutionException;
 import net.mysocio.ui.management.CommandIterpreterFactory;
 import net.mysocio.ui.management.ICommandInterpreter;
@@ -31,7 +32,10 @@ public class RequestHandler extends AbstractHandler {
 		IConnectionData connectionData = new ConnectionData(request);
 		ICommandInterpreter commandInterpreter = CommandIterpreterFactory.getCommandInterpreter(connectionData);
 		response.setContentType(commandInterpreter.getCommandResponseType(command));
-		return commandInterpreter.executeCommand(command);
+		String commandOutput = commandInterpreter.executeCommand(command);
+		//I want to flush changes in user data every time request finished.
+		DataManagerFactory.getDataManager().flush();
+		return commandOutput;
 	}
 
 	@Override

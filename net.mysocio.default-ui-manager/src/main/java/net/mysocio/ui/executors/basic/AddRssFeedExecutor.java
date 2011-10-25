@@ -50,7 +50,6 @@ public class AddRssFeedExecutor implements ICommandExecutor {
 		SocioUser user = connectionData.getUser();
 		source = (RssSource)dataManager.createSource(source);
 		user.addSource(source);
-		dataManager.saveObject(user);
 		AbstractUiManager uiManager = new DefaultUiManager();
 		return uiManager.getPage(new RssConnections(),user);
 	}

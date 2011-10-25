@@ -44,7 +44,6 @@ public class MessagesManager implements IMessagesManager {
 			}
 		}
 		user.setLastUpdate(checkTime);
-		DataManagerFactory.getDataManager().saveObject(user);
 	}
 
 	public static IMessagesManager getInstance() {
@@ -65,7 +64,6 @@ public class MessagesManager implements IMessagesManager {
 	
 	public void setMessageReadden(SocioUser user, String messageId){
 		user.setMessageReadden(messageId);
-		DataManagerFactory.getDataManager().saveObject(user);
 		ISocioObject object = DataManagerFactory.getDataManager().getObject(GeneralMessage.class, messageId);
 		DataManagerFactory.getDataManager().deleteObject(object);
 	}
