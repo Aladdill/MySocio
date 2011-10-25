@@ -40,10 +40,6 @@ public class TestAccount extends Account {
 		ts.setName("Test account");
 		ts.setUrl("testSourceId");
 		sources.add(ts);
-		TestSource ts1 = new TestSource();
-		ts1.setName("Test account1");
-		ts1.setUrl("testSourceId1");
-		sources.add(ts1);
 		return sources;
 	}
 	

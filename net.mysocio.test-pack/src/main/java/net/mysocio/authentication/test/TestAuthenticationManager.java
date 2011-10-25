@@ -28,11 +28,14 @@ public class TestAuthenticationManager implements IAuthenticationManager{
 	}
 
 	public String authenticate(IConnectionData connectionData) throws Exception {
-		Account account = new TestAccount();
-		account.setAccountUniqueId("test@test.com");
-		account.setUserName("Vasya Pupkin");
-		account.setUserpicUrl("images/portrait.jpg");
 		JdoDataManager dataManager = (JdoDataManager)DataManagerFactory.getDataManager();
+		Account account = dataManager.getAccount(TestAccount.class, "test@test.com");
+		if (account == null){
+			account = new TestAccount();
+			account.setAccountUniqueId("test@test.com");
+			account.setUserName("Vasya Pupkin");
+			account.setUserpicUrl("images/portrait.jpg");
+		}
 		SocioUser user = dataManager.getUser(account, new Locale("ru"));
 		MessagesManager.getInstance().updateUnreaddenMessages(user);
 		connectionData.setUser(user);

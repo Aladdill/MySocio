@@ -57,12 +57,14 @@ img.MessageUserpic {
 	width: 50px;
 	height: 50px;
 	border: 2px solid #00aeef;
+	float: left;
 }
 
 div.MessageUserpic {
 	float: left;
 	padding-right: 15px;
 	padding-top: 4px;
+	padding-bottom: 15px;
 }
 
 div.UserName {
@@ -207,6 +209,13 @@ span.tab {
 	float: left;
 }
 
+span.MessageDate {
+	float: right;
+	margin-top: 9px;
+	color: #a3a3a3;
+	font: 12px Calibri;
+}
+
 div.MiddleHeaderLine {
 	margin-bottom: 18px;
 }
@@ -326,11 +335,11 @@ div.MessageTextSelected {
 }
 
 img.NetworkIcon {
-	
+	float: left;
 }
 
 img.NetworkIconReaden {
-	
+	float: left;
 }
 
 .Invisible {
@@ -385,6 +394,9 @@ a.MessageTitle {
 	text-decoration: none;
 	color: inherit;
 	font: 19px Calibri;
+	float: left;
+	margin-left: 5px;
+	margin-top: 2px;
 }
 
 a.Undecorated {

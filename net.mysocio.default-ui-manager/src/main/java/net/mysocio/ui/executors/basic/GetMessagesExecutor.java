@@ -3,6 +3,9 @@
  */
 package net.mysocio.ui.executors.basic;
 
+import java.sql.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.List;
 
@@ -33,6 +36,9 @@ public class GetMessagesExecutor implements ICommandExecutor {
 			AbstractUiManager uiManager = new DefaultUiManager();
 			String pageHtml = uiManager.getPage(new DefaultMessage(),connectionData.getUser());
 			pageHtml = message.replacePlaceholders(pageHtml);
+			DateFormat formatter = DateFormat.getDateInstance(DateFormat.LONG, connectionData.getLocale());
+			String date = formatter.format(new Date(message.getDate()));
+			pageHtml = pageHtml.replace("message.date", date);
 			output.append(pageHtml);
 		}
 		return output.toString();

@@ -82,12 +82,24 @@ public class JdoDataManager implements IDataManager {
 			logger.debug("Account found");
 			return getUniqueObject(SocioUser.class, getEqualsExpression("id", userId));
 		}
+		saveObject(account);
 		logger.debug("Creating user");
 		SocioUser user = new SocioUser();
 		user.setName(userName);
 		user.setUserpicUrl(account.getUserpicUrl());
 		user.setLocale(locale.getLanguage());
-		saveObject(account);
+		addAccountToUser(account, user);
+		saveObject(user);
+		account.setUserId(user.getId());
+		logger.debug("User created");
+		return user;
+	}
+
+	/**
+	 * @param account
+	 * @param user
+	 */
+	private void addAccountToUser(Account account, SocioUser user) {
 		List<SocioTag> accTags = account.getTags();
 		user.addTags(accTags);
 		List<ISource> sources = account.getSources();
@@ -99,10 +111,6 @@ public class JdoDataManager implements IDataManager {
 			user.addSource(source);
 		}
 		user.addAccount(account);
-		saveObject(user);
-		account.setUserId(user.getId());
-		logger.debug("User created");
-		return user;
 	}
 
 	/**

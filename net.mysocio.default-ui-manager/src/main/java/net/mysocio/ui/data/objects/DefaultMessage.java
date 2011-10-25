@@ -28,6 +28,7 @@ public class DefaultMessage extends UiObject{
 		addTextLabel("message.share");
 		addTextLabel("message.keep.unread");
 		addTextLabel("message.expand");
+		addTextLabel("message.collapse");
 	}
 	@Override
 	public String getHtmlTemplate() {

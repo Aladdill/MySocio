@@ -72,23 +72,22 @@ public class FacebookSourceManager implements ISourceManager {
 	private FacebookMessage parseFacebookMessage(FacebookSource fs, JsonNode element) throws ParseException {
 		FacebookMessage message = new FacebookMessage();
 		message.setDate(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(getAttribute(element, "created_time")).getTime());
-		String text = getAttribute(element, "message");
+		String text = "";
 		String type = getAttribute(element, "type");
-		if (type.equals("link")){
-			if(element.get("picture") != null){
-				text += "</br><img alt=\"" + getAttribute(element, "caption") +"\" src=\"" + getAttribute(element, "picture") + "\">";
-			}
-			text +=	"</br><a href=\"" + getAttribute(element, "link") +" target=\"_blank\">" + getAttribute(element, "name") + "</a>";
-		}else if(type.equals("photo") || type.equals("video")){
-			text = "</br><img alt=\"" + getAttribute(element, "caption") +"\" src=\"" + getAttribute(element, "picture") + "\">" +
-			"</br><a href=\"" + getAttribute(element, "link") +" target=\"_blank\">" + getAttribute(element, "name") + "</a>";
+		if (element.get("picture") != null){
+			text = "<img alt=\"\" src=\"" + getAttribute(element, "picture") + "\">";
 		}
+		text +=	"</br><a href=\"" + getAttribute(element, "link") +" target=\"_blank\">" + getAttribute(element, "name") + "</a>";
+		text += getAttribute(element, "message");
+		if (type.equals("link")){
+			text += "</br>" + getAttribute(element, "caption");
+		}
+		text += "</br>" + getAttribute(element, "description");
+		text += "&nbsp;" + getAttribute(element, "story");
 		message.setText(text);
 		message.setSourceId(fs.getId());
-		String title = getAttribute(element, "story");
-		if (title.length() <= 0){
-			title = getAttribute(element.get("from"), "name");
-		}
+		String title = getAttribute(element.get("from"), "name");
+		message.setUserPic("https://graph.facebook.com/" + getAttribute(element.get("from"), "id") + "/picture");
 		message.setTitle(title);
 		message.setUniqueId(getAttribute(element, "id"));
 		return message;

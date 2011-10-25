@@ -35,15 +35,17 @@ public class MessagesManager implements IMessagesManager {
 		long checkTime = System.currentTimeMillis();
 		Long lastUpdate = user.getLastUpdate();
 		List<ISource> sources = user.getSources();
+		Integer totalMessages = 0;
 		for (ISource source : sources) {
 			List<String> storedMessages = storeMessages(source.getManager().getLastMessages(source, lastUpdate, checkTime));
-			user.addTotalUnreadmessages(storedMessages.size());
+			totalMessages += storedMessages.size();
 			List<SocioTag> tags = source.getTags();
 			for (SocioTag tag : tags) {
 				user.addUnreadMessages(tag.getId(),storedMessages);
 			}
 		}
 		user.setLastUpdate(checkTime);
+		user.addTotalUnreadmessages(totalMessages);
 	}
 
 	public static IMessagesManager getInstance() {
