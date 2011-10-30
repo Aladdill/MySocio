@@ -3,15 +3,14 @@
  */
 package net.mysocio.data.contacts;
 
-import java.util.ArrayList;
 import java.util.List;
+
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
 
 import net.mysocio.connection.readers.ISource;
 import net.mysocio.connection.writers.IDestination;
 import net.mysocio.data.NamedObject;
-import net.mysocio.data.SocioTag;
 
 /**
  * @author Aladdin
@@ -23,10 +22,9 @@ public abstract class Contact extends NamedObject implements IContact {
 	 * 
 	 */
 	private static final long serialVersionUID = 8721056150291879634L;
-	private List<ISource> sources = new ArrayList<ISource>();
-	private List<IDestination> destinations = new ArrayList<IDestination>();
-	private String userpicUrl =  new String();
-	private List<SocioTag> tags = new ArrayList<SocioTag>();
+	private String userpicUrl = "images/portrait.jpg";
+	private String url;
+	private String socioContactId;
 	
 	public void setUserpicUrl(String userpicUrl) {
 		this.userpicUrl = userpicUrl;
@@ -36,35 +34,23 @@ public abstract class Contact extends NamedObject implements IContact {
 		return userpicUrl;
 	}
 
-	public void addSource(ISource source) {
-		this.sources.add(source);
-	}
-
-	public void addSources(List<? extends ISource> sources) {
-		this.sources.addAll(sources);		
-	}
-
-	public List<ISource> getSources() {
-		return this.sources;
-	}
+	public abstract List<ISource> getSources();
 	
-	public List<IDestination> getDestinations() {
-		return destinations;
-	}
-	
-	public void addDestination(IDestination destination) {
-		this.destinations.add(destination);
+	public abstract List<IDestination> getDestinations();
+
+	public String getUrl() {
+		return url;
 	}
 
-	public void addDestinations(List<? extends IDestination> destinations) {
-		this.destinations.addAll(destinations);		
+	public void setUrl(String url) {
+		this.url = url;
 	}
 
-	public List<SocioTag> getTags() {
-		return tags;
+	public String getSocioContactId() {
+		return socioContactId;
 	}
 
-	public void setTags(List<SocioTag> tags) {
-		this.tags = tags;
+	public void setSocioContactId(String socioContactId) {
+		this.socioContactId = socioContactId;
 	}
 }

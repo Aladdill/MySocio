@@ -33,5 +33,8 @@ public class MySocioContextListener implements ServletContextListener {
 		ServletContext servletContext = arg0.getServletContext();
 		DefaultResourcesManager.init(servletContext.getRealPath(""));
 		AuthenticationResourcesManager.init(servletContext.getRealPath(""));
+		System.getProperties().put("proxySet", "true");
+        System.getProperties().put("proxyHost", "web-proxy.isr.hp.com");
+        System.getProperties().put("proxyPort", "8080");
 	}
 }

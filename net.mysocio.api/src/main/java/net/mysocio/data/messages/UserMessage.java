@@ -19,6 +19,7 @@ public abstract class UserMessage extends GeneralMessage {
 	 */
 	private static final long serialVersionUID = -3132822032864353865L;
 	private String userPic;
+	private String userId;
 
 	public String getUserPic() {
 		return userPic;
@@ -44,5 +45,13 @@ public abstract class UserMessage extends GeneralMessage {
 	@Override
 	public String getText() {
 		return "<div class=\"MessageUserpic\"><img alt=\"UserPic\" src=\""+ getUserPic() +"\" class=\"MessageUserpic\"></div>" + super.getText();
+	}
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 }

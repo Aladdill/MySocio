@@ -12,6 +12,8 @@ import net.mysocio.data.ITagedObject;
  */
 public interface IContact extends INamedObject, ITagedObject {
 	public String getUserpicUrl();
-
 	public abstract void setUserpicUrl(String userpicUrl);
+	public String getUrl();
+	public String getIcon();
+	public String getSocioContactId();
 }

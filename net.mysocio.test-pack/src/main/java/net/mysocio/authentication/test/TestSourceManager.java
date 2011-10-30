@@ -37,7 +37,6 @@ public class TestSourceManager implements ISourceManager {
 		TestMessage message = new TestMessage();
 		message.setDate(System.currentTimeMillis());
 		message.setTitle("Test message Title");
-		message.setSourceId(source.getId());
 		message.setText(DefaultResourcesManager.getResource(new Locale("ru"), "mesage.test.long"));
 		message.setUniqueId("http://aladdill.livejournal.com/207656.html");
 		return message;
@@ -52,7 +51,6 @@ public class TestSourceManager implements ISourceManager {
 		message.setUniqueId(source.getUrl() + "Test message Title"  + i);
 		message.setDate(System.currentTimeMillis());
 		message.setTitle("Test message Title " + i);
-		message.setSourceId(source.getId());
 		message.setText(DefaultResourcesManager.getResource(new Locale("ru"), "mesage.test.short"));
 		return message;
 	}

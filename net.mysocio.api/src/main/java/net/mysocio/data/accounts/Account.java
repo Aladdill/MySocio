@@ -4,7 +4,9 @@
 package net.mysocio.data.accounts;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
@@ -13,6 +15,7 @@ import net.mysocio.connection.readers.ISource;
 import net.mysocio.data.ITagedObject;
 import net.mysocio.data.SocioObject;
 import net.mysocio.data.SocioTag;
+import net.mysocio.data.contacts.IContact;
 
 /**
  * @author Aladdin
@@ -30,6 +33,7 @@ public abstract class Account extends SocioObject implements ITagedObject{
 	private String userpicUrl = new String();
 	private String email = new String();
 	private List<SocioTag> tags = new ArrayList<SocioTag>();
+	private Map<String, IContact> contacts = new HashMap<String, IContact>();
 	
 
 	public String getUserId() {
@@ -82,5 +86,13 @@ public abstract class Account extends SocioObject implements ITagedObject{
 
 	public void setTags(List<SocioTag> tags) {
 		this.tags = tags;
+	}
+
+	public Map<String, IContact> getContacts() {
+		return contacts;
+	}
+
+	public void setContacts(Map<String, IContact> contacts) {
+		this.contacts = contacts;
 	}
 }

@@ -16,14 +16,14 @@ import org.slf4j.LoggerFactory;
  * @author Aladdin
  *
  */
-public class MarkMessageReadenExecutor implements ICommandExecutor{
-	private static final Logger logger = LoggerFactory.getLogger(MarkMessageReadenExecutor.class);
+public class MarkMessagesReadenExecutor implements ICommandExecutor{
+	private static final Logger logger = LoggerFactory.getLogger(MarkMessagesReadenExecutor.class);
 	@Override
 	public String execute(IConnectionData connectionData)
 			throws CommandExecutionException {
-		String messageId = connectionData.getRequestParameter("messageId");
-		logger.debug("Marking readen message with id: " + messageId);
-		MessagesManager.getInstance().setMessageReadden(connectionData.getUser(), messageId);
+		String messagesIds = connectionData.getRequestParameter("messagesIds");
+		logger.debug("Marking readen message with ids: " + messagesIds);
+		MessagesManager.getInstance().setMessagesReadden(connectionData.getUser(), messagesIds);
 		return new GetSourcesExecutor().execute(connectionData);
 	}
 

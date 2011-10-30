@@ -1,6 +1,3 @@
-function openMessage(id) {
-	window.alert(id);
-}
 function expandMessage(id) {
 	$("#" + id).children(".MessageText").addClass("Expand");
 	$("#" + id).children(".MessageExpand").addClass("Invisible");
@@ -76,11 +73,15 @@ function hideSources() {
 	hideDiv("sources_tree");
 	hideDiv("subscriptions_underline");
 	hideDiv("subscriptions_title");
+	//Stop refreshing sources when user in other 
+	$("#sources_tree").everyTime("refreshSources", rereshSourcesAndMarkReadden);
 }
 function showSources() {
 	showDiv("sources_tree");
 	showDiv("subscriptions_underline");
 	showDiv("subscriptions_title");
+	//Start refreshing sources when user logs in
+	$("#sources_tree").everyTime("30s", "refreshSources", rereshSourcesAndMarkReadden, 0);
 }
 function hideDiv(id) {
 	$("#" + id).css("display", "none");
@@ -165,9 +166,21 @@ function messageScroll() {
 	});
 }
 function markMessageReadden(id) {
-	$("#sources_tree").data("treeRefreshInitiated", true);
-	$.post("execute?command=markMessageReaden&messageId=" + id, {},
-			initSourcesData, "json").error(onFailure);
+	var messages = $("#data_container").data("readdenMessages");
+	if (messages != undefined){
+		messages += "," + id;
+	}else{
+		$("#data_container").data("readdenMessages", id);
+	}
+	
+}
+function rereshSourcesAndMarkReadden(){
+	var messages = $("#data_container").data("readdenMessages");
+	if (messages != undefined){
+		$("#sources_tree").data("treeRefreshInitiated", true);
+		$.post("execute?command=markMessagesReaden&messagesIds=" + messages, {},
+				initSourcesData, "json").error(onFailure);
+	}
 }
 function initPage() {
 	if ($("#login_center_div").size() != 0) {

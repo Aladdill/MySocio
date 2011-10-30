@@ -51,9 +51,8 @@ public class LJDataReader {
 		for (LjSource source : this.friends) {
 			SocioContact friendContact = new SocioContact();
 			friendContact.setName(source.getName());
-			friendContact.addSource(source);
 			DataManagerFactory.getDataManager().saveObject(friendContact);
-			contacts.add(friendContact);
+//			contacts.add(friendContact);
 		}
 		return contacts;
 	}

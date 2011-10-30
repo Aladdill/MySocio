@@ -18,10 +18,11 @@ public enum EDefaultCommand {
 	logout(new LogoutPageExecutor()),
 	openMainPage(new LoadPageExecutor(new DefaultSiteBody())),
 	openSettings(new LoadPageExecutor(new RssConnections())),
+	getContacts(new LoadPageExecutor(new RssConnections())),
 	addRssFeed(new AddRssFeedExecutor()),
 	getRssFeeds(new GetRssFeedsExecutor()),
 	getSources(new GetSourcesExecutor(), DefaultCommandIterpreter.JSON),
-	markMessageReaden(new MarkMessageReadenExecutor(), DefaultCommandIterpreter.JSON);
+	markMessagesReaden(new MarkMessagesReadenExecutor(), DefaultCommandIterpreter.JSON);
 	private ICommandExecutor executor;
 	private String responseType = DefaultCommandIterpreter.TEXT_HTML;
 	private EDefaultCommand(ICommandExecutor executor){

@@ -29,5 +29,4 @@ public class FacebookMessage extends UserMessage {
 	public String getReadenNetworkIcon() {
 		return "images/main/message/fb-gray.png";
 	}
-
 }

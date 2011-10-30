@@ -6,12 +6,14 @@ package net.mysocio.connection.facebook;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import net.mysocio.authentication.facebook.FacebookAuthenticationManager;
+import net.mysocio.connection.readers.IAccountSourceManager;
 import net.mysocio.connection.readers.ISource;
-import net.mysocio.connection.readers.ISourceManager;
 import net.mysocio.data.accounts.facebook.FacebookAccount;
 import net.mysocio.data.messages.IMessage;
 import net.mysocio.data.messages.facebook.FacebookMessage;
@@ -24,7 +26,7 @@ import org.codehaus.jackson.map.ObjectMapper;
  * @author Aladdin
  * 
  */
-public class FacebookSourceManager implements ISourceManager {
+public class FacebookSourceManager implements IAccountSourceManager {
 	private static final FacebookSourceManager instance = new FacebookSourceManager();
 	private static final long MONTH = 30*24*3600l;
 
@@ -43,7 +45,7 @@ public class FacebookSourceManager implements ISourceManager {
 	 */
 	public List<IMessage> getLastMessages(ISource source, Long from, Long to) throws Exception {
 		FacebookSource fs = (FacebookSource) source;
-		FacebookAccount fa = fs.getAccount();
+		FacebookAccount fa = (FacebookAccount)fs.getAccount();
 		long toInSec = to/1000;
 		long fromInSec = from/1000;
 		String url = "https://graph.facebook.com/me/home?format=json&until="+toInSec;
@@ -85,11 +87,9 @@ public class FacebookSourceManager implements ISourceManager {
 		text += "</br>" + getAttribute(element, "description");
 		text += "&nbsp;" + getAttribute(element, "story");
 		message.setText(text);
-		message.setSourceId(fs.getId());
 		String title = getAttribute(element.get("from"), "name");
 		message.setUserPic("https://graph.facebook.com/" + getAttribute(element.get("from"), "id") + "/picture");
 		message.setTitle(title);
-		message.setUniqueId(getAttribute(element, "id"));
 		return message;
 	}
 
@@ -109,5 +109,11 @@ public class FacebookSourceManager implements ISourceManager {
 
 	public static FacebookSourceManager getInstance() {
 		return instance;
+	}
+
+	public Map<String, List<String>> orderMessagesByContactsTags(ISource source, List<IMessage> messages) {
+		FacebookSource fs = (FacebookSource) source;
+		FacebookAccount fa = (FacebookAccount)fs.getAccount();
+		return Collections.emptyMap();
 	}
 }

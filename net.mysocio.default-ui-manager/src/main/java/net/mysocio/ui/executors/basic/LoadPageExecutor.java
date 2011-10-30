@@ -31,7 +31,7 @@ public class LoadPageExecutor implements ICommandExecutor {
 		AbstractUiManager uiManager = new DefaultUiManager();
 		String pageHtml = uiManager.getPage(page,connectionData.getUser());
 		SocioUser user = connectionData.getUser();
-		pageHtml = pageHtml.replace("userpic.url", user.getUserpicUrl());
+		pageHtml = pageHtml.replace("userpic.url", user.getMainAccount().getUserpicUrl());
 		pageHtml = pageHtml.replace("user.name", user.getName());
 		return pageHtml;
 	}

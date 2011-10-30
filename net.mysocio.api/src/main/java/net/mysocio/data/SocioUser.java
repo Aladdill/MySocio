@@ -15,16 +15,15 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 
 import net.mysocio.connection.readers.ISource;
+import net.mysocio.connection.writers.IDestination;
 import net.mysocio.data.accounts.Account;
-import net.mysocio.data.contacts.Contact;
-import net.mysocio.data.contacts.IContact;
 
 /**
  * @author Aladdin
  * Although User is subclass of MySocio object, tags list is private list of tags usable by this user and not object tags.
  */
 @PersistenceCapable
-public class SocioUser extends Contact implements IUser {
+public class SocioUser extends NamedObject{
 	public static final String ALL_SOURCES = "All";
 	/**
 	 * 
@@ -32,7 +31,10 @@ public class SocioUser extends Contact implements IUser {
 	private static final long serialVersionUID = -2886854604233072581L;
 	private Map<String, List<String>> unreadMessages = new HashMap<String, List<String>>();
 	private List<Account> accounts = new ArrayList<Account>();
-	private List<IContact> contacts = new ArrayList<IContact>();
+	private Account mainAccount;
+	private List<SocioContact> contacts = new ArrayList<SocioContact>();
+	private List<ISource> sources = new ArrayList<ISource>();
+	private List<IDestination> destinations = new ArrayList<IDestination>();
 	private Map<String, SocioTag> userTags = new HashMap<String, SocioTag>();
 	private Long lastUpdate = 0l;
 	private Integer totalUnreadmessages = 0;	
@@ -58,7 +60,7 @@ public class SocioUser extends Contact implements IUser {
 	
 	private String locale;
 	
-	public List<IContact> getContacts(){
+	public List<SocioContact> getContacts(){
 		return contacts;
 	}
 
@@ -134,10 +136,10 @@ public class SocioUser extends Contact implements IUser {
 	/**
 	 * @param contacts the contacts to set
 	 */
-	public void setContacts(List<IContact> contacts) {
+	public void setContacts(List<SocioContact> contacts) {
 		this.contacts = contacts;
 	}
-	public void addContact(IContact contact) {
+	public void addContact(SocioContact contact) {
 		this.contacts.add(contact);
 	}
 
@@ -182,17 +184,29 @@ public class SocioUser extends Contact implements IUser {
 			addTag(tag);
 		}
 	}
-
-	@Override
+	
 	public void addSource(ISource source) {
-		super.addSource(source);
+		this.sources.add(source);
 	}
 
-	@Override
 	public void addSources(List<? extends ISource> sources) {
-		for (ISource source : sources) {
-			addSource(source);
-		}
+		this.sources.addAll(sources);		
+	}
+
+	public List<ISource> getSources() {
+		return this.sources;
+	}
+	
+	public List<IDestination> getDestinations() {
+		return destinations;
+	}
+	
+	public void addDestination(IDestination destination) {
+		this.destinations.add(destination);
+	}
+
+	public void addDestinations(List<? extends IDestination> destinations) {
+		this.destinations.addAll(destinations);		
 	}
 
 	public List<SocioTag> getDefaultTags() {
@@ -205,5 +219,13 @@ public class SocioUser extends Contact implements IUser {
 	
 	public void addTotalUnreadmessages(int num) {
 		totalUnreadmessages += num;
+	}
+
+	public Account getMainAccount() {
+		return mainAccount;
+	}
+
+	public void setMainAccount(Account mainAccount) {
+		this.mainAccount = mainAccount;
 	}
 }

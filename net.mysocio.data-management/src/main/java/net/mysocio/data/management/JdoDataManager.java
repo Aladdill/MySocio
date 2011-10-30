@@ -86,9 +86,9 @@ public class JdoDataManager implements IDataManager {
 		logger.debug("Creating user");
 		SocioUser user = new SocioUser();
 		user.setName(userName);
-		user.setUserpicUrl(account.getUserpicUrl());
 		user.setLocale(locale.getLanguage());
 		addAccountToUser(account, user);
+		user.setMainAccount(account);
 		saveObject(user);
 		account.setUserId(user.getId());
 		logger.debug("User created");

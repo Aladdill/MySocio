@@ -17,10 +17,6 @@ public interface IMessage extends ISocioObject {
 
 	public String getUniqueId();
 
-	public void setSourceId(String sourceId);
-
-	public String getSourceId();
-
 	public void setUniqueId(String uniqueId);
 
 	public void setText(String text);
