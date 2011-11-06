@@ -45,10 +45,10 @@ public class GoogleAuthenticationManager extends AbstractOauth2Manager{
 	protected Class<? extends Api> getApiClass() {
 		return GoogleOauth2Api.class;
 	}
-	@Override
-	protected Account getAccount(OAuthService service, Token accessToken) throws Exception {
+	
+	protected Account getAccount(Token accessToken) throws Exception {
 		 OAuthRequest request = new OAuthRequest(Verb.GET, "https://www.google.com/m8/feeds/");
-		    service.signRequest(accessToken, request);
+//		    service.signRequest(accessToken, request);
 		Response response = request.send();
 		ContactFeed resultFeed = new ContactFeed(ContactFeed.readFeed(new ParseSource(response.getStream())));
 		logger.debug("got contacts with title" + resultFeed.getTitle().getPlainText());

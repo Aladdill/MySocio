@@ -67,7 +67,7 @@ public class MessagesManager implements IMessagesManager {
 		return instance;
 	}
 
-	private synchronized List<String> storeMessages(List<IMessage> messages) {
+	public synchronized List<String> storeMessages(List<IMessage> messages) {
 		List<String> stored = new ArrayList<String>();
 		for (IMessage message : messages) {
 			IMessage savedMessage = DataManagerFactory.getDataManager().createMessage(message);

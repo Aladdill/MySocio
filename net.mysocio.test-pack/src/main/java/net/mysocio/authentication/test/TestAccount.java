@@ -56,4 +56,9 @@ public class TestAccount extends Account {
 		return tags;
 	}
 
+	@Override
+	public String getIconUrl() {
+		return "test.icon.account";
+	}
+
 }

@@ -3,15 +3,11 @@
  */
 package net.mysocio.authentication.test;
 
-import java.util.Locale;
-
 import net.mysocio.data.IAuthenticationManager;
 import net.mysocio.data.IConnectionData;
-import net.mysocio.data.SocioUser;
 import net.mysocio.data.accounts.Account;
 import net.mysocio.data.management.DataManagerFactory;
 import net.mysocio.data.management.JdoDataManager;
-import net.mysocio.data.management.MessagesManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +23,11 @@ public class TestAuthenticationManager implements IAuthenticationManager{
 		return logger;
 	}
 
-	public String authenticate(IConnectionData connectionData) throws Exception {
+	public String getRequestUrl() {
+		return "execute?command=startAuthentication&flow=addAccount";
+	}
+
+	public Account getAccount(IConnectionData connectionData) throws Exception {
 		JdoDataManager dataManager = (JdoDataManager)DataManagerFactory.getDataManager();
 		Account account = dataManager.getAccount(TestAccount.class, "test@test.com");
 		if (account == null){
@@ -36,10 +36,6 @@ public class TestAuthenticationManager implements IAuthenticationManager{
 			account.setUserName("Vasya Pupkin");
 			account.setUserpicUrl("images/portrait.jpg");
 		}
-		SocioUser user = dataManager.getUser(account, new Locale("ru"));
-		MessagesManager.getInstance().updateUnreaddenMessages(user);
-		connectionData.setUser(user);
-		connectionData.removeSessionAttribute("identifier");
-		return "pages/closingWindow.html";
+		return account;
 	}
 }

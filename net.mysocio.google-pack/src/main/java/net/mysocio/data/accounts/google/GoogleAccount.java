@@ -61,4 +61,9 @@ public class GoogleAccount extends Oauth2Account{
 		tags.add(accTag);
 		return tags;
 	}
+
+	@Override
+	public String getIconUrl() {
+		return "google.icon.account";
+	}
 }

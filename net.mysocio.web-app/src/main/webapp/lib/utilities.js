@@ -55,13 +55,19 @@ function initSourcesData(data) {
 		}
 	});
 }
-function login(identifierValue) {
-	$.post("login", {
+function openAuthenticationWindow(identifierValue, flowValue) {
+	$.post("execute?command=startAuthentication", {
 		identifier : identifierValue,
-		email : "test@test.com"
+		flow : flowValue
 	}).success(function(data) {
 		window.open(data, "name", "height=500,width=500");
 	}).error(onFailure);
+}
+function login(identifierValue) {
+	openAuthenticationWindow(identifierValue, "login");
+}
+function addAccount(identifierValue) {
+	openAuthenticationWindow(identifierValue, "addAccount");
 }
 function hideTabs() {
 	hideDiv("tabs");
@@ -73,8 +79,8 @@ function hideSources() {
 	hideDiv("sources_tree");
 	hideDiv("subscriptions_underline");
 	hideDiv("subscriptions_title");
-	//Stop refreshing sources when user in other 
-	$("#sources_tree").everyTime("refreshSources", rereshSourcesAndMarkReadden);
+	//Stop refreshing sources when user in other tab
+	$("#sources_tree").stopTime("refreshSources");
 }
 function showSources() {
 	showDiv("sources_tree");
@@ -96,11 +102,17 @@ function showSettings() {
 	hideSources();
 	showTabs();
 	$("#upper_link").html($("#back_to_main_link").html());
+	showAccounts();
+}
+function showRssFeeds() {
+	openUrlInDiv("#data_container", "execute?command=getRssFeeds", []);
 }
 function showMainPage() {
 	hideTabs();
 	showSources();
 	$("#upper_link").html($("#settings_link").html());
+	$("#data_container").html("<div id='filler' class='filler'></div>");
+	
 }
 function openMainPage() {
 	resizeTabs();
@@ -208,7 +220,9 @@ function getMessages(id) {
 				$("#filler").before(data);
 			}).error(onFailure);
 }
-function getAllMessages() {
-	openUrlInDiv("#data_container", "execute?command=getMessages&sourceId=all",
-			[]);
+function showAccounts() {
+	openUrlInDiv("#data_container", "execute?command=getAccounts", []);
+}
+function showContacts() {
+	openUrlInDiv("#data_container", "execute?command=getContacts", []);
 }

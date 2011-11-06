@@ -18,15 +18,8 @@ public class TwitterAuthenticationManager implements IAuthenticationManager {
 		return null;
 	}
 
-	public Account login(IConnectionData connectionData) throws Exception {
+	public Account getAccount(IConnectionData connectionData) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	@Override
-	public String authenticate(IConnectionData connectionData) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

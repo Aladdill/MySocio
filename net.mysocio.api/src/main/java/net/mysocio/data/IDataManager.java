@@ -38,5 +38,9 @@ public interface IDataManager {
 	
 	public ISocioObject getObject(Class<?> clazz, String id);
 	
+	public<T extends ISocioObject> List<T> getObjects(Class<?> T);
+	
+	public void addAccountToUser(Account account, SocioUser user);
+	
 	public void flush();
 }

@@ -25,7 +25,6 @@ import org.scribe.model.OAuthRequest;
 import org.scribe.model.Response;
 import org.scribe.model.Token;
 import org.scribe.model.Verb;
-import org.scribe.oauth.OAuthService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,7 +51,7 @@ public class FacebookAuthenticationManager extends AbstractOauth2Manager{
 	}
 
 	@Override
-	protected Account getAccount(OAuthService service, Token accessToken)
+	protected Account getAccount(Token accessToken)
 	throws Exception {
 		FacebookAccount account = initAccount(accessToken.getToken());
 		return account;

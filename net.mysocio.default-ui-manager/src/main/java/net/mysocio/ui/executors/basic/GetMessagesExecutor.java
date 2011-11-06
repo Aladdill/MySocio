@@ -5,13 +5,11 @@ package net.mysocio.ui.executors.basic;
 
 import java.sql.Date;
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.List;
 
 import net.mysocio.data.IConnectionData;
 import net.mysocio.data.SocioUser;
-import net.mysocio.data.management.DataManagerFactory;
 import net.mysocio.data.management.MessagesManager;
 import net.mysocio.data.messages.IMessage;
 import net.mysocio.ui.data.objects.DefaultMessage;
@@ -32,11 +30,11 @@ public class GetMessagesExecutor implements ICommandExecutor {
 	public String execute(IConnectionData connectionData) throws CommandExecutionException{
 		StringBuffer output = new StringBuffer();
 		List<? extends IMessage> messages = getMessages(connectionData);
+		AbstractUiManager uiManager = new DefaultUiManager();
+		DateFormat formatter = DateFormat.getDateInstance(DateFormat.LONG, connectionData.getLocale());
+		String messagePage = uiManager.getPage(new DefaultMessage(),connectionData.getUser());
 		for (IMessage message : messages) {
-			AbstractUiManager uiManager = new DefaultUiManager();
-			String pageHtml = uiManager.getPage(new DefaultMessage(),connectionData.getUser());
-			pageHtml = message.replacePlaceholders(pageHtml);
-			DateFormat formatter = DateFormat.getDateInstance(DateFormat.LONG, connectionData.getLocale());
+			String pageHtml = message.replacePlaceholders(messagePage);
 			String date = formatter.format(new Date(message.getDate()));
 			pageHtml = pageHtml.replace("message.date", date);
 			output.append(pageHtml);

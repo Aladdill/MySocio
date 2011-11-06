@@ -76,4 +76,9 @@ public class FacebookAccount extends Oauth2Account {
 		tags.add(accTag);
 		return tags;
 	}
+
+	@Override
+	public String getIconUrl() {
+		return "facebook.icon.account";
+	}
 }

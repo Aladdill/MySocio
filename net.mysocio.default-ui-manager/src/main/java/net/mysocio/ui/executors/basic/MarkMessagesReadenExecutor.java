@@ -1,11 +1,10 @@
 /**
  * 
  */
-package net.mysocio.ui.managers.basic;
+package net.mysocio.ui.executors.basic;
 
 import net.mysocio.data.IConnectionData;
 import net.mysocio.data.management.MessagesManager;
-import net.mysocio.ui.executors.basic.GetSourcesExecutor;
 import net.mysocio.ui.management.CommandExecutionException;
 import net.mysocio.ui.management.ICommandExecutor;
 
@@ -26,5 +25,4 @@ public class MarkMessagesReadenExecutor implements ICommandExecutor{
 		MessagesManager.getInstance().setMessagesReadden(connectionData.getUser(), messagesIds);
 		return new GetSourcesExecutor().execute(connectionData);
 	}
-
 }

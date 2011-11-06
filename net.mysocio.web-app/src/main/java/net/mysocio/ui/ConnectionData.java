@@ -59,4 +59,8 @@ public class ConnectionData implements IConnectionData{
 	public void removeSessionAttribute(String attributeName) {
 		session.removeAttribute(attributeName);
 	}
+	@Override
+	public void setSessionAttribute(String attributeName, String attributeValue) {
+		session.setAttribute(attributeName, attributeValue);
+	}
 }

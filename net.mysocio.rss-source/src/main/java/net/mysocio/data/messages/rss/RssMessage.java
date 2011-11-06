@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.mysocio.data.rss;
+package net.mysocio.data.messages.rss;
 
 import javax.jdo.annotations.PersistenceCapable;
 
@@ -13,15 +13,15 @@ import net.mysocio.data.messages.GeneralMessage;
  */
 @PersistenceCapable
 public class RssMessage extends GeneralMessage {
+	private String sourceId;
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -8628206019126311936L;
-	public RssMessage() {
-		super();
+	public String getSourceId() {
+		return sourceId;
 	}
-	public RssMessage(String link) {
-		super();
-		setUniqueId(link);
+	public void setSourceId(String sourceId) {
+		this.sourceId = sourceId;
 	}
 }

@@ -14,6 +14,8 @@ public interface IConnectionData {
 	public abstract String getRequestParameter(String parameterName);
 	
 	public abstract String getSessionAttribute(String attributeName);
+	
+	public abstract void setSessionAttribute(String attributeName, String attributeValue);
 
 	public abstract SocioUser getUser();
 

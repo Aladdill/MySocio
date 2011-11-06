@@ -17,4 +17,5 @@ public interface IMessagesManager {
 	public void updateUnreaddenMessages(SocioUser user) throws Exception;
 	public List<IMessage> getMessagesForSelectedSource(SocioUser user);
 	public void setMessagesReadden(SocioUser user, String messageId);
+	public List<String> storeMessages(List<IMessage> messages);
 }

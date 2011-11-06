@@ -3,15 +3,6 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
 	<display-name>MySocio</display-name>
-	<!-- location of spring xml files 
-	<context-param>
-		<param-name>contextConfigLocation</param-name>
-		<param-value>classpath:camel-context.xml</param-value>
-	</context-param> -->
-	<!-- the listener that kick-starts Spring 
-	<listener>
-		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
-	</listener> -->
 	<listener>
 		<listener-class>net.mysocio.context.MySocioContextListener</listener-class>
 	</listener>
@@ -23,14 +14,5 @@
 	<servlet-mapping>
 		<servlet-name>RequestHandler</servlet-name>
 		<url-pattern>/execute</url-pattern>
-	</servlet-mapping>
-	<servlet>
-		<display-name>LoginHandler</display-name>
-		<servlet-name>LoginHandler</servlet-name>
-		<servlet-class>net.mysocio.ui.LoginHandler</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>LoginHandler</servlet-name>
-		<url-pattern>/login</url-pattern>
 	</servlet-mapping>
 </web-app>

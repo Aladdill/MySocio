@@ -6,8 +6,8 @@
 		<groupId>net.mysocio</groupId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
-	<artifactId>rss-source</artifactId>
-	<name>RSS Source</name>
+	<artifactId>rss-pack</artifactId>
+	<name>RSS sources Pack</name>
 	<dependencies>
 		<dependency>
 			<groupId>rome</groupId>

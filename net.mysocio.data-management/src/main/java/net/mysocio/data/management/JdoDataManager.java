@@ -60,8 +60,6 @@ public class JdoDataManager implements IDataManager {
 			pm = null;
 			pmf.close();
 			pmf = null;
-			Runtime r = Runtime.getRuntime();
-	        r.gc();
 		}
 	}
 	
@@ -82,15 +80,13 @@ public class JdoDataManager implements IDataManager {
 			logger.debug("Account found");
 			return getUniqueObject(SocioUser.class, getEqualsExpression("id", userId));
 		}
-		saveObject(account);
 		logger.debug("Creating user");
 		SocioUser user = new SocioUser();
 		user.setName(userName);
 		user.setLocale(locale.getLanguage());
+		saveObject(user);
 		addAccountToUser(account, user);
 		user.setMainAccount(account);
-		saveObject(user);
-		account.setUserId(user.getId());
 		logger.debug("User created");
 		return user;
 	}
@@ -99,7 +95,9 @@ public class JdoDataManager implements IDataManager {
 	 * @param account
 	 * @param user
 	 */
-	private void addAccountToUser(Account account, SocioUser user) {
+	public void addAccountToUser(Account account, SocioUser user) {
+		account.setUserId(user.getId());
+		saveObject(account);
 		List<SocioTag> accTags = account.getTags();
 		user.addTags(accTags);
 		List<ISource> sources = account.getSources();
@@ -139,6 +137,12 @@ public class JdoDataManager implements IDataManager {
 		q.setUnique(true);
 		object = (T)q.execute();
 		return object;
+	}
+	
+	public<T extends ISocioObject> List<T> getObjects(Class<?> T){
+		Query q=pm.newQuery(T);
+		List<T> objects = (List<T>)q.execute();
+		return objects;
 	}
 	
 	public void saveUiObject(UiObject uiObject) throws DuplicateMySocioObjectException{

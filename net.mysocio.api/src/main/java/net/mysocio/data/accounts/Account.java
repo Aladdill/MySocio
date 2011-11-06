@@ -95,4 +95,5 @@ public abstract class Account extends SocioObject implements ITagedObject{
 	public void setContacts(Map<String, IContact> contacts) {
 		this.contacts = contacts;
 	}
+	public abstract String getIconUrl();
 }
