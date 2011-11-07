@@ -21,8 +21,7 @@ import org.slf4j.LoggerFactory;
  * 
  */
 public class CreateAccountExecutor implements ICommandExecutor {
-	private static final Logger logger = LoggerFactory
-			.getLogger(CreateAccountExecutor.class);
+	private static final Logger logger = LoggerFactory.getLogger(CreateAccountExecutor.class);
 
 	/*
 	 * (non-Javadoc)
@@ -34,11 +33,11 @@ public class CreateAccountExecutor implements ICommandExecutor {
 	public String execute(IConnectionData connectionData)
 			throws CommandExecutionException {
 		String flow = connectionData.getSessionAttribute("flow");
+		logger.debug("Creating account in flow: " + flow);
 		String responseString = null;
 		try {
 			SocioUser user = connectionData.getUser();
-			Account account = AccountsManager.getInstance().getAccount(
-					connectionData);
+			Account account = AccountsManager.getInstance().getAccount(connectionData);
 			if ("login".equals(flow)) {
 				user = DataManagerFactory.getDataManager().getUser(account,connectionData.getLocale());
 				connectionData.setUser(user);
@@ -60,7 +59,7 @@ public class CreateAccountExecutor implements ICommandExecutor {
 			logger.error("Failed to create account.", e);
 			throw new CommandExecutionException(e);
 		}
-		connectionData.removeSessionAttribute("identifier");
+		connectionData.removeSessionAttribute(AccountsManager.IDENTIFIER);
 		connectionData.removeSessionAttribute("flow");
 		return responseString;
 	}

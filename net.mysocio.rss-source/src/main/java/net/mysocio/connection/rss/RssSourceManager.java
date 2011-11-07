@@ -7,6 +7,7 @@ import java.util.List;
 
 import net.mysocio.connection.readers.ISource;
 import net.mysocio.connection.readers.ISourceManager;
+import net.mysocio.data.management.DataManagerFactory;
 import net.mysocio.data.messages.IMessage;
 
 /**
@@ -20,7 +21,6 @@ public class RssSourceManager implements ISourceManager {
 	 */
 	public List<IMessage> getLastMessages(ISource source, Long from, Long to)
 			throws Exception {
-		return null;
+		return DataManagerFactory.getDataManager().getSourceAwareMessages(source.getId(), from, to);
 	}
-
 }

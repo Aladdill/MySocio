@@ -7,7 +7,7 @@
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>default-ui-manager</artifactId>
-	<name>MySocioDefaultUiManager</name>
+	<name>MySocio Default UI Manager</name>
 	<dependencies>
 		<dependency>
 			<groupId>net.mysocio</groupId>
@@ -26,7 +26,7 @@
 		</dependency>
 		<dependency>
 			<groupId>net.mysocio</groupId>
-			<artifactId>rss-source</artifactId>
+			<artifactId>rss-pack</artifactId>
 			<version>${mysocio.version}</version>
 		</dependency>
 	</dependencies>

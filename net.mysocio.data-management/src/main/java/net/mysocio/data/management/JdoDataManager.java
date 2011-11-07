@@ -25,6 +25,7 @@ import net.mysocio.data.accounts.Account;
 import net.mysocio.data.contacts.Contact;
 import net.mysocio.data.messages.GeneralMessage;
 import net.mysocio.data.messages.IMessage;
+import net.mysocio.data.messages.SourceAwareMessage;
 import net.mysocio.data.ui.IUiObject;
 import net.mysocio.data.ui.UiObject;
 import net.mysocio.data.ui.UserUiObjects;
@@ -125,6 +126,14 @@ public class JdoDataManager implements IDataManager {
 	
 	private String getEqualsExpression(String fieldName, String value){
 		return fieldName + " == \"" + value + "\"";
+	}
+	
+	private String getMoreExpression(String fieldName, String value){
+		return fieldName + " > \"" + value + "\"";
+	}
+	
+	private String getLessExpression(String fieldName, String value){
+		return fieldName + " < \"" + value + "\"";
 	}
 
 	public IUiObject getUiObject(String category, String name){
@@ -287,5 +296,12 @@ public class JdoDataManager implements IDataManager {
 		q.setFilter("objectsIds.contains(id)");
 		q.setOrdering("date ascending");
 		return (List<IMessage>)q.execute(ids);
+	}
+	public List<IMessage> getSourceAwareMessages(String id, Long from, Long to){
+		Query q=pm.newQuery(SourceAwareMessage.class, getEqualsExpression("sourceId", id) + " && " +
+				getMoreExpression("date", Long.toString(from)) + " && " +
+				getLessExpression("date", Long.toString(to)));
+		q.setOrdering("date ascending");
+		return (List<IMessage>)q.execute();
 	}
 }

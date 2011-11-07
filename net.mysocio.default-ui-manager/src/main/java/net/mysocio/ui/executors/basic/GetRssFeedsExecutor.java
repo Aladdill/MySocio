@@ -7,9 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.mysocio.connection.readers.ISource;
+import net.mysocio.connection.rss.RssSource;
 import net.mysocio.data.IConnectionData;
 import net.mysocio.data.SocioUser;
-import net.mysocio.sources.rss.RssSource;
 import net.mysocio.ui.management.CommandExecutionException;
 import net.mysocio.ui.management.ICommandExecutor;
 

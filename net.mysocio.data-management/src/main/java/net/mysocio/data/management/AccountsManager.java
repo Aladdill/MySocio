@@ -16,6 +16,7 @@ import net.mysocio.data.accounts.Account;
  *
  */
 public class AccountsManager {
+	public static final String IDENTIFIER = "identifier";
 	private static final AccountsManager instance = new AccountsManager();
 	private static Map<String, IAuthenticationManager> accounts = new HashMap<String, IAuthenticationManager>();
 	private AccountsManager(){}
@@ -43,7 +44,7 @@ public class AccountsManager {
 	}
 	
 	public Account getAccount(IConnectionData connectionData) throws Exception{
-		String identifier = connectionData.getSessionAttribute("idenifier");
+		String identifier = connectionData.getSessionAttribute(IDENTIFIER);
 		if (identifier == null){
 			throw new InvalidNetworkException(identifier);
 		}

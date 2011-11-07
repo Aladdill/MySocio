@@ -42,5 +42,7 @@ public interface IDataManager {
 	
 	public void addAccountToUser(Account account, SocioUser user);
 	
+	public List<IMessage> getSourceAwareMessages(String id, Long from, Long to);
+	
 	public void flush();
 }

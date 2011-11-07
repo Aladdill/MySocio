@@ -11,7 +11,7 @@
 	<build>
 		<finalName>mysocio</finalName>
 	</build>
-	<name>MySocioWebApp</name>
+	<name>MySocio Web Application</name>
 	<description>My Socio Web Application</description>
 	<dependencies>
 		<dependency>
@@ -106,15 +106,15 @@
 			<version>${scribe-version}</version>
 		</dependency>
 		<dependency>
-					<groupId>org.apache.camel</groupId>
+			<groupId>org.apache.camel</groupId>
 			<artifactId>camel-rss</artifactId>
 			<version>${camel-version}</version>
 		</dependency>
-		<dependency>
+		<!-- <dependency>
 			<groupId>org.apache.camel</groupId>
 			<artifactId>camel-spring</artifactId>
 			<version>${camel-version}</version>
-		</dependency>
+		</dependency> -->
 		<dependency>
 			<groupId>org.apache.camel</groupId>
 			<artifactId>camel-core</artifactId>

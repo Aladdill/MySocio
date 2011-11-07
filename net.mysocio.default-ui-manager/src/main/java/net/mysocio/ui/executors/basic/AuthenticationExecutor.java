@@ -25,9 +25,11 @@ public class AuthenticationExecutor implements ICommandExecutor {
 	@Override
 	public String execute(IConnectionData connectionData)
 			throws CommandExecutionException {
-		String identifier = connectionData.getRequestParameter("identifier");
-		connectionData.setSessionAttribute("identifier", identifier);
-		connectionData.setSessionAttribute("flow", connectionData.getRequestParameter("flow"));
+		String identifier = connectionData.getRequestParameter(AccountsManager.IDENTIFIER);
+		connectionData.setSessionAttribute(AccountsManager.IDENTIFIER, identifier);
+		String flow = connectionData.getRequestParameter("flow");
+		logger.debug("Authenticating acunt of type:" + identifier + "in flow: " + flow);
+		connectionData.setSessionAttribute("flow", flow);
 		String accountRequestUrl = null;
 		try {
 			accountRequestUrl = AccountsManager.getInstance().getAccountRequestUrl(identifier);

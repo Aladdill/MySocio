@@ -1,11 +1,9 @@
 /**
  * 
  */
-package net.mysocio.data.camel.routes;
+package net.mysocio.data.management;
 
 import java.util.List;
-
-import net.mysocio.connection.rss.RssSource;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;
@@ -27,16 +25,16 @@ public class CamelContextManager {
 			logger.error("Failed to start camel context.", e);
 		}
 	}
-	public synchronized static void addRssRoutes(final List<RssSource> sources) throws Exception{
+	public synchronized static void addRssRoutes(final List<IRssMessagesRidingBean> beans) throws Exception{
 		camelContext.addRoutes(new RouteBuilder() {
 			@Override
 			public void configure() throws Exception {
-				for (RssSource source : sources) {
+				for (IRssMessagesRidingBean bean : beans) {
 		    		if (logger.isDebugEnabled()){
-		    			logger.debug("Creating route for RSS feed on url" + source.getUrl());
+		    			logger.debug("Creating route for RSS feed on url" + bean.getUrl());
 		    		}
-		    		from("rss:" + source.getUrl() + "?consumer.delay=2000").
-		            bean(new RssMessagesRidingBean(source.getId()));
+		    		from("rss:" + bean.getUrl() + "?consumer.delay=2000").
+		            bean(bean);
 				}
 			}
 		});

@@ -11,7 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @author gurfinke
+ * @author Aladdin
  *
  */
 public class DefaultCommandIterpreter implements ICommandInterpreter{
@@ -28,6 +28,7 @@ public class DefaultCommandIterpreter implements ICommandInterpreter{
 
 	@Override
 	public String executeCommand(String command) throws CommandExecutionException {
+		logger.debug("Getting command.");
 		EDefaultCommand commandObject = getCommandValue(command);
 		logger.debug("executing command:" + command);
 		String response = "No page set for this command";
@@ -62,6 +63,7 @@ public class DefaultCommandIterpreter implements ICommandInterpreter{
 	
 	@Override
 	public String getCommandResponseType(String command) throws CommandExecutionException{
+		logger.debug("Getting response type.");
 		EDefaultCommand commandObject = getCommandValue(command);
 		String responseType = commandObject.getResponseType();
 		logger.debug("Command response type:" + responseType);

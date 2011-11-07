@@ -24,7 +24,7 @@ public class TestAuthenticationManager implements IAuthenticationManager{
 	}
 
 	public String getRequestUrl() {
-		return "execute?command=startAuthentication&flow=addAccount";
+		return "execute?command=addAccount";
 	}
 
 	public Account getAccount(IConnectionData connectionData) throws Exception {

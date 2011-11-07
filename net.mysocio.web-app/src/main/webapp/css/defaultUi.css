@@ -461,12 +461,12 @@ a.Undecorated {
 }
 
 div.LoginPage {
-	background: url("../images/darker-texture-login.jpg");
+	background: url("../images/loginPage/darker-texture-login.jpg");
 	vertical-align: middle;
 }
 
 div.AuthCircle {
-	background: url("../images/big-circle.png");
+	background: url("../images/loginPage/big-circle.png");
 	height: 340px;
 	width: 340px;
 	margin-bottom: 54px;
@@ -515,7 +515,7 @@ div.LoginBaloon {
 	float: none;
 	width: 100px;
 	height: 78px;
-	background: url("../images/baloon.jpg") no-repeat 0 0;
+	background: url("../images/loginPage/baloon.jpg") no-repeat 0 0;
 }
 
 span.Baloon {

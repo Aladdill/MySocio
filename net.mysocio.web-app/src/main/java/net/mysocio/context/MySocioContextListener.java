@@ -14,8 +14,8 @@ import net.mysocio.authentication.linkedin.LinkedinAuthenticationManager;
 import net.mysocio.authentication.test.TestAuthenticationManager;
 import net.mysocio.authentication.twitter.TwitterAuthenticationManager;
 import net.mysocio.authentication.vkontakte.VkontakteAuthenticationManager;
-import net.mysocio.data.camel.routes.CamelContextManager;
 import net.mysocio.data.management.AccountsManager;
+import net.mysocio.data.management.CamelContextManager;
 import net.mysocio.data.management.DefaultResourcesManager;
 import net.mysocio.data.management.JdoDataManager;
 
@@ -42,9 +42,9 @@ public class MySocioContextListener implements ServletContextListener {
 		ServletContext servletContext = arg0.getServletContext();
 		DefaultResourcesManager.init(servletContext.getRealPath(""));
 		AuthenticationResourcesManager.init(servletContext.getRealPath(""));
-//		System.getProperties().put("proxySet", "true");
-//        System.getProperties().put("proxyHost", "web-proxy.isr.hp.com");
-//        System.getProperties().put("proxyPort", "8080");
+		System.getProperties().put("proxySet", "true");
+        System.getProperties().put("proxyHost", "web-proxy.isr.hp.com");
+        System.getProperties().put("proxyPort", "8080");
         CamelContextManager.initContext();
         AccountsManager.getInstance().addAccount("google", new GoogleAuthenticationManager());
         AccountsManager.getInstance().addAccount("facebook", new FacebookAuthenticationManager());

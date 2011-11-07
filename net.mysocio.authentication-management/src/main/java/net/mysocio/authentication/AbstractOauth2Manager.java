@@ -35,7 +35,7 @@ public abstract class AbstractOauth2Manager implements IAuthenticationManager {
 	}
 
 	protected String getMysocioRedirect(){
-		return "http://mysocio.sytes.net/mysocio/execute?command=startAuthentication&flow=addAccount";
+		return "http://mysocio.sytes.net/mysocio/execute?command=addAccount";
 	}
 
 	protected String getScope(){

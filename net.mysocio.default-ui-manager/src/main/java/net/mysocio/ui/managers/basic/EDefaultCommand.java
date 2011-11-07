@@ -2,6 +2,7 @@ package net.mysocio.ui.managers.basic;
 
 import net.mysocio.ui.data.objects.DefaultSiteBody;
 import net.mysocio.ui.data.objects.RssConnections;
+import net.mysocio.ui.executors.basic.AuthenticationExecutor;
 import net.mysocio.ui.executors.basic.CreateAccountExecutor;
 import net.mysocio.ui.executors.basic.AddRssFeedExecutor;
 import net.mysocio.ui.executors.basic.GetAccountsExecutor;
@@ -20,6 +21,7 @@ import net.mysocio.ui.management.ICommandExecutor;
 public enum EDefaultCommand {
 	getMessages(new GetMessagesExecutor()),
 	openStartPage(new LoginPageExecutor()),
+	startAuthentication(new AuthenticationExecutor()),
 	logout(new LogoutPageExecutor()),
 	openMainPage(new LoadPageExecutor(new DefaultSiteBody())),
 	getContacts(new LoadPageExecutor(new RssConnections())),
