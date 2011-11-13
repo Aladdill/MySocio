@@ -20,7 +20,11 @@ public interface IDataManager {
 
 	public void saveObjects(List<? extends Object> objects);
 
-	public void saveObject(Object object);
+	public Object saveObject(Object object);
+	
+	public<T> T detachObject(T object);
+	
+	public<T> T persistObject(T object);
 	
 	public void deleteObject(Object object);
 
@@ -32,6 +36,10 @@ public interface IDataManager {
 
 	public ISource createSource(ISource source);
 	
+	public ISource addSourceToUser(SocioUser user, List<SocioTag> accTags, ISource source);
+	
+	public ISource addSourceToUser(SocioUser user, ISource source);
+	
 	public IMessage createMessage(IMessage message);
 	
 	public List<IMessage> getMessages(List<String> ids);
@@ -40,7 +48,7 @@ public interface IDataManager {
 	
 	public<T extends ISocioObject> List<T> getObjects(Class<?> T);
 	
-	public void addAccountToUser(Account account, SocioUser user);
+	public Account addAccountToUser(Account account, SocioUser user);
 	
 	public List<IMessage> getSourceAwareMessages(String id, Long from, Long to);
 	

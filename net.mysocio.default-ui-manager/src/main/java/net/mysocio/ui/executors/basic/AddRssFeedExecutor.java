@@ -11,7 +11,9 @@ import net.mysocio.connection.rss.RssSource;
 import net.mysocio.data.IConnectionData;
 import net.mysocio.data.IDataManager;
 import net.mysocio.data.SocioUser;
+import net.mysocio.data.management.CamelContextManager;
 import net.mysocio.data.management.DataManagerFactory;
+import net.mysocio.data.management.IRssMessagesRidingBean;
 import net.mysocio.data.messages.rss.RssMessagesRidingBean;
 import net.mysocio.ui.data.objects.RssConnections;
 import net.mysocio.ui.management.CommandExecutionException;
@@ -43,21 +45,26 @@ public class AddRssFeedExecutor implements ICommandExecutor {
 		try {
 			feed = input.build(new XmlReader(new URL(url)));
 		} catch (Exception e) {
-			logger.info("Error verifying feed" + url, e);
-			throw new NotValidRssUrlException("URL " + url + "is not a valid RSS url.");
+			logger.error("Error verifying feed" + url, e);
+			throw new NotValidRssUrlException("URL " + url + "is not a valid RSS url.", e);
 		}
 		RssSource source = new RssSource();
 		source.setUrl(url);
 		source.setName(feed.getTitle());
 		IDataManager dataManager = DataManagerFactory.getDataManager();
 		SocioUser user = connectionData.getUser();
-		source = (RssSource)dataManager.createSource(source);
-		List<RssMessagesRidingBean> beans = new ArrayList<RssMessagesRidingBean>();
+		dataManager.addSourceToUser(user, source);
+		List<IRssMessagesRidingBean> beans = new ArrayList<IRssMessagesRidingBean>();
 		RssMessagesRidingBean bean = new RssMessagesRidingBean();
 		bean.setId(source.getId());
 		bean.setUrl(source.getUrl());
 		beans.add(bean);
-		user.addSource(source);
+		try {
+			CamelContextManager.addRssRoutes(beans);
+		} catch (Exception e) {
+			logger.error("Error adding feed" + url, e);
+			throw new CommandExecutionException("Error adding feed" + url, e);
+		}
 		AbstractUiManager uiManager = new DefaultUiManager();
 		return uiManager.getPage(new RssConnections(),user);
 	}

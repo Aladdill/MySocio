@@ -9,7 +9,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import net.mysocio.data.IConnectionData;
+import net.mysocio.data.IDataManager;
 import net.mysocio.data.SocioUser;
+import net.mysocio.data.management.DataManagerFactory;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +25,7 @@ public class ConnectionData implements IConnectionData{
 	private HttpSession session;
 	private HttpServletRequest request;
 	private Locale locale;
+	private SocioUser user;
 	
 	public ConnectionData(HttpServletRequest request){
 		this.request = request;
@@ -33,7 +36,7 @@ public class ConnectionData implements IConnectionData{
 		}
 	}
 	public SocioUser getUser(){
-		return (SocioUser)session.getAttribute("user");
+		return user;
 	}
 	public void cleanSession() {
 		session.removeAttribute("user");
@@ -42,10 +45,7 @@ public class ConnectionData implements IConnectionData{
 		return request.getParameter(parameterName);
 	}
 	public void setUser(SocioUser user) {
-		session.setAttribute("user", user);
-		if (logger.isDebugEnabled()){
-			logger.debug("User was inserted into session with name " + user.getName());
-		}
+		this.user = user;
 	}
 	
 	public Locale getLocale() {

@@ -6,7 +6,8 @@ package net.mysocio.connection.readers.lj;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
 
-import net.mysocio.sources.rss.RssSource;
+import net.mysocio.connection.rss.RssSource;
+
 
 /**
  * @author gurfinke

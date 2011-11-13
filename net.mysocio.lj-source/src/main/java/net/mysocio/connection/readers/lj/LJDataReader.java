@@ -4,14 +4,11 @@
 package net.mysocio.connection.readers.lj;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import net.mysocio.data.SocioContact;
-import net.mysocio.data.SocioTag;
 import net.mysocio.data.contacts.IContact;
 import net.mysocio.data.management.DataManagerFactory;
 
@@ -50,7 +47,7 @@ public class LJDataReader {
 		//Put friends in groups
 		for (LjSource source : this.friends) {
 			SocioContact friendContact = new SocioContact();
-			friendContact.setName(source.getName());
+//			friendContact.setName(source.getName());
 			DataManagerFactory.getDataManager().saveObject(friendContact);
 //			contacts.add(friendContact);
 		}

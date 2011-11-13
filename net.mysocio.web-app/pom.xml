@@ -52,11 +52,11 @@
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
-		<dependency>
+		<!-- <dependency>
 			<groupId>net.mysocio</groupId>
 			<artifactId>lj-source</artifactId>
 			<version>${mysocio.version}</version>
-		</dependency>
+		</dependency> -->
 		<dependency>
 			<groupId>net.mysocio</groupId>
 			<artifactId>rss-pack</artifactId>
@@ -133,7 +133,7 @@
 		<dependency>
 			<groupId>org.datanucleus</groupId>
 			<artifactId>datanucleus-hbase</artifactId>
-			<version>${datanucleus-version}</version>
+			<version>${datanucleus-hbase-version}</version>
 		</dependency>
 		<dependency>
 			<groupId>xerces</groupId>

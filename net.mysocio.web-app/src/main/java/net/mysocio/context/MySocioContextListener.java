@@ -48,7 +48,7 @@ public class MySocioContextListener implements ServletContextListener {
         CamelContextManager.initContext();
         AccountsManager.getInstance().addAccount("google", new GoogleAuthenticationManager());
         AccountsManager.getInstance().addAccount("facebook", new FacebookAuthenticationManager());
-        AccountsManager.getInstance().addAccount("twiter", new TwitterAuthenticationManager());
+        AccountsManager.getInstance().addAccount("twitter", new TwitterAuthenticationManager());
         AccountsManager.getInstance().addAccount("vkontakte", new VkontakteAuthenticationManager());
         AccountsManager.getInstance().addAccount("linkedin", new LinkedinAuthenticationManager());
         AccountsManager.getInstance().addAccount("test", new TestAuthenticationManager());

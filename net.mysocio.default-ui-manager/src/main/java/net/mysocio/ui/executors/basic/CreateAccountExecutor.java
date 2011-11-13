@@ -4,6 +4,7 @@
 package net.mysocio.ui.executors.basic;
 
 import net.mysocio.data.IConnectionData;
+import net.mysocio.data.IDataManager;
 import net.mysocio.data.SocioUser;
 import net.mysocio.data.accounts.Account;
 import net.mysocio.data.management.AccountsManager;
@@ -38,10 +39,10 @@ public class CreateAccountExecutor implements ICommandExecutor {
 		try {
 			SocioUser user = connectionData.getUser();
 			Account account = AccountsManager.getInstance().getAccount(connectionData);
+			IDataManager dataManager = DataManagerFactory.getDataManager();
 			if ("login".equals(flow)) {
-				user = DataManagerFactory.getDataManager().getUser(account,connectionData.getLocale());
-				connectionData.setUser(user);
-				MessagesManager.getInstance().updateUnreaddenMessages(user);
+				user = dataManager.getUser(account,connectionData.getLocale());
+//				MessagesManager.getInstance().updateUnreaddenMessages(user);
 				responseString = DefaultResourcesManager.getPage("closingLoginWindow.html");
 			} else if ("addAccount".equals(flow)) {
 				if (user == null) {
@@ -49,12 +50,13 @@ public class CreateAccountExecutor implements ICommandExecutor {
 					throw new CommandExecutionException(
 							"Attempt to create account wile in logged out state. Probable attempt of hacking.");
 				}
-				DataManagerFactory.getDataManager().addAccountToUser(account, user);
+				dataManager.addAccountToUser(account, user);
 				responseString = DefaultResourcesManager.getPage("closingAddAccountWindow.html");
 			} else {
 				logger.error("Unknown flow:" + flow);
 				throw new CommandExecutionException("Unknown flow:" + flow);
 			}
+			connectionData.setUser(user);
 		} catch (Exception e) {
 			logger.error("Failed to create account.", e);
 			throw new CommandExecutionException(e);

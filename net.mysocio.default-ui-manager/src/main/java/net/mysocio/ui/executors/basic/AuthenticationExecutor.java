@@ -28,7 +28,7 @@ public class AuthenticationExecutor implements ICommandExecutor {
 		String identifier = connectionData.getRequestParameter(AccountsManager.IDENTIFIER);
 		connectionData.setSessionAttribute(AccountsManager.IDENTIFIER, identifier);
 		String flow = connectionData.getRequestParameter("flow");
-		logger.debug("Authenticating acunt of type:" + identifier + "in flow: " + flow);
+		logger.debug("Authenticating acunt of type:" + identifier + " in flow: " + flow);
 		connectionData.setSessionAttribute("flow", flow);
 		String accountRequestUrl = null;
 		try {

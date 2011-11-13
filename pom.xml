@@ -85,8 +85,9 @@
 	<properties>
 		<camel-version>2.7.0</camel-version>
 		<scribe-version>1.2.3</scribe-version>
-		<datanucleus-version>3.0.2</datanucleus-version>
+		<datanucleus-version>3.0.3</datanucleus-version>
 		<datanucleus-plugin-version>3.0.0-release</datanucleus-plugin-version>
+		<datanucleus-hbase-version>3.0.2</datanucleus-hbase-version>
 		<mysocio.version>0.0.1-SNAPSHOT</mysocio.version>
 	</properties>
 	<dependencies>

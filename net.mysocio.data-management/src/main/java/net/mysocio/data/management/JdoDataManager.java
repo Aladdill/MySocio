@@ -68,6 +68,14 @@ public class JdoDataManager implements IDataManager {
 		pm.flush();
 	}
 	
+	public<T> T detachObject(T object){
+		return pm.detachCopy(object);
+	}
+	
+	public<T> T persistObject(T object){
+		return pm.makePersistent(object);
+	}
+	
 	private JdoDataManager(){}
 	
 	/* (non-Javadoc)
@@ -85,8 +93,8 @@ public class JdoDataManager implements IDataManager {
 		SocioUser user = new SocioUser();
 		user.setName(userName);
 		user.setLocale(locale.getLanguage());
-		saveObject(user);
-		addAccountToUser(account, user);
+		user = (SocioUser)saveObject(user);
+		account = addAccountToUser(account, user);
 		user.setMainAccount(account);
 		logger.debug("User created");
 		return user;
@@ -96,20 +104,41 @@ public class JdoDataManager implements IDataManager {
 	 * @param account
 	 * @param user
 	 */
-	public void addAccountToUser(Account account, SocioUser user) {
+	public Account addAccountToUser(Account account, SocioUser user) {
 		account.setUserId(user.getId());
-		saveObject(account);
+		account = (Account)saveObject(account);
 		List<SocioTag> accTags = account.getTags();
 		user.addTags(accTags);
 		List<ISource> sources = account.getSources();
 		for (ISource source : sources) {
-			source = createSource(source);
-			user.addTags(source.getTags());
-			source.getTags().addAll(accTags);
-			saveObject(source);
-			user.addSource(source);
+			source = addSourceToUser(user, accTags, source);
 		}
 		user.addAccount(account);
+		return account;
+	}
+
+	/**
+	 * User should be saved after adding source
+	 * @param user
+	 * @param accTags
+	 * @param source
+	 * @return
+	 */
+	public ISource addSourceToUser(SocioUser user, List<SocioTag> accTags, ISource source) {
+		source = createSource(source);
+		user.addTags(source.getTags());
+		source.getTags().addAll(accTags);
+		saveObject(source);
+		user.addSource(source);
+		return source;
+	}
+	
+	public ISource addSourceToUser(SocioUser user, ISource source) {
+		source = createSource(source);
+		user.addTags(source.getTags());
+		saveObject(source);
+		user.addSource(source);
+		return source;
 	}
 
 	/**
@@ -176,7 +205,7 @@ public class JdoDataManager implements IDataManager {
 	/* (non-Javadoc)
 	 * @see net.mysocio.data.management.IDataManager#saveObject(net.mysocio.data.ISocioObject)
 	 */
-	public void saveObject(Object object) {
+	public Object saveObject(Object object) {
 		Transaction tx=pm.currentTransaction();
         try
         {
@@ -187,6 +216,7 @@ public class JdoDataManager implements IDataManager {
 			}
             object = pm.makePersistent(object);
             tx.commit();
+            return object;
         }
         finally
         {

@@ -33,12 +33,6 @@ public class GetSourcesExecutor implements ICommandExecutor {
 	@Override
 	public String execute(IConnectionData connectionManager) throws CommandExecutionException{
 		SocioUser user = connectionManager.getUser();
-		/*try {
-			MessagesManager.getInstance().updateUnreaddenMessages(user);
-		} catch (Exception e1) {
-			logger.error("Can't get user messages",e1);
-			throw new CommandExecutionException(e1);
-		}*/
 		JsonFactory f = new JsonFactory();
 		StringWriter writer = new StringWriter();
 		JsonGenerator jsonGenerator;
@@ -104,7 +98,7 @@ public class GetSourcesExecutor implements ICommandExecutor {
 		jsonGenerator.writeStringField("title", title);
 		jsonGenerator.writeEndObject();// for field 'data'
 		if (icon != null){
-			jsonGenerator.writeStringField("icon", "images/" + icon);
+			jsonGenerator.writeStringField("icon", icon);
 		}
 	}
 	private void addRootNode(JsonGenerator jsonGenerator, SocioUser user) throws Exception{

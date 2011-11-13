@@ -42,7 +42,7 @@ public class GetAccountsExecutor implements ICommandExecutor {
 		for (String identifier : accountsTypes) {
 			String currentAccountHTML = newAccountHTML;
 			currentAccountHTML = currentAccountHTML.replace("account.icon", DefaultResourcesManager.getResource(locale, (identifier + ".icon.account")));
-			currentAccountHTML = currentAccountHTML.replace("account.add.new", DefaultResourcesManager.getResource(locale, ("account.add.new"), new String[]{identifier + ".tag"}));
+			currentAccountHTML = currentAccountHTML.replace("account.add.new", DefaultResourcesManager.getResource(locale, ("account.add.new"), new String[]{DefaultResourcesManager.getResource(locale,identifier + ".tag")}));
 			currentAccountHTML = currentAccountHTML.replace("account.identifier", identifier);
 			page += currentAccountHTML;
 		}
