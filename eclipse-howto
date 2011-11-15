@@ -1,0 +1,4 @@
+1) Install EGit from http://download.eclipse.org/egit/updates
+2) Install m2e (Maven Integration for WTP) from http://m2eclipse.sonatype.org/sites/m2e
+3) Clone Git repository: URI: https://github.com/Aladdill/MySocio.git
+4) Import Projects from Git Repositories perspective
