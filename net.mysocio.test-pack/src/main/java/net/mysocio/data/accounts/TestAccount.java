@@ -1,23 +1,22 @@
 /**
  * 
  */
-package net.mysocio.authentication.test;
+package net.mysocio.data.accounts;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
 
-import net.mysocio.connection.readers.ISource;
+import net.mysocio.authentication.test.TestSource;
+import net.mysocio.connection.readers.Source;
 import net.mysocio.data.SocioTag;
-import net.mysocio.data.accounts.Account;
 
 /**
  * @author Aladdin
  *
  */
-@PersistenceCapable(identityType = IdentityType.APPLICATION, detachable="true")
+@PersistenceCapable(detachable="true")
 public class TestAccount extends Account {
 	/**
 	 * 
@@ -34,8 +33,8 @@ public class TestAccount extends Account {
 	}
 
 	@Override
-	public List<ISource> getSources() {
-		List<ISource> sources = new ArrayList<ISource>();
+	public List<Source> getSources() {
+		List<Source> sources = new ArrayList<Source>();
 		TestSource ts = new TestSource();
 		ts.setName("Test account");
 		ts.setUrl("testSourceId");
