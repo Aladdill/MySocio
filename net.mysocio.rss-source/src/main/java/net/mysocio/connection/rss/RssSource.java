@@ -6,7 +6,6 @@ package net.mysocio.connection.rss;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
 
 import net.mysocio.connection.readers.ISourceManager;
@@ -18,7 +17,7 @@ import net.mysocio.data.messages.rss.RssMessage;
  * @author Aladdin
  *
  */
-@PersistenceCapable(identityType = IdentityType.APPLICATION, detachable="true")
+@PersistenceCapable
 public class RssSource extends Source {
 
 	/**

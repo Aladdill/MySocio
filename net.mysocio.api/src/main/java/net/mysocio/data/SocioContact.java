@@ -6,7 +6,6 @@ package net.mysocio.data;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
 
 import net.mysocio.data.contacts.IContact;
@@ -17,7 +16,7 @@ import net.mysocio.data.contacts.IContact;
  * @author Aladdin
  *
  */
-@PersistenceCapable(identityType = IdentityType.APPLICATION, detachable="true")
+@PersistenceCapable(detachable="true")
 public class SocioContact extends NamedObject implements ITagedObject{
 
 	/**

@@ -3,8 +3,6 @@
  */
 package net.mysocio.data.messages;
 
-import javax.jdo.annotations.Inheritance;
-import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 
 import net.mysocio.data.SocioObject;
@@ -16,7 +14,6 @@ import net.mysocio.data.SocioObject;
  *
  */
 @PersistenceCapable
-@Inheritance(strategy=InheritanceStrategy.SUBCLASS_TABLE)
 public abstract class GeneralMessage extends SocioObject implements IMessage{
 	/**
 	 * 

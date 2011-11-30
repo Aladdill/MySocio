@@ -6,10 +6,9 @@ package net.mysocio.data.accounts.google;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
 
-import net.mysocio.connection.readers.ISource;
+import net.mysocio.connection.readers.Source;
 import net.mysocio.data.SocioTag;
 import net.mysocio.data.accounts.Oauth2Account;
 
@@ -17,7 +16,7 @@ import net.mysocio.data.accounts.Oauth2Account;
  * @author Aladdin
  *
  */
-@PersistenceCapable(identityType = IdentityType.APPLICATION, detachable="true")
+@PersistenceCapable
 public class GoogleAccount extends Oauth2Account{
 	private static final String ACCOUNT_TYPE = "google";
 
@@ -44,7 +43,7 @@ public class GoogleAccount extends Oauth2Account{
 	}
 
 	@Override
-	public List<ISource> getSources() {
+	public List<Source> getSources() {
 		// TODO Auto-generated method stub
 		return null;
 	}

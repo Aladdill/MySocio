@@ -6,11 +6,11 @@ package net.mysocio.data.accounts.facebook;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
 
 import net.mysocio.connection.facebook.FacebookSource;
 import net.mysocio.connection.readers.ISource;
+import net.mysocio.connection.readers.Source;
 import net.mysocio.data.SocioTag;
 import net.mysocio.data.accounts.Oauth2Account;
 
@@ -18,7 +18,7 @@ import net.mysocio.data.accounts.Oauth2Account;
  * @author Aladdin
  *
  */
-@PersistenceCapable(identityType = IdentityType.APPLICATION, detachable="true")
+@PersistenceCapable
 public class FacebookAccount extends Oauth2Account {
 
 	private static final String ACCOUNT_TYPE = "facebook";
@@ -55,8 +55,8 @@ public class FacebookAccount extends Oauth2Account {
 	}
 
 	@Override
-	public List<ISource> getSources() {
-		List<ISource> sources = new ArrayList<ISource>();
+	public List<Source> getSources() {
+		List<Source> sources = new ArrayList<Source>();
 		FacebookSource source = new FacebookSource();
 		source.setAccount(this);
 		source.setName(getUserName());

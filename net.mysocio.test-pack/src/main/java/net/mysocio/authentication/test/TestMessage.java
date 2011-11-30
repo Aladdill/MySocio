@@ -3,7 +3,6 @@
  */
 package net.mysocio.authentication.test;
 
-import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
 
 import net.mysocio.data.messages.GeneralMessage;
@@ -12,7 +11,7 @@ import net.mysocio.data.messages.GeneralMessage;
  * @author Aladdin
  *
  */
-@PersistenceCapable(identityType = IdentityType.APPLICATION, detachable="true")
+@PersistenceCapable(detachable="true")
 public class TestMessage extends GeneralMessage {
 
 	/**

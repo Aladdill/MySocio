@@ -5,9 +5,10 @@ package net.mysocio.authentication.test;
 
 import net.mysocio.data.IAuthenticationManager;
 import net.mysocio.data.IConnectionData;
+import net.mysocio.data.IDataManager;
 import net.mysocio.data.accounts.Account;
+import net.mysocio.data.accounts.TestAccount;
 import net.mysocio.data.management.DataManagerFactory;
-import net.mysocio.data.management.JdoDataManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +29,7 @@ public class TestAuthenticationManager implements IAuthenticationManager{
 	}
 
 	public Account getAccount(IConnectionData connectionData) throws Exception {
-		JdoDataManager dataManager = (JdoDataManager)DataManagerFactory.getDataManager();
+		IDataManager dataManager = DataManagerFactory.getDataManager();
 		Account account = dataManager.getAccount(TestAccount.class, "test@test.com");
 		if (account == null){
 			account = new TestAccount();

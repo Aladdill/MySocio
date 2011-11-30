@@ -8,20 +8,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.Inheritance;
+import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 
-import net.mysocio.connection.readers.ISource;
+import net.mysocio.connection.readers.Source;
 import net.mysocio.data.ITagedObject;
 import net.mysocio.data.SocioObject;
 import net.mysocio.data.SocioTag;
-import net.mysocio.data.contacts.IContact;
+import net.mysocio.data.contacts.Contact;
 
 /**
  * @author Aladdin
  *
  */
-@PersistenceCapable(identityType = IdentityType.APPLICATION, detachable="true")
+@PersistenceCapable
+@Inheritance(strategy=InheritanceStrategy.SUBCLASS_TABLE)
 public abstract class Account extends SocioObject implements ITagedObject{
 	/**
 	 * 
@@ -33,7 +35,7 @@ public abstract class Account extends SocioObject implements ITagedObject{
 	private String userpicUrl = new String();
 	private String email = new String();
 	private List<SocioTag> tags = new ArrayList<SocioTag>();
-	private Map<String, IContact> contacts = new HashMap<String, IContact>();
+	private Map<String, Contact> contacts = new HashMap<String, Contact>();
 	
 
 	public String getUserId() {
@@ -70,7 +72,7 @@ public abstract class Account extends SocioObject implements ITagedObject{
 		this.userpicUrl = userpicUrl;
 	}
 	
-	public abstract List<ISource> getSources();
+	public abstract List<Source> getSources();
 
 	public String getEmail() {
 		return email;
@@ -88,11 +90,11 @@ public abstract class Account extends SocioObject implements ITagedObject{
 		this.tags = tags;
 	}
 
-	public Map<String, IContact> getContacts() {
+	public Map<String, Contact> getContacts() {
 		return contacts;
 	}
 
-	public void setContacts(Map<String, IContact> contacts) {
+	public void setContacts(Map<String, Contact> contacts) {
 		this.contacts = contacts;
 	}
 	public abstract String getIconUrl();

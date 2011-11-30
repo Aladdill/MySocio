@@ -3,7 +3,6 @@
  */
 package net.mysocio.connection.readers;
 
-import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
 
 import net.mysocio.data.accounts.Account;
@@ -12,7 +11,7 @@ import net.mysocio.data.accounts.Account;
  * @author Aladdin
  *
  */
-@PersistenceCapable(identityType = IdentityType.APPLICATION, detachable="true")
+@PersistenceCapable
 public abstract class AccountSource extends Source {
 	/**
 	 * 

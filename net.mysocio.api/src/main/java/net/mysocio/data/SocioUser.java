@@ -14,15 +14,15 @@ import java.util.Set;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 
-import net.mysocio.connection.readers.ISource;
-import net.mysocio.connection.writers.IDestination;
+import net.mysocio.connection.readers.Source;
+import net.mysocio.connection.writers.Destination;
 import net.mysocio.data.accounts.Account;
 
 /**
  * @author Aladdin
  * Although User is subclass of MySocio object, tags list is private list of tags usable by this user and not object tags.
  */
-@PersistenceCapable
+@PersistenceCapable(detachable="true")
 public class SocioUser extends NamedObject{
 	public static final String ALL_SOURCES = "All";
 	/**
@@ -33,8 +33,8 @@ public class SocioUser extends NamedObject{
 	private List<Account> accounts = new ArrayList<Account>();
 	private Account mainAccount;
 	private List<SocioContact> contacts = new ArrayList<SocioContact>();
-	private List<ISource> sources = new ArrayList<ISource>();
-	private List<IDestination> destinations = new ArrayList<IDestination>();
+	private List<Source> sources = new ArrayList<Source>();
+	private List<Destination> destinations = new ArrayList<Destination>();
 	private Map<String, SocioTag> userTags = new HashMap<String, SocioTag>();
 	private Long lastUpdate = 0l;
 	private Integer totalUnreadmessages = 0;	
@@ -185,27 +185,27 @@ public class SocioUser extends NamedObject{
 		}
 	}
 	
-	public void addSource(ISource source) {
+	public void addSource(Source source) {
 		this.sources.add(source);
 	}
 
-	public void addSources(List<? extends ISource> sources) {
+	public void addSources(List<? extends Source> sources) {
 		this.sources.addAll(sources);		
 	}
 
-	public List<ISource> getSources() {
+	public List<Source> getSources() {
 		return this.sources;
 	}
 	
-	public List<IDestination> getDestinations() {
+	public List<Destination> getDestinations() {
 		return destinations;
 	}
 	
-	public void addDestination(IDestination destination) {
+	public void addDestination(Destination destination) {
 		this.destinations.add(destination);
 	}
 
-	public void addDestinations(List<? extends IDestination> destinations) {
+	public void addDestinations(List<? extends Destination> destinations) {
 		this.destinations.addAll(destinations);		
 	}
 

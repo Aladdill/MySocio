@@ -5,7 +5,8 @@ package net.mysocio.data.contacts;
 
 import java.util.List;
 
-import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.Inheritance;
+import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 
 import net.mysocio.connection.readers.ISource;
@@ -16,7 +17,8 @@ import net.mysocio.data.NamedObject;
  * @author Aladdin
  *
  */
-@PersistenceCapable(identityType = IdentityType.APPLICATION, detachable="true")
+@PersistenceCapable
+@Inheritance(strategy=InheritanceStrategy.SUBCLASS_TABLE)
 public abstract class Contact extends NamedObject implements IContact {
 	/**
 	 * 

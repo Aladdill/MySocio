@@ -3,7 +3,6 @@
  */
 package net.mysocio.data.messages.facebook;
 
-import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
 
 import net.mysocio.data.messages.UserMessage;
@@ -12,7 +11,7 @@ import net.mysocio.data.messages.UserMessage;
  * @author Aladdin
  *
  */
-@PersistenceCapable(identityType = IdentityType.APPLICATION, detachable="true")
+@PersistenceCapable
 public class FacebookMessage extends UserMessage {
 
 	/**

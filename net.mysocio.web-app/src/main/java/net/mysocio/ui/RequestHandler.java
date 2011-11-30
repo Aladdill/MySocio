@@ -1,5 +1,6 @@
 package net.mysocio.ui;
 
+import javax.jdo.Transaction;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -29,26 +30,37 @@ public class RequestHandler extends AbstractHandler {
 	 * @throws CommandExecutionException
 	 */
 	protected String handleRequest(HttpServletRequest request,HttpServletResponse response) throws CommandExecutionException {
-		String command = request.getParameter("command");
-		IConnectionData connectionData = new ConnectionData(request);
+		String commandOutput;
 		IDataManager dataManager = DataManagerFactory.getDataManager();
-		SocioUser user = (SocioUser) request.getSession().getAttribute("user");
-		if (user != null) {
-			connectionData.setUser(dataManager.persistObject(user));
-		}
-		ICommandInterpreter commandInterpreter = CommandIterpreterFactory.getCommandInterpreter(connectionData);
-		response.setContentType(commandInterpreter.getCommandResponseType(command));
-		String commandOutput = commandInterpreter.executeCommand(command);
-		user = connectionData.getUser();
-		if (user != null) {
-			dataManager.saveObject(user);
-			request.getSession().setAttribute("user", dataManager.detachObject(user));
-			if (logger.isDebugEnabled()) {
-				logger.debug("User was inserted into session with name "
-						+ user.getName());
+		Transaction tx = dataManager.startTransaction();
+		try {
+			String command = request.getParameter("command");
+			IConnectionData connectionData = new ConnectionData(request);
+			String userId = (String) request.getSession().getAttribute("user");
+			SocioUser user = null;
+			if (userId != null) {
+				user = (SocioUser)dataManager.getObject(SocioUser.class, userId);
+				connectionData.setUser(user);
 			}
+			ICommandInterpreter commandInterpreter = CommandIterpreterFactory.getCommandInterpreter(connectionData);
+			response.setContentType(commandInterpreter.getCommandResponseType(command));
+			commandOutput = commandInterpreter.executeCommand(command);
+			user = connectionData.getUser();
+			dataManager.endTransaction(tx);
 			// I want to flush changes in user data every time request finished.
-			DataManagerFactory.getDataManager().flush();
+			dataManager.flush();
+			if (user != null) {
+				//After commit SocioUser object should be detached it's defined in
+				//jdoconfig.xml by property datanucleus.DetachAllOnCommit
+				request.getSession().setAttribute("user", user.getId());
+				if (logger.isDebugEnabled()) {
+					logger.debug("User was inserted into session with name "
+							+ user.getName());
+				}
+			}
+		} catch (Exception e) {
+			dataManager.rollBackTransaction(tx);
+			throw new CommandExecutionException(e);
 		}
 		return commandOutput;
 	}

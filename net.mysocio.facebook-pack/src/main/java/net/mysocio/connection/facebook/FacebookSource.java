@@ -6,7 +6,6 @@ package net.mysocio.connection.facebook;
 import java.util.Collections;
 import java.util.List;
 
-import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
 
 import net.mysocio.connection.readers.AccountSource;
@@ -18,7 +17,7 @@ import net.mysocio.data.messages.facebook.FacebookMessage;
  * @author Aladdin
  *
  */
-@PersistenceCapable(identityType = IdentityType.APPLICATION, detachable="true")
+@PersistenceCapable
 public class FacebookSource extends AccountSource {
 	/**
 	 * 

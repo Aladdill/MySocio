@@ -5,7 +5,6 @@ package net.mysocio.data.ui;
 
 import java.util.Map;
 
-import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.Join;
 import javax.jdo.annotations.Key;
 import javax.jdo.annotations.PersistenceCapable;
@@ -17,7 +16,7 @@ import net.mysocio.data.SocioObject;
  * @author Aladdin
  *
  */
-@PersistenceCapable(identityType = IdentityType.APPLICATION, detachable="true")
+@PersistenceCapable(detachable="true")
 public class UserUiObjects extends SocioObject {
 	/**
 	 * 

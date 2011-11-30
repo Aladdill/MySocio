@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.Join;
 import javax.jdo.annotations.Key;
 import javax.jdo.annotations.PersistenceCapable;
@@ -20,7 +19,7 @@ import net.mysocio.data.NamedObject;
  * @author Aladdin
  *
  */
-@PersistenceCapable(identityType = IdentityType.APPLICATION, detachable="true")
+@PersistenceCapable(detachable="true")
 public class UiObject extends NamedObject implements IUiObject {
 	/**
 	 * 

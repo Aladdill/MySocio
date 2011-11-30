@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
  * 
  */
 public class CreateAccountExecutor implements ICommandExecutor {
+	private static final String CREATING_ACCOUNT_IN_LOGOUT = "Attempt to create account while in logged out state. Probable attempt of hacking.";
 	private static final Logger logger = LoggerFactory.getLogger(CreateAccountExecutor.class);
 
 	/*
@@ -42,13 +43,12 @@ public class CreateAccountExecutor implements ICommandExecutor {
 			IDataManager dataManager = DataManagerFactory.getDataManager();
 			if ("login".equals(flow)) {
 				user = dataManager.getUser(account,connectionData.getLocale());
-//				MessagesManager.getInstance().updateUnreaddenMessages(user);
 				responseString = DefaultResourcesManager.getPage("closingLoginWindow.html");
 			} else if ("addAccount".equals(flow)) {
 				if (user == null) {
-					logger.error("Attempt to create account wile in logged out state. Probable attempt of hacking.");
+					logger.error(CREATING_ACCOUNT_IN_LOGOUT);
 					throw new CommandExecutionException(
-							"Attempt to create account wile in logged out state. Probable attempt of hacking.");
+							CREATING_ACCOUNT_IN_LOGOUT);
 				}
 				dataManager.addAccountToUser(account, user);
 				responseString = DefaultResourcesManager.getPage("closingAddAccountWindow.html");

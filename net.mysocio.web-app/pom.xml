@@ -35,12 +35,6 @@
 			<version>${mysocio.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
-			<version>2.5</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
 			<groupId>net.mysocio</groupId>
 			<artifactId>data-management</artifactId>
 			<version>${mysocio.version}</version>
@@ -49,14 +43,7 @@
 			<groupId>net.mysocio</groupId>
 			<artifactId>default-ui-manager</artifactId>
 			<version>${mysocio.version}</version>
-			<type>jar</type>
-			<scope>compile</scope>
 		</dependency>
-		<!-- <dependency>
-			<groupId>net.mysocio</groupId>
-			<artifactId>lj-source</artifactId>
-			<version>${mysocio.version}</version>
-		</dependency> -->
 		<dependency>
 			<groupId>net.mysocio</groupId>
 			<artifactId>rss-pack</artifactId>
@@ -66,6 +53,12 @@
 			<groupId>net.mysocio</groupId>
 			<artifactId>authentication-management</artifactId>
 			<version>${mysocio.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<version>2.5</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.xmlrpc</groupId>
@@ -110,11 +103,6 @@
 			<artifactId>camel-rss</artifactId>
 			<version>${camel-version}</version>
 		</dependency>
-		<!-- <dependency>
-			<groupId>org.apache.camel</groupId>
-			<artifactId>camel-spring</artifactId>
-			<version>${camel-version}</version>
-		</dependency> -->
 		<dependency>
 			<groupId>org.apache.camel</groupId>
 			<artifactId>camel-core</artifactId>
@@ -134,6 +122,16 @@
 			<groupId>org.datanucleus</groupId>
 			<artifactId>datanucleus-hbase</artifactId>
 			<version>${datanucleus-hbase-version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>servlet-api</artifactId>
+					<groupId>org.mortbay.jetty</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>servlet-api-2.5</artifactId>
+					<groupId>org.mortbay.jetty</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>xerces</groupId>
@@ -144,28 +142,6 @@
 			<groupId>xalan</groupId>
 			<artifactId>xalan</artifactId>
 			<version>2.7.1</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.hbase</groupId>
-			<artifactId>hbase</artifactId>
-			<version>0.90.2</version>
-			<exclusions>
-				<exclusion>
-					<artifactId>servlet-api-2.5</artifactId>
-					<groupId>org.mortbay.jetty</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.hadoop</groupId>
-			<artifactId>hadoop-core</artifactId>
-			<version>0.20.2</version>
-			<exclusions>
-				<exclusion>
-					<artifactId>servlet-api-2.5</artifactId>
-					<groupId>org.mortbay.jetty</groupId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 	</dependencies>
 </project>

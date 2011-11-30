@@ -10,8 +10,8 @@ import java.util.Map;
 import java.util.Set;
 
 import net.mysocio.connection.readers.IAccountSourceManager;
-import net.mysocio.connection.readers.ISource;
 import net.mysocio.connection.readers.ISourceManager;
+import net.mysocio.connection.readers.Source;
 import net.mysocio.connection.writers.IDestination;
 import net.mysocio.data.IMessagesManager;
 import net.mysocio.data.ReferenceCountObject;
@@ -39,9 +39,9 @@ public class MessagesManager implements IMessagesManager {
 	public void updateUnreaddenMessages(SocioUser user) throws Exception {
 		long checkTime = System.currentTimeMillis();
 		Long lastUpdate = user.getLastUpdate();
-		List<ISource> sources = user.getSources();
+		List<Source> sources = user.getSources();
 		Integer totalMessages = 0;
-		for (ISource source : sources) {
+		for (Source source : sources) {
 			ISourceManager manager = source.getManager();
 			List<IMessage> lastMessages = manager.getLastMessages(source, lastUpdate, checkTime);
 			List<String> storedMessages = storeMessages(lastMessages);

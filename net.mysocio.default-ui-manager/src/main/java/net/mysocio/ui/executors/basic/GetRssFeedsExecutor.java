@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.mysocio.connection.readers.ISource;
+import net.mysocio.connection.readers.Source;
 import net.mysocio.connection.rss.RssSource;
 import net.mysocio.data.IConnectionData;
 import net.mysocio.data.SocioUser;
@@ -26,9 +27,9 @@ public class GetRssFeedsExecutor implements ICommandExecutor {
 	public String execute(IConnectionData connectionData)
 	throws CommandExecutionException {
 		SocioUser user = connectionData.getUser();
-		List<ISource> sources = user.getSources();
+		List<Source> sources = user.getSources();
 		List<RssSource> rssSources = new ArrayList<RssSource>();
-		for (ISource source : sources) {
+		for (Source source : sources) {
 			if (source instanceof RssSource){
 				rssSources.add((RssSource)source);
 			}

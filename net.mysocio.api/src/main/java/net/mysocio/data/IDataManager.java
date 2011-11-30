@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.jdo.Transaction;
+
 import net.mysocio.connection.readers.ISource;
 import net.mysocio.data.accounts.Account;
 import net.mysocio.data.messages.IMessage;
@@ -17,6 +19,11 @@ import net.mysocio.data.ui.IUiObject;
  *
  */
 public interface IDataManager {
+	public Transaction startTransaction();
+	
+	public void endTransaction(Transaction tx);
+	
+	public void rollBackTransaction(Transaction tx);
 
 	public void saveObjects(List<? extends Object> objects);
 

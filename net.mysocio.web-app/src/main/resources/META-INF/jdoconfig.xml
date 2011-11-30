@@ -6,12 +6,14 @@
 	<persistence-manager-factory name="transactions-optional">
 		<property name="javax.jdo.PersistenceManagerFactoryClass"
 			value="org.datanucleus.api.jdo.JDOPersistenceManagerFactory" />
-		<property name="datanucleus.ConnectionURL" value="hbase:" />
+		<property name="datanucleus.ConnectionURL" value="hbase" />
 		<property name="datanucleus.ConnectionUserName" value="" />
 		<property name="datanucleus.ConnectionPassword" value="" />
 		<property name="datanucleus.autoCreateSchema" value="true" />
 		<property name="datanucleus.validateTables" value="false" />
-		<property name="datanucleus.Optimistic" value="false" />
+		<property name="datanucleus.Optimistic" value="true" />
 		<property name="datanucleus.validateConstraints" value="false" />
+		<property name="datanucleus.DetachAllOnCommit" value="true"/>
+		<property name="datanucleus.CopyOnAttach" value="false"/>
 	</persistence-manager-factory>
 </jdoconfig>
