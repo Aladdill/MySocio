@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -187,6 +188,18 @@ public class SocioUser extends NamedObject{
 	
 	public void addSource(Source source) {
 		this.sources.add(source);
+	}
+	
+	public Source removeSource(String id){
+		Iterator<Source> iterator = sources.iterator();
+		while (iterator.hasNext()){
+			Source source = iterator.next();
+			if (source.getId().equals(id)){
+				iterator.remove();
+				return source;
+			}
+		}
+		return null;
 	}
 
 	public void addSources(List<? extends Source> sources) {

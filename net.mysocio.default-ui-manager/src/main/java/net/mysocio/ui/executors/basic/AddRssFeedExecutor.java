@@ -15,11 +15,8 @@ import net.mysocio.data.management.CamelContextManager;
 import net.mysocio.data.management.DataManagerFactory;
 import net.mysocio.data.management.IRssMessagesRidingBean;
 import net.mysocio.data.messages.rss.RssMessagesRidingBean;
-import net.mysocio.ui.data.objects.RssConnections;
 import net.mysocio.ui.management.CommandExecutionException;
 import net.mysocio.ui.management.ICommandExecutor;
-import net.mysocio.ui.managers.basic.AbstractUiManager;
-import net.mysocio.ui.managers.basic.DefaultUiManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,7 +62,6 @@ public class AddRssFeedExecutor implements ICommandExecutor {
 			logger.error("Error adding feed" + url, e);
 			throw new CommandExecutionException("Error adding feed" + url, e);
 		}
-		AbstractUiManager uiManager = new DefaultUiManager();
-		return uiManager.getPage(new RssConnections(),user);
+		return new GetRssFeedsExecutor().execute(connectionData);
 	}
 }

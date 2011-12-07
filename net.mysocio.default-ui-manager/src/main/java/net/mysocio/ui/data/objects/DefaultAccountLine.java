@@ -21,7 +21,7 @@ public class DefaultAccountLine extends UiObject {
 	public DefaultAccountLine(){
 		super();
 		setName(NAME);
-		addTextLabel("account.default");
+		addTextLabel("account.primary");
 	}
 	@Override
 	public String getHtmlTemplate() {

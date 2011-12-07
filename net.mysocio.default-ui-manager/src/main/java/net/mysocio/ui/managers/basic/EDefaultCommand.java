@@ -1,11 +1,11 @@
 package net.mysocio.ui.managers.basic;
 
 import net.mysocio.ui.data.objects.DefaultSiteBody;
-import net.mysocio.ui.data.objects.RssConnections;
+import net.mysocio.ui.executors.basic.AddRssFeedExecutor;
 import net.mysocio.ui.executors.basic.AuthenticationExecutor;
 import net.mysocio.ui.executors.basic.CreateAccountExecutor;
-import net.mysocio.ui.executors.basic.AddRssFeedExecutor;
 import net.mysocio.ui.executors.basic.GetAccountsExecutor;
+import net.mysocio.ui.executors.basic.GetContactsExecutor;
 import net.mysocio.ui.executors.basic.GetMessagesExecutor;
 import net.mysocio.ui.executors.basic.GetRssFeedsExecutor;
 import net.mysocio.ui.executors.basic.GetSourcesExecutor;
@@ -24,7 +24,7 @@ public enum EDefaultCommand {
 	startAuthentication(new AuthenticationExecutor()),
 	logout(new LogoutPageExecutor()),
 	openMainPage(new LoadPageExecutor(new DefaultSiteBody())),
-	getContacts(new LoadPageExecutor(new RssConnections())),
+	getContacts(new GetContactsExecutor()),
 	getRssFeeds(new GetRssFeedsExecutor()),
 	getAccounts(new GetAccountsExecutor()),
 	addRssFeed(new AddRssFeedExecutor()),

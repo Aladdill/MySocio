@@ -97,14 +97,14 @@ span.DefaultAccount {
 }
 div.Account {
 	float: left;
-	width: 100%;
+	width: 600px;
 	height: auto;
 	margin-left: 16px;
 	margin-top: 20px;
 }
 div.NewAccount {
 	float: left;
-	width: 100%;
+	width: 600px;
 	height: auto;
 	margin-left: 28px;
 	margin-top: 20px;
@@ -115,6 +115,18 @@ div.AccountData {
 	width: 100px;
 	height: 100%;
 	float: left;
+}
+div.RSS {
+	float: left;
+	width: 600px;
+	height: auto;
+	margin-left: 28px;
+	margin-top: 20px;
+}
+span.RSSType {
+	float: left;
+	margin-top: 7px;
+	margin-left: 10px;
 }
 div.MessageUserpic {
 	float: left;

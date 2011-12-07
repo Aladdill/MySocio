@@ -69,6 +69,20 @@ function login(identifierValue) {
 function addAccount(identifierValue) {
 	openAuthenticationWindow(identifierValue, "addAccount");
 }
+function addRssFeed() {
+	$.post("execute?command=addRssFeed", {
+		url : $("#rssUrl").attr("value")
+	}).success(function(data) {
+		$("#data_container").html(data);
+	}).error(onFailure);
+}
+function removeRssFeed(feedId) {
+	$.post("execute?command=removeRssFeed", {
+		id : feedId
+	}).success(function(data) {
+		$("#data_container").html(data);
+	}).error(onFailure);
+}
 function hideTabs() {
 	hideDiv("tabs");
 }
@@ -209,9 +223,6 @@ function logout() {
 }
 function loadStartPage() {
 	openUrlInDiv("#SiteBody", "execute?command=openStartPage", [ initPage ]);
-}
-function getRssFeeds() {
-	openUrlInDiv("#data_container", "execute?command=getRssFeeds", []);
 }
 function getMessages(id) {
 	$(".Message").remove();

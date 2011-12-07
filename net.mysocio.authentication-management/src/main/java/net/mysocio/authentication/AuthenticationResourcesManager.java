@@ -31,4 +31,7 @@ public class AuthenticationResourcesManager {
 	public static String getAuthenticationScope(String identifier){
 		return authentication.getString(identifier + ".scope");
 	}
+	public static String getRedirectUrl(){
+		return authentication.getString("redirect.url");
+	}
 }

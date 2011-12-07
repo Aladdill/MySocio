@@ -3,16 +3,20 @@
  */
 package net.mysocio.ui.executors.basic;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
-import net.mysocio.connection.readers.ISource;
 import net.mysocio.connection.readers.Source;
 import net.mysocio.connection.rss.RssSource;
 import net.mysocio.data.IConnectionData;
 import net.mysocio.data.SocioUser;
+import net.mysocio.data.management.DefaultResourcesManager;
+import net.mysocio.ui.data.objects.AddRssLine;
+import net.mysocio.ui.data.objects.RssLine;
 import net.mysocio.ui.management.CommandExecutionException;
 import net.mysocio.ui.management.ICommandExecutor;
+import net.mysocio.ui.managers.basic.AbstractUiManager;
+import net.mysocio.ui.managers.basic.DefaultUiManager;
 
 /**
  * @author Aladdin
@@ -27,23 +31,20 @@ public class GetRssFeedsExecutor implements ICommandExecutor {
 	public String execute(IConnectionData connectionData)
 	throws CommandExecutionException {
 		SocioUser user = connectionData.getUser();
+		AbstractUiManager uiManager = new DefaultUiManager();
 		List<Source> sources = user.getSources();
-		List<RssSource> rssSources = new ArrayList<RssSource>();
+		String page = uiManager.getPage(new AddRssLine(),user);
+		Locale locale = new Locale(user.getLocale());
+		page = page.replace("rss.icon", DefaultResourcesManager.getResource(locale, ("rss.icon")));
+		String feed = uiManager.getPage(new RssLine(),user);
 		for (Source source : sources) {
 			if (source instanceof RssSource){
-				rssSources.add((RssSource)source);
+				String currentFeed = feed.replace("rss.name", source.getName());
+				currentFeed += feed.replace("rss.id", source.getId());
+				currentFeed += currentFeed.replace("rss.icon", DefaultResourcesManager.getResource(locale, ("rss.icon")));
+				page += currentFeed;
 			}
 		}
-		return wrapRssSources(rssSources);
-	}
-
-	private String wrapRssSources(List<RssSource> rssSources) {
-		StringBuffer output = new StringBuffer();
-		for (RssSource rssSource : rssSources) {
-			output.append("<div class='RssFeed'>");
-			output.append(rssSource.getName());
-			output.append("</div>");
-		}
-		return output.toString();
+		return page;
 	}
 }
