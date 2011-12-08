@@ -11,7 +11,7 @@ import net.mysocio.data.NamedObject;
  * @author Aladdin
  *
  */
-@PersistenceCapable
+@PersistenceCapable(detachable="true")
 public class NamedFacebookObject extends NamedObject {
 	/**
 	 * 

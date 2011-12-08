@@ -17,7 +17,7 @@ import net.mysocio.data.contacts.Contact;
  * @author Aladdin
  *
  */
-@PersistenceCapable
+@PersistenceCapable(detachable="true")
 public class FacebookContact extends Contact {
 
 	/**

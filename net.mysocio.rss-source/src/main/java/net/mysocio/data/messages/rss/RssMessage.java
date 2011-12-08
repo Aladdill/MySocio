@@ -11,7 +11,7 @@ import net.mysocio.data.messages.SourceAwareMessage;
  * @author Aladdin
  *
  */
-@PersistenceCapable
+@PersistenceCapable(detachable="true")
 public class RssMessage extends SourceAwareMessage {
 	/**
 	 * 

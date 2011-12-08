@@ -10,7 +10,7 @@ import javax.jdo.annotations.PersistenceCapable;
  * @author Aladdin
  *
  */
-@PersistenceCapable
+@PersistenceCapable(detachable="true")
 public class FacebookFriendList extends NamedFacebookObject{
 	/**
 	 * 

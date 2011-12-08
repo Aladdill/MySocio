@@ -17,7 +17,7 @@ import net.mysocio.data.messages.rss.RssMessage;
  * @author Aladdin
  *
  */
-@PersistenceCapable
+@PersistenceCapable(detachable="true")
 public class RssSource extends Source {
 
 	/**

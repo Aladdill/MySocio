@@ -9,7 +9,6 @@ import java.util.List;
 import javax.jdo.annotations.PersistenceCapable;
 
 import net.mysocio.connection.facebook.FacebookSource;
-import net.mysocio.connection.readers.ISource;
 import net.mysocio.connection.readers.Source;
 import net.mysocio.data.SocioTag;
 import net.mysocio.data.accounts.Oauth2Account;
@@ -18,7 +17,7 @@ import net.mysocio.data.accounts.Oauth2Account;
  * @author Aladdin
  *
  */
-@PersistenceCapable
+@PersistenceCapable(detachable="true")
 public class FacebookAccount extends Oauth2Account {
 
 	private static final String ACCOUNT_TYPE = "facebook";

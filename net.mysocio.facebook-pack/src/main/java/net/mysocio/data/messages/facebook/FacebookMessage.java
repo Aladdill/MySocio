@@ -11,7 +11,7 @@ import net.mysocio.data.messages.UserMessage;
  * @author Aladdin
  *
  */
-@PersistenceCapable
+@PersistenceCapable(detachable="true")
 public class FacebookMessage extends UserMessage {
 
 	/**
