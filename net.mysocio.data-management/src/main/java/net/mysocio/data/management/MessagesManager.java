@@ -96,6 +96,9 @@ public class MessagesManager implements IMessagesManager {
 	}
 	
 	public synchronized void setMessagesReadden(SocioUser user, String messagesId){
+		if (messagesId.isEmpty()){
+			return;
+		}
 		String[] ids = messagesId.split(",");
 		for (String id : ids) {
 			user.setMessageReadden(id);

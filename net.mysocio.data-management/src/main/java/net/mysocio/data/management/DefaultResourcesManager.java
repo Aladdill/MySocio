@@ -72,7 +72,7 @@ public class DefaultResourcesManager {
 			resourceValue = resources.getString(resource);
 		} catch (MissingResourceException e) {
 			resourceValue = resource;
-			logger.warn("Resource missing.", e);
+			logger.info("Resource missing for key: " + resource);
 		}
 		return resourceValue;
 	}
@@ -102,6 +102,7 @@ public class DefaultResourcesManager {
 		for (String line = d.readLine(); line != null; line = d.readLine()){
 			out.append(line);
         }
+		d.close();
 		return out.toString();
 	}
 	public static boolean isMailInList(String userMail) {

@@ -60,7 +60,7 @@ public abstract class AbstractHandler extends HttpServlet {
 		String responseString;
 		response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		responseString = e.getMessage();
-		logger.error("Login request failed.",e);
+		logger.error("Request failed.");
 		return responseString;
 	}
 

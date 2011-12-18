@@ -5,15 +5,23 @@ package net.mysocio.authentication;
 
 import java.util.ResourceBundle;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * @author Aladdin
  *
  */
 public class AuthenticationResourcesManager {
+	private static final Logger logger = LoggerFactory.getLogger(AuthenticationResourcesManager.class);
 	private static ResourceBundle authentication;
 	public static void init(String contextPath){
 		if (authentication == null){
-			authentication = ResourceBundle.getBundle("authentication");
+			try {
+				authentication = ResourceBundle.getBundle("authentication");
+			} catch (Exception e) {
+				logger.error("No authentication properties were found.",e);
+			}
 		}
 	}
 	public static String getAuthenticationId(String identifier){

@@ -40,8 +40,8 @@ public class GetRssFeedsExecutor implements ICommandExecutor {
 		for (Source source : sources) {
 			if (source instanceof RssSource){
 				String currentFeed = feed.replace("rss.name", source.getName());
-				currentFeed += feed.replace("rss.id", source.getId());
-				currentFeed += currentFeed.replace("rss.icon", DefaultResourcesManager.getResource(locale, ("rss.icon")));
+				currentFeed = currentFeed.replace("rss.id", source.getId());
+				currentFeed = currentFeed.replace("rss.icon", DefaultResourcesManager.getResource(locale, ("rss.icon")));
 				page += currentFeed;
 			}
 		}

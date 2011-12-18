@@ -202,11 +202,12 @@ function markMessageReadden(id) {
 }
 function rereshSourcesAndMarkReadden(){
 	var messages = $("#data_container").data("readdenMessages");
-	if (messages != undefined){
-		$("#sources_tree").data("treeRefreshInitiated", true);
-		$.post("execute?command=markMessagesReaden&messagesIds=" + messages, {},
-				initSourcesData, "json").error(onFailure);
+	if (messages == undefined){
+		messages = "";
 	}
+	$("#sources_tree").data("treeRefreshInitiated", true);
+	$.post("execute?command=markMessagesReaden&messagesIds=" + messages, {},
+			initSourcesData, "json").error(onFailure);
 }
 function initPage() {
 	if ($("#login_center_div").size() != 0) {

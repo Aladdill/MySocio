@@ -9,9 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import net.mysocio.data.IConnectionData;
-import net.mysocio.data.IDataManager;
 import net.mysocio.data.SocioUser;
-import net.mysocio.data.management.DataManagerFactory;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

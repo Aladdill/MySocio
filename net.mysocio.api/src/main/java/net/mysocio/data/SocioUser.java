@@ -187,7 +187,9 @@ public class SocioUser extends NamedObject{
 	}
 	
 	public void addSource(Source source) {
-		this.sources.add(source);
+		if (!this.sources.contains(source)){
+			this.sources.add(source);
+		}
 	}
 	
 	public Source removeSource(String id){

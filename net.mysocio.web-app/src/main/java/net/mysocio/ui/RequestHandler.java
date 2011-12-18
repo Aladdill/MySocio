@@ -19,8 +19,7 @@ import org.slf4j.LoggerFactory;
  * Servlet implementation class RequestHandler
  */
 public class RequestHandler extends AbstractHandler {
-	private static final Logger logger = LoggerFactory
-			.getLogger(RequestHandler.class);
+	private static final Logger logger = LoggerFactory.getLogger(RequestHandler.class);
 	private static final long serialVersionUID = 1L;
 
 	/**

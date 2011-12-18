@@ -113,7 +113,7 @@ public class GetSourcesExecutor implements ICommandExecutor {
 		jsonGenerator.writeStartObject();
 		String tagId = tag.getId();
 		int unreadMessagesNum = user.getUnreadMessagesNum(tagId);
-		addNodeData(jsonGenerator, tag.getValue(), tagId, DefaultResourcesManager.getResource(new Locale(user.getLocale()), (tag.getIconType())), unreadMessagesNum);
+		addNodeData(jsonGenerator, DefaultResourcesManager.getResource(new Locale(user.getLocale()), tag.getValue()), tagId, DefaultResourcesManager.getResource(new Locale(user.getLocale()), tag.getIconType()), unreadMessagesNum);
 		jsonGenerator.writeEndObject();
 	}
 	
