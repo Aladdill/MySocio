@@ -21,11 +21,11 @@ public class FacebookMessage extends UserMessage {
 
 	@Override
 	public String getNetworkIcon() {
-		return "images/main/message/fb.png";
+		return "images/message/fb.png";
 	}
 
 	@Override
 	public String getReadenNetworkIcon() {
-		return "images/main/message/fb-gray.png";
+		return "images/message/fb-gray.png";
 	}
 }

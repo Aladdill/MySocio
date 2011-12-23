@@ -10,7 +10,6 @@ import net.mysocio.data.accounts.Account;
 import net.mysocio.data.management.AccountsManager;
 import net.mysocio.data.management.DataManagerFactory;
 import net.mysocio.data.management.DefaultResourcesManager;
-import net.mysocio.data.management.MessagesManager;
 import net.mysocio.ui.management.CommandExecutionException;
 import net.mysocio.ui.management.ICommandExecutor;
 
@@ -40,8 +39,9 @@ public class CreateAccountExecutor implements ICommandExecutor {
 		try {
 			SocioUser user = connectionData.getUser();
 			Account account = AccountsManager.getInstance().getAccount(connectionData);
-			IDataManager dataManager = DataManagerFactory.getDataManager();
+			IDataManager dataManager;
 			if ("login".equals(flow)) {
+				dataManager = DataManagerFactory.getDataManager();
 				user = dataManager.getUser(account,connectionData.getLocale());
 				responseString = DefaultResourcesManager.getPage("closingLoginWindow.html");
 			} else if ("addAccount".equals(flow)) {
@@ -50,6 +50,7 @@ public class CreateAccountExecutor implements ICommandExecutor {
 					throw new CommandExecutionException(
 							CREATING_ACCOUNT_IN_LOGOUT);
 				}
+				dataManager = DataManagerFactory.getDataManager(user);
 				dataManager.addAccountToUser(account, user);
 				responseString = DefaultResourcesManager.getPage("closingAddAccountWindow.html");
 			} else {

@@ -16,8 +16,8 @@ import net.mysocio.authentication.twitter.TwitterAuthenticationManager;
 import net.mysocio.authentication.vkontakte.VkontakteAuthenticationManager;
 import net.mysocio.data.management.AccountsManager;
 import net.mysocio.data.management.CamelContextManager;
+import net.mysocio.data.management.DataManagerFactory;
 import net.mysocio.data.management.DefaultResourcesManager;
-import net.mysocio.data.management.JdoDataManager;
 
 /**
  * @author Aladdin
@@ -31,7 +31,7 @@ public class MySocioContextListener implements ServletContextListener {
 	@Override
 	public void contextDestroyed(ServletContextEvent arg0) {
 		CamelContextManager.stopContext();
-		JdoDataManager.closeDataConnection();
+		DataManagerFactory.closeDataConnection();
 	}
 
 	/* (non-Javadoc)
@@ -39,6 +39,7 @@ public class MySocioContextListener implements ServletContextListener {
 	 */
 	@Override
 	public void contextInitialized(ServletContextEvent arg0) {
+		DataManagerFactory.init("non-transactional");
 		ServletContext servletContext = arg0.getServletContext();
 		DefaultResourcesManager.init(servletContext.getRealPath(""));
 		AuthenticationResourcesManager.init(servletContext.getRealPath(""));

@@ -3,7 +3,18 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:noNamespaceSchemaLocation="http://java.sun.com/xml/ns/jdo/jdoconfig">
 
-	<persistence-manager-factory name="transactions-optional">
+	<persistence-manager-factory name="non-transactional">
+		<property name="javax.jdo.PersistenceManagerFactoryClass"
+			value="org.datanucleus.api.jdo.JDOPersistenceManagerFactory" />
+		<property name="datanucleus.ConnectionURL" value="hbase" />
+		<property name="datanucleus.ConnectionUserName" value="" />
+		<property name="datanucleus.ConnectionPassword" value="" />
+		<property name="datanucleus.autoCreateSchema" value="true" />
+		<property name="datanucleus.validateTables" value="false" />
+		<property name="datanucleus.validateConstraints" value="false" />
+		<property name="javax.jdo.option.Multithreaded" value="true"/>
+	</persistence-manager-factory>
+	<!-- <persistence-manager-factory name="optimistic-transactions">
 		<property name="javax.jdo.PersistenceManagerFactoryClass"
 			value="org.datanucleus.api.jdo.JDOPersistenceManagerFactory" />
 		<property name="datanucleus.ConnectionURL" value="hbase" />
@@ -15,5 +26,6 @@
 		<property name="datanucleus.validateConstraints" value="false" />
 		<property name="datanucleus.DetachAllOnCommit" value="true"/>
 		<property name="datanucleus.CopyOnAttach" value="false"/>
-	</persistence-manager-factory>
+		<property name="javax.jdo.option.Multithreaded" value="true"/>
+	</persistence-manager-factory> -->
 </jdoconfig>

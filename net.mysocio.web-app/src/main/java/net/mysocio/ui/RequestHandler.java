@@ -1,6 +1,6 @@
 package net.mysocio.ui;
 
-import javax.jdo.Transaction;
+import javax.jdo.JDOHelper;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -31,7 +31,6 @@ public class RequestHandler extends AbstractHandler {
 	protected String handleRequest(HttpServletRequest request,HttpServletResponse response) throws CommandExecutionException {
 		String commandOutput;
 		IDataManager dataManager = DataManagerFactory.getDataManager();
-		Transaction tx = dataManager.startTransaction();
 		try {
 			String command = request.getParameter("command");
 			IConnectionData connectionData = new ConnectionData(request);
@@ -45,12 +44,10 @@ public class RequestHandler extends AbstractHandler {
 			response.setContentType(commandInterpreter.getCommandResponseType(command));
 			commandOutput = commandInterpreter.executeCommand(command);
 			user = connectionData.getUser();
-			dataManager.endTransaction(tx);
-			// I want to flush changes in user data every time request finished.
-			dataManager.flush();
 			if (user != null) {
-				//After commit SocioUser object should be detached it's defined in
-				//jdoconfig.xml by property datanucleus.DetachAllOnCommit
+				if (JDOHelper.isDirty(user)){
+					DataManagerFactory.getDataManager(user).persistObject(user);
+				}
 				request.getSession().setAttribute("user", user.getId());
 				if (logger.isDebugEnabled()) {
 					logger.debug("User was inserted into session with name "
@@ -58,7 +55,6 @@ public class RequestHandler extends AbstractHandler {
 				}
 			}
 		} catch (Exception e) {
-			dataManager.rollBackTransaction(tx);
 			throw new CommandExecutionException(e);
 		}
 		return commandOutput;

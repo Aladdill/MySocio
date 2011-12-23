@@ -73,6 +73,7 @@ public class FacebookSourceManager implements IAccountSourceManager {
 	 */
 	private FacebookMessage parseFacebookMessage(FacebookSource fs, JsonNode element) throws ParseException {
 		FacebookMessage message = new FacebookMessage();
+		message.setUniqueId(getAttribute(element, "id"));
 		message.setDate(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(getAttribute(element, "created_time")).getTime());
 		String text = "";
 		String type = getAttribute(element, "type");

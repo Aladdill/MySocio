@@ -85,7 +85,7 @@ public class SocioUser extends NamedObject{
 		return messages.size();
 	}
 	
-	public void addUnreadMessages(String sourceId, List<String> messages){
+	public int addUnreadMessages(String sourceId, List<String> messages){
 		List<String> list = unreadMessages.get(sourceId);
 		if (list == null){
 			list = new ArrayList<String>();
@@ -93,6 +93,7 @@ public class SocioUser extends NamedObject{
 		messages.removeAll(list);
 		list.addAll(messages);
 		unreadMessages.put(sourceId, list);
+		return messages.size();
 	}
 	
 	public void addUnreadMessage(String sourceId, String messageId){
@@ -132,6 +133,7 @@ public class SocioUser extends NamedObject{
 	
 	public void addAccount(Account account) {
 		this.accounts.add(account);
+		this.addTags(account.getTags());
 	}
 
 	/**
@@ -177,7 +179,32 @@ public class SocioUser extends NamedObject{
 	}
 	
 	public void addTag(SocioTag tag){
+		SocioTag currentTag = userTags.get(tag.getId());
+		if (currentTag != null){
+			tag.setRefCount(currentTag.getRefCount() + 1);
+		}else{
+			//init reference counter of tag
+			tag.setRefCount(1);
+		}
 		userTags.put(tag.getId(), tag);
+	}
+	
+	public void removeTag(SocioTag tag) throws CorruptedDataException{
+		String tagId = tag.getId();
+		SocioTag socioTag = userTags.get(tagId);
+		if (socioTag == null){
+			throw new CorruptedDataException("Trying to remove uexisting tag from User: " + tag.getValue());
+		}
+		tag.setRefCount(tag.getRefCount()-1);
+		if (tag.getRefCount() <= 0){
+			userTags.remove(tagId);
+		}
+	}
+	
+	public void removeTags(List<SocioTag> tags) throws CorruptedDataException{
+		for (SocioTag tag : tags) {
+			removeTag(tag);
+		}
 	}
 	
 	public void addTags(List<SocioTag> tags){
@@ -189,15 +216,17 @@ public class SocioUser extends NamedObject{
 	public void addSource(Source source) {
 		if (!this.sources.contains(source)){
 			this.sources.add(source);
+			this.addTags(source.getTags());
 		}
 	}
 	
-	public Source removeSource(String id){
+	public Source removeSource(String id) throws CorruptedDataException{
 		Iterator<Source> iterator = sources.iterator();
 		while (iterator.hasNext()){
 			Source source = iterator.next();
 			if (source.getId().equals(id)){
 				iterator.remove();
+				removeTags(source.getTags());
 				return source;
 			}
 		}
@@ -205,7 +234,9 @@ public class SocioUser extends NamedObject{
 	}
 
 	public void addSources(List<? extends Source> sources) {
-		this.sources.addAll(sources);		
+		for (Source source : sources) {
+			addSource(source);
+		}
 	}
 
 	public List<Source> getSources() {

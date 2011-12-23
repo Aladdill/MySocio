@@ -18,6 +18,15 @@ public class SocioTag extends SocioObject{
 	
 	private String value;
 	private String iconType;
+	private int refCount;
+
+	public int getRefCount() {
+		return refCount;
+	}
+
+	public void setRefCount(int refCount) {
+		this.refCount = refCount;
+	}
 
 	public String getValue() {
 		return value;

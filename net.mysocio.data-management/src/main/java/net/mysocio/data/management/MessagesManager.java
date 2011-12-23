@@ -53,11 +53,12 @@ public class MessagesManager implements IMessagesManager {
 					user.addUnreadMessages(tagId,messagesByUsers.get(tagId));
 				}
 			}
-			totalMessages += storedMessages.size();
 			List<SocioTag> tags = source.getTags();
+			int addedMessages = 0;
 			for (SocioTag tag : tags) {
-				user.addUnreadMessages(tag.getId(),storedMessages);
+				addedMessages = Math.max(addedMessages, user.addUnreadMessages(tag.getId(),storedMessages));
 			}
+			totalMessages += addedMessages;
 		}
 		user.setLastUpdate(checkTime);
 		user.addTotalUnreadmessages(totalMessages);
@@ -105,7 +106,7 @@ public class MessagesManager implements IMessagesManager {
 			ReferenceCountObject<IMessage> cachedMessage = cachedMessages.remove(id);
 			int counter = cachedMessage.getCounter() - 1;
 			if (counter == 0){
-				DataManagerFactory.getDataManager().deleteObject(cachedMessage.getObject());
+				DataManagerFactory.getDataManager(user).deleteObject(cachedMessage.getObject());
 			}else{
 				cachedMessage.setCounter(counter);
 				cachedMessages.put(id, cachedMessage);

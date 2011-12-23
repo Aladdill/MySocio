@@ -195,6 +195,7 @@ function markMessageReadden(id) {
 	var messages = $("#data_container").data("readdenMessages");
 	if (messages != undefined){
 		messages += "," + id;
+		$("#data_container").data("readdenMessages", messages);
 	}else{
 		$("#data_container").data("readdenMessages", id);
 	}
@@ -202,6 +203,7 @@ function markMessageReadden(id) {
 }
 function rereshSourcesAndMarkReadden(){
 	var messages = $("#data_container").data("readdenMessages");
+	$("#data_container").data("readdenMessages", "");
 	if (messages == undefined){
 		messages = "";
 	}

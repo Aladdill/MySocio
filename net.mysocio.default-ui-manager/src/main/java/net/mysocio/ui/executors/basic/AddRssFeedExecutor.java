@@ -48,8 +48,8 @@ public class AddRssFeedExecutor implements ICommandExecutor {
 		RssSource source = new RssSource();
 		source.setUrl(url);
 		source.setName(feed.getTitle());
-		IDataManager dataManager = DataManagerFactory.getDataManager();
 		SocioUser user = connectionData.getUser();
+		IDataManager dataManager = DataManagerFactory.getDataManager(user);
 		dataManager.addSourceToUser(user, source);
 		List<IRssMessagesRidingBean> beans = new ArrayList<IRssMessagesRidingBean>();
 		RssMessagesRidingBean bean = new RssMessagesRidingBean();

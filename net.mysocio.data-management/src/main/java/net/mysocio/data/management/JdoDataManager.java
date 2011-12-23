@@ -11,7 +11,6 @@ import java.util.Map;
 import javax.jdo.Extent;
 import javax.jdo.JDOHelper;
 import javax.jdo.PersistenceManager;
-import javax.jdo.PersistenceManagerFactory;
 import javax.jdo.Query;
 import javax.jdo.Transaction;
 
@@ -39,35 +38,15 @@ import org.slf4j.LoggerFactory;
  * 
  */
 public class JdoDataManager implements IDataManager {
-	private static final Logger logger = LoggerFactory
-			.getLogger(JdoDataManager.class);
-	private static PersistenceManager pm;
-	private static PersistenceManagerFactory pmf;
-	private static IDataManager instance = new JdoDataManager();
+	private static final Logger logger = LoggerFactory.getLogger(JdoDataManager.class);
+	private PersistenceManager pm;
+	
 
-	public static IDataManager getInstance() {
-		if (pm == null) {
-			// Create a PersistenceManagerFactory for this datastore
-			System.setProperty("sun.net.http.allowRestrictedHeaders", "true");
-			pmf = JDOHelper
-					.getPersistenceManagerFactory("transactions-optional");
-			pm = pmf.getPersistenceManager();
-			pm.setMultithreaded(true);
-		}
-		return instance;
+	public JdoDataManager(PersistenceManager pm) {
+		this.pm = pm; 
 	}
 
-	public static void closeDataConnection() {
-		if (pm != null) {
-			pm.flush();
-			pm.close();
-			pm = null;
-			pmf.close();
-			pmf = null;
-		}
-	}
-
-	public synchronized void flush() {
+	public void flush() {
 		pm.flush();
 	}
 
@@ -93,10 +72,7 @@ public class JdoDataManager implements IDataManager {
 	public <T> T persistObject(T object) {
 		return pm.makePersistent(object);
 	}
-
-	private JdoDataManager() {
-	}
-
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -131,11 +107,10 @@ public class JdoDataManager implements IDataManager {
 	public Account addAccountToUser(Account account, SocioUser user) {
 		account.setUserId(user.getId());
 		saveObject(account);
-		List<SocioTag> accTags = account.getTags();
-		user.addTags(accTags);
 		user.addAccount(account);
 		user.setMainAccount(account);
 		List<Source> sources = account.getSources();
+		List<SocioTag> accTags = account.getTags();
 		for (Source source : sources) {
 			addSourceToUser(user, accTags, source);
 		}
@@ -154,16 +129,13 @@ public class JdoDataManager implements IDataManager {
 			ISource source) {
 		Source savedSource = createSource(source);
 		source.getTags().addAll(accTags);
-		user.addTags(savedSource.getTags());
 		user.addSource(savedSource);
 		return source;
 	}
 
 	public ISource addSourceToUser(SocioUser user, ISource source) {
-		source = createSource((Source)source);
-		user.addTags(source.getTags());
-		saveObject(source);
-		user.addSource((Source)source);
+		Source savedSource = createSource((Source)source);
+		user.addSource(savedSource);
 		return source;
 	}
 
@@ -253,11 +225,11 @@ public class JdoDataManager implements IDataManager {
 			ITagedObject tagedObj = (ITagedObject) object;
 			tagedObj.getTags().addAll(createTags(tagedObj));
 		}
-		object = pm.makePersistent(object);
-		return object;
+		return persistObject(object);
 	}
 
 	public void deleteObject(Object object) {
+		PersistenceManager pm = JDOHelper.getPersistenceManager(object);
 		pm.deletePersistent(object);
 	}
 
@@ -310,7 +282,7 @@ public class JdoDataManager implements IDataManager {
 	private List<SocioTag> createTags(ITagedObject object) {
 		List<SocioTag> tags = object.getDefaultTags();
 		for (SocioTag tag : tags) {
-			pm.makePersistent(tag);
+			persistObject(tag);
 		}
 		return tags;
 	}
@@ -354,8 +326,7 @@ public class JdoDataManager implements IDataManager {
 	}
 
 	public List<IMessage> getSourceAwareMessages(String id, Long from, Long to) {
-		Query q = pm
-				.newQuery(
+		Query q = pm.newQuery(
 						SourceAwareMessage.class,
 						getEqualsExpression("sourceId", id)
 								+ " && "
