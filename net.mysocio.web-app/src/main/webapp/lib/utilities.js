@@ -100,8 +100,13 @@ function showSources() {
 	showDiv("sources_tree");
 	showDiv("subscriptions_underline");
 	showDiv("subscriptions_title");
+	initSources();
 	//Start refreshing sources when user logs in
-	$("#sources_tree").everyTime("30s", "refreshSources", rereshSourcesAndMarkReadden, 0);
+	$("#sources_tree").everyTime("60s", "refreshSources", refreshSources, 0);
+}
+function refreshSources(){
+	$("#sources_tree").data("treeRefreshInitiated", true);
+	initSources();
 }
 function hideDiv(id) {
 	$("#" + id).css("display", "none");
@@ -126,14 +131,13 @@ function showMainPage() {
 	showSources();
 	$("#upper_link").html($("#settings_link").html());
 	$("#data_container").html("<div id='filler' class='filler'></div>");
-	
+	$("#filler").css("height", $("#data_container").innerHeight() - 10);
 }
 function openMainPage() {
 	resizeTabs();
 	hideTabs();
 	initMessagesContainer();
 	showSources();
-	initSources();
 }
 function initMessagesContainer() {
 	var messageContainer = $("#data_container");
@@ -192,24 +196,7 @@ function messageScroll() {
 	});
 }
 function markMessageReadden(id) {
-	var messages = $("#data_container").data("readdenMessages");
-	if (messages != undefined){
-		messages += "," + id;
-		$("#data_container").data("readdenMessages", messages);
-	}else{
-		$("#data_container").data("readdenMessages", id);
-	}
-	
-}
-function rereshSourcesAndMarkReadden(){
-	var messages = $("#data_container").data("readdenMessages");
-	$("#data_container").data("readdenMessages", "");
-	if (messages == undefined){
-		messages = "";
-	}
-	$("#sources_tree").data("treeRefreshInitiated", true);
-	$.post("execute?command=markMessagesReaden&messagesIds=" + messages, {},
-			initSourcesData, "json").error(onFailure);
+	$.post("execute?command=markMessagesReaden&messagesIds=" + id).error(onFailure);
 }
 function initPage() {
 	if ($("#login_center_div").size() != 0) {
@@ -231,8 +218,11 @@ function getMessages(id) {
 	$(".Message").remove();
 	$.post("execute?command=getMessages&sourceId=" + id).success(
 			function(data) {
-				$("#filler").before(data);
+				$(data).sort(sortAlpha).insertBefore("#filler");
 			}).error(onFailure);
+}
+function sortAlpha(a,b){  
+    return $(a).find(".LongDate").first().html() < $(b).find(".LongDate").first().html() ? 1 : -1;  
 }
 function showAccounts() {
 	openUrlInDiv("#data_container", "execute?command=getAccounts", []);

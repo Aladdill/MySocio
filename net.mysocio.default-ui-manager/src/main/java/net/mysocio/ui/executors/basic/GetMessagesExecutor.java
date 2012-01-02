@@ -31,11 +31,12 @@ public class GetMessagesExecutor implements ICommandExecutor {
 		StringBuffer output = new StringBuffer();
 		List<? extends IMessage> messages = getMessages(connectionData);
 		AbstractUiManager uiManager = new DefaultUiManager();
-		DateFormat formatter = DateFormat.getDateInstance(DateFormat.LONG, connectionData.getLocale());
+		DateFormat formatter = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, connectionData.getLocale());
 		String messagePage = uiManager.getPage(new DefaultMessage(),connectionData.getUser());
 		for (IMessage message : messages) {
 			String pageHtml = message.replacePlaceholders(messagePage);
 			String date = formatter.format(new Date(message.getDate()));
+			pageHtml = pageHtml.replace("date.long", Long.toString(message.getDate()));
 			pageHtml = pageHtml.replace("message.date", date);
 			output.append(pageHtml);
 		}

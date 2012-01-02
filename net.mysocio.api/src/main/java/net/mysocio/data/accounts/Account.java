@@ -23,7 +23,7 @@ import net.mysocio.data.contacts.Contact;
  *
  */
 @PersistenceCapable
-@Inheritance(strategy=InheritanceStrategy.SUBCLASS_TABLE)
+@Inheritance(customStrategy="complete-table")
 public abstract class Account extends SocioObject implements ITagedObject{
 	/**
 	 * 

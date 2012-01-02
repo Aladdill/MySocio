@@ -23,4 +23,10 @@ public class RssSourceManager implements ISourceManager {
 			throws Exception {
 		return DataManagerFactory.getDataManager().getSourceAwareMessages(source.getId(), from, to);
 	}
+
+	public List<IMessage> getFirstBulkOfMessages(ISource source)
+			throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

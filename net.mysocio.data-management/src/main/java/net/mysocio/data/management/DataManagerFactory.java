@@ -19,7 +19,6 @@ public class DataManagerFactory {
 	public static void init(String database){
 		if (pmf == null) {
 			// Create a PersistenceManagerFactory for this datastore
-			System.setProperty("sun.net.http.allowRestrictedHeaders", "true");
 			pmf = JDOHelper.getPersistenceManagerFactory(database);
 		}
 	}

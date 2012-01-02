@@ -18,7 +18,7 @@ import net.mysocio.data.NamedObject;
  *
  */
 @PersistenceCapable
-@Inheritance(strategy=InheritanceStrategy.SUBCLASS_TABLE)
+@Inheritance(customStrategy="complete-table")
 public abstract class Contact extends NamedObject implements IContact {
 	/**
 	 * 

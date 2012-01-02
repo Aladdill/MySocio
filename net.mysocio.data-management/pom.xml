@@ -41,6 +41,11 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
+			<groupId>net.sf.ehcache</groupId>
+			<artifactId>ehcache-core</artifactId>
+			<version>2.5.0</version>
+		</dependency>
+		<dependency>
 			<groupId>rome</groupId>
 			<artifactId>rome</artifactId>
 			<version>0.8</version>

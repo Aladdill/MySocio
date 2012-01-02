@@ -42,19 +42,53 @@
 			<id>apache.m2.repo</id>
 			<name>Apache Maven2 Repository</name>
 			<url>http://people.apache.org/repo/m2-ibiblio-rsync-repository</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
 		</repository>
 		<repository>
 			<id>DataNucleus_Repos2</id>
 			<name>DataNucleus Repository</name>
 			<url>http://www.datanucleus.org/downloads/maven2</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
 		</repository>
 		<repository>
 			<id>google-api-services</id>
 			<url>http://mavenrepo.google-api-java-client.googlecode.com/hg</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
 		</repository>
 		<repository>
 			<id>mandubian-mvn</id>
 			<url>http://mandubian-mvn.googlecode.com/svn/trunk/mandubian-mvn/repository</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>sourceforge</id>
+			<url>http://oss.sonatype.org/content/groups/sourceforge/</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
 		</repository>
 	</repositories>
 	<pluginRepositories>
@@ -76,8 +110,7 @@
 		<module>net.mysocio.google-pack</module>
 		<module>net.mysocio.test-pack</module>
 		<module>net.mysocio.default-ui-manager</module>
-		<!-- <module>org.katkov.lj-api</module>
-		<module>net.mysocio.lj-source</module> -->
+		<!-- <module>org.katkov.lj-api</module> <module>net.mysocio.lj-source</module> -->
 		<module>net.mysocio.rss-source</module>
 		<module>net.mysocio.web-app</module>
 		<!-- <module>org.ljtoolkit.ljtoolkit</module> -->

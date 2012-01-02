@@ -45,13 +45,11 @@ public interface IDataManager {
 	
 	public ISource addSourceToUser(SocioUser user, List<SocioTag> accTags, ISource source);
 	
-	public ISource addSourceToUser(SocioUser user, ISource source);
-	
 	public IMessage createMessage(IMessage message);
 	
 	public List<IMessage> getMessages(List<String> ids);
 	
-	public ISocioObject getObject(Class<?> clazz, String id);
+	public ISocioObject getObject(String id);
 	
 	public<T extends ISocioObject> List<T> getObjects(Class<?> T);
 	

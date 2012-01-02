@@ -4,7 +4,6 @@
 package net.mysocio.data.management;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -14,10 +13,13 @@ import net.mysocio.connection.readers.ISourceManager;
 import net.mysocio.connection.readers.Source;
 import net.mysocio.connection.writers.IDestination;
 import net.mysocio.data.IMessagesManager;
-import net.mysocio.data.ReferenceCountObject;
 import net.mysocio.data.SocioTag;
 import net.mysocio.data.SocioUser;
+import net.mysocio.data.messages.GeneralMessage;
 import net.mysocio.data.messages.IMessage;
+import net.sf.ehcache.Cache;
+import net.sf.ehcache.CacheManager;
+import net.sf.ehcache.Element;
 
 /**
  * @author Aladdin
@@ -25,7 +27,6 @@ import net.mysocio.data.messages.IMessage;
  */
 public class MessagesManager implements IMessagesManager {
 	private static MessagesManager instance = new MessagesManager();
-	private static Map<String, ReferenceCountObject<IMessage>> cachedMessages  = new HashMap<String, ReferenceCountObject<IMessage>>();
 	
 	private MessagesManager(){}
 
@@ -72,17 +73,8 @@ public class MessagesManager implements IMessagesManager {
 		List<String> stored = new ArrayList<String>();
 		for (IMessage message : messages) {
 			IMessage savedMessage = DataManagerFactory.getDataManager().createMessage(message);
-			String id = savedMessage.getId();
-			ReferenceCountObject<IMessage> cachedMessage = cachedMessages.get(id);
-			if (cachedMessage != null){
-				cachedMessage.setCounter(cachedMessage.getCounter() + 1);
-			}else{
-				cachedMessage = new ReferenceCountObject<IMessage>();
-				cachedMessage.setCounter(1);
-				cachedMessage.setObject(savedMessage);
-			}
-			cachedMessages.put(id, cachedMessage);
-			stored.add(id);
+			cacheMessage(savedMessage);
+			stored.add(savedMessage.getId());
 		}
 		return stored;
 	}
@@ -91,7 +83,13 @@ public class MessagesManager implements IMessagesManager {
 		List<IMessage> messages = new ArrayList<IMessage>();
 		List<String> unreadMessages = user.getUnreadMessages();
 		for (String id : unreadMessages) {
-			messages.add(cachedMessages.get(id).getObject());
+			IMessage message = getCacheMessage(id);
+//			if (message != null){
+//				messages.add(message);
+//			}else{
+				message = (GeneralMessage)DataManagerFactory.getDataManager(user).getObject(id);
+				messages.add(message);
+//			}
 		}
 		return messages;
 	}
@@ -103,14 +101,22 @@ public class MessagesManager implements IMessagesManager {
 		String[] ids = messagesId.split(",");
 		for (String id : ids) {
 			user.setMessageReadden(id);
-			ReferenceCountObject<IMessage> cachedMessage = cachedMessages.remove(id);
-			int counter = cachedMessage.getCounter() - 1;
-			if (counter == 0){
-				DataManagerFactory.getDataManager(user).deleteObject(cachedMessage.getObject());
-			}else{
-				cachedMessage.setCounter(counter);
-				cachedMessages.put(id, cachedMessage);
-			}
 		}
+	}
+	private void cacheMessage(IMessage message){
+		CacheManager cm = CacheManager.create();
+		Cache cache = cm.getCache("Messages");
+		Element element = new Element(message.getId(), message);
+		cache.put(element);
+	}
+	
+	private IMessage getCacheMessage(String id){
+		CacheManager cm = CacheManager.create();
+		Cache cache = cm.getCache("Messages");
+		Element element = cache.get(id);
+		if (element == null){
+			return null;
+		}
+		return (IMessage)element.getValue();
 	}
 }

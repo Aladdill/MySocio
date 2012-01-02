@@ -25,12 +25,6 @@ public class MarkMessagesReadenExecutor implements ICommandExecutor{
 		logger.debug("Marking readen message with ids: " + messagesIds);
 		SocioUser user = connectionData.getUser();
 		MessagesManager.getInstance().setMessagesReadden(user, messagesIds);
-		try {
-			MessagesManager.getInstance().updateUnreaddenMessages(user);
-		} catch (Exception e) {
-			logger.error("Can't get unreadden messages", e);
-			throw new  CommandExecutionException(e);
-		}
-		return new GetSourcesExecutor().execute(connectionData);
+		return "";
 	}
 }

@@ -4,6 +4,7 @@
 package net.mysocio.authentication.test;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -53,5 +54,10 @@ public class TestSourceManager implements ISourceManager {
 		message.setTitle("Test message Title " + i);
 		message.setText(DefaultResourcesManager.getResource(new Locale("ru"), "mesage.test.short"));
 		return message;
+	}
+
+	public List<IMessage> getFirstBulkOfMessages(ISource source)
+			throws Exception {
+		return Collections.emptyList();
 	}
 }

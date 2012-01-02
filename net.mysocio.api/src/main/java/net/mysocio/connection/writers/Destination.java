@@ -7,7 +7,7 @@ import javax.jdo.annotations.PersistenceCapable;
 import net.mysocio.data.NamedObject;
 
 @PersistenceCapable
-@Inheritance(strategy=InheritanceStrategy.SUBCLASS_TABLE)
+@Inheritance(customStrategy="complete-table")
 public abstract class Destination extends NamedObject implements IDestination{
 
 	/**

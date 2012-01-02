@@ -3,6 +3,7 @@
  */
 package net.mysocio.data.messages;
 
+import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.PersistenceCapable;
 
 /**
@@ -10,6 +11,7 @@ import javax.jdo.annotations.PersistenceCapable;
  *
  */
 @PersistenceCapable
+@Inheritance(customStrategy="complete-table")
 public abstract class SourceAwareMessage extends GeneralMessage {
 
 	/**

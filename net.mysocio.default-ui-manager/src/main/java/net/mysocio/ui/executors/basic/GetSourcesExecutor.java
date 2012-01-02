@@ -12,6 +12,7 @@ import net.mysocio.data.IConnectionData;
 import net.mysocio.data.SocioTag;
 import net.mysocio.data.SocioUser;
 import net.mysocio.data.management.DefaultResourcesManager;
+import net.mysocio.data.management.MessagesManager;
 import net.mysocio.ui.management.CommandExecutionException;
 import net.mysocio.ui.management.ICommandExecutor;
 
@@ -33,6 +34,12 @@ public class GetSourcesExecutor implements ICommandExecutor {
 	@Override
 	public String execute(IConnectionData connectionManager) throws CommandExecutionException{
 		SocioUser user = connectionManager.getUser();
+		try {
+			MessagesManager.getInstance().updateUnreaddenMessages(user);
+		} catch (Exception e) {
+			logger.error("Can't get unreadden messages", e);
+			throw new  CommandExecutionException(e);
+		}
 		JsonFactory f = new JsonFactory();
 		StringWriter writer = new StringWriter();
 		JsonGenerator jsonGenerator;

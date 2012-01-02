@@ -80,7 +80,7 @@ public class FacebookSourceManager implements IAccountSourceManager {
 		if (element.get("picture") != null){
 			text = "<img alt=\"\" src=\"" + getAttribute(element, "picture") + "\">";
 		}
-		text +=	"</br><a href=\"" + getAttribute(element, "link") +" target=\"_blank\">" + getAttribute(element, "name") + "</a>";
+		text +=	"</br><a href=\"" + getAttribute(element, "link") +"\" target=\"_blank\">" + getAttribute(element, "name") + "</a>";
 		text += getAttribute(element, "message");
 		if (type.equals("link")){
 			text += "</br>" + getAttribute(element, "caption");
@@ -116,5 +116,11 @@ public class FacebookSourceManager implements IAccountSourceManager {
 		FacebookSource fs = (FacebookSource) source;
 		FacebookAccount fa = (FacebookAccount)fs.getAccount();
 		return Collections.emptyMap();
+	}
+
+	public List<IMessage> getFirstBulkOfMessages(ISource source)
+			throws Exception {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

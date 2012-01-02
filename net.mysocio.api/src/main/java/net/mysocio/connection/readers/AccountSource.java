@@ -3,6 +3,7 @@
  */
 package net.mysocio.connection.readers;
 
+import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.PersistenceCapable;
 
 import net.mysocio.data.accounts.Account;
@@ -12,6 +13,7 @@ import net.mysocio.data.accounts.Account;
  *
  */
 @PersistenceCapable
+@Inheritance(customStrategy="complete-table")
 public abstract class AccountSource extends Source {
 	/**
 	 * 

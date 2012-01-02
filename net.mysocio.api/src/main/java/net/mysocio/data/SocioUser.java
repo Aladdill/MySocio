@@ -132,8 +132,10 @@ public class SocioUser extends NamedObject{
 	}
 	
 	public void addAccount(Account account) {
-		this.accounts.add(account);
-		this.addTags(account.getTags());
+		if (!getAccounts().contains(account)){
+			getAccounts().add(account);
+			this.addTags(account.getTags());
+		}
 	}
 
 	/**
@@ -214,8 +216,8 @@ public class SocioUser extends NamedObject{
 	}
 	
 	public void addSource(Source source) {
-		if (!this.sources.contains(source)){
-			this.sources.add(source);
+		if (!getSources().contains(source)){
+			getSources().add(source);
 			this.addTags(source.getTags());
 		}
 	}
@@ -240,7 +242,7 @@ public class SocioUser extends NamedObject{
 	}
 
 	public List<Source> getSources() {
-		return this.sources;
+		return sources;
 	}
 	
 	public List<Destination> getDestinations() {
@@ -248,7 +250,7 @@ public class SocioUser extends NamedObject{
 	}
 	
 	public void addDestination(Destination destination) {
-		this.destinations.add(destination);
+		destinations.add(destination);
 	}
 
 	public void addDestinations(List<? extends Destination> destinations) {

@@ -19,6 +19,7 @@ import net.mysocio.connection.readers.Source;
 import net.mysocio.data.IDataManager;
 import net.mysocio.data.ISocioObject;
 import net.mysocio.data.ITagedObject;
+import net.mysocio.data.SocioObject;
 import net.mysocio.data.SocioTag;
 import net.mysocio.data.SocioUser;
 import net.mysocio.data.accounts.Account;
@@ -133,30 +134,31 @@ public class JdoDataManager implements IDataManager {
 		return source;
 	}
 
-	public ISource addSourceToUser(SocioUser user, ISource source) {
-		Source savedSource = createSource((Source)source);
-		user.addSource(savedSource);
-		return source;
-	}
-
 	/**
 	 * @param account
 	 * @return
 	 */
 	public Account getAccount(Class clazz, String accountUniqueId) {
-		Account object;
 		Query q = pm.newQuery(clazz);
 		q.declareParameters("String id");
 		q.setFilter("accountUniqueId == id");
 		Map args = new HashMap();
 		args.put("id", accountUniqueId);
 		q.setUnique(true);
-		object = (Account)q.executeWithMap(args);
+		Account object = (Account)q.executeWithMap(args);
 		return object;
 	}
 
-	public ISocioObject getObject(Class<?> clazz, String id) {
-		return (ISocioObject)pm.getObjectById(clazz, id);
+	public ISocioObject getObject(String id) {
+		Extent e = pm.getExtent(SocioObject.class, true);
+		Query  q = pm.newQuery(e);
+		q.declareParameters("String objectId");
+		q.setFilter("id == objectId");
+		Map args = new HashMap();
+		args.put("objectId", id);
+		q.setUnique(true);
+		ISocioObject object = (ISocioObject)q.executeWithMap(args);
+		return object;
 	}
 
 	private String getEqualsExpression(String fieldName, String value) {

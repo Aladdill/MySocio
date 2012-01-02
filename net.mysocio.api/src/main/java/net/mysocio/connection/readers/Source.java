@@ -18,7 +18,7 @@ import net.mysocio.data.SocioTag;
  *
  */
 @PersistenceCapable
-@Inheritance(strategy=InheritanceStrategy.SUBCLASS_TABLE)
+@Inheritance(customStrategy="complete-table")
 public abstract class Source extends NamedObject implements ISource {
 	/**
 	 * 

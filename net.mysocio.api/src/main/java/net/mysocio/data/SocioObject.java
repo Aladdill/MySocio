@@ -16,7 +16,7 @@ import javax.jdo.annotations.Persistent;
  *
  */
 @PersistenceCapable
-@Inheritance(strategy=InheritanceStrategy.SUBCLASS_TABLE)
+@Inheritance(customStrategy="complete-table")
 public abstract class SocioObject implements ISocioObject{
 	/**
 	 * 

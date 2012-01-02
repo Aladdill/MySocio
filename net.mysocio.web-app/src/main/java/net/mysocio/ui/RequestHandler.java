@@ -31,13 +31,14 @@ public class RequestHandler extends AbstractHandler {
 	protected String handleRequest(HttpServletRequest request,HttpServletResponse response) throws CommandExecutionException {
 		String commandOutput;
 		IDataManager dataManager = DataManagerFactory.getDataManager();
+		SocioUser user = null;
 		try {
 			String command = request.getParameter("command");
 			IConnectionData connectionData = new ConnectionData(request);
 			String userId = (String) request.getSession().getAttribute("user");
-			SocioUser user = null;
+			
 			if (userId != null) {
-				user = (SocioUser)dataManager.getObject(SocioUser.class, userId);
+				user = (SocioUser)dataManager.getObject(userId);
 				connectionData.setUser(user);
 			}
 			ICommandInterpreter commandInterpreter = CommandIterpreterFactory.getCommandInterpreter(connectionData);
@@ -55,6 +56,16 @@ public class RequestHandler extends AbstractHandler {
 				}
 			}
 		} catch (Exception e) {
+			if (user != null) {
+				if (JDOHelper.isDirty(user)){
+					DataManagerFactory.getDataManager(user).persistObject(user);
+				}
+				request.getSession().setAttribute("user", user.getId());
+				if (logger.isDebugEnabled()) {
+					logger.debug("User was inserted into session with name "
+							+ user.getName());
+				}
+			}
 			throw new CommandExecutionException(e);
 		}
 		return commandOutput;

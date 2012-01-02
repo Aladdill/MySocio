@@ -24,7 +24,7 @@ public class RssMessagesRidingBean implements IRssMessagesRidingBean {
     	List<SyndEntryImpl> entries = feed.getEntries();
     	List<IMessage> messages = new ArrayList<IMessage>();
     	if (logger.isDebugEnabled()){
-			logger.debug("Got " + entries.size() + " messages for feed: " + feed.getUri());
+			logger.debug("Got " + entries.size() + " messages for feed: " + feed.getTitle());
 		}
     	for (SyndEntryImpl entry : entries) {
     		RssMessage message = new RssMessage();

@@ -39,13 +39,15 @@ public class MySocioContextListener implements ServletContextListener {
 	 */
 	@Override
 	public void contextInitialized(ServletContextEvent arg0) {
+		System.setProperty("sun.net.http.allowRestrictedHeaders", "true");
+		System.setProperty("file.encoding", "UTF-8");
+//		System.getProperties().put("proxySet", "true");
+//      System.getProperties().put("proxyHost", "web-proxy.isr.hp.com");
+//      System.getProperties().put("proxyPort", "8080");
 		DataManagerFactory.init("non-transactional");
 		ServletContext servletContext = arg0.getServletContext();
 		DefaultResourcesManager.init(servletContext.getRealPath(""));
 		AuthenticationResourcesManager.init(servletContext.getRealPath(""));
-		System.getProperties().put("proxySet", "true");
-        System.getProperties().put("proxyHost", "web-proxy.isr.hp.com");
-        System.getProperties().put("proxyPort", "8080");
         CamelContextManager.initContext();
         AccountsManager.getInstance().addAccount("google", new GoogleAuthenticationManager());
         AccountsManager.getInstance().addAccount("facebook", new FacebookAuthenticationManager());

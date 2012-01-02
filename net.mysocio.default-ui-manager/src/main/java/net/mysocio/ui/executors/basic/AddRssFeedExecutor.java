@@ -3,6 +3,7 @@
  */
 package net.mysocio.ui.executors.basic;
 
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +24,6 @@ import org.slf4j.LoggerFactory;
 
 import com.sun.syndication.feed.synd.SyndFeed;
 import com.sun.syndication.io.SyndFeedInput;
-import com.sun.syndication.io.XmlReader;
 
 /**
  * @author Aladdin
@@ -40,7 +40,7 @@ public class AddRssFeedExecutor implements ICommandExecutor {
 		SyndFeedInput input = new SyndFeedInput();
 		SyndFeed feed = null;
 		try {
-			feed = input.build(new XmlReader(new URL(url)));
+			feed = input.build(new InputStreamReader(new URL(url).openStream(), "UTF-8"));
 		} catch (Exception e) {
 			logger.error("Error verifying feed" + url, e);
 			throw new NotValidRssUrlException("URL " + url + "is not a valid RSS url.", e);
@@ -50,7 +50,7 @@ public class AddRssFeedExecutor implements ICommandExecutor {
 		source.setName(feed.getTitle());
 		SocioUser user = connectionData.getUser();
 		IDataManager dataManager = DataManagerFactory.getDataManager(user);
-		dataManager.addSourceToUser(user, source);
+		RssSource savedSource = (RssSource)dataManager.createSource(source);
 		List<IRssMessagesRidingBean> beans = new ArrayList<IRssMessagesRidingBean>();
 		RssMessagesRidingBean bean = new RssMessagesRidingBean();
 		bean.setId(source.getId());
@@ -58,6 +58,7 @@ public class AddRssFeedExecutor implements ICommandExecutor {
 		beans.add(bean);
 		try {
 			CamelContextManager.addRssRoutes(beans);
+			user.addSource(savedSource);
 		} catch (Exception e) {
 			logger.error("Error adding feed" + url, e);
 			throw new CommandExecutionException("Error adding feed" + url, e);
