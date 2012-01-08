@@ -20,7 +20,7 @@ import net.mysocio.ui.data.objects.DefaultLoginPage;
  */
 public class DefaultUiManager extends AbstractUiManager {
 	public String getPage(IUiObject page, SocioUser user) {
-		Map<String, IUiObject> userObjects = DataManagerFactory.getDataManager().getUserUiObjects(user);
+		Map<String, IUiObject> userObjects = DataManagerFactory.getDataManager(user).getUserUiObjects(user);
 		return getUiObjectHtml(page, userObjects , new Locale(user.getLocale()));
 	}
 

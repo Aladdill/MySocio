@@ -15,40 +15,14 @@
 			<version>${mysocio.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.datanucleus</groupId>
-			<artifactId>datanucleus-core</artifactId>
-			<version>${datanucleus-version}</version>
-		</dependency>
-		<dependency>
-			<groupId>javax.jdo</groupId>
-			<artifactId>jdo-api</artifactId>
-			<version>3.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.camel</groupId>
-			<artifactId>camel-rss</artifactId>
-			<version>${camel-version}</version>
-		</dependency>
-		<dependency>
 			<groupId>org.apache.camel</groupId>
 			<artifactId>camel-core</artifactId>
 			<version>${camel-version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.xmlrpc</groupId>
-			<artifactId>xmlrpc-common</artifactId>
-			<version>3.1.3</version>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
 			<groupId>net.sf.ehcache</groupId>
 			<artifactId>ehcache-core</artifactId>
 			<version>2.5.0</version>
-		</dependency>
-		<dependency>
-			<groupId>rome</groupId>
-			<artifactId>rome</artifactId>
-			<version>0.8</version>
 		</dependency>
 	</dependencies>
 </project>

@@ -3,13 +3,10 @@
  */
 package net.mysocio.data.ui;
 
+import java.util.HashMap;
 import java.util.Map;
 
-import javax.jdo.annotations.Join;
-import javax.jdo.annotations.Key;
 import javax.jdo.annotations.PersistenceCapable;
-import javax.jdo.annotations.Value;
-
 import net.mysocio.data.SocioObject;
 
 /**
@@ -22,15 +19,13 @@ public class UserUiObjects extends SocioObject {
 	 * 
 	 */
 	private static final long serialVersionUID = -4563232180995547625L;
-	private Long userId;
-	@Join
-	@Key(types=String.class)
-    @Value(types=UiObject.class)
-	private Map<String, IUiObject> userUiObjects;
-	public Long getUserId() {
+	private String userId;
+	private Map<String, IUiObject> userUiObjects = new HashMap<String, IUiObject>();
+	
+	public String getUserId() {
 		return userId;
 	}
-	public void setUserId(Long userId) {
+	public void setUserId(String userId) {
 		this.userId = userId;
 	}
 	public Map<String, IUiObject> getUserUiObjects() {
@@ -38,5 +33,8 @@ public class UserUiObjects extends SocioObject {
 	}
 	public void setUserUiObjects(Map<String, IUiObject> userUiObjects) {
 		this.userUiObjects = userUiObjects;
-	} 
+	}
+	public void addUserUiObject(IUiObject object){
+		this.userUiObjects.put(object.getCategory(), object);
+	}
 }

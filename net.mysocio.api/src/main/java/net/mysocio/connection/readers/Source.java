@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.jdo.annotations.Inheritance;
-import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 
 import net.mysocio.data.NamedObject;
@@ -49,4 +48,10 @@ public abstract class Source extends NamedObject implements ISource {
 	public void setTags(List<SocioTag> tags) {
 		this.tags = tags;
 	}
+	
+	public void addTag(SocioTag tag) {
+		this.tags.add(tag);
+	}
+	
+	public abstract void createRoute(String to) throws Exception;
 }

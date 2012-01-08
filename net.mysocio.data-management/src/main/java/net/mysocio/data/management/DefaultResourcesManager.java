@@ -8,7 +8,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -29,6 +28,7 @@ import org.slf4j.LoggerFactory;
 public class DefaultResourcesManager {
 	private static final Logger logger = LoggerFactory.getLogger(DefaultResourcesManager.class);
 	private static String servletContextPath;
+	private static final String PROPERTIES_FOLDER = File.separator + "properties" + File.separator;
 	private static Map<Locale, ResourceBundle> bundles;
 	public static void init(String contextPath){
 		if (servletContextPath == null){
@@ -46,7 +46,7 @@ public class DefaultResourcesManager {
 	private static PropertyResourceBundle createBundle(Locale locale){
 		PropertyResourceBundle propertyResourceBundle = createDefaultBundle();
 		try {
-			propertyResourceBundle = new PropertyResourceBundle(new InputStreamReader(new FileInputStream(servletContextPath + "/properties/textResources_" + locale.getLanguage() + ".properties"), "UTF8"));
+			propertyResourceBundle = new PropertyResourceBundle(new FileInputStream(servletContextPath + PROPERTIES_FOLDER + "textResources_" + locale.getLanguage() + ".properties"));
 		} catch (Exception e) {
 			logger.error("Coudn't get bundle for locale " + locale.getLanguage());
 		}
@@ -56,7 +56,7 @@ public class DefaultResourcesManager {
 	private static PropertyResourceBundle createDefaultBundle(){
 		PropertyResourceBundle propertyResourceBundle = null;
 		try {
-			propertyResourceBundle = new PropertyResourceBundle(new InputStreamReader(new FileInputStream(servletContextPath + "/properties/textResources.properties"), "UTF8"));
+			propertyResourceBundle = new PropertyResourceBundle(new FileInputStream(servletContextPath + PROPERTIES_FOLDER + "textResources.properties"));
 		} catch (Exception e) {
 			logger.error("Coudn't get bundle for default locale.");
 		}
@@ -87,7 +87,7 @@ public class DefaultResourcesManager {
 		return getResource(new Locale(user.getLocale()), resource);
 	}
 	public static String getPage(String pageName){
-		String filepath = servletContextPath + "/pages/" + pageName;
+		String filepath = servletContextPath + File.separator + "pages" + File.separator + pageName;
 		String fileContent = "";
 		try {
 			fileContent = readFile(filepath);
@@ -108,8 +108,8 @@ public class DefaultResourcesManager {
 	public static boolean isMailInList(String userMail) {
 		Properties mails = new Properties();
 		try {
-			String filepath = servletContextPath + "/resources/mails.list.properties";
-			mails.load(new FileReader(new File(filepath)));
+			String filepath = servletContextPath + File.separator + "resources" + File.separator + "mails.list.properties";
+			mails.load(new FileInputStream(filepath));
 			String[] mailsList = ((String)mails.get("mails")).split(",");
 			for (String mail : mailsList) {
 				if (mail.equals(userMail)){

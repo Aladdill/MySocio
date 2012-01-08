@@ -4,11 +4,8 @@
 package net.mysocio.authentication.google;
 
 
-import java.util.List;
-
 import net.mysocio.authentication.AbstractOauth2Manager;
 import net.mysocio.data.accounts.Account;
-import net.mysocio.data.accounts.google.GoogleAccount;
 
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonParser;
@@ -18,13 +15,9 @@ import org.scribe.model.OAuthRequest;
 import org.scribe.model.Response;
 import org.scribe.model.Token;
 import org.scribe.model.Verb;
-import org.scribe.oauth.OAuthService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.gdata.data.ParseSource;
-import com.google.gdata.data.Person;
-import com.google.gdata.data.contacts.ContactFeed;
 
 /**
  * @author Aladdin
@@ -50,17 +43,18 @@ public class GoogleAuthenticationManager extends AbstractOauth2Manager{
 		 OAuthRequest request = new OAuthRequest(Verb.GET, "https://www.google.com/m8/feeds/");
 //		    service.signRequest(accessToken, request);
 		Response response = request.send();
-		ContactFeed resultFeed = new ContactFeed(ContactFeed.readFeed(new ParseSource(response.getStream())));
-		logger.debug("got contacts with title" + resultFeed.getTitle().getPlainText());
-		List<Person> authors = resultFeed.getAuthors();
-		GoogleAccount account = new GoogleAccount();
-		account.setToken(accessToken.getToken());
-		account.setRefreshToken(getRefreshToken(accessToken.getRawResponse()));
-		for (Person person : authors) {
-			account.setUserName(person.getName());
-			account.setAccountUniqueId(person.getEmail());
-		}
-		return account;
+//		ContactFeed resultFeed = new ContactFeed(ContactFeed.readFeed(new ParseSource(response.getStream())));
+//		logger.debug("got contacts with title" + resultFeed.getTitle().getPlainText());
+//		List<Person> authors = resultFeed.getAuthors();
+//		GoogleAccount account = new GoogleAccount();
+//		account.setToken(accessToken.getToken());
+//		account.setRefreshToken(getRefreshToken(accessToken.getRawResponse()));
+//		for (Person person : authors) {
+//			account.setUserName(person.getName());
+//			account.setAccountUniqueId(person.getEmail());
+//		}
+//		return account;
+		return null;
 	}
 	
 	private String getRefreshToken(String response) throws Exception{

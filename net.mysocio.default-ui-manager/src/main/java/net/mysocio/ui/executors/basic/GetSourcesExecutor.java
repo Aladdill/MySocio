@@ -12,7 +12,6 @@ import net.mysocio.data.IConnectionData;
 import net.mysocio.data.SocioTag;
 import net.mysocio.data.SocioUser;
 import net.mysocio.data.management.DefaultResourcesManager;
-import net.mysocio.data.management.MessagesManager;
 import net.mysocio.ui.management.CommandExecutionException;
 import net.mysocio.ui.management.ICommandExecutor;
 
@@ -34,12 +33,6 @@ public class GetSourcesExecutor implements ICommandExecutor {
 	@Override
 	public String execute(IConnectionData connectionManager) throws CommandExecutionException{
 		SocioUser user = connectionManager.getUser();
-		try {
-			MessagesManager.getInstance().updateUnreaddenMessages(user);
-		} catch (Exception e) {
-			logger.error("Can't get unreadden messages", e);
-			throw new  CommandExecutionException(e);
-		}
 		JsonFactory f = new JsonFactory();
 		StringWriter writer = new StringWriter();
 		JsonGenerator jsonGenerator;
@@ -118,7 +111,7 @@ public class GetSourcesExecutor implements ICommandExecutor {
 	
 	private void addTagNode(JsonGenerator jsonGenerator, SocioTag tag, SocioUser user) throws Exception{
 		jsonGenerator.writeStartObject();
-		String tagId = tag.getId();
+		String tagId = tag.getUniqueId();
 		int unreadMessagesNum = user.getUnreadMessagesNum(tagId);
 		addNodeData(jsonGenerator, DefaultResourcesManager.getResource(new Locale(user.getLocale()), tag.getValue()), tagId, DefaultResourcesManager.getResource(new Locale(user.getLocale()), tag.getIconType()), unreadMessagesNum);
 		jsonGenerator.writeEndObject();

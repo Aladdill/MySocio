@@ -5,14 +5,14 @@ package net.mysocio.data.messages.rss;
 
 import javax.jdo.annotations.PersistenceCapable;
 
-import net.mysocio.data.messages.SourceAwareMessage;
+import net.mysocio.data.messages.GeneralMessage;
 
 /**
  * @author Aladdin
  *
  */
 @PersistenceCapable(detachable="true")
-public class RssMessage extends SourceAwareMessage {
+public class RssMessage extends GeneralMessage {
 	/**
 	 * 
 	 */

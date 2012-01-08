@@ -3,15 +3,14 @@
  */
 package net.mysocio.connection.rss;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.jdo.annotations.PersistenceCapable;
 
-import net.mysocio.connection.readers.ISourceManager;
 import net.mysocio.connection.readers.Source;
-import net.mysocio.data.SocioTag;
+import net.mysocio.data.management.CamelContextManager;
 import net.mysocio.data.messages.rss.RssMessage;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Aladdin
@@ -19,7 +18,7 @@ import net.mysocio.data.messages.rss.RssMessage;
  */
 @PersistenceCapable(detachable="true")
 public class RssSource extends Source {
-
+	static final Logger logger = LoggerFactory.getLogger(RssSource.class);
 	/**
 	 * 
 	 */
@@ -29,20 +28,12 @@ public class RssSource extends Source {
 		return RssMessage.class;
 	}
 
-	public ISourceManager getManager() {
-		return new RssSourceManager();
-	}
-
-	public List<SocioTag> getDefaultTags() {
-		List<SocioTag> tags = new ArrayList<SocioTag>();
-		SocioTag tag = new SocioTag();
-		tag.setIconType("rss.icon");
-		tag.setValue(getName());
-		tags.add(tag);
-		SocioTag tag1 = new SocioTag();
-		tag1.setIconType("rss.icon");
-		tag1.setValue("RSS");
-		tags.add(tag1);
-		return tags;
+	public void createRoute(String to) throws Exception {
+		if (logger.isDebugEnabled()){
+			logger.debug("Creating route for RSS feed on url" + getUrl());
+		}
+		RssMessageProcessor processor = new RssMessageProcessor();
+		processor.setTo(to);
+		CamelContextManager.addRoute("rss:" + getUrl() + "?consumer.delay=2000", processor , null);
 	}
 }

@@ -5,17 +5,11 @@ package net.mysocio.ui.executors.basic;
 
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 import net.mysocio.connection.rss.RssSource;
 import net.mysocio.data.IConnectionData;
-import net.mysocio.data.IDataManager;
 import net.mysocio.data.SocioUser;
-import net.mysocio.data.management.CamelContextManager;
-import net.mysocio.data.management.DataManagerFactory;
-import net.mysocio.data.management.IRssMessagesRidingBean;
-import net.mysocio.data.messages.rss.RssMessagesRidingBean;
+import net.mysocio.data.management.SourcesManager;
 import net.mysocio.ui.management.CommandExecutionException;
 import net.mysocio.ui.management.ICommandExecutor;
 
@@ -34,7 +28,6 @@ public class AddRssFeedExecutor implements ICommandExecutor {
 	/* (non-Javadoc)
 	 * @see net.mysocio.ui.management.ICommandExecutor#execute(net.mysocio.data.IConnectionData)
 	 */
-	@Override
 	public String execute(IConnectionData connectionData) throws CommandExecutionException{
 		String url = connectionData.getRequestParameter("url");
 		SyndFeedInput input = new SyndFeedInput();
@@ -49,19 +42,11 @@ public class AddRssFeedExecutor implements ICommandExecutor {
 		source.setUrl(url);
 		source.setName(feed.getTitle());
 		SocioUser user = connectionData.getUser();
-		IDataManager dataManager = DataManagerFactory.getDataManager(user);
-		RssSource savedSource = (RssSource)dataManager.createSource(source);
-		List<IRssMessagesRidingBean> beans = new ArrayList<IRssMessagesRidingBean>();
-		RssMessagesRidingBean bean = new RssMessagesRidingBean();
-		bean.setId(source.getId());
-		bean.setUrl(source.getUrl());
-		beans.add(bean);
 		try {
-			CamelContextManager.addRssRoutes(beans);
-			user.addSource(savedSource);
+			SourcesManager.addSourceToUser(user, source);
 		} catch (Exception e) {
-			logger.error("Error adding feed" + url, e);
-			throw new CommandExecutionException("Error adding feed" + url, e);
+			logger.error("Source cuoldn't be added to user.", e);
+			throw new CommandExecutionException(e);
 		}
 		return new GetRssFeedsExecutor().execute(connectionData);
 	}

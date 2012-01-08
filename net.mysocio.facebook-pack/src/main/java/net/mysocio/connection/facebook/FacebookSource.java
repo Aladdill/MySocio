@@ -3,14 +3,11 @@
  */
 package net.mysocio.connection.facebook;
 
-import java.util.Collections;
-import java.util.List;
-
 import javax.jdo.annotations.PersistenceCapable;
 
 import net.mysocio.connection.readers.AccountSource;
-import net.mysocio.connection.readers.ISourceManager;
-import net.mysocio.data.SocioTag;
+import net.mysocio.data.accounts.facebook.FacebookAccount;
+import net.mysocio.data.management.CamelContextManager;
 import net.mysocio.data.messages.facebook.FacebookMessage;
 
 /**
@@ -28,11 +25,13 @@ public class FacebookSource extends AccountSource {
 		return FacebookMessage.class;
 	}
 
-	public ISourceManager getManager() {
-		return FacebookSourceManager.getInstance();
-	}
-
-	public List<SocioTag> getDefaultTags() {
-		return Collections.emptyList();
+	public void createRoute(String to) throws Exception {
+		FacebookInputProcessor processor = new FacebookInputProcessor();
+		processor.setTo(to);
+		FacebookAccount account = (FacebookAccount)getAccount();
+		processor.setToken(account.getToken());
+		processor.setUsername(account.getUserName());
+		processor.setAccountId(account.getAccountUniqueId());
+		CamelContextManager.addRoute("timer://" + getId() + "?fixedRate=true&period=60s", processor, null);
 	}
 }

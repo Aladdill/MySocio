@@ -6,7 +6,6 @@ package net.mysocio.data.contacts;
 import java.util.List;
 
 import javax.jdo.annotations.Inheritance;
-import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 
 import net.mysocio.connection.readers.ISource;

@@ -18,15 +18,12 @@ import net.mysocio.connection.readers.ISource;
 import net.mysocio.connection.readers.Source;
 import net.mysocio.data.IDataManager;
 import net.mysocio.data.ISocioObject;
-import net.mysocio.data.ITagedObject;
 import net.mysocio.data.SocioObject;
 import net.mysocio.data.SocioTag;
 import net.mysocio.data.SocioUser;
 import net.mysocio.data.accounts.Account;
-import net.mysocio.data.contacts.Contact;
 import net.mysocio.data.messages.GeneralMessage;
 import net.mysocio.data.messages.IMessage;
-import net.mysocio.data.messages.SourceAwareMessage;
 import net.mysocio.data.ui.IUiObject;
 import net.mysocio.data.ui.UiObject;
 import net.mysocio.data.ui.UserUiObjects;
@@ -53,12 +50,16 @@ public class JdoDataManager implements IDataManager {
 
 	public Transaction startTransaction() {
 		Transaction tx = pm.currentTransaction();
-		tx.begin();
+		if (!tx.isActive()){
+			tx.begin();
+		}
 		return tx;
 	}
 
 	public void endTransaction(Transaction tx) {
-		tx.commit();
+		if (tx.isActive()){
+			tx.commit();
+		}
 	}
 	public void rollBackTransaction(Transaction tx) {
 		if (tx.isActive()) {
@@ -81,7 +82,7 @@ public class JdoDataManager implements IDataManager {
 	 * net.mysocio.data.management.IDataManager#createUser(java.lang.String,
 	 * java.lang.String)
 	 */
-	public SocioUser getUser(Account account, Locale locale) {
+	public SocioUser getUser(Account account, Locale locale) throws Exception {
 		String userName = account.getUserName();
 		logger.debug("Getting user " + userName + " for "
 				+ account.getAccountType());
@@ -95,8 +96,15 @@ public class JdoDataManager implements IDataManager {
 		SocioUser user = new SocioUser();
 		user.setName(userName);
 		user.setLocale(locale.getLanguage());
-		saveObject(user);
+		persistObject(user);
+		UserUiObjects uiObjects = new UserUiObjects();
+		userId = user.getId();
+		uiObjects.setUserId(userId);
+		persistObject(uiObjects);
 		addAccountToUser(account, user);
+		DefaultUserMessagesProcessor processor = new DefaultUserMessagesProcessor();
+		processor.setUserId(userId);
+		CamelContextManager.addRoute("activemq:" + userId, processor, null);
 		logger.debug("User created");
 		return user;
 	}
@@ -104,34 +112,28 @@ public class JdoDataManager implements IDataManager {
 	/**
 	 * @param account
 	 * @param user
+	 * @throws Exception 
 	 */
-	public Account addAccountToUser(Account account, SocioUser user) {
+	public Account addAccountToUser(Account account, SocioUser user) throws Exception {
 		account.setUserId(user.getId());
-		saveObject(account);
+		persistObject(account);
 		user.addAccount(account);
 		user.setMainAccount(account);
 		List<Source> sources = account.getSources();
-		List<SocioTag> accTags = account.getTags();
 		for (Source source : sources) {
-			addSourceToUser(user, accTags, source);
+			SocioTag tag = new SocioTag();
+			tag.setValue("facebook.tag");
+			tag.setUniqueId("facebook.tag");
+			tag.setIconType("facebook.icon.general");
+			source.addTag(tag);
+			SocioTag tag1 = new SocioTag();
+			tag1.setValue(account.getUserName());
+			tag1.setUniqueId(account.getAccountUniqueId());
+			tag1.setIconType("facebook.icon.general");
+			source.addTag(tag1);
+			SourcesManager.addSourceToUser(user, source);
 		}
 		return account;
-	}
-
-	/**
-	 * User should be saved after adding source
-	 * 
-	 * @param user
-	 * @param accTags
-	 * @param source
-	 * @return
-	 */
-	public ISource addSourceToUser(SocioUser user, List<SocioTag> accTags,
-			ISource source) {
-		Source savedSource = createSource(source);
-		source.getTags().addAll(accTags);
-		user.addSource(savedSource);
-		return source;
 	}
 
 	/**
@@ -201,7 +203,7 @@ public class JdoDataManager implements IDataManager {
 			throw new DuplicateMySocioObjectException("UI object with name "
 					+ name + " already exists in category " + category);
 		}
-		saveObject(uiObject);
+		persistObject(uiObject);
 	}
 
 	/*
@@ -211,23 +213,8 @@ public class JdoDataManager implements IDataManager {
 	 */
 	public void saveObjects(List<? extends Object> objects) {
 		for (Object object : objects) {
-			saveObject(object);
+			persistObject(object);
 		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * net.mysocio.data.management.IDataManager#saveObject(net.mysocio.data.
-	 * ISocioObject)
-	 */
-	public Object saveObject(Object object) {
-		if (object instanceof ITagedObject) {
-			ITagedObject tagedObj = (ITagedObject) object;
-			tagedObj.getTags().addAll(createTags(tagedObj));
-		}
-		return persistObject(object);
 	}
 
 	public void deleteObject(Object object) {
@@ -241,11 +228,7 @@ public class JdoDataManager implements IDataManager {
 		q.setUnique(true);
 		T objectT = (T) q.execute();
 		if (objectT == null) {
-			if (objectT instanceof ITagedObject) {
-				ITagedObject tagedObj = (ITagedObject) objectT;
-				tagedObj.getTags().addAll(createTags(tagedObj));
-			}
-			objectT = pm.makePersistent(object);
+			objectT = persistObject(object);
 		} else {
 			logger.info("Duplicate object of type: " + T.toString()
 					+ " for query: " + query);
@@ -269,41 +252,15 @@ public class JdoDataManager implements IDataManager {
 		q.setUnique(true);
 		ISource object = (ISource)q.executeWithMap(args);
 		if (object == null){
-			saveObject(source);
-			return (Source)source;
+			return (Source)persistObject(source);
 		}
 		return (Source)object;
-	}
-
-	/**
-	 * We assume, that tags are always created as part of object transaction
-	 * 
-	 * @param object
-	 * @return
-	 */
-	private List<SocioTag> createTags(ITagedObject object) {
-		List<SocioTag> tags = object.getDefaultTags();
-		for (SocioTag tag : tags) {
-			persistObject(tag);
-		}
-		return tags;
 	}
 
 	public IMessage createMessage(IMessage message) {
 		IMessage createdMessage = createUniqueObject(message.getClass(),
 				getEqualsExpression("uniqueId", message.getUniqueId()), message);
 		return createdMessage;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * net.mysocio.data.management.IDataManager#saveContact(net.mysocio.data
-	 * .Contact)
-	 */
-	public void createContact(Contact contact) {
-		saveObject(contact);
 	}
 
 	public Map<String, IUiObject> getUserUiObjects(SocioUser user) {
@@ -325,17 +282,5 @@ public class JdoDataManager implements IDataManager {
 		q.setFilter("objectsIds.contains(id)");
 		q.setOrdering("date ascending");
 		return (List<IMessage>) q.execute(ids);
-	}
-
-	public List<IMessage> getSourceAwareMessages(String id, Long from, Long to) {
-		Query q = pm.newQuery(
-						SourceAwareMessage.class,
-						getEqualsExpression("sourceId", id)
-								+ " && "
-								+ getMoreExpression("date", Long.toString(from))
-								+ " && "
-								+ getLessExpression("date", Long.toString(to)));
-		q.setOrdering("date ascending");
-		return (List<IMessage>) q.execute();
 	}
 }

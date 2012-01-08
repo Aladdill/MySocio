@@ -11,7 +11,6 @@ public class VkontakteAuthenticationManager implements IAuthenticationManager {
 		return null;
 	}
 
-	@Override
 	public Account getAccount(IConnectionData connectionData) throws Exception {
 		// TODO Auto-generated method stub
 		return null;

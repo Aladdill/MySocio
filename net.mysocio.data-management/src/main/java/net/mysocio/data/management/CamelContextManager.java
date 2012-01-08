@@ -3,10 +3,10 @@
  */
 package net.mysocio.data.management;
 
-import java.util.List;
-
 import org.apache.camel.CamelContext;
-import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.Component;
+import org.apache.camel.Processor;
+import org.apache.camel.ProducerTemplate;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,19 +25,14 @@ public class CamelContextManager {
 			logger.error("Failed to start camel context.", e);
 		}
 	}
-	public synchronized static void addRssRoutes(final List<IRssMessagesRidingBean> beans) throws Exception{
-		camelContext.addRoutes(new RouteBuilder() {
-			@Override
-			public void configure() throws Exception {
-				for (IRssMessagesRidingBean bean : beans) {
-		    		if (logger.isDebugEnabled()){
-		    			logger.debug("Creating route for RSS feed on url" + bean.getUrl());
-		    		}
-		    		from("rss:" + bean.getUrl() + "?consumer.delay=2000").
-		            bean(bean);
-				}
-			}
-		});
+	public static void addComponent(String name, Component component){
+		camelContext.addComponent(name,component);
+	}
+	public static void addRoute(String from, Processor processor, String to) throws Exception{
+		camelContext.addRoutes(new GeneralRouteBuilder(from, to, processor));
+	}
+	public static ProducerTemplate getProducerTemplate(){
+		return camelContext.createProducerTemplate();
 	}
 	public static void stopContext(){
 		try {

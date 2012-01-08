@@ -27,23 +27,19 @@ public interface IDataManager {
 
 	public void saveObjects(List<? extends Object> objects);
 
-	public Object saveObject(Object object);
-	
 	public<T> T detachObject(T object);
 	
 	public<T> T persistObject(T object);
 	
 	public void deleteObject(Object object);
 
-	public SocioUser getUser(Account account, Locale locale);
+	public SocioUser getUser(Account account, Locale locale) throws Exception;
 	
 	public Account getAccount(Class clazz, String accountUniqueId);
 
 	public Map<String, IUiObject> getUserUiObjects(SocioUser user);
 
 	public ISource createSource(ISource source);
-	
-	public ISource addSourceToUser(SocioUser user, List<SocioTag> accTags, ISource source);
 	
 	public IMessage createMessage(IMessage message);
 	
@@ -53,9 +49,7 @@ public interface IDataManager {
 	
 	public<T extends ISocioObject> List<T> getObjects(Class<?> T);
 	
-	public Account addAccountToUser(Account account, SocioUser user);
-	
-	public List<IMessage> getSourceAwareMessages(String id, Long from, Long to);
+	public Account addAccountToUser(Account account, SocioUser user) throws Exception;
 	
 	public void flush();
 }

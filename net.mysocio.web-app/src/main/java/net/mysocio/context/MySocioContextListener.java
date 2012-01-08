@@ -7,6 +7,8 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
+import org.apache.activemq.camel.component.ActiveMQComponent;
+
 import net.mysocio.authentication.AuthenticationResourcesManager;
 import net.mysocio.authentication.facebook.FacebookAuthenticationManager;
 import net.mysocio.authentication.google.GoogleAuthenticationManager;
@@ -48,6 +50,7 @@ public class MySocioContextListener implements ServletContextListener {
 		ServletContext servletContext = arg0.getServletContext();
 		DefaultResourcesManager.init(servletContext.getRealPath(""));
 		AuthenticationResourcesManager.init(servletContext.getRealPath(""));
+		CamelContextManager.addComponent("activemq", ActiveMQComponent.activeMQComponent("vm://localhost?broker.persistent=false"));
         CamelContextManager.initContext();
         AccountsManager.getInstance().addAccount("google", new GoogleAuthenticationManager());
         AccountsManager.getInstance().addAccount("facebook", new FacebookAuthenticationManager());

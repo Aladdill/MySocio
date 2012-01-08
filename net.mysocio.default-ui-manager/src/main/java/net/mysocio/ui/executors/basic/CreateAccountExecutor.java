@@ -41,6 +41,10 @@ public class CreateAccountExecutor implements ICommandExecutor {
 			Account account = AccountsManager.getInstance().getAccount(connectionData);
 			IDataManager dataManager;
 			if ("login".equals(flow)) {
+				if (user!=null){
+					logger.error("User already logged in from this IP.");
+					throw new CommandExecutionException("User already logged in from this IP.");
+				}
 				dataManager = DataManagerFactory.getDataManager();
 				user = dataManager.getUser(account,connectionData.getLocale());
 				responseString = DefaultResourcesManager.getPage("closingLoginWindow.html");

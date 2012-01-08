@@ -5,15 +5,9 @@ package net.mysocio.data.management;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
-import net.mysocio.connection.readers.IAccountSourceManager;
-import net.mysocio.connection.readers.ISourceManager;
-import net.mysocio.connection.readers.Source;
 import net.mysocio.connection.writers.IDestination;
 import net.mysocio.data.IMessagesManager;
-import net.mysocio.data.SocioTag;
 import net.mysocio.data.SocioUser;
 import net.mysocio.data.messages.GeneralMessage;
 import net.mysocio.data.messages.IMessage;
@@ -37,46 +31,23 @@ public class MessagesManager implements IMessagesManager {
 		destination.postMessage(message);
 	}
 
-	public void updateUnreaddenMessages(SocioUser user) throws Exception {
-		long checkTime = System.currentTimeMillis();
-		Long lastUpdate = user.getLastUpdate();
-		List<Source> sources = user.getSources();
-		Integer totalMessages = 0;
-		for (Source source : sources) {
-			ISourceManager manager = source.getManager();
-			List<IMessage> lastMessages = manager.getLastMessages(source, lastUpdate, checkTime);
-			List<String> storedMessages = storeMessages(lastMessages);
-			if (manager instanceof IAccountSourceManager) {
-				IAccountSourceManager accManager = (IAccountSourceManager) manager;
-				Map<String, List<String>> messagesByUsers = accManager.orderMessagesByContactsTags(source, lastMessages);
-				Set<String> keySet = messagesByUsers.keySet();
-				for (String tagId : keySet) {
-					user.addUnreadMessages(tagId,messagesByUsers.get(tagId));
-				}
-			}
-			List<SocioTag> tags = source.getTags();
-			int addedMessages = 0;
-			for (SocioTag tag : tags) {
-				addedMessages = Math.max(addedMessages, user.addUnreadMessages(tag.getId(),storedMessages));
-			}
-			totalMessages += addedMessages;
-		}
-		user.setLastUpdate(checkTime);
-		user.addTotalUnreadmessages(totalMessages);
-	}
-
 	public static IMessagesManager getInstance() {
 		return instance;
 	}
 
-	public synchronized List<String> storeMessages(List<IMessage> messages) {
+	public List<String> storeMessages(List<IMessage> messages) {
 		List<String> stored = new ArrayList<String>();
 		for (IMessage message : messages) {
-			IMessage savedMessage = DataManagerFactory.getDataManager().createMessage(message);
-			cacheMessage(savedMessage);
+			IMessage savedMessage = storeMessage(message);
 			stored.add(savedMessage.getId());
 		}
 		return stored;
+	}
+
+	public IMessage storeMessage(IMessage message) {
+		IMessage savedMessage = DataManagerFactory.getDataManager().createMessage(message);
+		cacheMessage(savedMessage);
+		return savedMessage;
 	}
 
 	public List<IMessage> getMessagesForSelectedSource(SocioUser user) {
@@ -84,12 +55,12 @@ public class MessagesManager implements IMessagesManager {
 		List<String> unreadMessages = user.getUnreadMessages();
 		for (String id : unreadMessages) {
 			IMessage message = getCacheMessage(id);
-//			if (message != null){
-//				messages.add(message);
-//			}else{
+			if (message != null){
+				messages.add(message);
+			}else{
 				message = (GeneralMessage)DataManagerFactory.getDataManager(user).getObject(id);
 				messages.add(message);
-//			}
+			}
 		}
 		return messages;
 	}

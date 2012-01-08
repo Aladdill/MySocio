@@ -7,7 +7,6 @@ import java.util.List;
 
 import javax.jdo.annotations.PersistenceCapable;
 
-import net.mysocio.data.ITagedObject;
 import net.mysocio.data.NamedObject;
 
 /**
@@ -15,7 +14,7 @@ import net.mysocio.data.NamedObject;
  *
  */
 @PersistenceCapable
-public abstract class ContactsGroup extends NamedObject implements ITagedObject {
+public abstract class ContactsGroup extends NamedObject{
 	private List<String> contacts;
 
 	/**

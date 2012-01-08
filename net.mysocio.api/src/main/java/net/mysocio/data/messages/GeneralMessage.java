@@ -3,11 +3,14 @@
  */
 package net.mysocio.data.messages;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.jdo.annotations.Inheritance;
-import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 
 import net.mysocio.data.SocioObject;
+import net.mysocio.data.SocioTag;
 
 
 
@@ -25,6 +28,7 @@ public abstract class GeneralMessage extends SocioObject implements IMessage{
 	private String uniqueId =  new String();
 	private String title =  new String();
 	private String text =  new String();
+	private Set<SocioTag> tags = new HashSet<SocioTag>();
 	
 	private long date;
 
@@ -69,6 +73,12 @@ public abstract class GeneralMessage extends SocioObject implements IMessage{
 		message = message.replace("message.link", getUniqueId());
 		return message;
 	}
-	
+
+	public Set<SocioTag> getTags() {
+		return tags;
+	}
+	public void addTag(SocioTag tag){
+		tags.add(tag);
+	}
 	
 }

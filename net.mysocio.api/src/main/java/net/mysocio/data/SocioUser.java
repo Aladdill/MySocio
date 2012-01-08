@@ -4,6 +4,7 @@
 package net.mysocio.data;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -18,6 +19,7 @@ import javax.jdo.annotations.Persistent;
 import net.mysocio.connection.readers.Source;
 import net.mysocio.connection.writers.Destination;
 import net.mysocio.data.accounts.Account;
+import net.mysocio.data.messages.GeneralMessage;
 
 /**
  * @author Aladdin
@@ -85,28 +87,6 @@ public class SocioUser extends NamedObject{
 		return messages.size();
 	}
 	
-	public int addUnreadMessages(String sourceId, List<String> messages){
-		List<String> list = unreadMessages.get(sourceId);
-		if (list == null){
-			list = new ArrayList<String>();
-		}
-		messages.removeAll(list);
-		list.addAll(messages);
-		unreadMessages.put(sourceId, list);
-		return messages.size();
-	}
-	
-	public void addUnreadMessage(String sourceId, String messageId){
-		List<String> list = unreadMessages.get(sourceId);
-		if (list == null){
-			list = new ArrayList<String>();
-		}
-		if (!list.contains(messageId)){
-			list.add(messageId);
-		}
-		unreadMessages.put(sourceId, list);
-	}
-	
 	public void setMessageReadden(String messageId){
 		Set<String> tags = unreadMessages.keySet();
 		for (String tagId : tags) {
@@ -134,7 +114,6 @@ public class SocioUser extends NamedObject{
 	public void addAccount(Account account) {
 		if (!getAccounts().contains(account)){
 			getAccounts().add(account);
-			this.addTags(account.getTags());
 		}
 	}
 
@@ -181,35 +160,13 @@ public class SocioUser extends NamedObject{
 	}
 	
 	public void addTag(SocioTag tag){
-		SocioTag currentTag = userTags.get(tag.getId());
-		if (currentTag != null){
-			tag.setRefCount(currentTag.getRefCount() + 1);
-		}else{
-			//init reference counter of tag
-			tag.setRefCount(1);
-		}
-		userTags.put(tag.getId(), tag);
+		SocioTag currentTag = userTags.get(tag.getUniqueId());
+		if (currentTag == null){
+			userTags.put(tag.getUniqueId(), tag);
+		}		
 	}
 	
-	public void removeTag(SocioTag tag) throws CorruptedDataException{
-		String tagId = tag.getId();
-		SocioTag socioTag = userTags.get(tagId);
-		if (socioTag == null){
-			throw new CorruptedDataException("Trying to remove uexisting tag from User: " + tag.getValue());
-		}
-		tag.setRefCount(tag.getRefCount()-1);
-		if (tag.getRefCount() <= 0){
-			userTags.remove(tagId);
-		}
-	}
-	
-	public void removeTags(List<SocioTag> tags) throws CorruptedDataException{
-		for (SocioTag tag : tags) {
-			removeTag(tag);
-		}
-	}
-	
-	public void addTags(List<SocioTag> tags){
+	public void addTags(Collection<SocioTag> tags){
 		for (SocioTag tag : tags) {
 			addTag(tag);
 		}
@@ -228,7 +185,6 @@ public class SocioUser extends NamedObject{
 			Source source = iterator.next();
 			if (source.getId().equals(id)){
 				iterator.remove();
-				removeTags(source.getTags());
 				return source;
 			}
 		}
@@ -257,23 +213,32 @@ public class SocioUser extends NamedObject{
 		this.destinations.addAll(destinations);		
 	}
 
-	public List<SocioTag> getDefaultTags() {
-		return Collections.emptyList();
-	}
-
 	public Integer getTotalUnreadmessages() {
 		return totalUnreadmessages;
 	}
 	
-	public void addTotalUnreadmessages(int num) {
-		totalUnreadmessages += num;
-	}
-
 	public Account getMainAccount() {
 		return mainAccount;
 	}
 
 	public void setMainAccount(Account mainAccount) {
 		this.mainAccount = mainAccount;
+	}
+
+	public void addUnreaddenMessage(GeneralMessage message) {
+		Set<SocioTag> tags = message.getTags();
+		String messageId = message.getId();
+		for (SocioTag tag : tags) {
+			String sourceId = tag.getUniqueId();
+			List<String> list = unreadMessages.get(sourceId);
+			if (list == null){
+				list = new ArrayList<String>();
+				list.add(messageId);
+			}else if (!list.contains(messageId)){
+				list.add(messageId);
+			}
+			unreadMessages.put(sourceId, list);
+		}
+		totalUnreadmessages++;
 	}
 }

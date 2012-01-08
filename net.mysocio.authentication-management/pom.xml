@@ -29,10 +29,5 @@
 			<artifactId>jackson-jaxrs</artifactId>
 			<version>1.8.3</version>
 		</dependency>
-		<dependency>
-			<groupId>com.google.gdata</groupId>
-			<artifactId>gdata-contacts-3.0</artifactId>
-			<version>1.41.5</version>
-		</dependency>
 	</dependencies>
 </project>

@@ -99,6 +99,22 @@
 		</dependency>
 		<dependency>
 			<groupId>org.apache.camel</groupId>
+			<artifactId>camel-quartz</artifactId>
+			<version>${camel-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.activemq</groupId>
+			<artifactId>activemq-camel</artifactId>
+			<version>5.5.1</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>tools</artifactId>
+					<groupId>com.sun</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.camel</groupId>
 			<artifactId>camel-core</artifactId>
 			<version>${camel-version}</version>
 		</dependency>
