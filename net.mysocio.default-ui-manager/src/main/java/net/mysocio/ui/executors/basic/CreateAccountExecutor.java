@@ -3,6 +3,8 @@
  */
 package net.mysocio.ui.executors.basic;
 
+import javax.jdo.annotations.PersistenceAware;
+
 import net.mysocio.data.IConnectionData;
 import net.mysocio.data.IDataManager;
 import net.mysocio.data.SocioUser;
@@ -20,6 +22,7 @@ import org.slf4j.LoggerFactory;
  * @author Aladdin
  * 
  */
+@PersistenceAware
 public class CreateAccountExecutor implements ICommandExecutor {
 	private static final String CREATING_ACCOUNT_IN_LOGOUT = "Attempt to create account while in logged out state. Probable attempt of hacking.";
 	private static final Logger logger = LoggerFactory.getLogger(CreateAccountExecutor.class);

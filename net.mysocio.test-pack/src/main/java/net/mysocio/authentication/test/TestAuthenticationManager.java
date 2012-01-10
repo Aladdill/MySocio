@@ -30,7 +30,7 @@ public class TestAuthenticationManager implements IAuthenticationManager{
 
 	public Account getAccount(IConnectionData connectionData) throws Exception {
 		IDataManager dataManager = DataManagerFactory.getDataManager();
-		Account account = dataManager.getAccount(TestAccount.class, "test@test.com");
+		Account account = dataManager.getAccount("test@test.com");
 		if (account == null){
 			account = new TestAccount();
 			account.setAccountUniqueId("test@test.com");

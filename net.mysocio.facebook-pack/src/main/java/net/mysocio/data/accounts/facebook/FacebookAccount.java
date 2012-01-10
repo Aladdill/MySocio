@@ -59,21 +59,18 @@ public class FacebookAccount extends Oauth2Account {
 		FacebookSource source = new FacebookSource();
 		source.setAccount(this);
 		source.setName(getUserName());
-		sources.add(source);
-		return sources;
-	}
-
-	public List<SocioTag> getDefaultTags() {
-		List<SocioTag> tags = new ArrayList<SocioTag>();
 		SocioTag tag = new SocioTag();
 		tag.setValue("facebook.tag");
+		tag.setUniqueId("facebook.tag");
 		tag.setIconType("facebook.icon.general");
-		tags.add(tag);
-		SocioTag accTag = new SocioTag();
-		accTag.setValue(getUserName());
-		accTag.setIconType("facebook.icon.account");
-		tags.add(accTag);
-		return tags;
+		source.addTag(tag);
+		SocioTag tag1 = new SocioTag();
+		tag1.setValue(getUserName());
+		tag1.setUniqueId(getAccountUniqueId());
+		tag1.setIconType("facebook.icon.general");
+		source.addTag(tag1);
+		sources.add(source);
+		return sources;
 	}
 
 	@Override

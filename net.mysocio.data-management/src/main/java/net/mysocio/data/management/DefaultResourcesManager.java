@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
  * @author Aladdin
  *
  */
-public class DefaultResourcesManager {
+public class DefaultResourcesManager{
 	private static final Logger logger = LoggerFactory.getLogger(DefaultResourcesManager.class);
 	private static String servletContextPath;
 	private static final String PROPERTIES_FOLDER = File.separator + "properties" + File.separator;

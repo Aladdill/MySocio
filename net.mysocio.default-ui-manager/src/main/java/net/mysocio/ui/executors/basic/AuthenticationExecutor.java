@@ -3,6 +3,8 @@
  */
 package net.mysocio.ui.executors.basic;
 
+import javax.jdo.annotations.PersistenceAware;
+
 import net.mysocio.data.IConnectionData;
 import net.mysocio.data.management.AccountsManager;
 import net.mysocio.data.management.InvalidNetworkException;
@@ -16,6 +18,7 @@ import org.slf4j.LoggerFactory;
  * @author Aladdin
  *
  */
+@PersistenceAware
 public class AuthenticationExecutor implements ICommandExecutor {
 	private static final Logger logger = LoggerFactory.getLogger(AuthenticationExecutor.class);
 

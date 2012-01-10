@@ -8,10 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.jdo.annotations.Join;
-import javax.jdo.annotations.Key;
+import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.PersistenceCapable;
-import javax.jdo.annotations.Value;
 
 import net.mysocio.data.NamedObject;
 
@@ -19,8 +17,9 @@ import net.mysocio.data.NamedObject;
  * @author Aladdin
  *
  */
-@PersistenceCapable(detachable="true")
-public class UiObject extends NamedObject implements IUiObject {
+@PersistenceCapable
+@Inheritance(customStrategy="complete-table")
+public abstract class UiObject extends NamedObject{
 	/**
 	 * 
 	 */
@@ -28,10 +27,7 @@ public class UiObject extends NamedObject implements IUiObject {
 	public static final String TAG_START = "<<";
 	public static final String TAG_END = ">>";
 	private String category;
-	@Join
-	@Key(types=String.class)
-    @Value(types=UiObject.class)
-	private Map<String, IUiObject> innerObjects = new HashMap<String, IUiObject>();
+	private Map<String, UiObject> innerObjects = new HashMap<String, UiObject>();
 	private List<String> textLabels = new ArrayList<String>();
 	private String htmlTemplate = "";
 
@@ -41,7 +37,7 @@ public class UiObject extends NamedObject implements IUiObject {
 	public String getTag(String tagName){
 		return UiObject.TAG_START + tagName + TAG_END;
 	}
-	public void setInnerObjects(Map<String, IUiObject> innerObjects) {
+	public void setInnerObjects(Map<String, UiObject> innerObjects) {
 		this.innerObjects = innerObjects;
 	}
 
@@ -61,28 +57,21 @@ public class UiObject extends NamedObject implements IUiObject {
 		this.category = category;
 	}
 
-	/* (non-Javadoc)
-	 * @see net.mysocio.data.IUiObject#getCategory()
-	 */
 	public String getCategory() {
 		return category;
 	}
 
-	/* (non-Javadoc)
-	 * @see net.mysocio.data.IUiObject#getInnerUiOjjects()
-	 */
-	public Map<String, IUiObject> getInnerUiObjects() {
+	public Map<String, UiObject> getInnerUiObjects() {
 		return innerObjects;
 	}
 
-	/* (non-Javadoc)
-	 * @see net.mysocio.data.IUiObject#getInnerTextLabels()
-	 */
 	public List<String> getInnerTextLabels() {
 		return textLabels;
 	}
 
 	public String getHtmlTemplate() {return this.htmlTemplate;}
+	
+	public String getPageFile(){return null;}
 	
 	public void setHtmlTemplate(String htmlTemplate) {
 		this.htmlTemplate = htmlTemplate;

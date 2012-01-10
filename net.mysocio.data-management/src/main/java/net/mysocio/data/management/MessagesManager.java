@@ -6,7 +6,11 @@ package net.mysocio.data.management;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.jdo.Transaction;
+import javax.jdo.annotations.PersistenceAware;
+
 import net.mysocio.connection.writers.IDestination;
+import net.mysocio.data.IDataManager;
 import net.mysocio.data.IMessagesManager;
 import net.mysocio.data.SocioUser;
 import net.mysocio.data.messages.GeneralMessage;
@@ -19,6 +23,7 @@ import net.sf.ehcache.Element;
  * @author Aladdin
  *
  */
+@PersistenceAware
 public class MessagesManager implements IMessagesManager {
 	private static MessagesManager instance = new MessagesManager();
 	
@@ -45,7 +50,11 @@ public class MessagesManager implements IMessagesManager {
 	}
 
 	public IMessage storeMessage(IMessage message) {
-		IMessage savedMessage = DataManagerFactory.getDataManager().createMessage(message);
+		IDataManager dataManager = DataManagerFactory.getDataManager();
+		dataManager.setDetachAllOnCommit(true);
+		Transaction transaction = dataManager.startTransaction();
+		IMessage savedMessage = dataManager.createMessage(message);
+		dataManager.endTransaction(transaction);
 		cacheMessage(savedMessage);
 		return savedMessage;
 	}

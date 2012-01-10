@@ -8,6 +8,8 @@ import java.io.StringWriter;
 import java.util.Collection;
 import java.util.Locale;
 
+import javax.jdo.annotations.PersistenceAware;
+
 import net.mysocio.data.IConnectionData;
 import net.mysocio.data.SocioTag;
 import net.mysocio.data.SocioUser;
@@ -25,6 +27,7 @@ import org.slf4j.LoggerFactory;
  * @author Aladdin
  *
  */
+@PersistenceAware
 public class GetSourcesExecutor implements ICommandExecutor {
 	private static final Logger logger = LoggerFactory.getLogger(GetSourcesExecutor.class);
 	/* (non-Javadoc)

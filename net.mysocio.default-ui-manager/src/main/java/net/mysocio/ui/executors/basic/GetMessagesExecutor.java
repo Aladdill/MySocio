@@ -8,6 +8,12 @@ import java.text.DateFormat;
 import java.util.Collections;
 import java.util.List;
 
+import javax.jdo.annotations.PersistenceAware;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import net.mysocio.data.CorruptedDataException;
 import net.mysocio.data.IConnectionData;
 import net.mysocio.data.SocioUser;
 import net.mysocio.data.management.MessagesManager;
@@ -22,7 +28,9 @@ import net.mysocio.ui.managers.basic.DefaultUiManager;
  * @author Aladdin
  *
  */
+@PersistenceAware
 public class GetMessagesExecutor implements ICommandExecutor {
+	private static final Logger logger = LoggerFactory.getLogger(GetContactsExecutor.class);
 	/* (non-Javadoc)
 	 * @see net.mysocio.ui.management.ICommandExecutor#execute(javax.servlet.http.HttpServletRequest)
 	 */
@@ -32,7 +40,13 @@ public class GetMessagesExecutor implements ICommandExecutor {
 		List<? extends IMessage> messages = getMessages(connectionData);
 		AbstractUiManager uiManager = new DefaultUiManager();
 		DateFormat formatter = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, connectionData.getLocale());
-		String messagePage = uiManager.getPage(new DefaultMessage(),connectionData.getUser());
+		String messagePage = "";
+		try {
+			messagePage = uiManager.getPage(DefaultMessage.CATEGORY, DefaultMessage.NAME, connectionData.getUser());
+		} catch (CorruptedDataException e) {
+			logger.error("Failed showing messages",e);
+			throw new CommandExecutionException(e);
+		}
 		for (IMessage message : messages) {
 			String pageHtml = message.replacePlaceholders(messagePage);
 			String date = formatter.format(new Date(message.getDate()));

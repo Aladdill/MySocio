@@ -70,7 +70,7 @@ public abstract class GeneralMessage extends SocioObject implements IMessage{
 		String message = template.replace("message.title", getTitle());
 		message = message.replace("message.id", getId());
 		message = message.replace("message.text", getText());
-		message = message.replace("message.link", getUniqueId());
+		message = message.replace("message.link", getLink());
 		return message;
 	}
 
@@ -80,5 +80,5 @@ public abstract class GeneralMessage extends SocioObject implements IMessage{
 	public void addTag(SocioTag tag){
 		tags.add(tag);
 	}
-	
+	public abstract String getLink();
 }

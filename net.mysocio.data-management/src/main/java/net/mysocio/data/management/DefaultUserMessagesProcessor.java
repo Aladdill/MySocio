@@ -4,6 +4,7 @@
 package net.mysocio.data.management;
 
 import javax.jdo.Transaction;
+import javax.jdo.annotations.PersistenceAware;
 
 import net.mysocio.data.IDataManager;
 import net.mysocio.data.SocioUser;
@@ -16,6 +17,7 @@ import org.apache.camel.Processor;
  * @author Aladdin
  *
  */
+@PersistenceAware
 public class DefaultUserMessagesProcessor implements Processor {
 	private String userId; 
 
@@ -24,6 +26,7 @@ public class DefaultUserMessagesProcessor implements Processor {
 	 */
 	public void process(Exchange exchange) throws Exception {
 		IDataManager dataManager = DataManagerFactory.getDataManager();
+		dataManager.setDetachAllOnCommit(true);
 		SocioUser user = (SocioUser)dataManager.getObject(userId);
 		GeneralMessage message = (GeneralMessage)exchange.getIn().getBody();
 		Transaction transaction = dataManager.startTransaction();

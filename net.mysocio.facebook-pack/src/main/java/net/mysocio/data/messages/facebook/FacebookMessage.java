@@ -28,4 +28,9 @@ public class FacebookMessage extends UserMessage {
 	public String getReadenNetworkIcon() {
 		return "images/networksIcons/fb-gray.png";
 	}
+
+	@Override
+	public String getLink() {
+		return "https://facebook.com/" + getUserId();
+	}
 }

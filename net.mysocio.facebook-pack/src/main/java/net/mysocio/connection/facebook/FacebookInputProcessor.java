@@ -7,30 +7,36 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Iterator;
 
+import javax.jdo.annotations.PersistenceAware;
+
 import net.mysocio.authentication.facebook.FacebookAuthenticationManager;
 import net.mysocio.data.SocioTag;
+import net.mysocio.data.management.AbstractMessageProcessor;
 import net.mysocio.data.management.CamelContextManager;
 import net.mysocio.data.management.MessagesManager;
 import net.mysocio.data.messages.facebook.FacebookMessage;
 
 import org.apache.camel.Exchange;
-import org.apache.camel.Processor;
 import org.apache.camel.ProducerTemplate;
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Aladdin
  *
  */
-public class FacebookInputProcessor implements Processor {
+@PersistenceAware
+public class FacebookInputProcessor extends AbstractMessageProcessor {
+	private static final Logger logger = LoggerFactory
+			.getLogger(FacebookInputProcessor.class);
 	private static final long MONTH = 30*24*3600l;
 	private Long lastUpdate = 0l;
 	private String token;
-	private String username;
-	private String accountId;
 	private String to;
+	
 
 	public String getTo() {
 		return to;
@@ -71,8 +77,10 @@ public class FacebookInputProcessor implements Processor {
 		text += "&nbsp;" + getAttribute(element, "story");
 		message.setText(text);
 		String title = getAttribute(element.get("from"), "name");
-		message.setUserPic("https://graph.facebook.com/" + getAttribute(element.get("from"), "id") + "/picture");
+		String userId = getAttribute(element.get("from"), "id");
+		message.setUserPic("https://graph.facebook.com/" + userId + "/picture");
 		message.setTitle(title);
+		message.setUserId(userId);
 		return message;
 	}
 	
@@ -107,36 +115,16 @@ public class FacebookInputProcessor implements Processor {
 		while (elements.hasNext()) {
 			JsonNode element = elements.next();
 			FacebookMessage message = parseFacebookMessage(element);
-			MessagesManager.getInstance().storeMessage(message);
+			logger.debug("Got facebook message from user " + message.getTitle() + " with id " + message.getUniqueId());
+			addTagsToMessage(message);
 			SocioTag tag = new SocioTag();
-			tag.setValue("facebook.tag");
-			tag.setUniqueId("facebook.tag");
+			tag.setValue(message.getTitle());
+			tag.setUniqueId(message.getUserId());
 			tag.setIconType("facebook.icon.general");
 			message.addTag(tag);
-			SocioTag tag1 = new SocioTag();
-			tag1.setValue(username);
-			tag1.setUniqueId(accountId);
-			tag1.setIconType("facebook.icon.general");
-			message.addTag(tag1);
+			MessagesManager.getInstance().storeMessage(message);
 			producerTemplate.sendBody(to,message);
 		}
 		lastUpdate = toInSec*1000;
 	}
-
-	public String getUsername() {
-		return username;
-	}
-
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	public String getAccountId() {
-		return accountId;
-	}
-
-	public void setAccountId(String accountId) {
-		this.accountId = accountId;
-	}
-
 }

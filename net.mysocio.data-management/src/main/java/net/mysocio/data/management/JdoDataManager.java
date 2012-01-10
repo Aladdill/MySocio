@@ -13,18 +13,17 @@ import javax.jdo.JDOHelper;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 import javax.jdo.Transaction;
+import javax.jdo.annotations.PersistenceAware;
 
 import net.mysocio.connection.readers.ISource;
 import net.mysocio.connection.readers.Source;
 import net.mysocio.data.IDataManager;
 import net.mysocio.data.ISocioObject;
 import net.mysocio.data.SocioObject;
-import net.mysocio.data.SocioTag;
 import net.mysocio.data.SocioUser;
 import net.mysocio.data.accounts.Account;
 import net.mysocio.data.messages.GeneralMessage;
 import net.mysocio.data.messages.IMessage;
-import net.mysocio.data.ui.IUiObject;
 import net.mysocio.data.ui.UiObject;
 import net.mysocio.data.ui.UserUiObjects;
 
@@ -35,6 +34,7 @@ import org.slf4j.LoggerFactory;
  * @author Aladdin
  * 
  */
+@PersistenceAware
 public class JdoDataManager implements IDataManager {
 	private static final Logger logger = LoggerFactory.getLogger(JdoDataManager.class);
 	private PersistenceManager pm;
@@ -65,6 +65,10 @@ public class JdoDataManager implements IDataManager {
 		if (tx.isActive()) {
 			tx.rollback();
 		}
+	}
+	
+	public void setDetachAllOnCommit(boolean detach){
+		pm.setDetachAllOnCommit(detach);
 	}
 
 	public <T> T detachObject(T object) {
@@ -97,10 +101,7 @@ public class JdoDataManager implements IDataManager {
 		user.setName(userName);
 		user.setLocale(locale.getLanguage());
 		persistObject(user);
-		UserUiObjects uiObjects = new UserUiObjects();
 		userId = user.getId();
-		uiObjects.setUserId(userId);
-		persistObject(uiObjects);
 		addAccountToUser(account, user);
 		DefaultUserMessagesProcessor processor = new DefaultUserMessagesProcessor();
 		processor.setUserId(userId);
@@ -121,16 +122,6 @@ public class JdoDataManager implements IDataManager {
 		user.setMainAccount(account);
 		List<Source> sources = account.getSources();
 		for (Source source : sources) {
-			SocioTag tag = new SocioTag();
-			tag.setValue("facebook.tag");
-			tag.setUniqueId("facebook.tag");
-			tag.setIconType("facebook.icon.general");
-			source.addTag(tag);
-			SocioTag tag1 = new SocioTag();
-			tag1.setValue(account.getUserName());
-			tag1.setUniqueId(account.getAccountUniqueId());
-			tag1.setIconType("facebook.icon.general");
-			source.addTag(tag1);
 			SourcesManager.addSourceToUser(user, source);
 		}
 		return account;
@@ -140,10 +131,11 @@ public class JdoDataManager implements IDataManager {
 	 * @param account
 	 * @return
 	 */
-	public Account getAccount(Class clazz, String accountUniqueId) {
-		Query q = pm.newQuery(clazz);
+	public Account getAccount(String accountUniqueId) {
+		Extent<Account> extent = pm.getExtent(Account.class, true);
+		Query q = pm.newQuery(extent);
 		q.declareParameters("String id");
-		q.setFilter("accountUniqueId == id");
+		q.setFilter("accountUniqueId.equals(id)");
 		Map args = new HashMap();
 		args.put("id", accountUniqueId);
 		q.setUnique(true);
@@ -155,7 +147,7 @@ public class JdoDataManager implements IDataManager {
 		Extent e = pm.getExtent(SocioObject.class, true);
 		Query  q = pm.newQuery(e);
 		q.declareParameters("String objectId");
-		q.setFilter("id == objectId");
+		q.setFilter("id.equals(objectId)");
 		Map args = new HashMap();
 		args.put("objectId", id);
 		q.setUnique(true);
@@ -164,7 +156,7 @@ public class JdoDataManager implements IDataManager {
 	}
 
 	private String getEqualsExpression(String fieldName, String value) {
-		return fieldName + " == \"" + value + "\"";
+		return fieldName + ".equals(\"" + value + "\")";
 	}
 
 	private String getMoreExpression(String fieldName, String value) {
@@ -175,14 +167,14 @@ public class JdoDataManager implements IDataManager {
 		return fieldName + " < \"" + value + "\"";
 	}
 
-	public IUiObject getUiObject(String category, String name) {
+	public UiObject getUiObject(String category, String name) {
 		return getUniqueObject(UiObject.class,
 				getEqualsExpression("category", category) + " && "
 						+ getEqualsExpression("name", name));
 	}
 
 	public <T extends ISocioObject> T getUniqueObject(Class<?> T, String query) {
-		T object;
+		T object = null;
 		Query q = pm.newQuery(T, query);
 		q.setUnique(true);
 		object = (T) q.execute();
@@ -190,7 +182,8 @@ public class JdoDataManager implements IDataManager {
 	}
 
 	public <T extends ISocioObject> List<T> getObjects(Class<?> T) {
-		Query q = pm.newQuery(T);
+		Extent extent = pm.getExtent(T, true);
+		Query q = pm.newQuery(extent);
 		List<T> objects = (List<T>) q.execute();
 		return objects;
 	}
@@ -244,9 +237,10 @@ public class JdoDataManager implements IDataManager {
 	 * .readers.ISource)
 	 */
 	public Source createSource(ISource source) {
-		Query q = pm.newQuery(source.getClass());
+		Extent extent = pm.getExtent(Source.class, true);
+		Query q = pm.newQuery(extent);
 		q.declareParameters("String sourceUrl");
-		q.setFilter("url == sourceUrl");
+		q.setFilter("url.equals(sourceUrl)");
 		Map args = new HashMap();
 		args.put("sourceUrl", source.getUrl());
 		q.setUnique(true);
@@ -263,20 +257,21 @@ public class JdoDataManager implements IDataManager {
 		return createdMessage;
 	}
 
-	public Map<String, IUiObject> getUserUiObjects(SocioUser user) {
+	public Map<String, UiObject> getUserUiObjects(SocioUser user) {
 		UserUiObjects objects;
 		Query q = pm.newQuery(UserUiObjects.class,
 				getEqualsExpression("userId", user.getId()));
 		q.setUnique(true);
 		objects = (UserUiObjects) q.execute();
 		if (objects == null) {
-			return new HashMap<String, IUiObject>();
+			return new HashMap<String, UiObject>();
 		}
 		return objects.getUserUiObjects();
 	}
 
 	public List<IMessage> getMessages(List<String> ids) {
-		Query q = pm.newQuery(GeneralMessage.class);
+		Extent extent = pm.getExtent(GeneralMessage.class, true);
+		Query q = pm.newQuery(extent);
 		q.declareImports("import java.util.Collection");
 		q.declareParameters("Collection objectsIds");
 		q.setFilter("objectsIds.contains(id)");

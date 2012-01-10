@@ -8,8 +8,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import net.mysocio.data.CorruptedDataException;
 import net.mysocio.data.management.DefaultResourcesManager;
-import net.mysocio.data.ui.IUiObject;
+import net.mysocio.data.ui.UiObject;
 import net.mysocio.ui.management.IUiManager;
 
 /**
@@ -18,16 +19,22 @@ import net.mysocio.ui.management.IUiManager;
  */
 public abstract class AbstractUiManager implements IUiManager {
 
-	public String getUiObjectHtml(IUiObject uiObject, Map<String, IUiObject> userObjects, Locale userLocale){
+	public String getUiObjectHtml(UiObject uiObject, Map<String, UiObject> userObjects, Locale userLocale) throws CorruptedDataException{
 		String htmlTemplate = uiObject.getHtmlTemplate();
+		if (htmlTemplate == null || htmlTemplate.isEmpty()){
+			htmlTemplate = DefaultResourcesManager.getPage(uiObject.getPageFile());
+			if (htmlTemplate == null || htmlTemplate.isEmpty()){
+				throw new CorruptedDataException("Page: " + uiObject.getName() + " wasn't found.");
+			}
+		}
 		List<String> innerTextLabels = uiObject.getInnerTextLabels();
 		for (String textLable : innerTextLabels) {
 			htmlTemplate = htmlTemplate.replace(textLable, getLocalizedString(textLable, userLocale));
 		}
-		Map<String, IUiObject> defaultInnerUiObjects = uiObject.getInnerUiObjects();
+		Map<String, UiObject> defaultInnerUiObjects = uiObject.getInnerUiObjects();
 		Set<String> innerObjectsTags = defaultInnerUiObjects.keySet();
 		for (String key : innerObjectsTags) {
-			IUiObject innerObject = userObjects.get(key);
+			UiObject innerObject = userObjects.get(key);
 			if (innerObject == null){
 				innerObject = defaultInnerUiObjects.get(key);
 			}

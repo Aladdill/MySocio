@@ -25,4 +25,25 @@
 			<version>2.5.0</version>
 		</dependency>
 	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.datanucleus</groupId>
+				<artifactId>maven-datanucleus-plugin</artifactId>
+				<version>${datanucleus-enhancer-version}</version>
+				<configuration>
+					<log4jConfiguration>${basedir}/log4j.properties</log4jConfiguration>
+					<verbose>true</verbose>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>compile</phase>
+						<goals>
+							<goal>enhance</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 </project>

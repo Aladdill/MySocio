@@ -3,6 +3,8 @@
  */
 package net.mysocio.ui.executors.basic;
 
+import javax.jdo.annotations.PersistenceAware;
+
 import net.mysocio.data.IConnectionData;
 import net.mysocio.ui.management.CommandExecutionException;
 import net.mysocio.ui.management.ICommandExecutor;
@@ -11,6 +13,7 @@ import net.mysocio.ui.management.ICommandExecutor;
  * @author Aladdin
  *
  */
+@PersistenceAware
 public class RemoveAccountExecutor implements ICommandExecutor {
 
 	/* (non-Javadoc)

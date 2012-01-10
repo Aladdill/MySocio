@@ -3,19 +3,25 @@
  */
 package net.mysocio.ui.executors.basic;
 
+import javax.jdo.annotations.PersistenceAware;
+
+import net.mysocio.data.CorruptedDataException;
 import net.mysocio.data.IConnectionData;
 import net.mysocio.data.SocioUser;
-import net.mysocio.ui.data.objects.DefaultSiteBody;
 import net.mysocio.ui.management.CommandExecutionException;
 import net.mysocio.ui.management.ICommandExecutor;
 import net.mysocio.ui.managers.basic.DefaultUiManager;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
- * @author gurfinke
+ * @author Aladdin
  *
  */
+@PersistenceAware
 public class LoginPageExecutor implements ICommandExecutor {
-
+	private static final Logger logger = LoggerFactory.getLogger(LoginPageExecutor.class);
 	/* (non-Javadoc)
 	 * @see net.mysocio.ui.management.ICommandExecutor#execute(net.mysocio.data.IConnectionData)
 	 */
@@ -23,8 +29,15 @@ public class LoginPageExecutor implements ICommandExecutor {
 	public String execute(IConnectionData connectionData) throws CommandExecutionException{
 		SocioUser user = connectionData.getUser();
 		if (user != null){
-			return new LoadPageExecutor(new DefaultSiteBody()).execute(connectionData);
+			return new LoadMainPageExecutor().execute(connectionData);
 		}
-		return new DefaultUiManager().getLoginPage(connectionData.getLocale());
+		String loginPage = "";
+		try {
+			loginPage = new DefaultUiManager().getLoginPage(connectionData.getLocale());
+		} catch (CorruptedDataException e) {
+			logger.error("Failed showing login page.",e);
+			throw new CommandExecutionException(e);
+		}
+		return loginPage;
 	}
 }

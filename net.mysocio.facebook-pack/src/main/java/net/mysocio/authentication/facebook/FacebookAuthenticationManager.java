@@ -9,6 +9,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import javax.jdo.annotations.PersistenceAware;
+
 import net.mysocio.authentication.AbstractOauth2Manager;
 import net.mysocio.data.accounts.Account;
 import net.mysocio.data.accounts.facebook.FacebookAccount;
@@ -32,6 +34,7 @@ import org.slf4j.LoggerFactory;
  * @author Aladdin
  * 
  */
+@PersistenceAware
 public class FacebookAuthenticationManager extends AbstractOauth2Manager {
 	private static final Logger logger = LoggerFactory
 			.getLogger(FacebookAuthenticationManager.class);
@@ -64,8 +67,7 @@ public class FacebookAuthenticationManager extends AbstractOauth2Manager {
 		ObjectMapper mapper = new ObjectMapper(new JsonFactory());
 		JsonNode root = mapper.readTree(response);
 		String id = root.get("id").getValueAsText();
-		account = (FacebookAccount) DataManagerFactory.getDataManager()
-				.getAccount(FacebookAccount.class, id);
+		account = (FacebookAccount) DataManagerFactory.getDataManager().getAccount(id);
 		if (account != null) {
 			return account;
 		}

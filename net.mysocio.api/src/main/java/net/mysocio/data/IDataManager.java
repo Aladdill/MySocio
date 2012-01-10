@@ -12,7 +12,7 @@ import javax.jdo.Transaction;
 import net.mysocio.connection.readers.ISource;
 import net.mysocio.data.accounts.Account;
 import net.mysocio.data.messages.IMessage;
-import net.mysocio.data.ui.IUiObject;
+import net.mysocio.data.ui.UiObject;
 
 /**
  * @author Aladdin
@@ -24,6 +24,8 @@ public interface IDataManager {
 	public void endTransaction(Transaction tx);
 	
 	public void rollBackTransaction(Transaction tx);
+	
+	public void setDetachAllOnCommit(boolean detach);
 
 	public void saveObjects(List<? extends Object> objects);
 
@@ -35,9 +37,11 @@ public interface IDataManager {
 
 	public SocioUser getUser(Account account, Locale locale) throws Exception;
 	
-	public Account getAccount(Class clazz, String accountUniqueId);
+	public Account getAccount(String accountUniqueId);
 
-	public Map<String, IUiObject> getUserUiObjects(SocioUser user);
+	public Map<String, UiObject> getUserUiObjects(SocioUser user);
+	
+	public UiObject getUiObject(String category, String name);
 
 	public ISource createSource(ISource source);
 	

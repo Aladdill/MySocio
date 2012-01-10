@@ -39,8 +39,17 @@ public class SocioUser extends NamedObject{
 	private List<Source> sources = new ArrayList<Source>();
 	private List<Destination> destinations = new ArrayList<Destination>();
 	private Map<String, SocioTag> userTags = new HashMap<String, SocioTag>();
+	private Map<String, String> pages = new HashMap<String, String>();
 	private Long lastUpdate = 0l;
 	private Integer totalUnreadmessages = 0;	
+	
+	public String getPage(String pageKey){
+		return pages.get(pageKey);
+	}
+	
+	public void addPage(String pageKey, String page){
+		pages.put(pageKey, page);
+	}
 	
 	public Long getLastUpdate() {
 		return lastUpdate;

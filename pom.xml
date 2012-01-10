@@ -86,7 +86,7 @@
 		<!-- <module>org.ljtoolkit.ljtoolkit</module> -->
 	</modules>
 	<properties>
-		<camel-version>2.9.0-RC1</camel-version>
+		<camel-version>2.9.0</camel-version>
 		<scribe-version>1.2.3</scribe-version>
 		<datanucleus-version>3.0.4</datanucleus-version>
 		<datanucleus-enhancer-version>3.0.1</datanucleus-enhancer-version>
