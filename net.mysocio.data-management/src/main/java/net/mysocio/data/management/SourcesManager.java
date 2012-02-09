@@ -19,7 +19,7 @@ public class SourcesManager {
 	public static void addSourceToUser(SocioUser user, Source source) throws Exception{
 		IDataManager dataManager = DataManagerFactory.getDataManager(user);
 		Source savedSource = (Source)dataManager.createSource(source);
-		source.createRoute("activemq:" + user.getId());
+		source.createRoute("activemq:" + user.getId()  + ".newMessage");
 		Transaction transaction = dataManager.startTransaction();
 		user.addSource(savedSource);
 		dataManager.endTransaction(transaction);

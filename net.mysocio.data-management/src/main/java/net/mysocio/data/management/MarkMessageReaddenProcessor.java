@@ -8,7 +8,6 @@ import javax.jdo.annotations.PersistenceAware;
 
 import net.mysocio.data.IDataManager;
 import net.mysocio.data.SocioUser;
-import net.mysocio.data.messages.GeneralMessage;
 
 import org.apache.camel.Exchange;
 import org.slf4j.Logger;
@@ -19,8 +18,8 @@ import org.slf4j.LoggerFactory;
  *
  */
 @PersistenceAware
-public class DefaultUserMessagesProcessor extends UserRouteProcessor {
-	private static final Logger logger = LoggerFactory.getLogger(DefaultUserMessagesProcessor.class);
+public class MarkMessageReaddenProcessor extends UserRouteProcessor {
+	private static final Logger logger = LoggerFactory.getLogger(MarkMessageReaddenProcessor.class);
 
 	/* (non-Javadoc)
 	 * @see org.apache.camel.Processor#process(org.apache.camel.Exchange)
@@ -29,12 +28,12 @@ public class DefaultUserMessagesProcessor extends UserRouteProcessor {
 		IDataManager dataManager = DataManagerFactory.getDataManager();
 		dataManager.setDetachAllOnCommit(true);
 		SocioUser user = (SocioUser)dataManager.getObject(getUserId());
-		GeneralMessage message = (GeneralMessage)exchange.getIn().getBody();
+		String id = (String)exchange.getIn().getBody();
 		if (logger.isDebugEnabled()){
-			logger.debug("Got message " + message.getTitle() + " with uid " + message.getUniqueId());
+			logger.debug("Marking readen message with id " + id);
 		}
 		Transaction transaction = dataManager.startTransaction();
-		user.addUnreaddenMessage(message);
+		user.setMessageReadden(id);
 		dataManager.endTransaction(transaction);
 	}
 }

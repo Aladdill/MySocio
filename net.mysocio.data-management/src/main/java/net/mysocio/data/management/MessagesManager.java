@@ -13,11 +13,14 @@ import net.mysocio.connection.writers.IDestination;
 import net.mysocio.data.IDataManager;
 import net.mysocio.data.IMessagesManager;
 import net.mysocio.data.SocioUser;
-import net.mysocio.data.messages.GeneralMessage;
 import net.mysocio.data.messages.IMessage;
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
+
+import org.apache.camel.ProducerTemplate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Aladdin
@@ -25,6 +28,7 @@ import net.sf.ehcache.Element;
  */
 @PersistenceAware
 public class MessagesManager implements IMessagesManager {
+	private static final Logger logger = LoggerFactory.getLogger(MessagesManager.class);
 	private static MessagesManager instance = new MessagesManager();
 	
 	private MessagesManager(){}
@@ -55,32 +59,42 @@ public class MessagesManager implements IMessagesManager {
 		Transaction transaction = dataManager.startTransaction();
 		IMessage savedMessage = dataManager.createMessage(message);
 		dataManager.endTransaction(transaction);
-		cacheMessage(savedMessage);
+//		cacheMessage(savedMessage);
 		return savedMessage;
 	}
 
 	public List<IMessage> getMessagesForSelectedSource(SocioUser user) {
 		List<IMessage> messages = new ArrayList<IMessage>();
 		List<String> unreadMessages = user.getUnreadMessages();
-		for (String id : unreadMessages) {
-			IMessage message = getCacheMessage(id);
-			if (message != null){
-				messages.add(message);
-			}else{
-				message = (GeneralMessage)DataManagerFactory.getDataManager(user).getObject(id);
-				messages.add(message);
-			}
+		if (!unreadMessages.isEmpty()){
+			IDataManager dataManager = DataManagerFactory.getDataManager();
+			messages = dataManager.getMessages(unreadMessages, user.getOrder(), user.getRange());
 		}
+//		for (String id : unreadMessages) {
+//			IMessage message = getCacheMessage(id);
+//			if (message != null){
+//				messages.add(message);
+//			}else{
+//				message = (GeneralMessage)DataManagerFactory.getDataManager(user).getObject(id);
+//				if (message == null){
+//					//It's data loss, should be investigated
+//					logger.error("Message with id " + id + "is missing");
+//					setMessagesReadden(user, id);
+//				}
+//				messages.add(message);
+//			}
+//		}
 		return messages;
 	}
 	
-	public synchronized void setMessagesReadden(SocioUser user, String messagesId){
+	public void setMessagesReadden(SocioUser user, String messagesId){
 		if (messagesId.isEmpty()){
 			return;
 		}
 		String[] ids = messagesId.split(",");
+		ProducerTemplate producerTemplate = CamelContextManager.getProducerTemplate();
 		for (String id : ids) {
-			user.setMessageReadden(id);
+			producerTemplate.sendBody("activemq:" + user.getId() + ".messageReaden",id);
 		}
 	}
 	private void cacheMessage(IMessage message){

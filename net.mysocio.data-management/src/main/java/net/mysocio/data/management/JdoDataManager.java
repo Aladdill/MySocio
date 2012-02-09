@@ -105,7 +105,10 @@ public class JdoDataManager implements IDataManager {
 		addAccountToUser(account, user);
 		DefaultUserMessagesProcessor processor = new DefaultUserMessagesProcessor();
 		processor.setUserId(userId);
-		CamelContextManager.addRoute("activemq:" + userId, processor, null);
+		CamelContextManager.addRoute("activemq:" + userId + ".newMessage", processor, null);
+		MarkMessageReaddenProcessor readdenProcessor = new MarkMessageReaddenProcessor();
+		readdenProcessor.setUserId(userId);
+		CamelContextManager.addRoute("activemq:" + userId + ".messageReaden", readdenProcessor, null);
 		logger.debug("User created");
 		return user;
 	}
@@ -188,13 +191,12 @@ public class JdoDataManager implements IDataManager {
 		return objects;
 	}
 
-	public void saveUiObject(UiObject uiObject)
-			throws DuplicateMySocioObjectException {
+	public void saveUiObject(UiObject uiObject){
 		String category = uiObject.getCategory();
 		String name = uiObject.getName();
 		if (getUiObject(category, name) != null) {
-			throw new DuplicateMySocioObjectException("UI object with name "
-					+ name + " already exists in category " + category);
+			logger.warn("UI object with name " + name + " already exists in category " + category);
+			return;
 		}
 		persistObject(uiObject);
 	}
@@ -269,13 +271,14 @@ public class JdoDataManager implements IDataManager {
 		return objects.getUserUiObjects();
 	}
 
-	public List<IMessage> getMessages(List<String> ids) {
+	public List<IMessage> getMessages(List<String> ids, String order, int range) {
 		Extent extent = pm.getExtent(GeneralMessage.class, true);
 		Query q = pm.newQuery(extent);
 		q.declareImports("import java.util.Collection");
 		q.declareParameters("Collection objectsIds");
 		q.setFilter("objectsIds.contains(id)");
-		q.setOrdering("date ascending");
+		q.setOrdering("date " + order);
+		q.setRange(0, range);
 		return (List<IMessage>) q.execute(ids);
 	}
 }
