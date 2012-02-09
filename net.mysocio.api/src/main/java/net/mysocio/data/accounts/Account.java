@@ -11,8 +11,10 @@ import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.PersistenceCapable;
 
 import net.mysocio.connection.readers.Source;
+import net.mysocio.data.IDisplayedObject;
 import net.mysocio.data.SocioObject;
 import net.mysocio.data.contacts.Contact;
+import net.mysocio.ui.data.objects.NewAccountLine;
 
 /**
  * @author Aladdin
@@ -20,7 +22,7 @@ import net.mysocio.data.contacts.Contact;
  */
 @PersistenceCapable
 @Inheritance(customStrategy="complete-table")
-public abstract class Account extends SocioObject{
+public abstract class Account extends SocioObject implements IDisplayedObject{
 	/**
 	 * 
 	 */
@@ -85,4 +87,14 @@ public abstract class Account extends SocioObject{
 		this.contacts = contacts;
 	}
 	public abstract String getIconUrl();
+	
+	@Override
+	public String getUiCategory() {
+		return NewAccountLine.CATEGORY;
+	}
+
+	@Override
+	public String getUiName() {
+		return NewAccountLine.NAME;
+	}
 }

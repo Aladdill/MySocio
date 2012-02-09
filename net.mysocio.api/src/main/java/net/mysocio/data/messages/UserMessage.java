@@ -6,6 +6,8 @@ package net.mysocio.data.messages;
 import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.PersistenceCapable;
 
+import net.mysocio.ui.data.objects.UserUiMessage;
+
 /**
  * @author Aladdin
  *
@@ -28,8 +30,6 @@ public abstract class UserMessage extends GeneralMessage {
 		this.userPic = userPic;
 	}
 	
-	
-	
 	public abstract String getNetworkIcon();
 	public abstract String getReadenNetworkIcon();
 
@@ -38,12 +38,12 @@ public abstract class UserMessage extends GeneralMessage {
 		String message = super.replacePlaceholders(template);
 		message = message.replace("network.icon.readen", getReadenNetworkIcon());
 		message = message.replace("network.icon", getNetworkIcon());
+		message = message.replace("user.pic", getUserPic());
 		return message;
 	}
-
-	@Override
-	public String getText() {
-		return "<div class=\"MessageUserpic\"><img alt=\"UserPic\" src=\""+ getUserPic() +"\" class=\"MessageUserpic\"></div>" + super.getText();
+	
+	public String getPageFile() {
+		return "userMessage.html";
 	}
 
 	public String getUserId() {
@@ -52,5 +52,15 @@ public abstract class UserMessage extends GeneralMessage {
 
 	public void setUserId(String userId) {
 		this.userId = userId;
+	}
+
+	@Override
+	public String getUiCategory() {
+		return UserUiMessage.CATEGORY;
+	}
+
+	@Override
+	public String getUiName() {
+		return UserUiMessage.NAME;
 	}
 }

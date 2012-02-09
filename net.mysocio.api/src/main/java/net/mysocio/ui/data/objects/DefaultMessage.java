@@ -12,8 +12,6 @@ import net.mysocio.data.ui.UiObject;
  *
  */
 @PersistenceCapable(detachable="true")
-
-
 public class DefaultMessage extends UiObject{
 
 	/**

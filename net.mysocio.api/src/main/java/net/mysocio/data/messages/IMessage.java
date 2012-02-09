@@ -3,6 +3,7 @@
  */
 package net.mysocio.data.messages;
 
+import net.mysocio.data.IDisplayedObject;
 import net.mysocio.data.ISocioObject;
 
 
@@ -11,7 +12,7 @@ import net.mysocio.data.ISocioObject;
  * @author Aladdin
  *
  */
-public interface IMessage extends ISocioObject {
+public interface IMessage extends ISocioObject, IDisplayedObject {
 
 	public String getText();
 

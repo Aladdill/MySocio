@@ -27,6 +27,8 @@ import net.mysocio.data.messages.GeneralMessage;
  */
 @PersistenceCapable(detachable="true")
 public class SocioUser extends NamedObject{
+	public static final String ASCENDING_ORDER = "ascending";
+	public static final String DESCENDING_ORDER = "descending";
 	public static final String ALL_SOURCES = "All";
 	/**
 	 * 
@@ -38,10 +40,11 @@ public class SocioUser extends NamedObject{
 	private List<SocioContact> contacts = new ArrayList<SocioContact>();
 	private List<Source> sources = new ArrayList<Source>();
 	private List<Destination> destinations = new ArrayList<Destination>();
-	private Map<String, SocioTag> userTags = new HashMap<String, SocioTag>();
+	private List<SocioTag> userTags = new ArrayList<SocioTag>();
 	private Map<String, String> pages = new HashMap<String, String>();
-	private Long lastUpdate = 0l;
-	private Integer totalUnreadmessages = 0;	
+	private Integer totalUnreadmessages = 0;
+	private String order = ASCENDING_ORDER;
+	private int range = 25;
 	
 	public String getPage(String pageKey){
 		return pages.get(pageKey);
@@ -51,14 +54,6 @@ public class SocioUser extends NamedObject{
 		pages.put(pageKey, page);
 	}
 	
-	public Long getLastUpdate() {
-		return lastUpdate;
-	}
-
-	public void setLastUpdate(Long lastUpdate) {
-		this.lastUpdate = lastUpdate;
-	}
-
 	public String getSelectedSource() {
 		return selectedTag;
 	}
@@ -76,10 +71,10 @@ public class SocioUser extends NamedObject{
 		return contacts;
 	}
 
-	public List<String> getUnreadMessages(Set<String> tagsIds){
+	public List<String> getUnreadMessages(List<SocioTag> tags){
 		Set<String> unreaddenMessages = new HashSet<String>();
-		for (String tagId : tagsIds) {
-			List<String> messages = this.unreadMessages.get(tagId);
+		for (SocioTag tag : tags) {
+			List<String> messages = this.unreadMessages.get(tag.getUniqueId());
 			if (messages != null){
 				
 				unreaddenMessages.addAll(messages);
@@ -137,7 +132,7 @@ public class SocioUser extends NamedObject{
 	}
 
 	public List<String> getAllUnreadMessages() {
-		return getUnreadMessages(userTags.keySet());
+		return getUnreadMessages(userTags);
 	}
 
 	public String getLocale() {
@@ -160,18 +155,22 @@ public class SocioUser extends NamedObject{
 		return messages;
 	}
 
-	public Map<String, SocioTag> getUserTags() {
+	public List<SocioTag> getUserTags() {
 		return userTags;
 	}
 	
 	public SocioTag getTag(String id) {
-		return userTags.get(id);
+		for (SocioTag tag : userTags) {
+			if (tag.getUniqueId().equals(id)){
+				return tag;
+			}
+		}
+		return null;
 	}
 	
 	public void addTag(SocioTag tag){
-		SocioTag currentTag = userTags.get(tag.getUniqueId());
-		if (currentTag == null){
-			userTags.put(tag.getUniqueId(), tag);
+		if (!userTags.contains(tag)){
+			userTags.add(tag);
 		}		
 	}
 	
@@ -249,5 +248,21 @@ public class SocioUser extends NamedObject{
 			unreadMessages.put(sourceId, list);
 		}
 		totalUnreadmessages++;
+	}
+
+	public String getOrder() {
+		return order;
+	}
+
+	public void setOrder(String order) {
+		this.order = order;
+	}
+
+	public int getRange() {
+		return range;
+	}
+
+	public void setRange(int range) {
+		this.range = range;
 	}
 }

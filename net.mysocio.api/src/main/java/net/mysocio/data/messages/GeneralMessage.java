@@ -11,6 +11,8 @@ import javax.jdo.annotations.PersistenceCapable;
 
 import net.mysocio.data.SocioObject;
 import net.mysocio.data.SocioTag;
+import net.mysocio.data.ui.UiObject;
+import net.mysocio.ui.data.objects.DefaultMessage;
 
 
 
@@ -81,4 +83,14 @@ public abstract class GeneralMessage extends SocioObject implements IMessage{
 		tags.add(tag);
 	}
 	public abstract String getLink();
+
+	@Override
+	public String getUiCategory() {
+		return DefaultMessage.CATEGORY;
+	}
+
+	@Override
+	public String getUiName() {
+		return DefaultMessage.NAME;
+	}
 }

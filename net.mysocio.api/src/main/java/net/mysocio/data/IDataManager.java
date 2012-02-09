@@ -42,12 +42,14 @@ public interface IDataManager {
 	public Map<String, UiObject> getUserUiObjects(SocioUser user);
 	
 	public UiObject getUiObject(String category, String name);
+	
+	public void saveUiObject(UiObject uiObject);
 
 	public ISource createSource(ISource source);
 	
 	public IMessage createMessage(IMessage message);
 	
-	public List<IMessage> getMessages(List<String> ids);
+	public List<IMessage> getMessages(List<String> ids, String order, int range);
 	
 	public ISocioObject getObject(String id);
 	
