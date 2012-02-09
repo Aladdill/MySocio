@@ -1806,6 +1806,7 @@
 					if(!$.isArray(js.data)) { tmp = js.data; js.data = []; js.data.push(tmp); }
 					$.each(js.data, function (i, m) {
 						tmp = $("<a />");
+						tmp.addClass("mysocio-tree-node");
 						if($.isFunction(m)) { m = m.call(this, js); }
 						if(typeof m == "string") { tmp.attr('href','#')[ t ? "html" : "text" ](m); }
 						else {

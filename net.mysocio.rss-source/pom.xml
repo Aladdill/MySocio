@@ -27,7 +27,12 @@
 		<dependency>
 			<groupId>rome</groupId>
 			<artifactId>rome</artifactId>
-			<version>0.8</version>
+			<version>1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.rometools</groupId>
+			<artifactId>rome-opml</artifactId>
+			<version>1.0</version>
 		</dependency>
 	</dependencies>
 	<build>

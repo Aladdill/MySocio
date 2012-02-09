@@ -4,8 +4,11 @@
 package net.mysocio.authentication.google;
 
 
+import java.util.List;
+
 import net.mysocio.authentication.AbstractOauth2Manager;
 import net.mysocio.data.accounts.Account;
+import net.mysocio.data.accounts.google.GoogleAccount;
 
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonParser;
@@ -40,20 +43,19 @@ public class GoogleAuthenticationManager extends AbstractOauth2Manager{
 	}
 	
 	protected Account getAccount(Token accessToken) throws Exception {
-		 OAuthRequest request = new OAuthRequest(Verb.GET, "https://www.google.com/m8/feeds/");
+//		 OAuthRequest request = new OAuthRequest(Verb.GET, "https://www.google.com/m8/feeds/");
 //		    service.signRequest(accessToken, request);
-		Response response = request.send();
+//		Response response = request.send();
 //		ContactFeed resultFeed = new ContactFeed(ContactFeed.readFeed(new ParseSource(response.getStream())));
 //		logger.debug("got contacts with title" + resultFeed.getTitle().getPlainText());
 //		List<Person> authors = resultFeed.getAuthors();
 //		GoogleAccount account = new GoogleAccount();
 //		account.setToken(accessToken.getToken());
 //		account.setRefreshToken(getRefreshToken(accessToken.getRawResponse()));
-//		for (Person person : authors) {
+//		for (person person : authors) {
 //			account.setUserName(person.getName());
 //			account.setAccountUniqueId(person.getEmail());
 //		}
-//		return account;
 		return null;
 	}
 	

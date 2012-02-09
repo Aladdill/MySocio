@@ -41,6 +41,9 @@ public class RssMessageProcessor extends AbstractMessageProcessor {
     		message.setUniqueId(entry.getLink());
     		message.setDate(entry.getPublishedDate().getTime());
     		String title = entry.getTitle();
+    		if (title == null){
+    			title = "";
+    		}
 			message.setTitle(title);
     		String text = entry.getDescription().getValue();
 			message.setText(text);

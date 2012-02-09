@@ -79,16 +79,15 @@
 		<module>net.mysocio.facebook-pack</module>
 		<module>net.mysocio.google-pack</module>
 		<module>net.mysocio.test-pack</module>
-		<module>net.mysocio.default-ui-manager</module>
-		<!-- <module>org.katkov.lj-api</module> <module>net.mysocio.lj-source</module> -->
 		<module>net.mysocio.rss-source</module>
+		<module>net.mysocio.lj-pack</module>
+		<module>net.mysocio.default-ui-manager</module>
 		<module>net.mysocio.web-app</module>
-		<!-- <module>org.ljtoolkit.ljtoolkit</module> -->
 	</modules>
 	<properties>
 		<camel-version>2.9.0</camel-version>
 		<scribe-version>1.2.3</scribe-version>
-		<datanucleus-version>3.0.4</datanucleus-version>
+		<datanucleus-version>3.0.7</datanucleus-version>
 		<datanucleus-enhancer-version>3.0.1</datanucleus-enhancer-version>
 		<datanucleus-hbase-version>3.0.2</datanucleus-hbase-version>
 		<mysocio.version>0.0.1-SNAPSHOT</mysocio.version>
@@ -124,7 +123,7 @@
 		<dependency>
 			<groupId>org.datanucleus</groupId>
 			<artifactId>datanucleus-api-jdo</artifactId>
-			<version>${datanucleus-version}</version>
+			<version>3.0.4</version>
 		</dependency>
 		<dependency>
 			<groupId>log4j</groupId>

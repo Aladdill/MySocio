@@ -94,7 +94,7 @@ public class GetSourcesExecutor implements ICommandExecutor {
 		String title = name;
 		if (unreadMessagesNum > 0){
 			jsonGenerator.writeStringField("style", "font-weight: bold;");
-			title += "(" + unreadMessagesNum + ")";
+			title = "(" + unreadMessagesNum + ")" + title;
 		}
 		jsonGenerator.writeEndObject();// for field 'attr'
 		jsonGenerator.writeObjectFieldStart("data");
@@ -106,7 +106,7 @@ public class GetSourcesExecutor implements ICommandExecutor {
 	}
 	private void addRootNode(JsonGenerator jsonGenerator, SocioUser user) throws Exception{
 		jsonGenerator.writeStartObject();
-		addNodeChildren(jsonGenerator, user.getUserTags().values(), user);
+		addNodeChildren(jsonGenerator, user.getUserTags(), user);
 		addNodeData(jsonGenerator, SocioUser.ALL_SOURCES, SocioUser.ALL_SOURCES, null, user.getTotalUnreadmessages());
 		jsonGenerator.writeStringField("state", "open");
 		jsonGenerator.writeEndObject();

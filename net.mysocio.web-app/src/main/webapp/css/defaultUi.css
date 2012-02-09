@@ -737,3 +737,6 @@ a#login_vkontakte img {
 a#login_vkontakte:HOVER img {
 	background: url("../images/loginPage/vkontakte-rollover.png") no-repeat 0 0;
 }
+
+/* adding elipsis to tree leafs*/
+.mysocio-tree-node {width:150px;text-overflow: ellipsis; overflow: hidden; -o-text-overflow: ellipsis;}

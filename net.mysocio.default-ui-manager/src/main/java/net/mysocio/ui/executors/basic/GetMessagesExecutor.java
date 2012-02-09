@@ -41,13 +41,13 @@ public class GetMessagesExecutor implements ICommandExecutor {
 		AbstractUiManager uiManager = new DefaultUiManager();
 		DateFormat formatter = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, connectionData.getLocale());
 		String messagePage = "";
-		try {
-			messagePage = uiManager.getPage(DefaultMessage.CATEGORY, DefaultMessage.NAME, connectionData.getUser());
-		} catch (CorruptedDataException e) {
-			logger.error("Failed showing messages",e);
-			throw new CommandExecutionException(e);
-		}
 		for (IMessage message : messages) {
+			try {
+				messagePage = uiManager.getPage(message.getUiCategory(), message.getUiName(), connectionData.getUser());
+			} catch (CorruptedDataException e) {
+				logger.error("Failed showing messages",e);
+				throw new CommandExecutionException(e);
+			}
 			String pageHtml = message.replacePlaceholders(messagePage);
 			String date = formatter.format(new Date(message.getDate()));
 			pageHtml = pageHtml.replace("date.long", Long.toString(message.getDate()));

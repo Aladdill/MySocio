@@ -12,6 +12,7 @@ function collapseMessage(id) {
 }
 function openUrlInDiv(divId, url, functions) {
 	$.post(url).success(function(data) {
+		if (isNoContent(data)){return;}
 		$(divId).html(data);
 	}).error(onFailure).complete(functions);
 }
@@ -60,6 +61,7 @@ function openAuthenticationWindow(identifierValue, flowValue) {
 		identifier : identifierValue,
 		flow : flowValue
 	}).success(function(data) {
+		if (isNoContent(data)){return;}
 		window.open(data, "name", "height=500,width=500");
 	}).error(onFailure);
 }
@@ -67,21 +69,28 @@ function login(identifierValue) {
 	openAuthenticationWindow(identifierValue, "login");
 }
 function addAccount(identifierValue) {
-	openAuthenticationWindow(identifierValue, "addAccount");
+	if (identifierValue == "lj"){
+		openLjAuthentication();
+	}else{
+		openAuthenticationWindow(identifierValue, "addAccount");
+	}
 }
 function addRssFeed() {
 	$.post("execute?command=addRssFeed", {
 		url : $("#rssUrl").attr("value")
-	}).success(function(data) {
-		$("#data_container").html(data);
-	}).error(onFailure);
+	}).success(setDataContainer).error(onFailure);
 }
 function removeRssFeed(feedId) {
 	$.post("execute?command=removeRssFeed", {
 		id : feedId
-	}).success(function(data) {
-		$("#data_container").html(data);
-	}).error(onFailure);
+	}).success(setDataContainer).error(onFailure);
+}
+function setDataContainer(data){
+	if (isNoContent(data)){return;}
+	$("#data_container").html(data);
+}
+function isNoContent(data){
+	return (data.status == 204);
 }
 function hideTabs() {
 	hideDiv("tabs");
@@ -115,7 +124,32 @@ function showDiv(id) {
 	$("#" + id).css("display", "block");
 }
 function onFailure(data) {
-	window.alert(data.responseText);
+	var $dialog = $('<div></div>')
+	.html(data.responseText)
+	.dialog({
+//		autoOpen: false,
+		title: 'Error'
+	});
+}
+function openLjAuthentication(){
+	var $dialog = $('<div>Username</div>');
+	var $input = $('<input type="text">');
+	$dialog.append($input)
+	$dialog.dialog({
+//		autoOpen: false,
+		title: 'Add Livejournal Account',
+		buttons: { "Ok": function() {
+		$.post("execute?command=startAuthentication", {
+			identifier : 'lj',
+			flow : 'addAccount',
+			username : $input.val()
+		}).success(function(data) {
+			showAccounts();
+		}).error(onFailure);
+		$(this).dialog("close"); 
+		}
+		}
+	});
 }
 function showSettings() {
 	hideSources();
@@ -218,6 +252,7 @@ function getMessages(id) {
 	$(".Message").remove();
 	$.post("execute?command=getMessages&sourceId=" + id).success(
 			function(data) {
+				if (isNoContent(data)){return;}
 				$(data).sort(sortAlpha).insertBefore("#filler");
 			}).error(onFailure);
 }

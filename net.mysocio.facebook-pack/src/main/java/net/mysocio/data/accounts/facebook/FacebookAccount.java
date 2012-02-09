@@ -20,7 +20,7 @@ import net.mysocio.data.accounts.Oauth2Account;
 @PersistenceCapable(detachable="true")
 public class FacebookAccount extends Oauth2Account {
 
-	private static final String ACCOUNT_TYPE = "facebook";
+	public static final String ACCOUNT_TYPE = "facebook";
 	/**
 	 * 
 	 */

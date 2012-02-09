@@ -11,8 +11,17 @@
 		<servlet-name>RequestHandler</servlet-name>
 		<servlet-class>net.mysocio.ui.RequestHandler</servlet-class>
 	</servlet>
+	<servlet>
+		<display-name>ImportOpmlHandler</display-name>
+		<servlet-name>ImportOpmlHandler</servlet-name>
+		<servlet-class>net.mysocio.ui.RequestHandler</servlet-class>
+	</servlet>
 	<servlet-mapping>
 		<servlet-name>RequestHandler</servlet-name>
 		<url-pattern>/execute</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>ImportOpmlHandler</servlet-name>
+		<url-pattern>/importOpml</url-pattern>
 	</servlet-mapping>
 </web-app>

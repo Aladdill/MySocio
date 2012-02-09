@@ -6,6 +6,7 @@ package net.mysocio.data.messages.facebook;
 import javax.jdo.annotations.PersistenceCapable;
 
 import net.mysocio.data.messages.UserMessage;
+import net.mysocio.ui.data.objects.facebook.FacebookUiMessage;
 
 /**
  * @author Aladdin
@@ -32,5 +33,15 @@ public class FacebookMessage extends UserMessage {
 	@Override
 	public String getLink() {
 		return "https://facebook.com/" + getUserId();
+	}
+
+	@Override
+	public String getUiCategory() {
+		return FacebookUiMessage.CATEGORY;
+	}
+
+	@Override
+	public String getUiName() {
+		return FacebookUiMessage.NAME;
 	}
 }

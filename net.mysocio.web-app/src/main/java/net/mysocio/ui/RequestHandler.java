@@ -32,11 +32,19 @@ public class RequestHandler extends AbstractHandler {
 		String commandOutput;
 		IDataManager dataManager = DataManagerFactory.getDataManager();
 		SocioUser user = null;
+		String command = request.getParameter("command");
+		IConnectionData connectionData = new ConnectionData(request);
+		synchronized(connectionData){
+			String pendingCommand = connectionData.getSessionAttribute(command);
+			int counter = 0;
+			if (pendingCommand != null){
+				counter = Integer.parseInt(pendingCommand);
+			}
+			counter ++;
+			connectionData.setSessionAttribute(command, Integer.toString(counter));
+		}
 		try {
-			String command = request.getParameter("command");
-			IConnectionData connectionData = new ConnectionData(request);
 			String userId = (String) request.getSession().getAttribute("user");
-			
 			if (userId != null) {
 				user = (SocioUser)dataManager.getObject(userId);
 				connectionData.setUser(user);
@@ -67,6 +75,21 @@ public class RequestHandler extends AbstractHandler {
 				}
 			}
 			throw new CommandExecutionException(e);
+		}finally{
+			synchronized(connectionData){
+				String pendingCommand = connectionData.getSessionAttribute(command);
+				int counter = 0;
+				if (pendingCommand != null){
+					counter = Integer.parseInt(pendingCommand);
+					counter --;
+					if (counter != 0){
+						response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+					}
+					connectionData.setSessionAttribute(command, Integer.toString(counter));
+				}else{
+					logger.error("Command finished without starting!");
+				}
+			}
 		}
 		return commandOutput;
 	}
