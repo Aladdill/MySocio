@@ -3,11 +3,11 @@
  */
 package net.mysocio.authentication;
 
-import java.rmi.AccessException;
-
 import net.mysocio.data.IAuthenticationManager;
 import net.mysocio.data.IConnectionData;
 import net.mysocio.data.accounts.Account;
+import net.mysocio.data.management.AccountsManager;
+
 import org.scribe.builder.ServiceBuilder;
 import org.scribe.builder.api.Api;
 import org.scribe.model.Token;
@@ -55,7 +55,7 @@ public abstract class AbstractOauth2Manager implements IAuthenticationManager {
         .provider(getApiClass())
         .apiKey(getMysocioId())
         .apiSecret(getMySocioSecret())
-        .callback(getMysocioRedirect())
+        .callback(getMysocioRedirect() + "&" + AccountsManager.IDENTIFIER + "=" + getUserIdentifier())
         .scope(getScope())
         .build();
 		return service;
@@ -76,12 +76,7 @@ public abstract class AbstractOauth2Manager implements IAuthenticationManager {
 	protected abstract Logger getLogger();
 
 	public Account getAccount(IConnectionData connectionData) throws Exception {
-		String error = connectionData.getRequestParameter("error");
-		if (error != null && error.equals("access_denied")){
-			logger.error("Access to user account wasn't granted.");
-			throw new AccessException("Are you sure you want to log in?");
-		}
-		String code = connectionData.getRequestParameter("code");
+		String code = connectionData.getSessionAttribute("code");
 		Verifier verifier = new Verifier(code);
 		OAuthService service = getService();
 		Token accessToken = service.getAccessToken(null, verifier);

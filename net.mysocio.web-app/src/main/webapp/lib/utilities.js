@@ -12,7 +12,9 @@ function collapseMessage(id) {
 }
 function openUrlInDiv(divId, url, functions) {
 	$.post(url).success(function(data) {
-		if (isNoContent(data)){return;}
+		if (isNoContent(data)) {
+			return;
+		}
 		$(divId).html(data);
 	}).error(onFailure).complete(functions);
 }
@@ -56,23 +58,35 @@ function initSourcesData(data) {
 		}
 	});
 }
-function openAuthenticationWindow(identifierValue, flowValue) {
+function login(identifierValue) {
+	startAuthentication(identifierValue);
+}
+function startAuthentication(identifierValue) {
 	$.post("execute?command=startAuthentication", {
 		identifier : identifierValue,
-		flow : flowValue
 	}).success(function(data) {
-		if (isNoContent(data)){return;}
+		if (isNoContent(data)) {
+			return;
+		}
 		window.open(data, "name", "height=500,width=500");
 	}).error(onFailure);
 }
-function login(identifierValue) {
-	openAuthenticationWindow(identifierValue, "login");
+function authenticationDone() {
+	var $dialog = creatingAccount();
+	$.post("execute?command=addAccount")
+	.success(function(data) {
+		if (isNoContent(data)) {
+			return;
+		}
+	})
+	.error(onFailure)
+	.complete(function() { $dialog.dialog("close"); loadMainPage();});
 }
 function addAccount(identifierValue) {
-	if (identifierValue == "lj"){
+	if (identifierValue == "lj") {
 		openLjAuthentication();
-	}else{
-		openAuthenticationWindow(identifierValue, "addAccount");
+	} else {
+		startAuthentication(identifierValue);
 	}
 }
 function addRssFeed() {
@@ -85,11 +99,13 @@ function removeRssFeed(feedId) {
 		id : feedId
 	}).success(setDataContainer).error(onFailure);
 }
-function setDataContainer(data){
-	if (isNoContent(data)){return;}
+function setDataContainer(data) {
+	if (isNoContent(data)) {
+		return;
+	}
 	$("#data_container").html(data);
 }
-function isNoContent(data){
+function isNoContent(data) {
 	return (data.status == 204);
 }
 function hideTabs() {
@@ -102,7 +118,7 @@ function hideSources() {
 	hideDiv("sources_tree");
 	hideDiv("subscriptions_underline");
 	hideDiv("subscriptions_title");
-	//Stop refreshing sources when user in other tab
+	// Stop refreshing sources when user in other tab
 	$("#sources_tree").stopTime("refreshSources");
 }
 function showSources() {
@@ -110,10 +126,10 @@ function showSources() {
 	showDiv("subscriptions_underline");
 	showDiv("subscriptions_title");
 	initSources();
-	//Start refreshing sources when user logs in
+	// Start refreshing sources when user logs in
 	$("#sources_tree").everyTime("60s", "refreshSources", refreshSources, 0);
 }
-function refreshSources(){
+function refreshSources() {
 	$("#sources_tree").data("treeRefreshInitiated", true);
 	initSources();
 }
@@ -124,30 +140,34 @@ function showDiv(id) {
 	$("#" + id).css("display", "block");
 }
 function onFailure(data) {
-	var $dialog = $('<div></div>')
-	.html(data.responseText)
-	.dialog({
-//		autoOpen: false,
-		title: 'Error'
+	var $dialog = $('<div></div>').html(data.responseText).dialog({
+		title : 'Error'
 	});
 }
-function openLjAuthentication(){
+function creatingAccount() {
+	var $dialog = $('<div></div>').html("Please wait, while account been created.").dialog({
+		title : 'Creating Account',
+		modal : true
+	});
+	return $dialog;
+}
+function openLjAuthentication() {
 	var $dialog = $('<div>Username</div>');
 	var $input = $('<input type="text">');
 	$dialog.append($input)
 	$dialog.dialog({
-//		autoOpen: false,
-		title: 'Add Livejournal Account',
-		buttons: { "Ok": function() {
-		$.post("execute?command=startAuthentication", {
-			identifier : 'lj',
-			flow : 'addAccount',
-			username : $input.val()
-		}).success(function(data) {
-			showAccounts();
-		}).error(onFailure);
-		$(this).dialog("close"); 
-		}
+		title : 'Add Livejournal Account',
+		buttons : {
+			"Ok" : function() {
+				var $waitDialog = creatingAccount();
+				$.post("execute?command=addAccount", {
+					identifier : 'lj',
+					username : $input.val()
+				}).success(function(data) {
+				}).error(onFailure)
+				.complete(function() { $waitDialog.dialog("close"); });
+				$(this).dialog("close");
+			}
 		}
 	});
 }
@@ -230,7 +250,8 @@ function messageScroll() {
 	});
 }
 function markMessageReadden(id) {
-	$.post("execute?command=markMessagesReaden&messagesIds=" + id).error(onFailure);
+	$.post("execute?command=markMessagesReaden&messagesIds=" + id).error(
+			onFailure);
 }
 function initPage() {
 	if ($("#login_center_div").size() != 0) {
@@ -252,12 +273,15 @@ function getMessages(id) {
 	$(".Message").remove();
 	$.post("execute?command=getMessages&sourceId=" + id).success(
 			function(data) {
-				if (isNoContent(data)){return;}
+				if (isNoContent(data)) {
+					return;
+				}
 				$(data).sort(sortAlpha).insertBefore("#filler");
 			}).error(onFailure);
 }
-function sortAlpha(a,b){  
-    return $(a).find(".LongDate").first().html() < $(b).find(".LongDate").first().html() ? 1 : -1;  
+function sortAlpha(a, b) {
+	return $(a).find(".LongDate").first().html() < $(b).find(".LongDate")
+			.first().html() ? 1 : -1;
 }
 function showAccounts() {
 	openUrlInDiv("#data_container", "execute?command=getAccounts", []);

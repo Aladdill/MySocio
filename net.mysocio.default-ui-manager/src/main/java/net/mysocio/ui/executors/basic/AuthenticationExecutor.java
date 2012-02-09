@@ -30,9 +30,7 @@ public class AuthenticationExecutor implements ICommandExecutor {
 			throws CommandExecutionException {
 		String identifier = connectionData.getRequestParameter(AccountsManager.IDENTIFIER);
 		connectionData.setSessionAttribute(AccountsManager.IDENTIFIER, identifier);
-		String flow = connectionData.getRequestParameter("flow");
-		logger.debug("Authenticating acunt of type:" + identifier + " in flow: " + flow);
-		connectionData.setSessionAttribute("flow", flow);
+		logger.debug("Authenticating acount of type:" + identifier);
 		String accountRequestUrl = null;
 		try {
 			accountRequestUrl = AccountsManager.getInstance().getAccountRequestUrl(identifier);

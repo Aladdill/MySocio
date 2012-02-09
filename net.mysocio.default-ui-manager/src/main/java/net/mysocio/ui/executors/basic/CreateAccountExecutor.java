@@ -24,7 +24,6 @@ import org.slf4j.LoggerFactory;
  */
 @PersistenceAware
 public class CreateAccountExecutor implements ICommandExecutor {
-	private static final String CREATING_ACCOUNT_IN_LOGOUT = "Attempt to create account while in logged out state. Probable attempt of hacking.";
 	private static final Logger logger = LoggerFactory.getLogger(CreateAccountExecutor.class);
 
 	/*
@@ -36,33 +35,18 @@ public class CreateAccountExecutor implements ICommandExecutor {
 	@Override
 	public String execute(IConnectionData connectionData)
 			throws CommandExecutionException {
-		String flow = connectionData.getSessionAttribute("flow");
-		logger.debug("Creating account in flow: " + flow);
-		String responseString = null;
 		try {
 			SocioUser user = connectionData.getUser();
 			Account account = AccountsManager.getInstance().getAccount(connectionData);
 			IDataManager dataManager;
-			if ("login".equals(flow)) {
-				if (user!=null){
-					logger.error("User already logged in from this IP.");
-					throw new CommandExecutionException("User already logged in from this IP.");
-				}
+			if (user == null) {
+				logger.debug("Creating account for new user.");
 				dataManager = DataManagerFactory.getDataManager();
 				user = dataManager.getUser(account,connectionData.getLocale());
-				responseString = DefaultResourcesManager.getPage("closingLoginWindow.html");
-			} else if ("addAccount".equals(flow)) {
-				if (user == null) {
-					logger.error(CREATING_ACCOUNT_IN_LOGOUT);
-					throw new CommandExecutionException(
-							CREATING_ACCOUNT_IN_LOGOUT);
-				}
+			} else {
+				logger.debug("Creating account for user: " + user.getName());
 				dataManager = DataManagerFactory.getDataManager(user);
 				dataManager.addAccountToUser(account, user);
-				responseString = DefaultResourcesManager.getPage("closingAddAccountWindow.html");
-			} else {
-				logger.error("Unknown flow:" + flow);
-				throw new CommandExecutionException("Unknown flow:" + flow);
 			}
 			connectionData.setUser(user);
 		} catch (Exception e) {
@@ -70,8 +54,8 @@ public class CreateAccountExecutor implements ICommandExecutor {
 			throw new CommandExecutionException(e);
 		}
 		connectionData.removeSessionAttribute(AccountsManager.IDENTIFIER);
-		connectionData.removeSessionAttribute("flow");
-		return responseString;
+		connectionData.removeSessionAttribute("code");
+		return "";
 	}
 
 }

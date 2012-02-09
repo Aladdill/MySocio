@@ -7,11 +7,14 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.List;
 
+import javax.jdo.annotations.PersistenceAware;
+
 import net.mysocio.data.IAuthenticationManager;
 import net.mysocio.data.IConnectionData;
 import net.mysocio.data.accounts.Account;
 import net.mysocio.data.accounts.lj.LjAccount;
 import net.mysocio.data.accounts.lj.LjFriend;
+import net.mysocio.data.management.DataManagerFactory;
 import net.mysocio.utils.rss.AddingRssException;
 
 import org.jdom.Document;
@@ -29,6 +32,7 @@ import com.sun.syndication.io.impl.OPML20Parser;
  * @author Aladdin
  *
  */
+@PersistenceAware
 public class LjAuthenticationManager implements IAuthenticationManager {
 	private static final String NO_USERNAME_FOUND_FOR_LJ_ACCOUNT = "No username found for LJ account.";
 	private static final String LJ_AUTHENTICATION_IS_NOT_YET_IMPLEMENTED = "LJ authentication is not yet implemented.";
@@ -52,8 +56,13 @@ public class LjAuthenticationManager implements IAuthenticationManager {
 			logger.error(NO_USERNAME_FOUND_FOR_LJ_ACCOUNT);
 			throw new IllegalArgumentException(NO_USERNAME_FOUND_FOR_LJ_ACCOUNT);
 		}
-		LjAccount ljAccount = new LjAccount();
-		
+		LjAccount ljAccount;
+		ljAccount = (LjAccount) DataManagerFactory.getDataManager().getAccount(username);
+		if (ljAccount != null) {
+			logger.debug("Account found.");
+			return ljAccount;
+		}
+		ljAccount = new LjAccount();
 		try {
 			SyndFeedInput input = new SyndFeedInput();
 			SyndFeed feed = input.build(new InputStreamReader(new URL("http://" + username + ".livejournal.com/data/rss").openStream(),

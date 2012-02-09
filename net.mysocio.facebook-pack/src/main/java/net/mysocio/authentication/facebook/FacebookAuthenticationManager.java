@@ -69,6 +69,7 @@ public class FacebookAuthenticationManager extends AbstractOauth2Manager {
 		String id = root.get("id").getValueAsText();
 		account = (FacebookAccount) DataManagerFactory.getDataManager().getAccount(id);
 		if (account != null) {
+			logger.debug("Account found.");
 			return account;
 		}
 		account = new FacebookAccount();
