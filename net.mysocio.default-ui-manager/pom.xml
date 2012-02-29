@@ -12,22 +12,18 @@
 		<dependency>
 			<groupId>net.mysocio</groupId>
 			<artifactId>api</artifactId>
-			<version>${mysocio.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>net.mysocio</groupId>
 			<artifactId>data-management</artifactId>
-			<version>${mysocio.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>net.mysocio</groupId>
 			<artifactId>authentication-management</artifactId>
-			<version>${mysocio.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>net.mysocio</groupId>
 			<artifactId>rss-pack</artifactId>
-			<version>${mysocio.version}</version>
 		</dependency>
 	</dependencies>
 	<build>

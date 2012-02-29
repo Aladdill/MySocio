@@ -12,22 +12,18 @@
 		<dependency>
 			<groupId>net.mysocio</groupId>
 			<artifactId>api</artifactId>
-			<version>${mysocio.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>net.mysocio</groupId>
 			<artifactId>data-management</artifactId>
-			<version>${mysocio.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.scribe</groupId>
 			<artifactId>scribe</artifactId>
-			<version>${scribe-version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.codehaus.jackson</groupId>
 			<artifactId>jackson-jaxrs</artifactId>
-			<version>1.8.3</version>
 		</dependency>
 	</dependencies>
 </project>

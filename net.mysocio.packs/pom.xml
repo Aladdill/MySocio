@@ -1,0 +1,55 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>my-socio</artifactId>
+		<groupId>net.mysocio</groupId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+	<artifactId>packs</artifactId>
+	<packaging>pom</packaging>
+	<name>Data Packs</name>
+	<description>Packages for networks and data integration</description>
+	<modules>
+		<module>net.mysocio.facebook-pack</module>
+		<module>net.mysocio.test-pack</module>
+		<module>net.mysocio.google-pack</module>
+		<module>net.mysocio.rss-pack</module>
+		<module>net.mysocio.lj-pack</module>
+	</modules>
+	<dependencies>
+		<dependency>
+			<groupId>org.datanucleus</groupId>
+			<artifactId>datanucleus-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.datanucleus</groupId>
+			<artifactId>datanucleus-enhancer</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.datanucleus</groupId>
+			<artifactId>datanucleus-api-jdo</artifactId>
+		</dependency>
+	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.datanucleus</groupId>
+				<artifactId>maven-datanucleus-plugin</artifactId>
+				<version>${datanucleus-enhancer-version}</version>
+				<configuration>
+					<log4jConfiguration>${basedir}/log4j.properties</log4jConfiguration>
+					<verbose>true</verbose>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>compile</phase>
+						<goals>
+							<goal>enhance</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>
