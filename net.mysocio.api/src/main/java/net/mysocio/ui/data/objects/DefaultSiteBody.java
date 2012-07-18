@@ -3,16 +3,14 @@
  */
 package net.mysocio.ui.data.objects;
 
-import javax.jdo.annotations.PersistenceCapable;
+import com.google.code.morphia.annotations.Entity;
 
 
 /**
  * @author Aladdin
  *
  */
-@PersistenceCapable(detachable="true")
-
-
+@Entity("ui_objects")
 public class DefaultSiteBody extends SiteBody{
 	/**
 	 * 

@@ -6,17 +6,17 @@ package net.mysocio.data.contacts.facebook;
 import java.util.Collections;
 import java.util.List;
 
-import javax.jdo.annotations.PersistenceCapable;
-
-import net.mysocio.connection.readers.ISource;
-import net.mysocio.connection.writers.IDestination;
+import net.mysocio.connection.readers.Source;
+import net.mysocio.connection.writers.Destination;
 import net.mysocio.data.contacts.Contact;
+
+import com.google.code.morphia.annotations.Entity;
 
 /**
  * @author Aladdin
  *
  */
-@PersistenceCapable(detachable="true")
+@Entity("contacts")
 public class FacebookContact extends Contact {
 
 	/**
@@ -27,12 +27,12 @@ public class FacebookContact extends Contact {
 	private String facebookId;
 
 	@Override
-	public List<ISource> getSources() {
+	public List<Source> getSources() {
 		return Collections.emptyList();
 	}
 
 	@Override
-	public List<IDestination> getDestinations() {
+	public List<Destination> getDestinations() {
 		return Collections.emptyList();
 	}
 

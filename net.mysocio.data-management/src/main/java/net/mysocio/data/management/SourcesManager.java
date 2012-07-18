@@ -3,25 +3,28 @@
  */
 package net.mysocio.data.management;
 
-import javax.jdo.Transaction;
-import javax.jdo.annotations.PersistenceAware;
+import java.util.List;
 
 import net.mysocio.connection.readers.Source;
 import net.mysocio.data.IDataManager;
+import net.mysocio.data.SocioTag;
 import net.mysocio.data.SocioUser;
 
 /**
  * @author Aladdin
  *
  */
-@PersistenceAware
 public class SourcesManager {
 	public static void addSourceToUser(SocioUser user, Source source) throws Exception{
-		IDataManager dataManager = DataManagerFactory.getDataManager(user);
+		IDataManager dataManager = DataManagerFactory.getDataManager();
 		Source savedSource = (Source)dataManager.createSource(source);
 		source.createRoute("activemq:" + user.getId()  + ".newMessage");
-		Transaction transaction = dataManager.startTransaction();
+		List<SocioTag> tags = savedSource.getTags();
+		for (SocioTag tag : tags) {
+			tag.setUserId(user.getId().toString());
+		}
+		dataManager.saveObjects(tags);
 		user.addSource(savedSource);
-		dataManager.endTransaction(transaction);
+		dataManager.saveObject(user);
 	}
 }

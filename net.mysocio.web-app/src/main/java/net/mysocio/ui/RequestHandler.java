@@ -1,13 +1,9 @@
 package net.mysocio.ui;
 
-import javax.jdo.JDOHelper;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.mysocio.data.IConnectionData;
-import net.mysocio.data.IDataManager;
-import net.mysocio.data.SocioUser;
-import net.mysocio.data.management.DataManagerFactory;
 import net.mysocio.ui.management.CommandExecutionException;
 import net.mysocio.ui.management.CommandIterpreterFactory;
 import net.mysocio.ui.management.ICommandInterpreter;
@@ -30,8 +26,6 @@ public class RequestHandler extends AbstractHandler {
 	 */
 	protected String handleRequest(HttpServletRequest request,HttpServletResponse response) throws CommandExecutionException {
 		String commandOutput;
-		IDataManager dataManager = DataManagerFactory.getDataManager();
-		SocioUser user = null;
 		String command = request.getParameter("command");
 		IConnectionData connectionData = new ConnectionData(request);
 		synchronized(connectionData){
@@ -43,35 +37,29 @@ public class RequestHandler extends AbstractHandler {
 			counter ++;
 			connectionData.setSessionAttribute(command, Integer.toString(counter));
 		}
+		String userId = null;
 		try {
-			String userId = (String) request.getSession().getAttribute("user");
+			userId = (String) request.getSession().getAttribute("user");
 			if (userId != null) {
-				user = (SocioUser)dataManager.getObject(userId);
-				connectionData.setUser(user);
+				connectionData.setUserId(userId);
 			}
 			ICommandInterpreter commandInterpreter = CommandIterpreterFactory.getCommandInterpreter(connectionData);
 			response.setContentType(commandInterpreter.getCommandResponseType(command));
 			commandOutput = commandInterpreter.executeCommand(command);
-			user = connectionData.getUser();
-			if (user != null) {
-				if (JDOHelper.isDirty(user)){
-					DataManagerFactory.getDataManager(user).persistObject(user);
-				}
-				request.getSession().setAttribute("user", user.getId());
+			userId = connectionData.getUserId();
+			if (userId != null) {
+				request.getSession().setAttribute("user", userId);
 				if (logger.isDebugEnabled()) {
-					logger.debug("User was inserted into session with name "
-							+ user.getName());
+					logger.debug("User was inserted into session with id "
+							+ userId);
 				}
 			}
 		} catch (Exception e) {
-			if (user != null) {
-				if (JDOHelper.isDirty(user)){
-					DataManagerFactory.getDataManager(user).persistObject(user);
-				}
-				request.getSession().setAttribute("user", user.getId());
+			if (userId != null) {
+				request.getSession().setAttribute("user", userId);
 				if (logger.isDebugEnabled()) {
-					logger.debug("User was inserted into session with name "
-							+ user.getName());
+					logger.debug("User was inserted into session with id "
+							+ userId);
 				}
 			}
 			throw new CommandExecutionException(e);

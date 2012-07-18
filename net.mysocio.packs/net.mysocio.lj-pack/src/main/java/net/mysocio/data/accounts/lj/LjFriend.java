@@ -3,15 +3,15 @@
  */
 package net.mysocio.data.accounts.lj;
 
-import javax.jdo.annotations.PersistenceCapable;
-
 import net.mysocio.data.NamedObject;
+
+import com.google.code.morphia.annotations.Entity;
 
 /**
  * @author Aladdin
  *
  */
-@PersistenceCapable(detachable="true")
+@Entity("friends")
 public class LjFriend extends NamedObject{
 
 	/**

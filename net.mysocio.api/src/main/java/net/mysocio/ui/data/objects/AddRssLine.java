@@ -3,17 +3,15 @@
  */
 package net.mysocio.ui.data.objects;
 
-import javax.jdo.annotations.PersistenceCapable;
-
 import net.mysocio.data.ui.UiObject;
+
+import com.google.code.morphia.annotations.Entity;
 
 /**
  * @author Aladdin
  *
  */
-@PersistenceCapable(detachable="true")
-
-
+@Entity("ui_objects")
 public class AddRssLine extends UiObject {
 	/**
 	 * 

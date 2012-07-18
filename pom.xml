@@ -41,6 +41,16 @@
 			</snapshots>
 		</repository>
 		<repository>
+			<id>morphia</id>
+			<url>http://morphia.googlecode.com/svn/mavenrepo</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+		<repository>
 			<id>mandubian-mvn</id>
 			<url>http://mandubian-mvn.googlecode.com/svn/trunk/mandubian-mvn/repository</url>
 			<releases>
@@ -79,13 +89,15 @@
 		<module>net.mysocio.packs</module>
 		<module>net.mysocio.default-ui-manager</module>
 		<module>net.mysocio.web-app</module>
+		<module>jdo-data-management</module>
+		<module>mongo-data-management</module>
 	</modules>
 	<properties>
-		<camel-version>2.9.0</camel-version>
-		<scribe-version>1.2.3</scribe-version>
+		<camel-version>[2.9.0,)</camel-version>
+		<scribe-version>1.3.0</scribe-version>
 		<datanucleus-version>3.1.0-m1</datanucleus-version>
-		<datanucleus-enhancer-version>3.0.1</datanucleus-enhancer-version>
-		<datanucleus-hbase-version>3.0.2</datanucleus-hbase-version>
+		<!-- <datanucleus-enhancer-version>3.0.1</datanucleus-enhancer-version> 
+			<datanucleus-hbase-version>3.0.2</datanucleus-hbase-version> -->
 		<mysocio.version>0.0.1-SNAPSHOT</mysocio.version>
 	</properties>
 	<dependencyManagement>
@@ -94,7 +106,7 @@
 			<dependency>
 				<groupId>org.datanucleus</groupId>
 				<artifactId>datanucleus-hbase</artifactId>
-				<version>${datanucleus-hbase-version}</version>
+				<version>${datanucleus-version}</version>
 				<exclusions>
 					<exclusion>
 						<artifactId>servlet-api</artifactId>
@@ -109,7 +121,7 @@
 			<dependency>
 				<groupId>org.datanucleus</groupId>
 				<artifactId>datanucleus-mongodb</artifactId>
-				<version>3.0.5</version>
+				<version>${datanucleus-version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.datanucleus</groupId>
@@ -119,12 +131,12 @@
 			<dependency>
 				<groupId>org.datanucleus</groupId>
 				<artifactId>datanucleus-enhancer</artifactId>
-				<version>${datanucleus-enhancer-version}</version>
+				<version>${datanucleus-version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.datanucleus</groupId>
 				<artifactId>datanucleus-api-jdo</artifactId>
-				<version>3.0.4</version>
+				<version>${datanucleus-version}</version>
 			</dependency>
 			<!-- Camel dependencies -->
 			<dependency>
@@ -239,6 +251,11 @@
 				<version>${mysocio.version}</version>
 			</dependency>
 			<dependency>
+				<groupId>net.mysocio</groupId>
+				<artifactId>mongo-data-management</artifactId>
+				<version>${mysocio.version}</version>
+			</dependency>
+			<dependency>
 				<groupId>javax.jdo</groupId>
 				<artifactId>jdo-api</artifactId>
 				<version>3.0</version>
@@ -293,6 +310,11 @@
 				<groupId>log4j</groupId>
 				<artifactId>log4j</artifactId>
 				<version>1.2.16</version>
+			</dependency>
+			<dependency>
+				<groupId>com.google.code.morphia</groupId>
+				<artifactId>morphia</artifactId>
+				<version>0.99</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
@@ -354,7 +376,7 @@
 											maven-datanucleus-plugin
 										</artifactId>
 										<versionRange>
-											${datanucleus-plugin-version}
+											${datanucleus-version}
 										</versionRange>
 										<goals>
 											<goal>enhance</goal>

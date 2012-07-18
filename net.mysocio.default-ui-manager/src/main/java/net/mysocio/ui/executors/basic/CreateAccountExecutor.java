@@ -3,15 +3,12 @@
  */
 package net.mysocio.ui.executors.basic;
 
-import javax.jdo.annotations.PersistenceAware;
-
 import net.mysocio.data.IConnectionData;
 import net.mysocio.data.IDataManager;
 import net.mysocio.data.SocioUser;
 import net.mysocio.data.accounts.Account;
 import net.mysocio.data.management.AccountsManager;
 import net.mysocio.data.management.DataManagerFactory;
-import net.mysocio.data.management.DefaultResourcesManager;
 import net.mysocio.ui.management.CommandExecutionException;
 import net.mysocio.ui.management.ICommandExecutor;
 
@@ -22,7 +19,6 @@ import org.slf4j.LoggerFactory;
  * @author Aladdin
  * 
  */
-@PersistenceAware
 public class CreateAccountExecutor implements ICommandExecutor {
 	private static final Logger logger = LoggerFactory.getLogger(CreateAccountExecutor.class);
 
@@ -45,7 +41,7 @@ public class CreateAccountExecutor implements ICommandExecutor {
 				user = dataManager.getUser(account,connectionData.getLocale());
 			} else {
 				logger.debug("Creating account for user: " + user.getName());
-				dataManager = DataManagerFactory.getDataManager(user);
+				dataManager = DataManagerFactory.getDataManager();
 				dataManager.addAccountToUser(account, user);
 			}
 			connectionData.setUser(user);

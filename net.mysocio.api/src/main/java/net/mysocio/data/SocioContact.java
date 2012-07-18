@@ -6,9 +6,10 @@ package net.mysocio.data;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.jdo.annotations.PersistenceCapable;
+import com.google.code.morphia.annotations.Entity;
+import com.google.code.morphia.annotations.Reference;
 
-import net.mysocio.data.contacts.IContact;
+import net.mysocio.data.contacts.Contact;
 
 
 
@@ -16,21 +17,21 @@ import net.mysocio.data.contacts.IContact;
  * @author Aladdin
  *
  */
-@PersistenceCapable(detachable="true")
+@Entity("my_socio_contacts")
 public class SocioContact extends NamedObject{
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -8736689433772607760L;
-	
-	private List<IContact> accountsContacts = new ArrayList<IContact>();
+	@Reference
+	private List<Contact> accountsContacts = new ArrayList<Contact>();
 
-	public List<IContact> getAccountsContacts() {
+	public List<Contact> getAccountsContacts() {
 		return accountsContacts;
 	}
 
-	public void setAccountsContacts(List<IContact> accountsContacts) {
+	public void setAccountsContacts(List<Contact> accountsContacts) {
 		this.accountsContacts = accountsContacts;
 	}
 }

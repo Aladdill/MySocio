@@ -5,15 +5,15 @@ package net.mysocio.data.contacts;
 
 import java.util.List;
 
-import javax.jdo.annotations.PersistenceCapable;
-
 import net.mysocio.data.NamedObject;
+
+import com.google.code.morphia.annotations.Entity;
 
 /**
  * @author Aladdin
  *
  */
-@PersistenceCapable
+@Entity("contacts_group")
 public abstract class ContactsGroup extends NamedObject{
 	private List<String> contacts;
 

@@ -51,12 +51,12 @@ public class RssUtils {
 		SocioTag tag = new SocioTag();
 		tag.setIconType("rss.icon");
 		tag.setValue(title);
-		tag.setUniqueId(url);
+		tag.setUserId(url);
 		source.addTag(tag);
 		SocioTag tag1 = new SocioTag();
 		tag1.setIconType("rss.icon");
 		tag1.setValue("rss.tag");
-		tag1.setUniqueId("rss.tag");
+		tag1.setUserId("rss.tag");
 		source.addTag(tag1);
 		try {
 			SourcesManager.addSourceToUser(user, source);

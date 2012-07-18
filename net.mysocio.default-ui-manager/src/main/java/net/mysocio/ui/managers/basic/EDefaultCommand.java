@@ -8,7 +8,7 @@ import net.mysocio.ui.executors.basic.GetAccountsExecutor;
 import net.mysocio.ui.executors.basic.GetContactsExecutor;
 import net.mysocio.ui.executors.basic.GetMessagesExecutor;
 import net.mysocio.ui.executors.basic.GetRssFeedsExecutor;
-import net.mysocio.ui.executors.basic.GetSourcesExecutor;
+import net.mysocio.ui.executors.basic.GetTagsExecutor;
 import net.mysocio.ui.executors.basic.LoadMainPageExecutor;
 import net.mysocio.ui.executors.basic.LoginPageExecutor;
 import net.mysocio.ui.executors.basic.LogoutPageExecutor;
@@ -32,7 +32,7 @@ public enum EDefaultCommand {
 	removeRssFeed(new RemoveRssFeedExecutor()),
 	addAccount(new CreateAccountExecutor()),
 	removeAccount(new RemoveAccountExecutor()),
-	getSources(new GetSourcesExecutor(), DefaultCommandIterpreter.JSON),
+	getSources(new GetTagsExecutor(), DefaultCommandIterpreter.JSON),
 	markMessagesReaden(new MarkMessagesReadenExecutor(), DefaultCommandIterpreter.JSON);
 	private ICommandExecutor executor;
 	private String responseType = DefaultCommandIterpreter.TEXT_HTML;

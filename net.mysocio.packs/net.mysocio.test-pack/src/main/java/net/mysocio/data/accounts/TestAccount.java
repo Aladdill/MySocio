@@ -6,8 +6,6 @@ package net.mysocio.data.accounts;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.jdo.annotations.PersistenceCapable;
-
 import net.mysocio.authentication.test.TestSource;
 import net.mysocio.connection.readers.Source;
 import net.mysocio.data.SocioTag;
@@ -16,7 +14,6 @@ import net.mysocio.data.SocioTag;
  * @author Aladdin
  *
  */
-@PersistenceCapable(detachable="true")
 public class TestAccount extends Account {
 	/**
 	 * 

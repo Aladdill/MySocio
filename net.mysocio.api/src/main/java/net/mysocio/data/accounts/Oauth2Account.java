@@ -3,7 +3,6 @@
  */
 package net.mysocio.data.accounts;
 
-import javax.jdo.annotations.PersistenceCapable;
 
 
 
@@ -11,7 +10,6 @@ import javax.jdo.annotations.PersistenceCapable;
  * @author Aladdin
  *
  */
-@PersistenceCapable
 public abstract class Oauth2Account extends Account{
 	/**
 	 * 

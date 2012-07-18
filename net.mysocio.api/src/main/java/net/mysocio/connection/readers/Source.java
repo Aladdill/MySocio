@@ -6,24 +6,24 @@ package net.mysocio.connection.readers;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.jdo.annotations.Inheritance;
-import javax.jdo.annotations.PersistenceCapable;
-
 import net.mysocio.data.NamedObject;
 import net.mysocio.data.SocioTag;
+
+import com.google.code.morphia.annotations.Entity;
+import com.google.code.morphia.annotations.Reference;
 
 /**
  * @author Aladdin
  *
  */
-@PersistenceCapable
-@Inheritance(customStrategy="complete-table")
-public abstract class Source extends NamedObject implements ISource {
+@Entity("sources")
+public abstract class Source extends NamedObject {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 133410971632390235L;
 	private String url;
+	@Reference
 	private List<SocioTag> tags = new ArrayList<SocioTag>();
 	
 	public Source() {

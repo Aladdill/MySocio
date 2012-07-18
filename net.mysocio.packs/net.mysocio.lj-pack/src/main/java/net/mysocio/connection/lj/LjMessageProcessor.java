@@ -5,8 +5,6 @@ package net.mysocio.connection.lj;
 
 import java.util.List;
 
-import javax.jdo.annotations.PersistenceAware;
-
 import net.mysocio.connection.rss.RssMessageProcessor;
 import net.mysocio.data.SocioTag;
 import net.mysocio.data.management.CamelContextManager;
@@ -26,7 +24,6 @@ import com.sun.syndication.feed.synd.SyndImage;
  * @author Aladdin
  *
  */
-@PersistenceAware
 public class LjMessageProcessor extends RssMessageProcessor {
 	static final Logger logger = LoggerFactory.getLogger(LjMessageProcessor.class);
 	public void process(Exchange exchange) throws Exception {
@@ -53,7 +50,7 @@ public class LjMessageProcessor extends RssMessageProcessor {
 			SocioTag tag = new SocioTag();
 			tag.setIconType("lj.icon");
 			tag.setValue(title);
-			tag.setUniqueId(link);
+			tag.setUserId(link);
 			message.addTag(tag);
 			addTagsToMessage(message);
     		if (logger.isDebugEnabled()){

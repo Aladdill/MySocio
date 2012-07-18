@@ -7,21 +7,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.jdo.annotations.Inheritance;
-import javax.jdo.annotations.PersistenceCapable;
-
 import net.mysocio.connection.readers.Source;
 import net.mysocio.data.IDisplayedObject;
 import net.mysocio.data.SocioObject;
+import net.mysocio.data.SocioUser;
 import net.mysocio.data.contacts.Contact;
 import net.mysocio.ui.data.objects.NewAccountLine;
+
+import com.google.code.morphia.annotations.Entity;
+import com.google.code.morphia.annotations.Reference;
 
 /**
  * @author Aladdin
  *
  */
-@PersistenceCapable
-@Inheritance(customStrategy="complete-table")
+@Entity("accounts")
 public abstract class Account extends SocioObject implements IDisplayedObject{
 	/**
 	 * 
@@ -29,21 +29,23 @@ public abstract class Account extends SocioObject implements IDisplayedObject{
 	private static final long serialVersionUID = 7561557374532619473L;
 	private String userName =  new String();
 	private String accountUniqueId = new String();
-	private String userId = new String();
+	@Reference
+	private SocioUser user;
 	private String userpicUrl = new String();
 	private String email = new String();
+	@Reference
 	private Map<String, Contact> contacts = new HashMap<String, Contact>();
 	
 
-	public String getUserId() {
-		return userId;
+	public SocioUser getUser() {
+		return user;
 	}
 
-	public void setUserId(String userId) {
-		this.userId = userId;
+	public void setUser(SocioUser user) {
+		this.user = user;
 	}
 
-	public abstract String getAccountType();
+	public String getAccountType(){return null;}
 
 	public String getAccountUniqueId() {
 		return accountUniqueId;
@@ -69,7 +71,7 @@ public abstract class Account extends SocioObject implements IDisplayedObject{
 		this.userpicUrl = userpicUrl;
 	}
 	
-	public abstract List<Source> getSources();
+	public List<Source> getSources(){return null;}
 
 	public String getEmail() {
 		return email;
@@ -86,7 +88,7 @@ public abstract class Account extends SocioObject implements IDisplayedObject{
 	public void setContacts(Map<String, Contact> contacts) {
 		this.contacts = contacts;
 	}
-	public abstract String getIconUrl();
+	public String getIconUrl(){return null;}
 	
 	@Override
 	public String getUiCategory() {

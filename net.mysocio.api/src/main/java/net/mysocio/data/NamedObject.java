@@ -3,16 +3,12 @@
  */
 package net.mysocio.data;
 
-import javax.jdo.annotations.Inheritance;
-import javax.jdo.annotations.PersistenceCapable;
 
 
 /**
  * @author Aladdin
  *
  */
-@PersistenceCapable
-@Inheritance(customStrategy="complete-table")
 public abstract class NamedObject extends SocioObject implements INamedObject{
 	/**
 	 * 

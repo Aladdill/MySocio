@@ -5,6 +5,8 @@ package net.mysocio.data;
 
 import java.io.Serializable;
 
+import org.bson.types.ObjectId;
+
 
 
 /**
@@ -12,5 +14,5 @@ import java.io.Serializable;
  *
  */
 public interface ISocioObject extends Serializable{
-	public String getId();
+	public ObjectId getId();
 }

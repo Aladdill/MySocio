@@ -3,15 +3,12 @@
  */
 package net.mysocio.data.accounts.facebook;
 
-import javax.jdo.annotations.PersistenceCapable;
-
 import net.mysocio.data.NamedObject;
 
 /**
  * @author Aladdin
  *
  */
-@PersistenceCapable(detachable="true")
 public class NamedFacebookObject extends NamedObject {
 	/**
 	 * 

@@ -6,7 +6,7 @@ package net.mysocio.data.accounts.google;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.jdo.annotations.PersistenceCapable;
+import com.google.code.morphia.annotations.Entity;
 
 import net.mysocio.connection.readers.Source;
 import net.mysocio.data.SocioTag;
@@ -16,7 +16,7 @@ import net.mysocio.data.accounts.Oauth2Account;
  * @author Aladdin
  *
  */
-@PersistenceCapable
+@Entity("accounts")
 public class GoogleAccount extends Oauth2Account{
 	public static final String ACCOUNT_TYPE = "google";
 

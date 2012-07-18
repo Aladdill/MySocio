@@ -7,13 +7,12 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Iterator;
 
-import javax.jdo.annotations.PersistenceAware;
-
 import net.mysocio.authentication.facebook.FacebookAuthenticationManager;
 import net.mysocio.data.SocioTag;
 import net.mysocio.data.management.AbstractMessageProcessor;
 import net.mysocio.data.management.CamelContextManager;
 import net.mysocio.data.management.MessagesManager;
+import net.mysocio.data.messages.UnreaddenMessage;
 import net.mysocio.data.messages.facebook.FacebookMessage;
 
 import org.apache.camel.Exchange;
@@ -28,7 +27,6 @@ import org.slf4j.LoggerFactory;
  * @author Aladdin
  *
  */
-@PersistenceAware
 public class FacebookInputProcessor extends AbstractMessageProcessor {
 	private static final Logger logger = LoggerFactory
 			.getLogger(FacebookInputProcessor.class);
@@ -101,7 +99,7 @@ public class FacebookInputProcessor extends AbstractMessageProcessor {
 	public void process(Exchange exchange) throws Exception {
 		long toInSec = System.currentTimeMillis()/1000;
 		long fromInSec = lastUpdate/1000;
-		String url = "https://graph.facebook.com/me/home?format=json&until="+toInSec;
+		String url = "https://graph.facebook.com/me/home?format=json";
 		if (fromInSec == 0 || (toInSec - fromInSec) > MONTH){
 			fromInSec = toInSec - MONTH;
 		}
@@ -116,14 +114,22 @@ public class FacebookInputProcessor extends AbstractMessageProcessor {
 			JsonNode element = elements.next();
 			FacebookMessage message = parseFacebookMessage(element);
 			logger.debug("Got facebook message from user " + message.getTitle() + " with id " + message.getUniqueId());
-			addTagsToMessage(message);
 			SocioTag tag = new SocioTag();
 			tag.setValue(message.getTitle());
-			tag.setUniqueId(message.getUserId());
 			tag.setIconType("facebook.icon.general");
-			message.addTag(tag);
 			MessagesManager.getInstance().storeMessage(message);
-			producerTemplate.sendBody(to,message);
+			UnreaddenMessage unreaddenMessage = new UnreaddenMessage();
+			unreaddenMessage.setMessageDate(message.getDate());
+			unreaddenMessage.setMessageId(message.getId().toString());
+			unreaddenMessage.setTag(tag);
+			producerTemplate.sendBody(to,unreaddenMessage);
+			for (SocioTag sourceTag : tags) {
+				unreaddenMessage = new UnreaddenMessage();
+				unreaddenMessage.setMessageDate(message.getDate());
+				unreaddenMessage.setMessageId(message.getId().toString());
+				unreaddenMessage.setTag(sourceTag);
+    			producerTemplate.sendBody(to,unreaddenMessage);
+			}
 		}
 		lastUpdate = toInSec*1000;
 	}

@@ -8,17 +8,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.jdo.annotations.Inheritance;
-import javax.jdo.annotations.PersistenceCapable;
-
 import net.mysocio.data.NamedObject;
+
+import com.google.code.morphia.annotations.Entity;
+import com.google.code.morphia.annotations.Reference;
 
 /**
  * @author Aladdin
  *
  */
-@PersistenceCapable
-@Inheritance(customStrategy="complete-table")
+@Entity("ui_objects")
 public abstract class UiObject extends NamedObject{
 	/**
 	 * 
@@ -27,6 +26,7 @@ public abstract class UiObject extends NamedObject{
 	public static final String TAG_START = "<<";
 	public static final String TAG_END = ">>";
 	private String category;
+	@Reference
 	private Map<String, UiObject> innerObjects = new HashMap<String, UiObject>();
 	private List<String> textLabels = new ArrayList<String>();
 	private String htmlTemplate = "";

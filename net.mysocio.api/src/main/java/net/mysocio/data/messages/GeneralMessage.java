@@ -3,16 +3,10 @@
  */
 package net.mysocio.data.messages;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.jdo.annotations.Inheritance;
-import javax.jdo.annotations.PersistenceCapable;
-
 import net.mysocio.data.SocioObject;
-import net.mysocio.data.SocioTag;
-import net.mysocio.data.ui.UiObject;
 import net.mysocio.ui.data.objects.DefaultMessage;
+
+import com.google.code.morphia.annotations.Entity;
 
 
 
@@ -20,9 +14,8 @@ import net.mysocio.ui.data.objects.DefaultMessage;
  * @author Aladdin
  *
  */
-@PersistenceCapable
-@Inheritance(customStrategy="complete-table")
-public abstract class GeneralMessage extends SocioObject implements IMessage{
+@Entity("messages")
+public abstract class GeneralMessage extends SocioObject{
 	/**
 	 * 
 	 */
@@ -30,7 +23,6 @@ public abstract class GeneralMessage extends SocioObject implements IMessage{
 	private String uniqueId =  new String();
 	private String title =  new String();
 	private String text =  new String();
-	private Set<SocioTag> tags = new HashSet<SocioTag>();
 	
 	private long date;
 
@@ -70,26 +62,18 @@ public abstract class GeneralMessage extends SocioObject implements IMessage{
 
 	public String replacePlaceholders(String template) {
 		String message = template.replace("message.title", getTitle());
-		message = message.replace("message.id", getId());
+		message = message.replace("message.id", getId().toString());
 		message = message.replace("message.text", getText());
 		message = message.replace("message.link", getLink());
 		return message;
 	}
 
-	public Set<SocioTag> getTags() {
-		return tags;
-	}
-	public void addTag(SocioTag tag){
-		tags.add(tag);
-	}
 	public abstract String getLink();
 
-	@Override
 	public String getUiCategory() {
 		return DefaultMessage.CATEGORY;
 	}
 
-	@Override
 	public String getUiName() {
 		return DefaultMessage.NAME;
 	}

@@ -3,15 +3,15 @@
  */
 package net.mysocio.data;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import javax.jdo.Transaction;
-
-import net.mysocio.connection.readers.ISource;
+import net.mysocio.connection.readers.Source;
 import net.mysocio.data.accounts.Account;
-import net.mysocio.data.messages.IMessage;
+import net.mysocio.data.messages.GeneralMessage;
+import net.mysocio.data.messages.UnreaddenMessage;
 import net.mysocio.data.ui.UiObject;
 
 /**
@@ -19,20 +19,9 @@ import net.mysocio.data.ui.UiObject;
  *
  */
 public interface IDataManager {
-	public Transaction startTransaction();
 	
-	public void endTransaction(Transaction tx);
-	
-	public void rollBackTransaction(Transaction tx);
-	
-	public void setDetachAllOnCommit(boolean detach);
-
 	public void saveObjects(List<? extends Object> objects);
 
-	public<T> T detachObject(T object);
-	
-	public<T> T persistObject(T object);
-	
 	public void deleteObject(Object object);
 
 	public SocioUser getUser(Account account, Locale locale) throws Exception;
@@ -45,17 +34,29 @@ public interface IDataManager {
 	
 	public void saveUiObject(UiObject uiObject);
 
-	public ISource createSource(ISource source);
+	public Source createSource(Source source);
 	
-	public IMessage createMessage(IMessage message);
+	public GeneralMessage createMessage(GeneralMessage message);
 	
-	public List<IMessage> getMessages(List<String> ids, String order, int range);
+	public List<GeneralMessage> getMessages(List<String> ids, String order, int range);
 	
-	public ISocioObject getObject(String id);
+	public<T> T getObject(Class T, String id);
 	
-	public<T extends ISocioObject> List<T> getObjects(Class<?> T);
+	public<T extends ISocioObject> List<T> getObjects(Class T);
 	
 	public Account addAccountToUser(Account account, SocioUser user) throws Exception;
-	
-	public void flush();
+
+	public<T extends ISocioObject> void saveObject(T object);
+
+	public void setMessageReadden(String messageId, String userId);
+
+	public List<GeneralMessage> getUnreadMessages(String userId, String tagId);
+
+	public String getPage(String userId, String pageKey);
+
+	public SocioTag getTag(String userId, String value);
+
+	public List<UnreaddenMessage> getUnreadMessages(String userId);
+
+	public Collection<SocioTag> getUserTags(String userId);
 }

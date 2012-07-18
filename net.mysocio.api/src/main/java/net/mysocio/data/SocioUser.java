@@ -4,103 +4,59 @@
 package net.mysocio.data;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.jdo.annotations.PersistenceCapable;
-import javax.jdo.annotations.Persistent;
 
 import net.mysocio.connection.readers.Source;
 import net.mysocio.connection.writers.Destination;
 import net.mysocio.data.accounts.Account;
-import net.mysocio.data.messages.GeneralMessage;
+
+import com.google.code.morphia.annotations.Entity;
+import com.google.code.morphia.annotations.Reference;
 
 /**
  * @author Aladdin
  * Although User is subclass of MySocio object, tags list is private list of tags usable by this user and not object tags.
  */
-@PersistenceCapable(detachable="true")
+@Entity("my_socio_users")
 public class SocioUser extends NamedObject{
 	public static final String ASCENDING_ORDER = "ascending";
 	public static final String DESCENDING_ORDER = "descending";
-	public static final String ALL_SOURCES = "All";
+	public static final String ALL_TAGS = "All";
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -2886854604233072581L;
-	private Map<String, List<String>> unreadMessages = new HashMap<String, List<String>>();
+	@Reference
 	private List<Account> accounts = new ArrayList<Account>();
+	@Reference
 	private Account mainAccount;
+	@Reference
 	private List<SocioContact> contacts = new ArrayList<SocioContact>();
+	@Reference
 	private List<Source> sources = new ArrayList<Source>();
+	@Reference
 	private List<Destination> destinations = new ArrayList<Destination>();
-	private List<SocioTag> userTags = new ArrayList<SocioTag>();
-	private Map<String, String> pages = new HashMap<String, String>();
-	private Integer totalUnreadmessages = 0;
+	@Reference
 	private String order = ASCENDING_ORDER;
 	private int range = 25;
 	
-	public String getPage(String pageKey){
-		return pages.get(pageKey);
-	}
-	
-	public void addPage(String pageKey, String page){
-		pages.put(pageKey, page);
-	}
-	
-	public String getSelectedSource() {
-		return selectedTag;
-	}
-
-	public void setSelectedSource(String selectedSource) {
-		this.selectedTag = selectedSource;
-	}
-
-	@Persistent
-	private String selectedTag = ALL_SOURCES;
+	private String selectedTag = ALL_TAGS;
 	
 	private String locale;
 	
+	public String getSelectedTag() {
+		return selectedTag;
+	}
+
+	public void setSelectedTag(String selectedTag) {
+		this.selectedTag = selectedTag;
+	}
+
 	public List<SocioContact> getContacts(){
 		return contacts;
 	}
-
-	public List<String> getUnreadMessages(List<SocioTag> tags){
-		Set<String> unreaddenMessages = new HashSet<String>();
-		for (SocioTag tag : tags) {
-			List<String> messages = this.unreadMessages.get(tag.getUniqueId());
-			if (messages != null){
-				
-				unreaddenMessages.addAll(messages);
-			}
-		}
-		return new ArrayList<String>(unreaddenMessages);
-	}
 	
-	public Integer getUnreadMessagesNum(String id){
-		List<String> messages = this.unreadMessages.get(id);
-		if (messages == null || messages.isEmpty()){
-			return 0;
-		}
-		return messages.size();
-	}
-	
-	public void setMessageReadden(String messageId){
-		Set<String> tags = unreadMessages.keySet();
-		for (String tagId : tags) {
-			List<String> messages = unreadMessages.get(tagId);
-			messages.remove(messageId);
-			unreadMessages.put(tagId, messages);
-		}
-		totalUnreadmessages--;
-	}
-
 	/**
 	 * @return the accounts
 	 */
@@ -131,10 +87,6 @@ public class SocioUser extends NamedObject{
 		this.contacts.add(contact);
 	}
 
-	public List<String> getAllUnreadMessages() {
-		return getUnreadMessages(userTags);
-	}
-
 	public String getLocale() {
 		return locale;
 	}
@@ -143,47 +95,9 @@ public class SocioUser extends NamedObject{
 		this.locale = locale;
 	}
 
-	public List<String> getUnreadMessages() {
-		if (selectedTag.equalsIgnoreCase(SocioUser.ALL_SOURCES)){
-			return getAllUnreadMessages();
-		}
-		List<String> messages = null;
-		messages = unreadMessages.get(selectedTag);
-		if (messages == null){
-			return Collections.emptyList();
-		}
-		return messages;
-	}
-
-	public List<SocioTag> getUserTags() {
-		return userTags;
-	}
-	
-	public SocioTag getTag(String id) {
-		for (SocioTag tag : userTags) {
-			if (tag.getUniqueId().equals(id)){
-				return tag;
-			}
-		}
-		return null;
-	}
-	
-	public void addTag(SocioTag tag){
-		if (!userTags.contains(tag)){
-			userTags.add(tag);
-		}		
-	}
-	
-	public void addTags(Collection<SocioTag> tags){
-		for (SocioTag tag : tags) {
-			addTag(tag);
-		}
-	}
-	
 	public void addSource(Source source) {
 		if (!getSources().contains(source)){
 			getSources().add(source);
-			this.addTags(source.getTags());
 		}
 	}
 	
@@ -221,33 +135,12 @@ public class SocioUser extends NamedObject{
 		this.destinations.addAll(destinations);		
 	}
 
-	public Integer getTotalUnreadmessages() {
-		return totalUnreadmessages;
-	}
-	
 	public Account getMainAccount() {
 		return mainAccount;
 	}
 
 	public void setMainAccount(Account mainAccount) {
 		this.mainAccount = mainAccount;
-	}
-
-	public void addUnreaddenMessage(GeneralMessage message) {
-		Set<SocioTag> tags = message.getTags();
-		String messageId = message.getId();
-		for (SocioTag tag : tags) {
-			String sourceId = tag.getUniqueId();
-			List<String> list = unreadMessages.get(sourceId);
-			if (list == null){
-				list = new ArrayList<String>();
-				list.add(messageId);
-			}else if (!list.contains(messageId)){
-				list.add(messageId);
-			}
-			unreadMessages.put(sourceId, list);
-		}
-		totalUnreadmessages++;
 	}
 
 	public String getOrder() {

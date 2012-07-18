@@ -5,20 +5,18 @@ package net.mysocio.data.contacts;
 
 import java.util.List;
 
-import javax.jdo.annotations.Inheritance;
-import javax.jdo.annotations.PersistenceCapable;
-
-import net.mysocio.connection.readers.ISource;
-import net.mysocio.connection.writers.IDestination;
+import net.mysocio.connection.readers.Source;
+import net.mysocio.connection.writers.Destination;
 import net.mysocio.data.NamedObject;
+
+import com.google.code.morphia.annotations.Entity;
 
 /**
  * @author Aladdin
  *
  */
-@PersistenceCapable
-@Inheritance(customStrategy="complete-table")
-public abstract class Contact extends NamedObject implements IContact {
+@Entity("contacts")
+public abstract class Contact extends NamedObject{
 	/**
 	 * 
 	 */
@@ -35,9 +33,9 @@ public abstract class Contact extends NamedObject implements IContact {
 		return userpicUrl;
 	}
 
-	public abstract List<ISource> getSources();
+	public abstract List<Source> getSources();
 	
-	public abstract List<IDestination> getDestinations();
+	public abstract List<Destination> getDestinations();
 
 	public String getUrl() {
 		return url;

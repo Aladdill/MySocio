@@ -3,13 +3,13 @@
  */
 package net.mysocio.ui.data.objects;
 
-import javax.jdo.annotations.PersistenceCapable;
+import com.google.code.morphia.annotations.Entity;
 
 /**
  * @author Aladdin
  *
  */
-@PersistenceCapable(detachable="true")
+@Entity("ui_objects")
 public class UserUiMessage extends DefaultMessage {
 	public static final String NAME = "UserMessage";
 	public static final String CATEGORY = "Message";

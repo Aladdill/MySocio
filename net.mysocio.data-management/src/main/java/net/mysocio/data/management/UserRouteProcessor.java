@@ -11,7 +11,7 @@ import org.apache.camel.Processor;
  */
 public abstract class UserRouteProcessor implements Processor {
 	private String userId;
-	
+
 	public String getUserId() {
 		return userId;
 	}

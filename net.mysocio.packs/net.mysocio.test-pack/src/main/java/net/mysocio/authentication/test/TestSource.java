@@ -8,18 +8,17 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-import javax.jdo.annotations.PersistenceCapable;
-
-import net.mysocio.connection.readers.ISource;
 import net.mysocio.connection.readers.Source;
 import net.mysocio.data.management.DefaultResourcesManager;
-import net.mysocio.data.messages.IMessage;
+import net.mysocio.data.messages.GeneralMessage;
+
+import com.google.code.morphia.annotations.Entity;
 
 /**
  * @author Aladdin
  *
  */
-@PersistenceCapable(detachable="true")
+@Entity("sources")
 public class TestSource extends Source {
 	/**
 	 * 
@@ -29,8 +28,8 @@ public class TestSource extends Source {
 	/* (non-Javadoc)
 	 * @see net.mysocio.connection.readers.ISourceManager#getLastMessages(net.mysocio.connection.readers.ISource, java.lang.Long, java.lang.Long)
 	 */
-	public List<IMessage> getLastMessages(ISource source, Long from, Long to) {
-		List<IMessage> messages = new ArrayList<IMessage>();
+	public List<GeneralMessage> getLastMessages(Source source, Long from, Long to) {
+		List<GeneralMessage> messages = new ArrayList<GeneralMessage>();
 		for (int i = 1; i <= 10; i++){
 			messages.add(createShortTestMesssage(i, source));
 		}
@@ -41,7 +40,7 @@ public class TestSource extends Source {
 	/**
 	 * @return
 	 */
-	private static TestMessage createLongTestMessage(ISource source) {
+	private static TestMessage createLongTestMessage(Source source) {
 		TestMessage message = new TestMessage();
 		message.setDate(System.currentTimeMillis());
 		message.setTitle("Test message Title");
@@ -54,7 +53,7 @@ public class TestSource extends Source {
 	 * @param i 
 	 * @return
 	 */
-	private static TestMessage createShortTestMesssage(int i, ISource source) {
+	private static TestMessage createShortTestMesssage(int i, Source source) {
 		TestMessage message = new TestMessage();
 		message.setUniqueId(source.getUrl() + "Test message Title"  + i);
 		message.setDate(System.currentTimeMillis());
@@ -63,7 +62,7 @@ public class TestSource extends Source {
 		return message;
 	}
 
-	public List<IMessage> getFirstBulkOfMessages(ISource source)
+	public List<GeneralMessage> getFirstBulkOfMessages(Source source)
 			throws Exception {
 		return Collections.emptyList();
 	}

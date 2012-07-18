@@ -3,14 +3,15 @@
  */
 package net.mysocio.data.accounts.facebook;
 
-import javax.jdo.annotations.PersistenceCapable;
+import com.google.code.morphia.annotations.Entity;
+
 
 
 /**
  * @author Aladdin
  *
  */
-@PersistenceCapable(detachable="true")
+@Entity("friend_lists")
 public class FacebookFriendList extends NamedFacebookObject{
 	/**
 	 * 

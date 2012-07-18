@@ -3,10 +3,9 @@
  */
 package net.mysocio.data;
 
-import javax.jdo.annotations.IdGeneratorStrategy;
-import javax.jdo.annotations.Inheritance;
-import javax.jdo.annotations.PersistenceCapable;
-import javax.jdo.annotations.Persistent;
+import org.bson.types.ObjectId;
+
+import com.google.code.morphia.annotations.Id;
 
 
 
@@ -14,29 +13,30 @@ import javax.jdo.annotations.Persistent;
  * @author Aladdin
  *
  */
-@PersistenceCapable
-@Inheritance(customStrategy="complete-table")
 public abstract class SocioObject implements ISocioObject{
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1428112468244972968L;
-	@Persistent(valueStrategy = IdGeneratorStrategy.UUIDHEX, primaryKey="true")
-	protected String id;
+	@Id
+	protected ObjectId id;
 	
 	/**
 	 * @param id the id to set
 	 */
-	public void setId(String id) {
+	public void setId(ObjectId id) {
 		this.id = id;
 	}
 
-	public String getId() {
+	public ObjectId getId() {
 		return id;
 	}
 
 	@Override
 	public int hashCode() {
+		if (id == null){
+			return "".hashCode();
+		}
 		return getId().hashCode();
 	}
 

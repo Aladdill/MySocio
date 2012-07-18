@@ -9,8 +9,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import javax.jdo.annotations.PersistenceAware;
-
 import net.mysocio.authentication.AbstractOauth2Manager;
 import net.mysocio.data.accounts.Account;
 import net.mysocio.data.accounts.facebook.FacebookAccount;
@@ -34,7 +32,6 @@ import org.slf4j.LoggerFactory;
  * @author Aladdin
  * 
  */
-@PersistenceAware
 public class FacebookAuthenticationManager extends AbstractOauth2Manager {
 	private static final Logger logger = LoggerFactory
 			.getLogger(FacebookAuthenticationManager.class);
@@ -90,6 +87,7 @@ public class FacebookAuthenticationManager extends AbstractOauth2Manager {
 		logger.debug("parsing friends");
 		account.setFriends(parseFriends(response));
 		logger.debug("friends parsed");
+		DataManagerFactory.getDataManager().saveObject(account);
 		return account;
 	}
 
@@ -104,6 +102,7 @@ public class FacebookAuthenticationManager extends AbstractOauth2Manager {
 			FacebookFriend friend = new FacebookFriend();
 			friend.setFacebookId(element.get("id").getValueAsText());
 			friend.setName(element.get("name").getValueAsText());
+			DataManagerFactory.getDataManager().saveObject(friend);
 			friends.add(friend);
 		}
 		return friends;
@@ -121,6 +120,7 @@ public class FacebookAuthenticationManager extends AbstractOauth2Manager {
 			FacebookFriendList friendList = new FacebookFriendList();
 			friendList.setFacebookId(element.get("id").getValueAsText());
 			friendList.setName(element.get("name").getValueAsText());
+			DataManagerFactory.getDataManager().saveObject(friendList);
 			friendsLists.add(friendList);
 		}
 		return friendsLists;

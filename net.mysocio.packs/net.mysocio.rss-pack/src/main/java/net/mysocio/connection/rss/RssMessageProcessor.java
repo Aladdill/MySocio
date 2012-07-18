@@ -5,11 +5,11 @@ package net.mysocio.connection.rss;
 
 import java.util.List;
 
-import javax.jdo.annotations.PersistenceAware;
-
+import net.mysocio.data.SocioTag;
 import net.mysocio.data.management.AbstractMessageProcessor;
 import net.mysocio.data.management.CamelContextManager;
 import net.mysocio.data.management.MessagesManager;
+import net.mysocio.data.messages.UnreaddenMessage;
 import net.mysocio.data.messages.rss.RssMessage;
 
 import org.apache.camel.Exchange;
@@ -24,7 +24,6 @@ import com.sun.syndication.feed.synd.SyndFeed;
  * @author Aladdin
  *
  */
-@PersistenceAware
 public class RssMessageProcessor extends AbstractMessageProcessor {
 	static final Logger logger = LoggerFactory.getLogger(RssMessageProcessor.class);
 	private String to;
@@ -47,13 +46,20 @@ public class RssMessageProcessor extends AbstractMessageProcessor {
 			message.setTitle(title);
     		String text = entry.getDescription().getValue();
 			message.setText(text);
-			addTagsToMessage(message);
+			
     		if (logger.isDebugEnabled()){
     			logger.debug("Message title: " + title);
     			logger.debug("Message text: " + text);
     		}
     		MessagesManager.getInstance().storeMessage(message);
-    		producerTemplate.sendBody(to,message);
+    		UnreaddenMessage unreaddenMessage;
+    		for (SocioTag tag : tags) {
+    			unreaddenMessage = new UnreaddenMessage();
+				unreaddenMessage.setMessageDate(message.getDate());
+				unreaddenMessage.setMessageId(message.getId().toString());
+				unreaddenMessage.setTag(tag);
+    			producerTemplate.sendBody(to,unreaddenMessage);
+			}
 		}
 	}
 

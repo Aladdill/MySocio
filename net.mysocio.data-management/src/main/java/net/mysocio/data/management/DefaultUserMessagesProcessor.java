@@ -3,12 +3,9 @@
  */
 package net.mysocio.data.management;
 
-import javax.jdo.Transaction;
-import javax.jdo.annotations.PersistenceAware;
-
 import net.mysocio.data.IDataManager;
-import net.mysocio.data.SocioUser;
-import net.mysocio.data.messages.GeneralMessage;
+import net.mysocio.data.SocioTag;
+import net.mysocio.data.messages.UnreaddenMessage;
 
 import org.apache.camel.Exchange;
 import org.slf4j.Logger;
@@ -18,7 +15,6 @@ import org.slf4j.LoggerFactory;
  * @author Aladdin
  *
  */
-@PersistenceAware
 public class DefaultUserMessagesProcessor extends UserRouteProcessor {
 	private static final Logger logger = LoggerFactory.getLogger(DefaultUserMessagesProcessor.class);
 
@@ -27,14 +23,19 @@ public class DefaultUserMessagesProcessor extends UserRouteProcessor {
 	 */
 	public void process(Exchange exchange) throws Exception {
 		IDataManager dataManager = DataManagerFactory.getDataManager();
-		dataManager.setDetachAllOnCommit(true);
-		SocioUser user = (SocioUser)dataManager.getObject(getUserId());
-		GeneralMessage message = (GeneralMessage)exchange.getIn().getBody();
+		UnreaddenMessage ureaddenMessage = (UnreaddenMessage)exchange.getIn().getBody();
 		if (logger.isDebugEnabled()){
-			logger.debug("Got message " + message.getTitle() + " with uid " + message.getUniqueId());
+			logger.debug("Got message with uid " + ureaddenMessage.getMessageId());
 		}
-		Transaction transaction = dataManager.startTransaction();
-		user.addUnreaddenMessage(message);
-		dataManager.endTransaction(transaction);
+		String userId = getUserId();
+		ureaddenMessage.setUserId(userId);
+		SocioTag tag = dataManager.getTag(userId,ureaddenMessage.getTag().getValue());
+		if (tag == null){
+			tag = ureaddenMessage.getTag();
+			tag.setUserId(userId);
+			dataManager.saveObject(tag);
+			ureaddenMessage.setTag(tag);
+		}
+		dataManager.saveObject(ureaddenMessage);
 	}
 }

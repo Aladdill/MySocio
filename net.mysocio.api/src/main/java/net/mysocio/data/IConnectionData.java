@@ -17,11 +17,11 @@ public interface IConnectionData {
 	
 	public abstract void setSessionAttribute(String attributeName, String attributeValue);
 
-	public abstract SocioUser getUser();
+	public abstract String getUserId();
 
 	public abstract void cleanSession();
 
-	public abstract void setUser(SocioUser user);
+	public abstract void setUserId(String user);
 
 	public abstract Locale getLocale();
 

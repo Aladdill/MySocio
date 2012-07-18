@@ -4,20 +4,15 @@
 package net.mysocio.authentication.google;
 
 
-import java.util.List;
-
 import net.mysocio.authentication.AbstractOauth2Manager;
 import net.mysocio.data.accounts.Account;
-import net.mysocio.data.accounts.google.GoogleAccount;
 
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.JsonToken;
 import org.scribe.builder.api.Api;
-import org.scribe.model.OAuthRequest;
-import org.scribe.model.Response;
+import org.scribe.builder.api.GoogleApi;
 import org.scribe.model.Token;
-import org.scribe.model.Verb;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,7 +34,7 @@ public class GoogleAuthenticationManager extends AbstractOauth2Manager{
 	}
 	@Override
 	protected Class<? extends Api> getApiClass() {
-		return GoogleOauth2Api.class;
+		return GoogleApi.class;
 	}
 	
 	protected Account getAccount(Token accessToken) throws Exception {

@@ -7,8 +7,6 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.List;
 
-import javax.jdo.annotations.PersistenceAware;
-
 import net.mysocio.data.IAuthenticationManager;
 import net.mysocio.data.IConnectionData;
 import net.mysocio.data.accounts.Account;
@@ -32,7 +30,6 @@ import com.sun.syndication.io.impl.OPML20Parser;
  * @author Aladdin
  * 
  */
-@PersistenceAware
 public class LjAuthenticationManager implements IAuthenticationManager {
 	private static final String NO_USERNAME_FOUND_FOR_LJ_ACCOUNT = "No username found for LJ account.";
 	private static final String LJ_AUTHENTICATION_IS_NOT_YET_IMPLEMENTED = "LJ authentication is not yet implemented.";
@@ -99,6 +96,7 @@ public class LjAuthenticationManager implements IAuthenticationManager {
 			friend.setUrl(outline.getXmlUrl());
 			ljAccount.addFriend(friend);
 		}
+		DataManagerFactory.getDataManager().saveObjects(ljAccount.getFriends());
 		return ljAccount;
 	}
 }

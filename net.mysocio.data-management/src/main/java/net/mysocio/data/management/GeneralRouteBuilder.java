@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 public class GeneralRouteBuilder extends RouteBuilder {
 	static final Logger logger = LoggerFactory
 			.getLogger(GeneralRouteBuilder.class);
+	private final long DEFAULT_ROUTE_DELAY = 300000;
 	private String from;
 	private String to;
 	private Processor processor;
@@ -37,9 +38,9 @@ public class GeneralRouteBuilder extends RouteBuilder {
 			logger.debug("Creating route from: " + from + " to: " + to);
 		}
 		if (to == null) {
-			from(from).process(processor);
+			from(from).delayer(DEFAULT_ROUTE_DELAY).process(processor);
 		}else{
-			from(from).process(processor).to(to);
+			from(from).delayer(DEFAULT_ROUTE_DELAY).process(processor).to(to);
 		}
 	}
 }

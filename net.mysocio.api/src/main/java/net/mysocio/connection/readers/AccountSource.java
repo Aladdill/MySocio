@@ -3,22 +3,22 @@
  */
 package net.mysocio.connection.readers;
 
-import javax.jdo.annotations.Inheritance;
-import javax.jdo.annotations.PersistenceCapable;
-
 import net.mysocio.data.accounts.Account;
+
+import com.google.code.morphia.annotations.Entity;
+import com.google.code.morphia.annotations.Reference;
 
 /**
  * @author Aladdin
  *
  */
-@PersistenceCapable
-@Inheritance(customStrategy="complete-table")
+@Entity("sources")
 public abstract class AccountSource extends Source {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 4346691940766962601L;
+	@Reference
 	private Account account; 
 
 	public Account getAccount() {

@@ -3,8 +3,6 @@
  */
 package net.mysocio.ui.executors.basic;
 
-import javax.jdo.annotations.PersistenceAware;
-
 import net.mysocio.data.IConnectionData;
 import net.mysocio.ui.management.CommandExecutionException;
 import net.mysocio.ui.management.ICommandExecutor;
@@ -18,7 +16,6 @@ import org.slf4j.LoggerFactory;
  * @author Aladdin
  *
  */
-@PersistenceAware
 public class AddRssFeedExecutor implements ICommandExecutor {
 	private static final Logger logger = LoggerFactory.getLogger(AddRssFeedExecutor.class);
 	/* (non-Javadoc)

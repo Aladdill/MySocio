@@ -3,17 +3,15 @@
  */
 package net.mysocio.data.messages;
 
-import javax.jdo.annotations.Inheritance;
-import javax.jdo.annotations.PersistenceCapable;
-
 import net.mysocio.ui.data.objects.UserUiMessage;
+
+import com.google.code.morphia.annotations.Entity;
 
 /**
  * @author Aladdin
  *
  */
-@PersistenceCapable
-@Inheritance(customStrategy="complete-table")
+@Entity("messages")
 public abstract class UserMessage extends GeneralMessage {
 	/**
 	 * 

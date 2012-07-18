@@ -3,23 +3,22 @@
  */
 package net.mysocio.data;
 
-import java.io.Serializable;
+import org.bson.types.ObjectId;
 
-import javax.jdo.annotations.PersistenceCapable;
+import com.google.code.morphia.annotations.Entity;
 
 /**
  * @author Aladdin
  *
  */
-@PersistenceCapable(detachable="true")
-public class SocioTag implements Serializable{
+@Entity("tags")
+public class SocioTag extends SocioObject{
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -7408921930602565552L;
-	
 	private String value;
-	private String uniqueId;
+	private String userId;
 	private String iconType;
 
 	public String getValue() {
@@ -38,36 +37,55 @@ public class SocioTag implements Serializable{
 		this.iconType = iconType;
 	}
 
-	public String getUniqueId() {
-		return uniqueId;
+	public String getUserId() {
+		return userId;
 	}
 
-	public void setUniqueId(String uniqueId) {
-		this.uniqueId = uniqueId;
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 
+	public ObjectId getId() {
+		return id;
+	}
+
+	public void setId(ObjectId id) {
+		this.id = id;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
-		int result = 1;
-		result = prime * result
-				+ ((uniqueId == null) ? 0 : uniqueId.hashCode());
+		int result = super.hashCode();
+		result = prime * result + ((userId == null) ? 0 : userId.hashCode());
+		result = prime * result + ((value == null) ? 0 : value.hashCode());
 		return result;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (obj == null)
+		if (!super.equals(obj))
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
 		SocioTag other = (SocioTag) obj;
-		if (uniqueId == null) {
-			if (other.uniqueId != null)
+		if (userId == null) {
+			if (other.userId != null)
 				return false;
-		} else if (!uniqueId.equals(other.uniqueId))
+		} else if (!userId.equals(other.userId))
+			return false;
+		if (value == null) {
+			if (other.value != null)
+				return false;
+		} else if (!value.equals(other.value))
 			return false;
 		return true;
 	}

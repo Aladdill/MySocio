@@ -3,15 +3,15 @@
  */
 package net.mysocio.data.messages.rss;
 
-import javax.jdo.annotations.PersistenceCapable;
-
 import net.mysocio.data.messages.GeneralMessage;
+
+import com.google.code.morphia.annotations.Entity;
 
 /**
  * @author Aladdin
  *
  */
-@PersistenceCapable(detachable="true")
+@Entity("messages")
 public class RssMessage extends GeneralMessage {
 	/**
 	 * 

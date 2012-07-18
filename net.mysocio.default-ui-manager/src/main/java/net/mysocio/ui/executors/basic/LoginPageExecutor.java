@@ -3,8 +3,6 @@
  */
 package net.mysocio.ui.executors.basic;
 
-import javax.jdo.annotations.PersistenceAware;
-
 import net.mysocio.data.CorruptedDataException;
 import net.mysocio.data.IConnectionData;
 import net.mysocio.data.SocioUser;
@@ -19,7 +17,6 @@ import org.slf4j.LoggerFactory;
  * @author Aladdin
  *
  */
-@PersistenceAware
 public class LoginPageExecutor implements ICommandExecutor {
 	private static final Logger logger = LoggerFactory.getLogger(LoginPageExecutor.class);
 	/* (non-Javadoc)

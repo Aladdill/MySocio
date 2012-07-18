@@ -6,24 +6,26 @@ package net.mysocio.data.accounts.lj;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.jdo.annotations.PersistenceCapable;
-
 import net.mysocio.connection.lj.LjSource;
 import net.mysocio.connection.readers.Source;
 import net.mysocio.data.SocioTag;
 import net.mysocio.data.accounts.Account;
 
+import com.google.code.morphia.annotations.Entity;
+import com.google.code.morphia.annotations.Reference;
+
 /**
  * @author Aladdin
  *
  */
-@PersistenceCapable(detachable="true")
+@Entity("accounts")
 public class LjAccount extends Account {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -2747486084487220210L;
 	public static final String ACCOUNT_TYPE = "lj";
+	@Reference
 	private List<LjFriend> friends = new ArrayList<LjFriend>();
 
 	/* (non-Javadoc)
@@ -47,7 +49,7 @@ public class LjAccount extends Account {
 			SocioTag tag = new SocioTag();
 			tag.setIconType("lj.icon");
 			tag.setValue("lj.tag");
-			tag.setUniqueId("lj.tag");
+			tag.setUserId("lj.tag");
 			source.addTag(tag);
 			sources.add(source);
 		}

@@ -43,7 +43,7 @@ public class ImportOpmlHandler extends AbstractHandler {
 		SocioUser user = null;
 		String userId = (String) request.getSession().getAttribute("user");
 		if (userId != null) {
-			user = (SocioUser) dataManager.getObject(userId);
+			user = dataManager.getObject(SocioUser.class, userId);
 		}
 		boolean isMultipart = ServletFileUpload.isMultipartContent(request);
 		if (user != null && isMultipart) {

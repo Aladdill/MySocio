@@ -5,8 +5,6 @@ package net.mysocio.connection.lj;
 
 import java.util.List;
 
-import javax.jdo.annotations.PersistenceCapable;
-
 import net.mysocio.connection.rss.RssSource;
 import net.mysocio.data.SocioTag;
 import net.mysocio.data.management.CamelContextManager;
@@ -15,11 +13,13 @@ import net.mysocio.data.messages.lj.LjMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.code.morphia.annotations.Entity;
+
 /**
  * @author Aladdin
  *
  */
-@PersistenceCapable(detachable="true")
+@Entity("sources")
 public class LjSource extends RssSource {
 	static final Logger logger = LoggerFactory.getLogger(LjSource.class);
 	/**

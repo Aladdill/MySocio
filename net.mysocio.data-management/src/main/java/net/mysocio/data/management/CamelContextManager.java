@@ -29,6 +29,7 @@ public class CamelContextManager {
 		camelContext.addComponent(name,component);
 	}
 	public static void addRoute(String from, Processor processor, String to) throws Exception{
+		
 		camelContext.addRoutes(new GeneralRouteBuilder(from, to, processor));
 	}
 	public static ProducerTemplate getProducerTemplate(){

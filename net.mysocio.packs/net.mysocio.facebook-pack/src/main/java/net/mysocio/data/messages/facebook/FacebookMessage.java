@@ -3,16 +3,16 @@
  */
 package net.mysocio.data.messages.facebook;
 
-import javax.jdo.annotations.PersistenceCapable;
-
 import net.mysocio.data.messages.UserMessage;
 import net.mysocio.ui.data.objects.facebook.FacebookUiMessage;
+
+import com.google.code.morphia.annotations.Entity;
 
 /**
  * @author Aladdin
  *
  */
-@PersistenceCapable(detachable="true")
+@Entity("messages")
 public class FacebookMessage extends UserMessage {
 
 	/**

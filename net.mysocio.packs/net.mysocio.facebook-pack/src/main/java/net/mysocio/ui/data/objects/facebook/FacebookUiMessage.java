@@ -3,15 +3,15 @@
  */
 package net.mysocio.ui.data.objects.facebook;
 
-import javax.jdo.annotations.PersistenceCapable;
-
 import net.mysocio.ui.data.objects.UserUiMessage;
+
+import com.google.code.morphia.annotations.Entity;
 
 /**
  * @author Aladdin
  *
  */
-@PersistenceCapable(detachable="true")
+@Entity("ui_objects")
 public class FacebookUiMessage extends UserUiMessage {
 	public static final String NAME = "FacebookMessage";
 	public static final String CATEGORY = "Message";
