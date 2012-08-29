@@ -48,25 +48,25 @@ td.SourcesBox {
 	float: left;
 }
 
-img.Userpic {
+.Userpic img{
 	width: 50px;
 	height: 50px;
 }
 
-img.MessageUserpic {
+.MessageUserpic img{
 	width: 50px;
 	height: 50px;
 	border: 2px solid #00aeef;
 	float: left;
 }
-img.AccountIcon {
+.AccountUserpic .icon {
 	right: 23px;
 	top: 32px;
 	position: relative;
 	z-index: 1;
 	padding-bottom: 15px;
 }
-img.AccountUserpic {
+.AccountUserpic .userpic {
 	width: 50px;
 	height: 50px;
 	border: 2px solid #00aeef;
@@ -78,7 +78,20 @@ img.AccountUserpic {
 	padding-top: 4px;
 	padding-bottom: 15px;
 }
-span.AccountName {
+.ContactUserpic {
+	float: left;
+	padding-left: 15px;
+	padding-top: 4px;
+	padding-bottom: 15px;
+}
+
+.ContactUserpic img{
+	width: 50px;
+	height: 50px;
+	border: 2px solid #00aeef;
+	float: left;
+}
+.AccountData span{
 	font: 14px Calibri;
 	color: #7d4089;
 	float: left;
@@ -102,6 +115,13 @@ span.DefaultAccount {
 	margin-left: 16px;
 	margin-top: 20px;
 }
+.Contact {
+	float: left;
+	width: 600px;
+	height: auto;
+	margin-left: 16px;
+	margin-top: 20px;
+}
 .NewAccount {
 	float: left;
 	width: 600px;
@@ -111,11 +131,26 @@ span.DefaultAccount {
 }
 .AccountData {
 	position: relative;
+	left: 5px;
+	width: 100px;
+	height: 100%;
+	float: left;
+}
+
+.ContactData {
+	position: relative;
 	left: -7px;
 	width: 100px;
 	height: 100%;
 	float: left;
 }
+
+.ContactData span{
+	font: 14px Calibri;
+	color: #7d4089;
+	float: left;
+}
+
 .RSS {
 	float: left;
 	width: 600px;
@@ -165,10 +200,10 @@ a.InnerLink {
 .PostBox {
 	border: 4px solid #ececec;
 	height: 35px;
-	width: 680px;
+	width: 672px;
 	font: 13px Calibri;
 	color: #a5a4a4;
-	margin-bottom: 2px;
+	margin: 35px 0px 2px 28px;
 }
 
 .PostBox : :FOCUS {
@@ -177,14 +212,17 @@ a.InnerLink {
 .PostBox textarea{
 	height: 35px;
 	width: 100%;
+	border: 0px;
 }
 .PostButtons {
-	height: 20px;
+	height: 30px;
 	width: 680px;
 	background-color: #ececec;
+	margin-left: 28px;
+	margin-bottom: 20px;
 }
 .PostButton {
-	height: 20px;
+	height: 30px;
 	width: 72px;
 	background-color: #a67eb0;
 	float: right;
@@ -399,19 +437,21 @@ tr.Footer {
 	background-color: #ececec;
 	font: 12px Calibri;
 	color: #82478e;
+	float: left;
+	width: 100%;
 }
 
 .MessageButtonsSelected {
 	background-color: #dedede;
 }
 
-.MessageButton {
+.MessageButtons div {
 	margin-top: 7px;
 	margin-right: 6px;
 	float: left;
 }
 
-img.MessageButton {
+.MessageButtons img{
 	margin-top: 5px;
 	margin-right: 5px;
 	margin-left: 6px;
@@ -423,6 +463,8 @@ img.MessageButton {
 	font: 13px Calibri;
 	overflow: hidden;
 	color: #292929;
+	float: left;
+	width: 100%;
 }
 .Expand {
 	height: auto;
@@ -488,7 +530,7 @@ img.NetworkIconReaden {
 	background: #f3f3f3;
 }
 
-a.MessageTitle {
+.MessageTitle a{
 	text-decoration: none;
 	color: inherit;
 	font: 19px Calibri;

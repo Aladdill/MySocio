@@ -195,7 +195,7 @@ function openMainPage() {
 }
 function initMessagesContainer() {
 	var messageContainer = $("#data_container");
-	messageContainer.css("height", $("body").innerHeight() - 81);
+	messageContainer.css("height", $("body").innerHeight() - 158);
 	$("#filler").css("height", messageContainer.innerHeight() - 10);
 	messageContainer.scroll(messageScroll);
 }

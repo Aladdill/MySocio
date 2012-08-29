@@ -45,7 +45,7 @@ public class GetContactsExecutor implements ICommandExecutor {
 		}
 		for (UserContact contact : contacts) {
 			String currentContactHTML = contactHTML;
-			currentContactHTML = currentContactHTML.replace("contact.userpic", "images/portrait.jpg");
+			currentContactHTML = currentContactHTML.replace("contact.userpic", contact.getContacts().get(0).getUserpicUrl());
 			currentContactHTML = currentContactHTML.replace("contact.username", contact.getContacts().get(0).getName());
 			page += currentContactHTML;
 		}
