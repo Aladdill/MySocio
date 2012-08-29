@@ -28,10 +28,18 @@ public class CamelContextManager {
 	public static void addComponent(String name, Component component){
 		camelContext.addComponent(name,component);
 	}
-	public static void addRoute(String from, Processor processor, String to) throws Exception{
-		
-		camelContext.addRoutes(new GeneralRouteBuilder(from, to, processor));
+	public static String addRoute(String from, Processor processor, String to) throws Exception{
+		GeneralRouteBuilder builder = new GeneralRouteBuilder(from, to, processor);
+		camelContext.addRoutes(builder);
+		return builder.getRouteId();
 	}
+	
+	public static String addRoute(String from, Processor processor, String to, Long delay) throws Exception{
+		GeneralRouteBuilder builder = new GeneralRouteBuilder(from, to, processor, delay);
+		camelContext.addRoutes(builder);
+		return builder.getRouteId();
+	}
+
 	public static ProducerTemplate getProducerTemplate(){
 		return camelContext.createProducerTemplate();
 	}

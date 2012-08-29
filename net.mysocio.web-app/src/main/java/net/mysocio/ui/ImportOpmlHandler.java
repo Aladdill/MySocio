@@ -6,9 +6,6 @@ package net.mysocio.ui;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import net.mysocio.data.IDataManager;
-import net.mysocio.data.SocioUser;
-import net.mysocio.data.management.DataManagerFactory;
 import net.mysocio.ui.management.CommandExecutionException;
 import net.mysocio.utils.rss.RssUtils;
 
@@ -39,14 +36,9 @@ public class ImportOpmlHandler extends AbstractHandler {
 	@Override
 	protected String handleRequest(HttpServletRequest request,
 			HttpServletResponse response) throws CommandExecutionException {
-		IDataManager dataManager = DataManagerFactory.getDataManager();
-		SocioUser user = null;
 		String userId = (String) request.getSession().getAttribute("user");
-		if (userId != null) {
-			user = dataManager.getObject(SocioUser.class, userId);
-		}
 		boolean isMultipart = ServletFileUpload.isMultipartContent(request);
-		if (user != null && isMultipart) {
+		if (userId != null && isMultipart) {
 			ServletFileUpload upload = new ServletFileUpload();
 			// Parse the request
 			try {
@@ -57,7 +49,7 @@ public class ImportOpmlHandler extends AbstractHandler {
 						logger.debug("Got form field while uploading OPML."
 								+ item.getFieldName());
 					} else {
-						RssUtils.importOpml(user, item.openStream());
+						RssUtils.importOpml(userId, item.openStream());
 					}
 				}
 			} catch (Exception e) {

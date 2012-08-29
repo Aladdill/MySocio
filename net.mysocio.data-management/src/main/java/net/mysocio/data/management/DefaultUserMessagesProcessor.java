@@ -25,7 +25,7 @@ public class DefaultUserMessagesProcessor extends UserRouteProcessor {
 		IDataManager dataManager = DataManagerFactory.getDataManager();
 		UnreaddenMessage ureaddenMessage = (UnreaddenMessage)exchange.getIn().getBody();
 		if (logger.isDebugEnabled()){
-			logger.debug("Got message with uid " + ureaddenMessage.getMessageId());
+			logger.debug("Got message with uid " + ureaddenMessage.getMessage().getId());
 		}
 		String userId = getUserId();
 		ureaddenMessage.setUserId(userId);
@@ -34,8 +34,8 @@ public class DefaultUserMessagesProcessor extends UserRouteProcessor {
 			tag = ureaddenMessage.getTag();
 			tag.setUserId(userId);
 			dataManager.saveObject(tag);
-			ureaddenMessage.setTag(tag);
 		}
+		ureaddenMessage.setTag(tag);
 		dataManager.saveObject(ureaddenMessage);
 	}
 }

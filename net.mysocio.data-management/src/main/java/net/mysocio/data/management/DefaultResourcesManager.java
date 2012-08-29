@@ -6,8 +6,11 @@ package net.mysocio.data.management;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -26,6 +29,7 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class DefaultResourcesManager{
+	private static final String DEFAULT_ENCODING = "UTF-8";
 	private static final Logger logger = LoggerFactory.getLogger(DefaultResourcesManager.class);
 	private static String servletContextPath;
 	private static final String PROPERTIES_FOLDER = File.separator + "properties" + File.separator;
@@ -46,22 +50,31 @@ public class DefaultResourcesManager{
 	private static PropertyResourceBundle createBundle(Locale locale){
 		PropertyResourceBundle propertyResourceBundle = createDefaultBundle();
 		try {
-			propertyResourceBundle = new PropertyResourceBundle(new FileInputStream(servletContextPath + PROPERTIES_FOLDER + "textResources_" + locale.getLanguage() + ".properties"));
+			String fileName = servletContextPath + PROPERTIES_FOLDER + "textResources_" + locale.getLanguage() + ".properties";
+			propertyResourceBundle = createResourceBundle(fileName);
 		} catch (Exception e) {
 			logger.error("Coudn't get bundle for locale " + locale.getLanguage());
 		}
 		bundles.put(locale, propertyResourceBundle);
 		return propertyResourceBundle;
 	}
+	
 	private static PropertyResourceBundle createDefaultBundle(){
 		PropertyResourceBundle propertyResourceBundle = null;
 		try {
-			propertyResourceBundle = new PropertyResourceBundle(new FileInputStream(servletContextPath + PROPERTIES_FOLDER + "textResources.properties"));
+			String fileName = servletContextPath + PROPERTIES_FOLDER + "textResources.properties";
+			propertyResourceBundle = createResourceBundle(fileName);
 		} catch (Exception e) {
 			logger.error("Coudn't get bundle for default locale.");
 		}
 		return propertyResourceBundle;
 	}
+	
+	private static PropertyResourceBundle createResourceBundle(String fileName)
+			throws IOException, FileNotFoundException {
+		return new PropertyResourceBundle(new InputStreamReader(new FileInputStream(fileName), Charset.forName(DEFAULT_ENCODING)));
+	}
+	
 	public static String getResource(Locale locale, String resource){
 		ResourceBundle resources = bundles.get(locale);
 		if (resources == null){

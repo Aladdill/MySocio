@@ -52,4 +52,22 @@ public class FacebookContact extends Contact {
 	public String getUserpicUrl() {
 		return "https://graph.facebook.com/" + getFacebookId() + "/picture";
 	}
+
+	/* (non-Javadoc)
+	 * @see net.mysocio.data.contacts.Contact#getUrl()
+	 */
+	@Override
+	public String getUrl() {
+		return "https://www.facebook.com/" + getFacebookId();
+	}
+
+	@Override
+	public String getUniqueFieldName() {
+		return "facebookId";
+	}
+
+	@Override
+	public Object getUniqueFieldValue() {
+		return getFacebookId();
+	}
 }

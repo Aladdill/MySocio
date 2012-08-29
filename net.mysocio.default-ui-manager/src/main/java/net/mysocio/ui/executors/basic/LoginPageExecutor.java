@@ -5,7 +5,6 @@ package net.mysocio.ui.executors.basic;
 
 import net.mysocio.data.CorruptedDataException;
 import net.mysocio.data.IConnectionData;
-import net.mysocio.data.SocioUser;
 import net.mysocio.ui.management.CommandExecutionException;
 import net.mysocio.ui.management.ICommandExecutor;
 import net.mysocio.ui.managers.basic.DefaultUiManager;
@@ -24,8 +23,8 @@ public class LoginPageExecutor implements ICommandExecutor {
 	 */
 	@Override
 	public String execute(IConnectionData connectionData) throws CommandExecutionException{
-		SocioUser user = connectionData.getUser();
-		if (user != null){
+		String userId = connectionData.getUserId();
+		if (userId != null){
 			return new LoadMainPageExecutor().execute(connectionData);
 		}
 		String loginPage = "";

@@ -3,21 +3,24 @@
  */
 package net.mysocio.data.management;
 
-import java.util.HashMap;
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import net.mysocio.connection.readers.Source;
 import net.mysocio.data.IDataManager;
 import net.mysocio.data.ISocioObject;
-import net.mysocio.data.SocioObject;
+import net.mysocio.data.IUniqueObject;
 import net.mysocio.data.SocioTag;
 import net.mysocio.data.SocioUser;
+import net.mysocio.data.UserAccount;
+import net.mysocio.data.UserContact;
+import net.mysocio.data.UserSource;
 import net.mysocio.data.accounts.Account;
-import net.mysocio.data.messages.GeneralMessage;
+import net.mysocio.data.contacts.Contact;
+import net.mysocio.data.messages.UnreaddenMessage;
 import net.mysocio.data.ui.UiObject;
-import net.mysocio.data.ui.UserUiObjects;
+import net.mysocio.data.ui.UserPage;
 
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
@@ -66,16 +69,20 @@ public class MongoDataManager implements IDataManager {
 		SocioUser user = new SocioUser();
 		user.setName(userName);
 		user.setLocale(locale.getLanguage());
-		ds.save(user);
+		saveObject(user);
 		userId = user.getId().toString();
-		addAccountToUser(account, user);
+		account.setUser(user);
+		saveObject(account);
 		user.setMainAccount(account);
+		saveObject(user);
+		addAccountToUser(account, userId);
+		
 		DefaultUserMessagesProcessor processor = new DefaultUserMessagesProcessor();
-		processor.setUser(user);
-		CamelContextManager.addRoute("activemq:" + userId + ".newMessage", processor, null);
+		processor.setUserId(userId);
+		CamelContextManager.addRoute("activemq:" + userId + ".newMessage", processor, null, 0l);
 		MarkMessageReaddenProcessor readdenProcessor = new MarkMessageReaddenProcessor();
-		readdenProcessor.setUser(user);
-		CamelContextManager.addRoute("activemq:" + userId + ".messageReaden", readdenProcessor, null);
+		readdenProcessor.setUserId(userId);
+		CamelContextManager.addRoute("activemq:" + userId + ".messageReaden", readdenProcessor, null, 0l);
 		logger.debug("User created");
 		return user;
 	}
@@ -85,19 +92,31 @@ public class MongoDataManager implements IDataManager {
 	 * @param user
 	 * @throws Exception 
 	 */
-	public Account addAccountToUser(Account account, SocioUser user) throws Exception {
-		account.setUser(user);
-		saveObject(account);
-		user.addAccount(account);
-		saveObject(user);
+	public void addAccountToUser(Account account, String userId) throws Exception {
+		UserAccount userAccount = new UserAccount();
+		userAccount.setUserId(userId);
+		userAccount.setAccount(account);
+		saveObject(userAccount);
 		List<Source> sources = account.getSources();
 		for (Source source : sources) {
-			Source savedSource = createSource(source);
-			savedSource.createRoute("activemq:" + user.getId()  + ".newMessage");
-			user.addSource(savedSource);
-			saveObject(user);
+			addSourceToUser(userId, source);
 		}
-		return account;
+		List<Contact> contacts = account.getContacts();
+		for (Contact contact : contacts) {
+			UserContact userContact = new UserContact();
+			userContact.addContact(contact);
+			userContact.setUserId(userId);
+			saveObject(userContact);
+		}
+	}
+	
+	public void addSourceToUser(String userId, Source source) throws Exception{
+		saveObject(source);
+		source.createRoute("activemq:" + userId  + ".newMessage");
+		UserSource userSource = new UserSource();
+		userSource.setUserId(userId);
+		userSource.setSource(source);
+		saveObject(userSource);
 	}
 
 	/**
@@ -109,7 +128,7 @@ public class MongoDataManager implements IDataManager {
 		return q.get();
 	}
 
-	public<T> T getObject(Class T, String id) {
+	public<T> T getObject(Class<T> T, String id) {
 		Query<T>  q = (Query<T>)ds.createQuery(T).field("id").equal(new ObjectId(id));
 		return q.get();
 	}
@@ -120,7 +139,7 @@ public class MongoDataManager implements IDataManager {
 		return q.get();
 	}
 
-	public <T extends ISocioObject> List<T> getObjects(Class T) {
+	public <T extends ISocioObject> List<T> getObjects(Class<T> T) {
 		return ds.find(T).asList();
 	}
 
@@ -139,67 +158,95 @@ public class MongoDataManager implements IDataManager {
 	 * 
 	 * @see net.mysocio.data.management.IDataManager#saveObjects(java.util.List)
 	 */
-	public void saveObjects(List<? extends Object> objects) {
-		ds.save(objects);
+	public <T extends ISocioObject> void saveObjects(Class<T> T, List<T> objects) {
+		for (T object : objects) {
+			saveObject(object);
+		}
 	}
 
 	public void deleteObject(Object object) {
 		ds.delete(object);
 	}
 
-	public <T> T createUniqueObject(Query<T> q,T object) {
-		T objectT = (T) q.get();
-		if (objectT == null) {
-			ds.save(object);
-		} else {
-			logger.info("Duplicate object of type: " + object.getClass()
-					+ " for query: " + q.toString());
+	public <T extends ISocioObject> void saveObject(T object) {
+		if (object instanceof IUniqueObject){
+			IUniqueObject uniqueObject = (IUniqueObject)object;
+			Query<T> q = (Query<T>)ds.createQuery(object.getClass()).field(uniqueObject.getUniqueFieldName()).equal(uniqueObject.getUniqueFieldValue());
+			T objectT = (T) q.get();
+			if (objectT != null) {
+				logger.info("Duplicate object of type: " + object.getClass() + " for query: " + q.toString());
+				return;
+			}
 		}
-		return objectT;
+		ds.save(object);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * net.mysocio.data.management.IDataManager#saveSource(net.mysocio.connection
-	 * .readers.ISource)
-	 */
-	public Source createSource(Source source) {
-		Query<Source> q = ds.createQuery(Source.class).field("url").equal(source.getUrl());
-		Source object = q.get();
-		for (SocioTag tag : source.getTags()) {
-			ds.save(tag);
-		}
-		if (object == null){
-			ds.save(source);
-			return source;
-		}
-		return (Source)object;
+	public void setMessageReadden(String messageId) {
+		Query<UnreaddenMessage> q = ds.createQuery(UnreaddenMessage.class).field("id").equal(new ObjectId(messageId));
+		ds.delete(q);
 	}
 
-	public GeneralMessage createMessage(GeneralMessage message) {
-		Query<GeneralMessage> q = ds.createQuery(GeneralMessage.class).field("uniqueId").equal(message.getUniqueId());
-		return createUniqueObject(q, message);
-	}
-
-	public Map<String, UiObject> getUserUiObjects(SocioUser user) {
-		UserUiObjects objects;
-		Query<UserUiObjects> q = ds.createQuery(UserUiObjects.class).field("userId").equal(user.getId().toString());
-		objects = q.get();
-		if (objects == null) {
-			return new HashMap<String, UiObject>();
+	public List<UnreaddenMessage> getUnreadMessages(SocioUser user, String tagId) {
+		Query<UnreaddenMessage> q = ds.createQuery(UnreaddenMessage.class).field("userId").equal(user.getId().toString());
+		if (!tagId.equals(SocioUser.ALL_TAGS)){
+			q.field("tag.id").equal(new ObjectId(tagId));
 		}
-		return objects.getUserUiObjects();
+		if (user.getOrder().equals(SocioUser.ASCENDING_ORDER)){
+			q.order("messageDate");
+		}else{
+			q.order("-messageDate");
+		}
+		q.limit(user.getRange());
+		List<UnreaddenMessage> messages = q.asList();
+		return messages;
+	}
+	
+	public Long countUnreadMessages(String tagId) {
+		return ds.createQuery(UnreaddenMessage.class).field("tag.id").equal(new ObjectId(tagId)).countAll();
 	}
 
-	public List<GeneralMessage> getMessages(List<String> ids, String order, int range) {
-		Query<GeneralMessage> q = ds.createQuery(GeneralMessage.class).filter("id in", ids).order("date").limit(range);
+	public String getPage(String userId, String pageKey) {
+		Query<UserPage> q = ds.createQuery(UserPage.class).field("userId").equal(userId).field("pageKey").equal(pageKey);
+		UserPage userPage = q.get();
+		if (userPage == null){
+			return null;
+		}
+		return userPage.getPageHTML();
+	}
+
+	public SocioTag getTag(String userId, String value) {
+		Query<SocioTag> q = ds.createQuery(SocioTag.class).field("userId").equal(userId).field("value").equal(value);
+		return q.get();
+	}
+	
+	public Collection<SocioTag> getUserTags(String userId) {
+		Query<SocioTag> q = ds.createQuery(SocioTag.class).field("userId").equal(userId);
 		return q.asList();
 	}
 
-	@Override
-	public <T extends ISocioObject> void saveObject(T object) {
-		ds.save(object);
+
+	public List<UserAccount> getAccounts(String userId) {
+		Query<UserAccount> q = ds.createQuery(UserAccount.class).field("userId").equal(userId);
+		return q.asList();
+	}
+
+	public void removeSource(String userId, String sourceId) {
+		Query<UserSource> q = ds.createQuery(UserSource.class).field("userId").equal(userId);
+		List<UserSource> sources = q.asList();
+		for (UserSource userSource : sources) {
+			if (userSource.getSource().getId().toString().equals(sourceId)){
+				ds.delete(userSource.getSource());
+			}
+		}
+	}
+
+	public List<UserContact> getContacts(String userId) {
+		Query<UserContact> q = ds.createQuery(UserContact.class).field("userId").equal(userId);
+		return q.asList();
+	}
+
+	public List<UserSource> getSources(String userId) {
+		Query<UserSource> q = ds.createQuery(UserSource.class).field("userId").equal(userId);
+		return q.asList();
 	}
 }

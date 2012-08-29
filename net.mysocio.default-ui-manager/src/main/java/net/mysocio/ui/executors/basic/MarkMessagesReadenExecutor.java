@@ -4,7 +4,6 @@
 package net.mysocio.ui.executors.basic;
 
 import net.mysocio.data.IConnectionData;
-import net.mysocio.data.SocioUser;
 import net.mysocio.data.management.MessagesManager;
 import net.mysocio.ui.management.CommandExecutionException;
 import net.mysocio.ui.management.ICommandExecutor;
@@ -23,8 +22,8 @@ public class MarkMessagesReadenExecutor implements ICommandExecutor{
 			throws CommandExecutionException {
 		String messagesIds = connectionData.getRequestParameter("messagesIds");
 		logger.debug("Marking readen message with ids: " + messagesIds);
-		SocioUser user = connectionData.getUser();
-		MessagesManager.getInstance().setMessagesReadden(user, messagesIds);
+		String userId = connectionData.getUserId();
+		MessagesManager.getInstance().setMessagesReadden(userId, messagesIds);
 		return "";
 	}
 }

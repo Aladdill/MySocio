@@ -6,7 +6,7 @@ package net.mysocio.ui.executors.basic;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Collection;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
@@ -16,7 +16,6 @@ import net.mysocio.data.SocioTag;
 import net.mysocio.data.SocioUser;
 import net.mysocio.data.management.DataManagerFactory;
 import net.mysocio.data.management.DefaultResourcesManager;
-import net.mysocio.data.messages.UnreaddenMessage;
 import net.mysocio.ui.management.CommandExecutionException;
 import net.mysocio.ui.management.ICommandExecutor;
 
@@ -35,7 +34,7 @@ public class GetTagsExecutor implements ICommandExecutor {
 	/* (non-Javadoc)
 	 * @see net.mysocio.ui.management.ICommandExecutor#execute(javax.servlet.http.HttpServletRequest)
 	 */
-	private Map<String, Integer> tagsMessagesCount;
+	private Map<String, Long> tagsMessagesCount = new HashMap<String, Long>();
 	private Locale locale;
 	private Collection<SocioTag> tags;
 	@Override
@@ -43,23 +42,14 @@ public class GetTagsExecutor implements ICommandExecutor {
 		IDataManager dataManager = DataManagerFactory.getDataManager();
 		String userId = connectionManager.getUserId();
 		SocioUser user = dataManager.getObject(SocioUser.class, userId);
-		List<UnreaddenMessage> unreadMessages = dataManager.getUnreadMessages(userId);
-		int totalCount = 0;
-		for (UnreaddenMessage unreaddenMessage : unreadMessages) {
-			String tagValue = unreaddenMessage.getTag().getValue();
-			Integer num = tagsMessagesCount.get(tagValue);
-			if (num == null){
-				num = 0;
-			}else{
-				num++;
-			}
-			totalCount++;
-			tagsMessagesCount.put(tagValue, num);
-		}
-		tagsMessagesCount.put(SocioUser.ALL_TAGS, totalCount);
 		locale = new Locale(user.getLocale());
 		tags = dataManager.getUserTags(userId);
-		dataManager.getUnreadMessages(userId);
+		for (SocioTag tag : tags) {
+			
+			String tagId = tag.getId().toString();
+			Long num = dataManager.countUnreadMessages(tagId);
+			tagsMessagesCount.put(tagId, num);
+		}
 		JsonFactory f = new JsonFactory();
 		StringWriter writer = new StringWriter();
 		JsonGenerator jsonGenerator;
@@ -111,7 +101,7 @@ public class GetTagsExecutor implements ICommandExecutor {
 	 * @throws JsonGenerationException
 	 */
 	private void addNodeData(JsonGenerator jsonGenerator, String name,
-			String id, String icon, int unreadMessagesNum) throws IOException,
+			String id, String icon, Long unreadMessagesNum) throws IOException,
 			JsonGenerationException {
 		jsonGenerator.writeObjectFieldStart("attr");
 		jsonGenerator.writeStringField("id", id);
@@ -131,17 +121,17 @@ public class GetTagsExecutor implements ICommandExecutor {
 	private void addRootNode(JsonGenerator jsonGenerator) throws Exception{
 		jsonGenerator.writeStartObject();
 		addNodeChildren(jsonGenerator);
-		addNodeData(jsonGenerator, SocioUser.ALL_TAGS, SocioUser.ALL_TAGS, null, tagsMessagesCount.get(SocioUser.ALL_TAGS));
+		addNodeData(jsonGenerator, SocioUser.ALL_TAGS, SocioUser.ALL_TAGS, null, 0l);
 		jsonGenerator.writeStringField("state", "open");
 		jsonGenerator.writeEndObject();
 	}
 	
 	private void addTagNode(JsonGenerator jsonGenerator, SocioTag tag) throws Exception{
 		jsonGenerator.writeStartObject();
-		String tagId = tag.getUserId();
-		Integer unreadMessagesNum = tagsMessagesCount.get(tagId);
+		String tagId = tag.getId().toString();
+		Long unreadMessagesNum = tagsMessagesCount.get(tagId);
 		if (unreadMessagesNum == null){
-			unreadMessagesNum = 0;
+			unreadMessagesNum = 0l;
 		}
 		addNodeData(jsonGenerator, DefaultResourcesManager.getResource(locale, tag.getValue()), tagId, DefaultResourcesManager.getResource(locale, tag.getIconType()), unreadMessagesNum);
 		jsonGenerator.writeEndObject();

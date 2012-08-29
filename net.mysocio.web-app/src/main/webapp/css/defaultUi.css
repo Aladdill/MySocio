@@ -31,7 +31,7 @@ td.SourcesBox {
 	height: 100%;
 }
 
-div.UserBox {
+.UserBox {
 	position: relative;
 	background: transparent;
 	margin-top: 37px;
@@ -39,7 +39,7 @@ div.UserBox {
 	float: none;
 }
 
-div.UserPic {
+.UserPic {
 	margin-left: 34px;
 	margin-right: 22px;
 	width: 50px;
@@ -72,7 +72,7 @@ img.AccountUserpic {
 	border: 2px solid #00aeef;
 	float: left;
 }
-div.AccountUserpic {
+.AccountUserpic {
 	float: left;
 	padding-left: 15px;
 	padding-top: 4px;
@@ -95,28 +95,28 @@ span.DefaultAccount {
 	color: #525152;
 	float: left;
 }
-div.Account {
+.Account {
 	float: left;
 	width: 600px;
 	height: auto;
 	margin-left: 16px;
 	margin-top: 20px;
 }
-div.NewAccount {
+.NewAccount {
 	float: left;
 	width: 600px;
 	height: auto;
 	margin-left: 28px;
 	margin-top: 20px;
 }
-div.AccountData {
+.AccountData {
 	position: relative;
 	left: -7px;
 	width: 100px;
 	height: 100%;
 	float: left;
 }
-div.RSS {
+.RSS {
 	float: left;
 	width: 600px;
 	height: auto;
@@ -128,27 +128,27 @@ span.RSSType {
 	margin-top: 7px;
 	margin-left: 10px;
 }
-div.MessageUserpic {
+.MessageUserpic {
 	float: left;
 	padding-right: 15px;
 	padding-top: 4px;
 	padding-bottom: 15px;
 }
 
-div.UserName {
+.UserName {
 	font: 14px Calibri;
 	color: #7d4089;
 	float: none;
 }
 
-div.Subsciptions {
+.Subsciptions {
 	font: 14px Calibri;
 	color: #00aeef;
 	margin-left: 34px;
 	margin-top: 35px;
 }
 
-div.SubsciptionsUnderline {
+.SubsciptionsUnderline {
 	margin-left: 34px;
 	margin-bottom: 9px;
 	height: 1px;
@@ -162,7 +162,35 @@ a.InnerLink {
 	float: none;
 }
 
-div.LoginCenterDiv {
+.PostBox {
+	border: 4px solid #ececec;
+	height: 35px;
+	width: 680px;
+	font: 13px Calibri;
+	color: #a5a4a4;
+	margin-bottom: 2px;
+}
+
+.PostBox : :FOCUS {
+	color: #000000;
+}
+.PostBox textarea{
+	height: 35px;
+	width: 100%;
+}
+.PostButtons {
+	height: 20px;
+	width: 680px;
+	background-color: #ececec;
+}
+.PostButton {
+	height: 20px;
+	width: 72px;
+	background-color: #a67eb0;
+	float: right;
+}
+
+.LoginCenterDiv {
 	margin-left: auto;
 	margin-right: auto;
 	margin-bottom: auto;
@@ -172,94 +200,94 @@ div.LoginCenterDiv {
 	position: relative;
 }
 
-div.Settings {
+.Settings {
 	margin-top: 12px;
 }
 
-div.HiddenDiv {
+.HiddenDiv {
 	display: none;
 }
-div.LongDate {
+.LongDate {
 	
 }
-div.LogOut {
+.LogOut {
 	
 }
 
-div.HeaderLine {
+.HeaderLine {
 	height: 4px;
 	width: 100%;
 	background: #00aeef;
 }
 
-div.HeaderMiddleColumn {
+.HeaderMiddleColumn {
 	height: 44px;
 	width: 100%;
 	background-image: url("../images/main/light-texture.jpg");
 	background-repeat: repeat;
 }
 
-div.HeaderMiddleColumnWithShade {
+.HeaderMiddleColumnWithShade {
 	height: 63px;
 	width: 100%;
 	background-image: url("../images/main/paper-light-part.jpg");
 	background-repeat: repeat;
 }
 
-div.LogoBox {
+.LogoBox {
 	height: 107px;
 	width: 100%;
 	background-image: url("../images/main/light-texture.jpg");
 	background-repeat: repeat;
 }
 
-div.ContentLine {
+.ContentLine {
 	height: 4px;
 	width: 100%;
 	background: #7d4089;
 }
 
-div.ContentHeader {
+.ContentHeader {
 	height: 44px;
 	width: 100%;
 	background-image: url("../images/main/light-texture2.jpg");
 	background-repeat: repeat;
 }
 
-div.BlueButtonTop {
+.BlueButtonTop {
 	height: 10px;
 	background-image: url('../images/main/blue_idle_right.png');
 	background-repeat: no-repeat;
 }
 
-div.BlueButtonCenter {
+.BlueButtonCenter {
 	width: 22px;
 	background-image: url('../images/main/blue_idle_center.png');
 	background-repeat: repeat;
 	float: none;
 }
 
-div.BlueButtonBottom {
+.BlueButtonBottom {
 	height: 10px;
 	background-image: url('../images/main/blue_idle_left.png');
 	background-repeat: no-repeat;
 	margin-bottom: 3px;
 }
 
-div.GrayButtonTop {
+.GrayButtonTop {
 	height: 10px;
 	background-image: url('../images/main/gray_idle_right.png');
 	background-repeat: no-repeat;
 }
 
-div.GrayButtonCenter {
+.GrayButtonCenter {
 	width: 22px;
 	background-image: url('../images/main/gray_idle_center.png');
 	background-repeat: repeat;
 	float: none;
 }
 
-div.GrayButtonBottom {
+.GrayButtonBottom {
 	height: 10px;
 	background-image: url('../images/main/gray_idle_left.png');
 	background-repeat: no-repeat;
@@ -286,7 +314,7 @@ span.MessageDate {
 	font: 12px Calibri;
 }
 
-div.MiddleHeaderLine {
+.MiddleHeaderLine {
 	margin-bottom: 18px;
 }
 
@@ -339,22 +367,22 @@ tr.Footer {
 	padding: 0px;
 }
 
-div.SourcesBox {
+.SourcesBox {
 	margin-left: 32px;
 	overflow: hidden;
 	width: 183px;
 	height: auto;
 }
 
-div.MessagesBox {
+.MessagesBox {
 	overflow: auto;
 }
 
-div.Tabs {
+.Tabs {
 	float: left;
 }
 
-div.Message {
+.Message {
 	height: auto;
 	width: 680px;
 	margin-left: 28px;
@@ -362,22 +390,22 @@ div.Message {
 	border: 0px;
 }
 
-div.SelectedMessage {
+.SelectedMessage {
 	
 }
 
-div.MessageButtons {
+.MessageButtons {
 	height: 27px;
 	background-color: #ececec;
 	font: 12px Calibri;
 	color: #82478e;
 }
 
-div.MessageButtonsSelected {
+.MessageButtonsSelected {
 	background-color: #dedede;
 }
 
-div.MessageButton {
+.MessageButton {
 	margin-top: 7px;
 	margin-right: 6px;
 	float: left;
@@ -390,16 +418,16 @@ img.MessageButton {
 	float: left;
 }
 
-div.MessageText {
+.MessageText {
 	height: auto;
 	font: 13px Calibri;
 	overflow: hidden;
 	color: #292929;
 }
-div.Expand {
+.Expand {
 	height: auto;
 }
-div.MessageTextSelected {
+.MessageTextSelected {
 	color: #292929;
 	background: #f3f3f3;
 }
@@ -416,11 +444,11 @@ img.NetworkIconReaden {
 	display: none;
 }
 
-div.MessageTextReaden {
+.MessageTextReaden {
 	color: #a3a3a3;
 }
 
-div.MessageExpand {
+.MessageExpand {
 	height: 20px;
 	font: 10px Calibri;
 	color: #82478e;
@@ -428,7 +456,7 @@ div.MessageExpand {
 	margin-bottom: 2px;
 }
 
-div.MessageCollapse {
+.MessageCollapse {
 	height: 20px;
 	font: 10px Calibri;
 	color: #82478e;
@@ -436,26 +464,26 @@ div.MessageCollapse {
 	margin-bottom: 2px;
 }
 
-div.MessageCollapseSelected {
+.MessageCollapseSelected {
 	background: #f3f3f3;
 }
 
-div.MessageExpandSelected {
+.MessageExpandSelected {
 	background: #f3f3f3;
 }
 
-div.MessageTitle {
+.MessageTitle {
 	height: 20px;
 	padding-top: 17px;
 	padding-bottom: 20px;
 	color: #00aeef;
 }
 
-div.MessageTitleReaden {
+.MessageTitleReaden {
 	color: #a3a3a3;
 }
 
-div.MessageTitleSelected {
+.MessageTitleSelected {
 	color: #00aeef;
 	background: #f3f3f3;
 }
@@ -474,12 +502,12 @@ a.Undecorated {
 	color: inherit;
 }
 
-div.LoginPage {
+.LoginPage {
 	background: url("../images/loginPage/darker-texture-login.jpg");
 	vertical-align: middle;
 }
 
-div.AuthCircle {
+.AuthCircle {
 	background: url("../images/loginPage/big-circle.png");
 	height: 340px;
 	width: 340px;
@@ -487,42 +515,42 @@ div.AuthCircle {
 	margin-left: 168px;
 }
 
-div.LoginOctopus {
+.LoginOctopus {
 	position: relative;
 	top: 15px;
 	left: 132px;
 	float: left;
 }
 
-div.LoginGoogle {
+.LoginGoogle {
 	position: relative;
 	top: 29px;
 	left: 166px;
 	float: none;
 }
 
-div.LoginFacebook {
+.LoginFacebook {
 	position: relative;
 	top: -60px;
 	left: 76px;
 	float: none;
 }
 
-div.LoginTwitter {
+.LoginTwitter {
 	position: relative;
 	top: -55px;
 	left: 164px;
 	float: none;
 }
 
-div.LoginLJ {
+.LoginLJ {
 	position: relative;
 	top: 100px;
 	left: 23px;
 	float: none;
 }
 
-div.LoginBaloon {
+.LoginBaloon {
 	position: relative;
 	top: -57px;
 	left: 44px;
@@ -543,14 +571,14 @@ span.Baloon {
 	color: #7d4d8b;
 }
 
-div.LoginVkontakte {
+.LoginVkontakte {
 	position: relative;
 	top: -104px;
 	left: 179px;
 	float: none;
 }
 
-div.LoginLinkedin {
+.LoginLinkedin {
 	position: relative;
 	top: -96px;
 	left: 165px;
@@ -608,13 +636,13 @@ td.Promo {
 	width: 100%;
 }
 
-div.Promo {
+.Promo {
 	position: relative;
 	width: 691px;
 	height: 100px;
 }
 
-div.PromoGeneral {
+.PromoGeneral {
 	position: relative;
 	width: 207px;
 	height: 100px;
@@ -630,7 +658,7 @@ span.PromoGeneral {
 	color: #7d4d8b;
 }
 
-div.PromoAbout {
+.PromoAbout {
 	position: relative;
 	width: 207px;
 	height: 100px;
@@ -639,7 +667,7 @@ div.PromoAbout {
 	float: left;
 }
 
-div.PromoYourLook {
+.PromoYourLook {
 	position: relative;
 	margin-top: 18px;
 	width: 207px;
@@ -663,22 +691,22 @@ span.PromoText {
 	font: 11px Verdana;
 	color: #444444;
 }
-div.PlusButton {
+.PlusButton {
 	height: 22px;
 	width: 22px;
 	background: url("../images/settings/add-idle.png") no-repeat 0 0;
 	float: left;
 }
-div.PlusButton:HOVER {
+.PlusButton:HOVER {
 	background: url("../images/settings/add-rollover.png") no-repeat 0 0;
 }
-div.MinusButton {
+.MinusButton {
 	height: 22px;
 	width: 22px;
 	background: url("../images/settings/remove-idle.png") no-repeat 0 0;
 	float: left;
 }
-div.MinusButton:HOVER {
+.MinusButton:HOVER {
 	background: url("../images/settings/remove-rollover.png") no-repeat 0 0;
 }
 

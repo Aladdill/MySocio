@@ -25,5 +25,9 @@
 			<groupId>net.mysocio</groupId>
 			<artifactId>rss-pack</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>net.mysocio</groupId>
+			<artifactId>facebook-pack</artifactId>
+		</dependency>
 	</dependencies>
 </project>

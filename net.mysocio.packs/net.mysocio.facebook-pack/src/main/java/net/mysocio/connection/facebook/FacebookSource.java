@@ -33,14 +33,12 @@ public class FacebookSource extends AccountSource {
 		processor.setToken(account.getToken());
 		SocioTag tag = new SocioTag();
 		tag.setValue("facebook.tag");
-		tag.setUserId("facebook.tag");
 		tag.setIconType("facebook.icon.general");
 		processor.addTag(tag);
 		SocioTag tag1 = new SocioTag();
 		tag1.setValue(account.getUserName());
-		tag1.setUserId(account.getAccountUniqueId());
 		tag1.setIconType("facebook.icon.general");
 		processor.addTag(tag1);
-		CamelContextManager.addRoute("timer://" + getId() + "?fixedRate=true&period=60s", processor, null);
+		CamelContextManager.addRoute("timer://" + getId() + "?fixedRate=true&period=60s", processor, null, 0l);
 	}
 }

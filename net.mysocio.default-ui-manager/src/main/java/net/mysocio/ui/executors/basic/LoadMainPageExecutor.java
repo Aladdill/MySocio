@@ -5,7 +5,9 @@ package net.mysocio.ui.executors.basic;
 
 import net.mysocio.data.CorruptedDataException;
 import net.mysocio.data.IConnectionData;
+import net.mysocio.data.IDataManager;
 import net.mysocio.data.SocioUser;
+import net.mysocio.data.management.DataManagerFactory;
 import net.mysocio.ui.data.objects.DefaultSiteBody;
 import net.mysocio.ui.management.CommandExecutionException;
 import net.mysocio.ui.management.ICommandExecutor;
@@ -30,13 +32,15 @@ public class LoadMainPageExecutor implements ICommandExecutor {
 		AbstractUiManager uiManager = new DefaultUiManager();
 		String pageHtml = "";
 		try {
-			pageHtml = uiManager.getPage(DefaultSiteBody.CATEGORY, DefaultSiteBody.NAME, connectionData.getUser());
+			pageHtml = uiManager.getPage(DefaultSiteBody.CATEGORY, DefaultSiteBody.NAME, connectionData.getUserId());
 		} catch (CorruptedDataException e) {
 			logger.error("Failed showing main page.",e);
 			throw new CommandExecutionException(e);
 		}
-		SocioUser user = connectionData.getUser();
-		pageHtml = pageHtml.replace("userpic.url", user.getAccounts().get(0).getUserpicUrl());
+		String userId = connectionData.getUserId();
+		IDataManager dataManager = DataManagerFactory.getDataManager();
+		SocioUser user = dataManager.getObject(SocioUser.class, userId);
+		pageHtml = pageHtml.replace("userpic.url", user.getMainAccount().getUserpicUrl());
 		pageHtml = pageHtml.replace("user.name", user.getName());
 		return pageHtml;
 	}

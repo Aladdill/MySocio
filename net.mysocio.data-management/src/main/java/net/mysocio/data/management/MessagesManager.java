@@ -11,6 +11,7 @@ import net.mysocio.data.IDataManager;
 import net.mysocio.data.IMessagesManager;
 import net.mysocio.data.SocioUser;
 import net.mysocio.data.messages.GeneralMessage;
+import net.mysocio.data.messages.UnreaddenMessage;
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
@@ -43,21 +44,21 @@ public class MessagesManager implements IMessagesManager {
 	public List<String> storeMessages(List<GeneralMessage> messages) {
 		List<String> stored = new ArrayList<String>();
 		for (GeneralMessage message : messages) {
-			GeneralMessage savedMessage = storeMessage(message);
-			stored.add(savedMessage.getId().toString());
+			storeMessage(message);
+			stored.add(message.getId().toString());
 		}
 		return stored;
 	}
 
-	public GeneralMessage storeMessage(GeneralMessage message) {
+	public void storeMessage(GeneralMessage message) {
 		IDataManager dataManager = DataManagerFactory.getDataManager();
-		GeneralMessage savedMessage = dataManager.createMessage(message);
-		return savedMessage;
+		dataManager.saveObject(message);
 	}
 
-	public List<GeneralMessage> getMessagesForSelectedSource(String userId, String tagId) {
+	public List<UnreaddenMessage> getMessagesForSelectedTag(String userId, String tagId) {
 		IDataManager dataManager = DataManagerFactory.getDataManager();
-		List<GeneralMessage> unreadMessages = dataManager.getUnreadMessages(userId, tagId);
+		SocioUser user = dataManager.getObject(SocioUser.class, userId);
+		List<UnreaddenMessage> unreadMessages = dataManager.getUnreadMessages(user, tagId);
 //		for (String id : unreadMessages) {
 //			IMessage message = getCacheMessage(id);
 //			if (message != null){
@@ -75,14 +76,14 @@ public class MessagesManager implements IMessagesManager {
 		return unreadMessages;
 	}
 	
-	public void setMessagesReadden(SocioUser user, String messagesId){
+	public void setMessagesReadden(String userId, String messagesId){
 		if (messagesId.isEmpty()){
 			return;
 		}
 		String[] ids = messagesId.split(",");
 		ProducerTemplate producerTemplate = CamelContextManager.getProducerTemplate();
 		for (String id : ids) {
-			producerTemplate.sendBody("activemq:" + user.getId() + ".messageReaden",id);
+			producerTemplate.sendBody("activemq:" + userId + ".messageReaden",id);
 		}
 	}
 	private void cacheMessage(GeneralMessage message){

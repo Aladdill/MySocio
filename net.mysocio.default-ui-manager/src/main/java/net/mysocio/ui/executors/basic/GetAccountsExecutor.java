@@ -11,7 +11,7 @@ import net.mysocio.data.CorruptedDataException;
 import net.mysocio.data.IConnectionData;
 import net.mysocio.data.IDataManager;
 import net.mysocio.data.SocioUser;
-import net.mysocio.data.accounts.Account;
+import net.mysocio.data.UserAccount;
 import net.mysocio.data.management.AccountsManager;
 import net.mysocio.data.management.DataManagerFactory;
 import net.mysocio.data.management.DefaultResourcesManager;
@@ -40,7 +40,7 @@ public class GetAccountsExecutor implements ICommandExecutor {
 			String userId = connectionData.getUserId();
 			IDataManager dataManager = DataManagerFactory.getDataManager();
 			SocioUser user = dataManager.getObject(SocioUser.class, userId);
-			List<Account> accounts = user.getAccounts();
+			List<UserAccount> accounts = dataManager.getAccounts(userId);
 			AbstractUiManager uiManager = new DefaultUiManager();
 			Set<String> accountsTypes = AccountsManager.getInstance().getAccounts();
 			String newAccountHTML = uiManager.getPage(NewAccountLine.CATEGORY, NewAccountLine.NAME, userId);
@@ -53,15 +53,15 @@ public class GetAccountsExecutor implements ICommandExecutor {
 				page += currentAccountHTML;
 			}
 			String accountHTML = uiManager.getPage(AccountLine.CATEGORY, AccountLine.NAME, userId);
-			for (Account account : accounts) {
+			for (UserAccount userAccount : accounts) {
 				String currentAccountHTML = accountHTML;
-				if (account.getId().equals(user.getMainAccount().getId())){
+				if (userAccount.getAccount().getId().equals(user.getMainAccount().getId())){
 					currentAccountHTML = uiManager.getPage(DefaultAccountLine.CATEGORY, DefaultAccountLine.NAME,userId);
 				}
-				currentAccountHTML = currentAccountHTML.replace("account.icon", DefaultResourcesManager.getResource(locale, (account.getIconUrl())));
-				currentAccountHTML = currentAccountHTML.replace("account.id", account.getId().toString());
-				currentAccountHTML = currentAccountHTML.replace("account.userpic", account.getUserpicUrl());
-				currentAccountHTML = currentAccountHTML.replace("account.username", account.getUserName());
+				currentAccountHTML = currentAccountHTML.replace("account.icon", DefaultResourcesManager.getResource(locale, (userAccount.getAccount().getIconUrl())));
+				currentAccountHTML = currentAccountHTML.replace("account.id", userAccount.getAccount().getId().toString());
+				currentAccountHTML = currentAccountHTML.replace("account.userpic", userAccount.getAccount().getUserpicUrl());
+				currentAccountHTML = currentAccountHTML.replace("account.username", userAccount.getAccount().getUserName());
 				page += currentAccountHTML;
 			}
 		} catch (CorruptedDataException e) {

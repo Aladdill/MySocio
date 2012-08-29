@@ -9,9 +9,11 @@ import java.util.List;
 
 import net.mysocio.data.IAuthenticationManager;
 import net.mysocio.data.IConnectionData;
+import net.mysocio.data.IDataManager;
 import net.mysocio.data.accounts.Account;
 import net.mysocio.data.accounts.lj.LjAccount;
 import net.mysocio.data.accounts.lj.LjFriend;
+import net.mysocio.data.contacts.Contact;
 import net.mysocio.data.management.DataManagerFactory;
 import net.mysocio.utils.rss.AddingRssException;
 
@@ -62,7 +64,8 @@ public class LjAuthenticationManager implements IAuthenticationManager {
 			throw new IllegalArgumentException(NO_USERNAME_FOUND_FOR_LJ_ACCOUNT);
 		}
 		LjAccount ljAccount;
-		ljAccount = (LjAccount) DataManagerFactory.getDataManager().getAccount(
+		IDataManager dataManager = DataManagerFactory.getDataManager();
+		ljAccount = (LjAccount) dataManager.getAccount(
 				username);
 		if (ljAccount != null) {
 			logger.debug("Account found.");
@@ -94,9 +97,10 @@ public class LjAuthenticationManager implements IAuthenticationManager {
 			LjFriend friend = new LjFriend();
 			friend.setName(outline.getText());
 			friend.setUrl(outline.getXmlUrl());
-			ljAccount.addFriend(friend);
+			ljAccount.addContact(friend);
 		}
-		DataManagerFactory.getDataManager().saveObjects(ljAccount.getFriends());
+		dataManager.saveObjects(Contact.class, ljAccount.getContacts());
+		dataManager.saveObject(ljAccount);
 		return ljAccount;
 	}
 }

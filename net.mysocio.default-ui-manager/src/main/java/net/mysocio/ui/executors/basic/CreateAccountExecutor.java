@@ -5,7 +5,6 @@ package net.mysocio.ui.executors.basic;
 
 import net.mysocio.data.IConnectionData;
 import net.mysocio.data.IDataManager;
-import net.mysocio.data.SocioUser;
 import net.mysocio.data.accounts.Account;
 import net.mysocio.data.management.AccountsManager;
 import net.mysocio.data.management.DataManagerFactory;
@@ -32,19 +31,19 @@ public class CreateAccountExecutor implements ICommandExecutor {
 	public String execute(IConnectionData connectionData)
 			throws CommandExecutionException {
 		try {
-			SocioUser user = connectionData.getUser();
+			String userId = connectionData.getUserId();
 			Account account = AccountsManager.getInstance().getAccount(connectionData);
 			IDataManager dataManager;
-			if (user == null) {
+			if (userId == null) {
 				logger.debug("Creating account for new user.");
 				dataManager = DataManagerFactory.getDataManager();
-				user = dataManager.getUser(account,connectionData.getLocale());
+				userId = dataManager.getUser(account,connectionData.getLocale()).getId().toString();
 			} else {
-				logger.debug("Creating account for user: " + user.getName());
+				logger.debug("Creating account for user: " + userId);
 				dataManager = DataManagerFactory.getDataManager();
-				dataManager.addAccountToUser(account, user);
+				dataManager.addAccountToUser(account, userId);
 			}
-			connectionData.setUser(user);
+			connectionData.setUserId(userId);
 		} catch (Exception e) {
 			logger.error("Failed to create account.", e);
 			throw new CommandExecutionException(e);

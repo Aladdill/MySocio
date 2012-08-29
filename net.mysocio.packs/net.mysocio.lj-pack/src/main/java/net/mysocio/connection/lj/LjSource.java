@@ -3,10 +3,7 @@
  */
 package net.mysocio.connection.lj;
 
-import java.util.List;
-
 import net.mysocio.connection.rss.RssSource;
-import net.mysocio.data.SocioTag;
 import net.mysocio.data.management.CamelContextManager;
 import net.mysocio.data.messages.lj.LjMessage;
 
@@ -37,10 +34,7 @@ public class LjSource extends RssSource {
 		}
 		LjMessageProcessor processor = new LjMessageProcessor();
 		processor.setTo(to);
-		List<SocioTag> tags = getTags();
-		for (SocioTag tag : tags) {
-			processor.addTag(tag);
-		}
+		processor.addTags(getTags());
 		CamelContextManager.addRoute("rss:" + getUrl() + "?consumer.delay=2000", processor , null);
 	}
 }

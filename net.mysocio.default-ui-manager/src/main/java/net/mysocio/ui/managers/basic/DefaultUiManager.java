@@ -24,6 +24,7 @@ import net.mysocio.ui.data.objects.DefaultSiteBody;
 import net.mysocio.ui.data.objects.NewAccountLine;
 import net.mysocio.ui.data.objects.RssLine;
 import net.mysocio.ui.data.objects.UserUiMessage;
+import net.mysocio.ui.data.objects.facebook.FacebookUiMessage;
 
 
 

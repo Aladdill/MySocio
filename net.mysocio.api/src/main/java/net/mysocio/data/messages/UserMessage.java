@@ -31,15 +31,6 @@ public abstract class UserMessage extends GeneralMessage {
 	public abstract String getNetworkIcon();
 	public abstract String getReadenNetworkIcon();
 
-	@Override
-	public String replacePlaceholders(String template) {
-		String message = super.replacePlaceholders(template);
-		message = message.replace("network.icon.readen", getReadenNetworkIcon());
-		message = message.replace("network.icon", getNetworkIcon());
-		message = message.replace("user.pic", getUserPic());
-		return message;
-	}
-	
 	public String getPageFile() {
 		return "userMessage.html";
 	}

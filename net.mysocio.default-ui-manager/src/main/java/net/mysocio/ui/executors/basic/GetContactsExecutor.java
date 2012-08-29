@@ -7,8 +7,9 @@ import java.util.List;
 
 import net.mysocio.data.CorruptedDataException;
 import net.mysocio.data.IConnectionData;
-import net.mysocio.data.SocioContact;
-import net.mysocio.data.SocioUser;
+import net.mysocio.data.IDataManager;
+import net.mysocio.data.UserContact;
+import net.mysocio.data.management.DataManagerFactory;
 import net.mysocio.ui.data.objects.ContactLine;
 import net.mysocio.ui.management.CommandExecutionException;
 import net.mysocio.ui.management.ICommandExecutor;
@@ -32,7 +33,8 @@ public class GetContactsExecutor implements ICommandExecutor {
 			throws CommandExecutionException {
 		String page = "";
 		String userId = connectionData.getUserId();
-		List<SocioContact> contacts = user.getContacts();
+		IDataManager dataManager = DataManagerFactory.getDataManager();
+		List<UserContact> contacts = dataManager.getContacts(userId);
 		AbstractUiManager uiManager = new DefaultUiManager();
 		String contactHTML;
 		try {
@@ -41,10 +43,10 @@ public class GetContactsExecutor implements ICommandExecutor {
 			logger.error("Failed showing contacts",e);
 			throw new CommandExecutionException(e);
 		}
-		for (SocioContact contact : contacts) {
+		for (UserContact contact : contacts) {
 			String currentContactHTML = contactHTML;
 			currentContactHTML = currentContactHTML.replace("contact.userpic", "images/portrait.jpg");
-			currentContactHTML = currentContactHTML.replace("contact.username", contact.getName());
+			currentContactHTML = currentContactHTML.replace("contact.username", contact.getContacts().get(0).getName());
 			page += currentContactHTML;
 		}
 		return page;

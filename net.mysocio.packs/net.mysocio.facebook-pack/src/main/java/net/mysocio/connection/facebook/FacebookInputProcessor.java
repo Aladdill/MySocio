@@ -12,7 +12,6 @@ import net.mysocio.data.SocioTag;
 import net.mysocio.data.management.AbstractMessageProcessor;
 import net.mysocio.data.management.CamelContextManager;
 import net.mysocio.data.management.MessagesManager;
-import net.mysocio.data.messages.UnreaddenMessage;
 import net.mysocio.data.messages.facebook.FacebookMessage;
 
 import org.apache.camel.Exchange;
@@ -33,16 +32,6 @@ public class FacebookInputProcessor extends AbstractMessageProcessor {
 	private static final long MONTH = 30*24*3600l;
 	private Long lastUpdate = 0l;
 	private String token;
-	private String to;
-	
-
-	public String getTo() {
-		return to;
-	}
-
-	public void setTo(String to) {
-		this.to = to;
-	}
 
 	public String getToken() {
 		return token;
@@ -118,17 +107,9 @@ public class FacebookInputProcessor extends AbstractMessageProcessor {
 			tag.setValue(message.getTitle());
 			tag.setIconType("facebook.icon.general");
 			MessagesManager.getInstance().storeMessage(message);
-			UnreaddenMessage unreaddenMessage = new UnreaddenMessage();
-			unreaddenMessage.setMessageDate(message.getDate());
-			unreaddenMessage.setMessageId(message.getId().toString());
-			unreaddenMessage.setTag(tag);
-			producerTemplate.sendBody(to,unreaddenMessage);
+			addMessageForTag(producerTemplate, message, tag);
 			for (SocioTag sourceTag : tags) {
-				unreaddenMessage = new UnreaddenMessage();
-				unreaddenMessage.setMessageDate(message.getDate());
-				unreaddenMessage.setMessageId(message.getId().toString());
-				unreaddenMessage.setTag(sourceTag);
-    			producerTemplate.sendBody(to,unreaddenMessage);
+				addMessageForTag(producerTemplate, message, sourceTag);
 			}
 		}
 		lastUpdate = toInSec*1000;

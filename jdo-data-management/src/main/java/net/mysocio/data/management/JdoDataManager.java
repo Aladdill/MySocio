@@ -16,14 +16,12 @@ import javax.jdo.Transaction;
 import javax.jdo.annotations.PersistenceAware;
 
 import net.mysocio.connection.readers.Source;
-import net.mysocio.data.IDataManager;
 import net.mysocio.data.ISocioObject;
 import net.mysocio.data.SocioObject;
 import net.mysocio.data.SocioUser;
 import net.mysocio.data.accounts.Account;
 import net.mysocio.data.messages.GeneralMessage;
 import net.mysocio.data.ui.UiObject;
-import net.mysocio.data.ui.UserUiObjects;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +31,7 @@ import org.slf4j.LoggerFactory;
  * 
  */
 @PersistenceAware
-public class JdoDataManager implements IDataManager {
+public class JdoDataManager {
 	private static final Logger logger = LoggerFactory.getLogger(JdoDataManager.class);
 	private PersistenceManager pm;
 	
@@ -85,59 +83,7 @@ public class JdoDataManager implements IDataManager {
 	 * java.lang.String)
 	 */
 	public SocioUser getUser(Account account, Locale locale) throws Exception {
-		String userName = account.getUserName();
-		logger.debug("Getting user " + userName + " for "
-				+ account.getAccountType());
-//		String userId = account.getUserId();
-//		if (userId != null && !userId.isEmpty()) {
-//			logger.debug("Account found");
-//			return getUniqueObject(SocioUser.class,
-//					getEqualsExpression("id", userId));
-//		}
-		SocioUser user = createUser(account, locale, userName);
-		return user;
-	}
-
-	private SocioUser createUser(Account account, Locale locale, String userName)
-			throws Exception {
-		String userId;
-		logger.debug("Creating user");
-		SocioUser user = new SocioUser();
-		user.setName(userName);
-		user.setLocale(locale.getLanguage());
-		persistObject(user);
-		userId = user.getId().toString();
-		addAccountToUser(account, user);
-//		user.setMainAccount(account);
-//		DefaultUserMessagesProcessor processor = new DefaultUserMessagesProcessor();
-//		processor.setUser(userId.toString());
-//		CamelContextManager.addRoute("activemq:" + userId + ".newMessage", processor, null);
-//		MarkMessageReaddenProcessor readdenProcessor = new MarkMessageReaddenProcessor();
-//		readdenProcessor.setUserId(userId);
-//		CamelContextManager.addRoute("activemq:" + userId + ".messageReaden", readdenProcessor, null);
-		logger.debug("User created");
-		return user;
-	}
-
-	/**
-	 * @param account
-	 * @param user
-	 * @throws Exception 
-	 */
-	public Account addAccountToUser(Account account, SocioUser user) throws Exception {
-//		account.setUserId(user.getId());
-		persistObject(account);
-		user.addAccount(account);
-		List<Source> sources = account.getSources();
-		persistObject(user);
-		for (Source source : sources) {
-//			SourcesManager.addSourceToUser(user, source);
-			Source savedSource = createSource(source);
-			savedSource.createRoute("activemq:" + user.getId()  + ".newMessage");
-			user.addSource(savedSource);
-			persistObject(user);
-		}
-		return account;
+		return null;
 	}
 
 	/**
@@ -270,15 +216,7 @@ public class JdoDataManager implements IDataManager {
 	}
 
 	public Map<String, UiObject> getUserUiObjects(SocioUser user) {
-		UserUiObjects objects;
-		Query q = pm.newQuery(UserUiObjects.class,
-				getEqualsExpression("userId", user.getId().toString()));
-		q.setUnique(true);
-		objects = (UserUiObjects) q.execute();
-		if (objects == null) {
-			return new HashMap<String, UiObject>();
-		}
-		return objects.getUserUiObjects();
+		return null;
 	}
 
 	public List<GeneralMessage> getMessages(List<String> ids, String order, int range) {
@@ -290,23 +228,5 @@ public class JdoDataManager implements IDataManager {
 		q.setOrdering("date " + order);
 		q.setRange(0, range);
 		return (List<GeneralMessage>) q.execute(ids);
-	}
-
-	@Override
-	public <T extends ISocioObject> List<T> getObjects(Class T) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public <T extends ISocioObject> void saveObject(T object) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public <T> T getObject(Class T, String id) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 }

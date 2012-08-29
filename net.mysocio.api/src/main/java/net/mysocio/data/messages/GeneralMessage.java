@@ -3,6 +3,7 @@
  */
 package net.mysocio.data.messages;
 
+import net.mysocio.data.IUniqueObject;
 import net.mysocio.data.SocioObject;
 import net.mysocio.ui.data.objects.DefaultMessage;
 
@@ -15,7 +16,7 @@ import com.google.code.morphia.annotations.Entity;
  *
  */
 @Entity("messages")
-public abstract class GeneralMessage extends SocioObject{
+public abstract class GeneralMessage extends SocioObject implements IUniqueObject{
 	/**
 	 * 
 	 */
@@ -60,14 +61,6 @@ public abstract class GeneralMessage extends SocioObject{
 		this.uniqueId = uniqueId;
 	}
 
-	public String replacePlaceholders(String template) {
-		String message = template.replace("message.title", getTitle());
-		message = message.replace("message.id", getId().toString());
-		message = message.replace("message.text", getText());
-		message = message.replace("message.link", getLink());
-		return message;
-	}
-
 	public abstract String getLink();
 
 	public String getUiCategory() {
@@ -76,5 +69,21 @@ public abstract class GeneralMessage extends SocioObject{
 
 	public String getUiName() {
 		return DefaultMessage.NAME;
+	}
+
+	/* (non-Javadoc)
+	 * @see net.mysocio.data.IUniqueObject#getUniqueFieldName()
+	 */
+	@Override
+	public String getUniqueFieldName() {
+		return "uniqueId";
+	}
+
+	/* (non-Javadoc)
+	 * @see net.mysocio.data.IUniqueObject#getUniqueFieldValue()
+	 */
+	@Override
+	public Object getUniqueFieldValue() {
+		return getUniqueId();
 	}
 }

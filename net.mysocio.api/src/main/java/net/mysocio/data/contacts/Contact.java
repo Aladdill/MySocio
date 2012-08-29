@@ -7,6 +7,7 @@ import java.util.List;
 
 import net.mysocio.connection.readers.Source;
 import net.mysocio.connection.writers.Destination;
+import net.mysocio.data.IUniqueObject;
 import net.mysocio.data.NamedObject;
 
 import com.google.code.morphia.annotations.Entity;
@@ -16,14 +17,13 @@ import com.google.code.morphia.annotations.Entity;
  *
  */
 @Entity("contacts")
-public abstract class Contact extends NamedObject{
+public abstract class Contact extends NamedObject implements IUniqueObject{
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 8721056150291879634L;
 	private String userpicUrl = "images/portrait.jpg";
-	private String url;
-	private String socioContactId;
+	private String url = new String();
 	
 	public void setUserpicUrl(String userpicUrl) {
 		this.userpicUrl = userpicUrl;
@@ -43,13 +43,5 @@ public abstract class Contact extends NamedObject{
 
 	public void setUrl(String url) {
 		this.url = url;
-	}
-
-	public String getSocioContactId() {
-		return socioContactId;
-	}
-
-	public void setSocioContactId(String socioContactId) {
-		this.socioContactId = socioContactId;
 	}
 }

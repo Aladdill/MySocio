@@ -10,10 +10,12 @@ import java.util.List;
 import java.util.Set;
 
 import net.mysocio.authentication.AbstractOauth2Manager;
+import net.mysocio.data.ContactsList;
 import net.mysocio.data.accounts.Account;
 import net.mysocio.data.accounts.facebook.FacebookAccount;
-import net.mysocio.data.accounts.facebook.FacebookFriend;
 import net.mysocio.data.accounts.facebook.FacebookFriendList;
+import net.mysocio.data.contacts.Contact;
+import net.mysocio.data.contacts.facebook.FacebookContact;
 import net.mysocio.data.management.DataManagerFactory;
 
 import org.codehaus.jackson.JsonFactory;
@@ -79,41 +81,42 @@ public class FacebookAuthenticationManager extends AbstractOauth2Manager {
 		response = callUrl(token, "https://graph.facebook.com/me/friendlists");
 		logger.debug("friends lists taken");
 		logger.debug("parsing friends list");
-		account.setFriendLists(parseFriendLists(response));
+		account.setContactsLists(parseFriendLists(response));
 		logger.debug("friends list parsed");
 		logger.debug("getting friends");
 		response = callUrl(token, "https://graph.facebook.com/me/friends");
 		logger.debug("friends taken");
 		logger.debug("parsing friends");
-		account.setFriends(parseFriends(response));
+		List<Contact> friends = parseFriends(response);
+		DataManagerFactory.getDataManager().saveObjects(Contact.class, friends);
+		account.setContacts(friends);
 		logger.debug("friends parsed");
 		DataManagerFactory.getDataManager().saveObject(account);
 		return account;
 	}
 
-	private List<FacebookFriend> parseFriends(String response) throws Exception {
+	private List<Contact> parseFriends(String response) throws Exception {
 		ObjectMapper mapper = new ObjectMapper(new JsonFactory());
 		JsonNode root = mapper.readTree(response);
 		JsonNode entry = root.get("data");
-		List<FacebookFriend> friends = new ArrayList<FacebookFriend>();
+		List<Contact> friends = new ArrayList<Contact>();
 		Iterator<JsonNode> elements = entry.getElements();
 		while (elements.hasNext()) {
 			JsonNode element = elements.next();
-			FacebookFriend friend = new FacebookFriend();
+			FacebookContact friend = new FacebookContact();
 			friend.setFacebookId(element.get("id").getValueAsText());
 			friend.setName(element.get("name").getValueAsText());
-			DataManagerFactory.getDataManager().saveObject(friend);
 			friends.add(friend);
 		}
 		return friends;
 	}
 
-	private List<FacebookFriendList> parseFriendLists(String response)
+	private List<ContactsList> parseFriendLists(String response)
 			throws Exception {
 		ObjectMapper mapper = new ObjectMapper(new JsonFactory());
 		JsonNode root = mapper.readTree(response);
 		JsonNode entry = root.get("data");
-		List<FacebookFriendList> friendsLists = new ArrayList<FacebookFriendList>();
+		List<ContactsList> friendsLists = new ArrayList<ContactsList>();
 		Iterator<JsonNode> elements = entry.getElements();
 		while (elements.hasNext()) {
 			JsonNode element = elements.next();

@@ -5,6 +5,7 @@ package net.mysocio.data.management;
 
 import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.model.RouteDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,16 +16,26 @@ import org.slf4j.LoggerFactory;
 public class GeneralRouteBuilder extends RouteBuilder {
 	static final Logger logger = LoggerFactory
 			.getLogger(GeneralRouteBuilder.class);
-	private final long DEFAULT_ROUTE_DELAY = 300000;
+	private final long DEFAULT_ROUTE_DELAY = 60000;
 	private String from;
 	private String to;
 	private Processor processor;
+	private Long delay = DEFAULT_ROUTE_DELAY;
+	private String routeId;
 
 	public GeneralRouteBuilder(String from, String to, Processor processor) {
 		super();
 		this.from = from;
 		this.to = to;
 		this.processor = processor;
+	}
+
+	public GeneralRouteBuilder(String from, String to, Processor processor,	Long delay) {
+		super();
+		this.from = from;
+		this.to = to;
+		this.processor = processor;
+		this.delay = delay;
 	}
 
 	/*
@@ -37,10 +48,42 @@ public class GeneralRouteBuilder extends RouteBuilder {
 		if (logger.isDebugEnabled()) {
 			logger.debug("Creating route from: " + from + " to: " + to);
 		}
+		RouteDefinition routeDefinition = null;
 		if (to == null) {
-			from(from).delayer(DEFAULT_ROUTE_DELAY).process(processor);
+			if (delay != 0){
+				routeDefinition = from(from).delayer(delay).process(processor);
+			}else{
+				routeDefinition = from(from).process(processor);
+			}
 		}else{
-			from(from).delayer(DEFAULT_ROUTE_DELAY).process(processor).to(to);
+			if (delay != 0){
+				from(from).delayer(delay).process(processor).to(to);
+			}else{
+				routeDefinition = from(from).process(processor).to(to);
+			}
 		}
+		
+		this.routeId = routeDefinition.getId();
+	}
+
+	/**
+	 * @return the delay
+	 */
+	public Long getDelay() {
+		return delay;
+	}
+
+	/**
+	 * @param delay the delay to set
+	 */
+	public void setDelay(Long delay) {
+		this.delay = delay;
+	}
+
+	/**
+	 * @return the routeId
+	 */
+	public String getRouteId() {
+		return routeId;
 	}
 }

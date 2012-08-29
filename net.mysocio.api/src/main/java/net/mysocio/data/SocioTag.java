@@ -3,8 +3,6 @@
  */
 package net.mysocio.data;
 
-import org.bson.types.ObjectId;
-
 import com.google.code.morphia.annotations.Entity;
 
 /**
@@ -43,14 +41,6 @@ public class SocioTag extends SocioObject{
 
 	public void setUserId(String userId) {
 		this.userId = userId;
-	}
-
-	public ObjectId getId() {
-		return id;
-	}
-
-	public void setId(ObjectId id) {
-		this.id = id;
 	}
 
 	/* (non-Javadoc)

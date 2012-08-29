@@ -9,9 +9,9 @@ import java.net.URL;
 import java.util.List;
 
 import net.mysocio.connection.rss.RssSource;
+import net.mysocio.data.IDataManager;
 import net.mysocio.data.SocioTag;
-import net.mysocio.data.SocioUser;
-import net.mysocio.data.management.SourcesManager;
+import net.mysocio.data.management.DataManagerFactory;
 
 import org.jdom.Document;
 import org.jdom.input.SAXBuilder;
@@ -32,7 +32,7 @@ public class RssUtils {
 	private static final Logger logger = LoggerFactory
 			.getLogger(RssUtils.class);
 
-	public static void addRssFeed(SocioUser user, String url)
+	public static void addRssFeed(String userId, String url)
 			throws AddingRssException {
 		SyndFeedInput input = new SyndFeedInput();
 		SyndFeed feed = null;
@@ -51,30 +51,29 @@ public class RssUtils {
 		SocioTag tag = new SocioTag();
 		tag.setIconType("rss.icon");
 		tag.setValue(title);
-		tag.setUserId(url);
 		source.addTag(tag);
 		SocioTag tag1 = new SocioTag();
 		tag1.setIconType("rss.icon");
 		tag1.setValue("rss.tag");
-		tag1.setUserId("rss.tag");
 		source.addTag(tag1);
 		try {
-			SourcesManager.addSourceToUser(user, source);
+			IDataManager dataManager = DataManagerFactory.getDataManager();
+			dataManager.addSourceToUser(userId, source);
 		} catch (Exception e) {
 			logger.error("Source couldn't be added to user.", e);
 			throw new AddingRssException(e);
 		}
 	}
-	public static void importOpml(SocioUser user, String url) throws Exception{
+	public static void importOpml(String userId, String url) throws Exception{
 		URL feedURL = new URL(url);
-		importOpml(user, feedURL.openStream());
+		importOpml(userId, feedURL.openStream());
 	}
-	public static void importOpml(SocioUser user, InputStream stream) throws Exception{
+	public static void importOpml(String userId, InputStream stream) throws Exception{
 		SAXBuilder builder = new SAXBuilder();
 		Document document = builder.build(stream);
-		importOpml(user, document);
+		importOpml(userId, document);
 	}
-	private static void importOpml(SocioUser user, Document document) throws Exception {
+	private static void importOpml(String userId, Document document) throws Exception {
 		OPML20Parser parser = new OPML20Parser();
 		Opml feed = (Opml) parser.parse(document, true);
 		List<Outline> outlines = (List<Outline>) feed.getOutlines();
@@ -82,7 +81,7 @@ public class RssUtils {
 			List<Outline> children = outline.getChildren();
 			if (children.size() > 0) {
 				for (Outline child : children) {
-					addRssFeed(user, child.getXmlUrl());
+					addRssFeed(userId, child.getXmlUrl());
 				}
 			}
 		}

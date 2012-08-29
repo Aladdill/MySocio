@@ -24,7 +24,7 @@ public class AddRssFeedExecutor implements ICommandExecutor {
 	public String execute(IConnectionData connectionData) throws CommandExecutionException{
 		String url = connectionData.getRequestParameter("url");
 		try {
-			RssUtils.addRssFeed(connectionData.getUser(), url);
+			RssUtils.addRssFeed(connectionData.getUserId(), url);
 		} catch (AddingRssException e) {
 			logger.error("Error occured while adding rss feed.");
 			throw new CommandExecutionException(e);

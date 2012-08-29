@@ -3,11 +3,11 @@
  */
 package net.mysocio.data.accounts;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import net.mysocio.connection.readers.Source;
+import net.mysocio.data.ContactsList;
 import net.mysocio.data.IDisplayedObject;
 import net.mysocio.data.SocioObject;
 import net.mysocio.data.SocioUser;
@@ -34,7 +34,9 @@ public abstract class Account extends SocioObject implements IDisplayedObject{
 	private String userpicUrl = new String();
 	private String email = new String();
 	@Reference
-	private Map<String, Contact> contacts = new HashMap<String, Contact>();
+	private List<Contact> contacts = new ArrayList<Contact>();
+	@Reference
+	private List<ContactsList> contactsLists = new ArrayList<ContactsList>();
 	
 
 	public SocioUser getUser() {
@@ -81,13 +83,6 @@ public abstract class Account extends SocioObject implements IDisplayedObject{
 		this.email = email;
 	}
 
-	public Map<String, Contact> getContacts() {
-		return contacts;
-	}
-
-	public void setContacts(Map<String, Contact> contacts) {
-		this.contacts = contacts;
-	}
 	public String getIconUrl(){return null;}
 	
 	@Override
@@ -98,5 +93,40 @@ public abstract class Account extends SocioObject implements IDisplayedObject{
 	@Override
 	public String getUiName() {
 		return NewAccountLine.NAME;
+	}
+
+	/**
+	 * @return the contacts
+	 */
+	public List<Contact> getContacts() {
+		return contacts;
+	}
+
+	/**
+	 * @param contacts the contacts to set
+	 */
+	public void setContacts(List<Contact> contacts) {
+		this.contacts = contacts;
+	}
+	
+	public void addContact(Contact contact) {
+		this.contacts.add(contact);
+	}
+
+	/**
+	 * @return the contactsLists
+	 */
+	public List<ContactsList> getContactsLists() {
+		return contactsLists;
+	}
+
+	/**
+	 * @param contactsLists the contactsLists to set
+	 */
+	public void setContactsLists(List<ContactsList> contactsLists) {
+		this.contactsLists = contactsLists;
+	}
+	public void addContactsList(ContactsList contactsList) {
+		this.contactsLists.add(contactsList);
 	}
 }

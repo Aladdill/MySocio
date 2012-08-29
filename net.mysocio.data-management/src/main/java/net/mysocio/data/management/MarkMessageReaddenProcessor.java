@@ -25,6 +25,6 @@ public class MarkMessageReaddenProcessor extends UserRouteProcessor {
 		if (logger.isDebugEnabled()){
 			logger.debug("Marking readen message with id " + messageId);
 		}
-		dataManager.setMessageReadden(messageId, getUserId());
+		dataManager.setMessageReadden(messageId);
 	}
 }
