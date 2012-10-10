@@ -59,7 +59,12 @@ public class RssMessageProcessor extends AbstractMessageProcessor {
 			logger.debug("Message title: " + title);
 			logger.debug("Message text: " + text);
 		}
-		MessagesManager.getInstance().storeMessage(message);
+		try {
+			MessagesManager.getInstance().storeMessage(message);
+		} catch (Exception e) {
+			//if it's duplicate message - we ignore it
+			return;
+		}
 		for (SocioTag tag : tags) {
 			addMessageForTag(producerTemplate, message, tag);
 		}

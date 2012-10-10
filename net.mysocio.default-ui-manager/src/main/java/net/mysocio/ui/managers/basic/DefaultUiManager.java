@@ -12,6 +12,7 @@ import net.mysocio.data.CorruptedDataException;
 import net.mysocio.data.IDataManager;
 import net.mysocio.data.SocioUser;
 import net.mysocio.data.management.DataManagerFactory;
+import net.mysocio.data.management.DuplicateMySocioObjectException;
 import net.mysocio.data.ui.UiObject;
 import net.mysocio.data.ui.UserPage;
 import net.mysocio.ui.data.objects.AccountLine;
@@ -24,7 +25,12 @@ import net.mysocio.ui.data.objects.DefaultSiteBody;
 import net.mysocio.ui.data.objects.NewAccountLine;
 import net.mysocio.ui.data.objects.RssLine;
 import net.mysocio.ui.data.objects.UserUiMessage;
+import net.mysocio.ui.data.objects.facebook.FacebookUiCheckinMessage;
+import net.mysocio.ui.data.objects.facebook.FacebookUiLinkMessage;
 import net.mysocio.ui.data.objects.facebook.FacebookUiMessage;
+import net.mysocio.ui.data.objects.facebook.FacebookUiPhotoMessage;
+import net.mysocio.ui.data.objects.facebook.FacebookUiStatusMessage;
+import net.mysocio.ui.data.objects.facebook.FacebookUiVideoMessage;
 
 
 
@@ -57,6 +63,16 @@ public class DefaultUiManager extends AbstractUiManager {
 		defaultPages.put(userUiMessage.getCategory()+userUiMessage.getName(),userUiMessage);
 		FacebookUiMessage facebookUiMessage = new FacebookUiMessage();
 		defaultPages.put(facebookUiMessage.getCategory()+facebookUiMessage.getName(),facebookUiMessage);
+		facebookUiMessage = new FacebookUiCheckinMessage();
+		defaultPages.put(facebookUiMessage.getCategory()+facebookUiMessage.getName(),facebookUiMessage);
+		facebookUiMessage = new FacebookUiLinkMessage();
+		defaultPages.put(facebookUiMessage.getCategory()+facebookUiMessage.getName(),facebookUiMessage);
+		facebookUiMessage = new FacebookUiPhotoMessage();
+		defaultPages.put(facebookUiMessage.getCategory()+facebookUiMessage.getName(),facebookUiMessage);
+		facebookUiMessage = new FacebookUiStatusMessage();
+		defaultPages.put(facebookUiMessage.getCategory()+facebookUiMessage.getName(),facebookUiMessage);
+		facebookUiMessage = new FacebookUiVideoMessage();
+		defaultPages.put(facebookUiMessage.getCategory()+facebookUiMessage.getName(),facebookUiMessage);
 		DefaultSiteBody defaultSiteBody = new DefaultSiteBody();
 		defaultPages.put(defaultSiteBody.getCategory()+defaultSiteBody.getName(),defaultSiteBody);
 	}
@@ -76,7 +92,11 @@ public class DefaultUiManager extends AbstractUiManager {
 			userPage.setUserId(userId);
 			userPage.setPageHTML(pageHTML);
 			userPage.setPageKey(pageKey);
-			dataManager.saveObject(userPage);
+			try {
+				dataManager.saveObject(userPage);
+			} catch (Exception e) {
+				throw new CorruptedDataException("Impossible situation object doesn't exist, but can't be saved!", e);
+			}
 		}
 		return pageHTML;
 	}

@@ -86,4 +86,12 @@ public abstract class GeneralMessage extends SocioObject implements IUniqueObjec
 	public Object getUniqueFieldValue() {
 		return getUniqueId();
 	}
+	
+	public String replacePlaceholders(String template) {
+		String message = template.replace("message.title", getTitle());
+		message = message.replace("message.id", getUniqueId());
+		message = message.replace("message.text", getText());
+		message = message.replace("message.link", getLink());
+		return message;
+	}
 }

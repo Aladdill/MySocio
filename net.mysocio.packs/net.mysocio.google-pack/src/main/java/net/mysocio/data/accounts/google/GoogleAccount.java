@@ -4,6 +4,7 @@
 package net.mysocio.data.accounts.google;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.google.code.morphia.annotations.Entity;
@@ -45,7 +46,7 @@ public class GoogleAccount extends Oauth2Account{
 	@Override
 	public List<Source> getSources() {
 		// TODO Auto-generated method stub
-		return null;
+		return Collections.EMPTY_LIST;
 	}
 	
 	public List<SocioTag> getDefaultTags() {

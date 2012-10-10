@@ -5,20 +5,18 @@ package net.mysocio.ui.executors.basic;
 
 import java.sql.Date;
 import java.text.DateFormat;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import net.mysocio.data.CorruptedDataException;
 import net.mysocio.data.IConnectionData;
 import net.mysocio.data.management.MessagesManager;
-import net.mysocio.data.messages.UnreaddenMessage;
+import net.mysocio.data.messages.GeneralMessage;
 import net.mysocio.ui.management.CommandExecutionException;
 import net.mysocio.ui.management.ICommandExecutor;
 import net.mysocio.ui.managers.basic.AbstractUiManager;
 import net.mysocio.ui.managers.basic.DefaultUiManager;
 
-import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,33 +32,27 @@ public class GetMessagesExecutor implements ICommandExecutor {
 	@Override
 	public String execute(IConnectionData connectionData) throws CommandExecutionException{
 		StringBuffer output = new StringBuffer();
-		List<UnreaddenMessage> messages = getMessages(connectionData);
+		List<GeneralMessage> messages = getMessages(connectionData);
 		AbstractUiManager uiManager = new DefaultUiManager();
 		DateFormat formatter = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, connectionData.getLocale());
 		String messagePage = "";
-		List<ObjectId> ids = new ArrayList<ObjectId>(); 
-		for (UnreaddenMessage message : messages) {
-			if (ids.contains(message.getMessage().getId())){
-				continue;
-			}else{
-				ids.add(message.getMessage().getId());
-			}
+		for (GeneralMessage message : messages) {
 			try {
-				messagePage = uiManager.getPage(message.getMessage().getUiCategory(), message.getMessage().getUiName(), connectionData.getUserId());
+				messagePage = uiManager.getPage(message.getUiCategory(), message.getUiName(), connectionData.getUserId());
 			} catch (CorruptedDataException e) {
 				logger.error("Failed showing messages",e);
 				throw new CommandExecutionException(e);
 			}
 			String pageHtml = message.replacePlaceholders(messagePage);
-			String date = formatter.format(new Date(message.getMessage().getDate()));
-			pageHtml = pageHtml.replace("date.long", Long.toString(message.getMessage().getDate()));
+			String date = formatter.format(new Date(message.getDate()));
+			pageHtml = pageHtml.replace("date.long", Long.toString(message.getDate()));
 			pageHtml = pageHtml.replace("message.date", date);
 			output.append(pageHtml);
 		}
 		return output.toString();
 	}
 	
-	private static List<UnreaddenMessage> getMessages(IConnectionData connectionData) {
+	private static List<GeneralMessage> getMessages(IConnectionData connectionData) {
 		String tagId = connectionData.getRequestParameter("sourceId");
 		if (tagId == null){
 			return Collections.emptyList();

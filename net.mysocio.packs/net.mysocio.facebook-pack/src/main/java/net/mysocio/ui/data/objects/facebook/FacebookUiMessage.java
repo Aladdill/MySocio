@@ -26,4 +26,9 @@ public class FacebookUiMessage extends UserUiMessage {
 		setName(NAME);
 		setCategory(CATEGORY);
 	}
+	
+	@Override
+	public String getPageFile() {
+		return "fbMessage.html";
+	}
 }

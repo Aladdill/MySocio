@@ -48,7 +48,7 @@ td.SourcesBox {
 	float: left;
 }
 
-.Userpic img{
+.UserPic img{
 	width: 50px;
 	height: 50px;
 }
@@ -80,15 +80,12 @@ td.SourcesBox {
 }
 .ContactUserpic {
 	float: left;
-	padding-left: 15px;
-	padding-top: 4px;
-	padding-bottom: 15px;
 }
 
 .ContactUserpic img{
 	width: 50px;
 	height: 50px;
-	border: 2px solid #00aeef;
+	border: 2px solid #D1C2D4;
 	float: left;
 }
 .AccountData span{
@@ -118,9 +115,10 @@ span.DefaultAccount {
 .Contact {
 	float: left;
 	width: 600px;
-	height: auto;
-	margin-left: 16px;
-	margin-top: 20px;
+	height: 54px;
+	margin: 1px 30px 1px;
+}
+
 }
 .NewAccount {
 	float: left;
@@ -139,9 +137,9 @@ span.DefaultAccount {
 
 .ContactData {
 	position: relative;
-	left: -7px;
-	width: 100px;
+	width: 500px;
 	height: 100%;
+	margin-left: 10px;
 	float: left;
 }
 
@@ -157,6 +155,12 @@ span.DefaultAccount {
 	height: auto;
 	margin-left: 28px;
 	margin-top: 20px;
+}
+.floatLeft{
+	float: left;
+}
+.fullWidth {
+	width: 100%;
 }
 span.RSSType {
 	float: left;
@@ -422,10 +426,28 @@ tr.Footer {
 
 .Message {
 	height: auto;
-	width: 680px;
+	width: 100%;
 	margin-left: 28px;
 	margin-top: 2px;
 	border: 0px;
+	float: left;
+}
+.MessageInnerBox {
+	width: 680px;
+}
+.FbVideoIcon {
+	position: relative;
+	left: 0px;
+	top: 0px;
+	float: left;
+	z-index: 1;
+}
+
+.FbVideoPicture {
+	position: relative;
+	left: -35px;
+	top: 0px;
+	float: left;
 }
 
 .SelectedMessage {
@@ -439,6 +461,7 @@ tr.Footer {
 	color: #82478e;
 	float: left;
 	width: 100%;
+	margin-top: 10px;
 }
 
 .MessageButtonsSelected {

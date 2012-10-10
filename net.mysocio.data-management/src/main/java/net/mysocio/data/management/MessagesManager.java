@@ -11,7 +11,6 @@ import net.mysocio.data.IDataManager;
 import net.mysocio.data.IMessagesManager;
 import net.mysocio.data.SocioUser;
 import net.mysocio.data.messages.GeneralMessage;
-import net.mysocio.data.messages.UnreaddenMessage;
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
@@ -41,7 +40,7 @@ public class MessagesManager implements IMessagesManager {
 		return instance;
 	}
 
-	public List<String> storeMessages(List<GeneralMessage> messages) {
+	public List<String> storeMessages(List<GeneralMessage> messages) throws Exception {
 		List<String> stored = new ArrayList<String>();
 		for (GeneralMessage message : messages) {
 			storeMessage(message);
@@ -50,15 +49,15 @@ public class MessagesManager implements IMessagesManager {
 		return stored;
 	}
 
-	public void storeMessage(GeneralMessage message) {
+	public void storeMessage(GeneralMessage message) throws Exception {
 		IDataManager dataManager = DataManagerFactory.getDataManager();
 		dataManager.saveObject(message);
 	}
 
-	public List<UnreaddenMessage> getMessagesForSelectedTag(String userId, String tagId) {
+	public List<GeneralMessage> getMessagesForSelectedTag(String userId, String tagId) {
 		IDataManager dataManager = DataManagerFactory.getDataManager();
 		SocioUser user = dataManager.getObject(SocioUser.class, userId);
-		List<UnreaddenMessage> unreadMessages = dataManager.getUnreadMessages(user, tagId);
+		List<GeneralMessage> unreadMessages = dataManager.getUnreadMessages(user, tagId);
 //		for (String id : unreadMessages) {
 //			IMessage message = getCacheMessage(id);
 //			if (message != null){

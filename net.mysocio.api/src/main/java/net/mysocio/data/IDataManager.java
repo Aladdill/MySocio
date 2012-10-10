@@ -9,7 +9,7 @@ import java.util.Locale;
 
 import net.mysocio.connection.readers.Source;
 import net.mysocio.data.accounts.Account;
-import net.mysocio.data.messages.UnreaddenMessage;
+import net.mysocio.data.messages.GeneralMessage;
 import net.mysocio.data.ui.UiObject;
 
 /**
@@ -18,7 +18,7 @@ import net.mysocio.data.ui.UiObject;
  */
 public interface IDataManager {
 	
-	public <T extends ISocioObject> void saveObjects(Class<T> T, List<T> objects);
+	public <T extends ISocioObject> void saveObjects(Class<T> T, List<T> objects) throws Exception;
 
 	public void deleteObject(Object object);
 
@@ -28,7 +28,7 @@ public interface IDataManager {
 
 	public UiObject getUiObject(String category, String name);
 	
-	public void saveUiObject(UiObject uiObject);
+	public void saveUiObject(UiObject uiObject) throws Exception;
 
 	public<T> T getObject(Class<T> T, String id);
 	
@@ -36,11 +36,11 @@ public interface IDataManager {
 	
 	public void addAccountToUser(Account account, String userId) throws Exception;
 
-	public<T extends ISocioObject> void saveObject(T object);
+	public<T extends ISocioObject> void saveObject(T object) throws Exception;
 
 	public void setMessageReadden(String messageId);
 
-	public List<UnreaddenMessage> getUnreadMessages(SocioUser user, String tagId);
+	public List<GeneralMessage> getUnreadMessages(SocioUser user, String tagId);
 
 	public String getPage(String userId, String pageKey);
 
