@@ -3,8 +3,6 @@
  */
 package net.mysocio.ui.data.objects.facebook;
 
-import net.mysocio.ui.data.objects.UserUiMessage;
-
 import com.google.code.morphia.annotations.Entity;
 
 /**
@@ -12,23 +10,21 @@ import com.google.code.morphia.annotations.Entity;
  *
  */
 @Entity("ui_objects")
-public class FacebookUiMessage extends UserUiMessage {
-	public static final String NAME = "FacebookMessage";
-	public static final String CATEGORY = "Message";
+public class FacebookUiStatusMessage extends FacebookUiMessage {
+	public static final String NAME = "FacebookStatusMessage";
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -1793278518382672999L;
 
-	public FacebookUiMessage() {
+	public FacebookUiStatusMessage() {
 		super();
 		setName(NAME);
-		setCategory(CATEGORY);
 	}
 	
 	@Override
 	public String getPageFile() {
-		return "fbMessage.html";
+		return "fbStatusMessage.html";
 	}
 }

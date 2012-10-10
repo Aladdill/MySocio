@@ -58,17 +58,4 @@ public class UnreaddenMessage extends SocioObject {
 	public void setMessage(GeneralMessage message) {
 		this.message = message;
 	}
-	
-	public String replacePlaceholders(String template) {
-		String message = template.replace("message.title", this.message.getTitle());
-		message = message.replace("message.id", getId().toString());
-		message = message.replace("message.text", this.message.getText());
-		message = message.replace("message.link", this.message.getLink());
-		if (this.message instanceof UserMessage){
-			message = message.replace("network.icon.readen", ((UserMessage)this.message).getReadenNetworkIcon());
-			message = message.replace("network.icon", ((UserMessage)this.message).getNetworkIcon());
-			message = message.replace("user.pic", ((UserMessage)this.message).getUserPic());
-		}
-		return message;
-	}
 }

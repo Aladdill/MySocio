@@ -11,8 +11,14 @@ import net.mysocio.authentication.facebook.FacebookAuthenticationManager;
 import net.mysocio.data.SocioTag;
 import net.mysocio.data.management.AbstractMessageProcessor;
 import net.mysocio.data.management.CamelContextManager;
+import net.mysocio.data.management.DuplicateMySocioObjectException;
 import net.mysocio.data.management.MessagesManager;
 import net.mysocio.data.messages.facebook.FacebookMessage;
+import net.mysocio.ui.data.objects.facebook.FacebookUiCheckinMessage;
+import net.mysocio.ui.data.objects.facebook.FacebookUiLinkMessage;
+import net.mysocio.ui.data.objects.facebook.FacebookUiPhotoMessage;
+import net.mysocio.ui.data.objects.facebook.FacebookUiStatusMessage;
+import net.mysocio.ui.data.objects.facebook.FacebookUiVideoMessage;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.ProducerTemplate;
@@ -50,24 +56,43 @@ public class FacebookInputProcessor extends AbstractMessageProcessor {
 		FacebookMessage message = new FacebookMessage();
 		message.setUniqueId(getAttribute(element, "id"));
 		message.setDate(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(getAttribute(element, "created_time")).getTime());
-		String text = "";
 		String type = getAttribute(element, "type");
-		if (element.get("picture") != null){
-			text = "<img alt=\"\" src=\"" + getAttribute(element, "picture") + "\">";
+		message.setType(type);
+		message.setPicture(getAttribute(element, "picture"));
+		JsonNode actions = element.get("actions");
+		if (actions.has(0)){
+			//here we suppose what every actions array has "Comments" as first object and it has "link" field 
+			message.setLinkToMessage(getAttribute(actions.get(0), "link"));
 		}
-		text +=	"</br><a href=\"" + getAttribute(element, "link") +"\" target=\"_blank\">" + getAttribute(element, "name") + "</a>";
-		text += getAttribute(element, "message");
-		if (type.equals("link")){
-			text += "</br>" + getAttribute(element, "caption");
-		}
-		text += "</br>" + getAttribute(element, "description");
-		text += "&nbsp;" + getAttribute(element, "story");
-		message.setText(text);
+		message.setCaption(getAttribute(element, "caption"));
+		message.setText(getAttribute(element, "message"));
+		message.setApplication(getAttribute(element, "application"));
+		message.setDescription(getAttribute(element, "description"));
 		String title = getAttribute(element.get("from"), "name");
 		String userId = getAttribute(element.get("from"), "id");
 		message.setUserPic("https://graph.facebook.com/" + userId + "/picture");
 		message.setTitle(title);
 		message.setUserId(userId);
+		message.setStory(getAttribute(element, "story"));
+		message.setLink(getAttribute(element, "link"));
+		message.setName(getAttribute(element, "name"));
+		message.setSource(getAttribute(element, "source"));
+		message.setProperties(getAttribute(element, "properties"));
+		message.setPrivacy(getAttribute(element, "privacy"));
+		message.setLikes(getAttribute(element, "likes"));
+		message.setPlace(getAttribute(element, "place"));
+		message.setPlace(getAttribute(element, "place"));
+		if (type.equals("photo")){
+			message.setUiObjectName(FacebookUiPhotoMessage.NAME);
+		}else if (type.equals("video")){
+			message.setUiObjectName(FacebookUiVideoMessage.NAME);
+		}else if (type.equals("link")){
+			message.setUiObjectName(FacebookUiLinkMessage.NAME);
+		}else if (type.equals("checkin")){
+			message.setUiObjectName(FacebookUiCheckinMessage.NAME);
+		}else if (type.equals("status")){
+			message.setUiObjectName(FacebookUiStatusMessage.NAME);
+		}
 		return message;
 	}
 	
@@ -106,7 +131,12 @@ public class FacebookInputProcessor extends AbstractMessageProcessor {
 			SocioTag tag = new SocioTag();
 			tag.setValue(message.getTitle());
 			tag.setIconType("facebook.icon.general");
-			MessagesManager.getInstance().storeMessage(message);
+			try {
+				MessagesManager.getInstance().storeMessage(message);
+			} catch (DuplicateMySocioObjectException e) {
+				//if it's duplicate message - we ignore it
+				return;
+			}
 			addMessageForTag(producerTemplate, message, tag);
 			for (SocioTag sourceTag : tags) {
 				addMessageForTag(producerTemplate, message, sourceTag);

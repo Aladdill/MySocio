@@ -3,6 +3,7 @@
  */
 package net.mysocio.data.management;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
@@ -18,6 +19,7 @@ import net.mysocio.data.UserContact;
 import net.mysocio.data.UserSource;
 import net.mysocio.data.accounts.Account;
 import net.mysocio.data.contacts.Contact;
+import net.mysocio.data.messages.GeneralMessage;
 import net.mysocio.data.messages.UnreaddenMessage;
 import net.mysocio.data.ui.UiObject;
 import net.mysocio.data.ui.UserPage;
@@ -143,7 +145,7 @@ public class MongoDataManager implements IDataManager {
 		return ds.find(T).asList();
 	}
 
-	public void saveUiObject(UiObject uiObject){
+	public void saveUiObject(UiObject uiObject) throws DuplicateMySocioObjectException{
 		String category = uiObject.getCategory();
 		String name = uiObject.getName();
 		if (getUiObject(category, name) != null) {
@@ -158,7 +160,7 @@ public class MongoDataManager implements IDataManager {
 	 * 
 	 * @see net.mysocio.data.management.IDataManager#saveObjects(java.util.List)
 	 */
-	public <T extends ISocioObject> void saveObjects(Class<T> T, List<T> objects) {
+	public <T extends ISocioObject> void saveObjects(Class<T> T, List<T> objects) throws DuplicateMySocioObjectException {
 		for (T object : objects) {
 			saveObject(object);
 		}
@@ -168,25 +170,25 @@ public class MongoDataManager implements IDataManager {
 		ds.delete(object);
 	}
 
-	public <T extends ISocioObject> void saveObject(T object) {
+	public <T extends ISocioObject> void saveObject(T object) throws DuplicateMySocioObjectException {
 		if (object instanceof IUniqueObject){
 			IUniqueObject uniqueObject = (IUniqueObject)object;
 			Query<T> q = (Query<T>)ds.createQuery(object.getClass()).field(uniqueObject.getUniqueFieldName()).equal(uniqueObject.getUniqueFieldValue());
 			T objectT = (T) q.get();
 			if (objectT != null) {
 				logger.info("Duplicate object of type: " + object.getClass() + " for query: " + q.toString());
-				return;
+				throw new DuplicateMySocioObjectException("Duplicate object of type: " + object.getClass() + " for query: " + q.toString());
 			}
 		}
 		ds.save(object);
 	}
 
 	public void setMessageReadden(String messageId) {
-		Query<UnreaddenMessage> q = ds.createQuery(UnreaddenMessage.class).field("id").equal(new ObjectId(messageId));
+		Query<UnreaddenMessage> q = ds.createQuery(UnreaddenMessage.class).field("message.uniqueId").equal(new ObjectId(messageId));
 		ds.delete(q);
 	}
 
-	public List<UnreaddenMessage> getUnreadMessages(SocioUser user, String tagId) {
+	public List<GeneralMessage> getUnreadMessages(SocioUser user, String tagId) {
 		Query<UnreaddenMessage> q = ds.createQuery(UnreaddenMessage.class).field("userId").equal(user.getId().toString());
 		if (!tagId.equals(SocioUser.ALL_TAGS)){
 			q.field("tag.id").equal(new ObjectId(tagId));
@@ -197,7 +199,13 @@ public class MongoDataManager implements IDataManager {
 			q.order("-messageDate");
 		}
 		q.limit(user.getRange());
-		List<UnreaddenMessage> messages = q.asList();
+		List<UnreaddenMessage> messagesList = q.asList();
+		List<GeneralMessage> messages = new ArrayList<GeneralMessage>();
+		for (UnreaddenMessage unreaddenMessage : messagesList) {
+			if (!messages.contains(unreaddenMessage.getMessage())){
+				messages.add(unreaddenMessage.getMessage());
+			}
+		}
 		return messages;
 	}
 	
