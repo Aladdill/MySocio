@@ -1,13 +1,13 @@
 function expandMessage(id) {
-	$("#" + id).children(".MessageText").addClass("Expand");
-	$("#" + id).children(".MessageExpand").addClass("Invisible");
-	$("#" + id).children(".MessageCollapse").removeClass("Invisible");
+	$("#" + id).find(".MessageText").addClass("Expand");
+	$("#" + id).find(".MessageExpand").addClass("Invisible");
+	$("#" + id).find(".MessageCollapse").removeClass("Invisible");
 	$("#" + id).addClass("Expand");
 }
 function collapseMessage(id) {
-	$("#" + id).children(".MessageText").removeClass("Expand");
-	$("#" + id).children(".MessageExpand").removeClass("Invisible");
-	$("#" + id).children(".MessageCollapse").addClass("Invisible");
+	$("#" + id).find(".MessageText").removeClass("Expand");
+	$("#" + id).find(".MessageExpand").removeClass("Invisible");
+	$("#" + id).find(".MessageCollapse").addClass("Invisible");
 	$("#" + id).removeClass("Expand");
 }
 function openUrlInDiv(divId, url, functions) {
@@ -178,11 +178,13 @@ function showSettings() {
 	showAccounts();
 }
 function showRssFeeds() {
+	$("#post_container").addClass("Invisible");
 	openUrlInDiv("#data_container", "execute?command=getRssFeeds", []);
 }
 function showMainPage() {
 	hideTabs();
 	showSources();
+	$("#post_container").removeClass("Invisible");
 	$("#upper_link").html($("#settings_link").html());
 	$("#data_container").html("<div id='filler' class='filler'></div>");
 	$("#filler").css("height", $("#data_container").innerHeight() - 10);
@@ -206,43 +208,43 @@ function messageScroll() {
 		var current = message.position().top + 100;
 		if ((previous * current <= 0 && value.id != "filler")) {
 			message.addClass("SelectedMessage");
-			message.children(".MessageTitle").addClass("MessageTitleSelected");
-			message.children(".MessageTitle").children(".NetworkIconReaden")
+			message.find(".MessageTitle").addClass("MessageTitleSelected");
+			message.find(".MessageTitle").find(".NetworkIconReaden")
 					.addClass("Invisible");
-			message.children(".MessageTitle").children(".NetworkIcon")
+			message.find(".MessageTitle").find(".NetworkIcon")
 					.removeClass("Invisible");
-			message.children(".MessageText").removeClass("MessageTextReaden");
-			message.children(".MessageText").addClass("MessageTextSelected");
-			message.children(".MessageButtons").addClass(
+			message.find(".MessageText").removeClass("MessageTextReaden");
+			message.find(".MessageText").addClass("MessageTextSelected");
+			message.find(".MessageButtons").addClass(
 					"MessageButtonsSelected");
-			message.children(".MessageExpand")
+			message.find(".MessageExpand")
 					.addClass("MessageExpandSelected");
-			message.children(".MessageCollapse").addClass(
+			message.find(".MessageCollapse").addClass(
 					"MessageCollapseSelected");
 			if (message.data("wasSelected") == undefined) {
 				markMessageReadden(value.id);
 				message.data("wasSelected", "true");
-				message.children(".MessageTitle")
+				message.find(".MessageTitle")
 						.addClass("MessageTitleReaden");
 			}
 		} else {
 			if (message.hasClass("SelectedMessage")) {
 				message.removeClass("SelectedMessage");
-				message.children(".MessageTitle").removeClass(
+				message.find(".MessageTitle").removeClass(
 						"MessageTitleSelected");
-				message.children(".MessageTitle")
-						.children(".NetworkIconReaden")
+				message.find(".MessageTitle")
+						.find(".NetworkIconReaden")
 						.removeClass("Invisible");
-				message.children(".MessageTitle").children(".NetworkIcon")
+				message.find(".MessageTitle").find(".NetworkIcon")
 						.addClass("Invisible");
-				message.children(".MessageText").addClass("MessageTextReaden");
-				message.children(".MessageText").removeClass(
+				message.find(".MessageText").addClass("MessageTextReaden");
+				message.find(".MessageText").removeClass(
 						"MessageTextSelected");
-				message.children(".MessageButtons").removeClass(
+				message.find(".MessageButtons").removeClass(
 						"MessageButtonsSelected");
-				message.children(".MessageExpand").removeClass(
+				message.find(".MessageExpand").removeClass(
 						"MessageExpandSelected");
-				message.children(".MessageCollapse").removeClass(
+				message.find(".MessageCollapse").removeClass(
 						"MessageCollapseSelected");
 			}
 		}
@@ -284,8 +286,10 @@ function sortAlpha(a, b) {
 			.first().html() ? 1 : -1;
 }
 function showAccounts() {
+	$("#post_container").addClass("Invisible");
 	openUrlInDiv("#data_container", "execute?command=getAccounts", []);
 }
 function showContacts() {
+	$("#post_container").addClass("Invisible");
 	openUrlInDiv("#data_container", "execute?command=getContacts", []);
 }

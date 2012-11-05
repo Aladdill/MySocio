@@ -31,6 +31,8 @@ public class DefaultSiteBody extends SiteBody{
 		addTextLabel("tab.rss.feeds");
 		addTextLabel("tab.rss.feeds");
 		addTextLabel("subscriptions.title");
+		addTextLabel("post.here");
+		addTextLabel("post.button");
 	}
 	@Override
 	public String getPageFile() {

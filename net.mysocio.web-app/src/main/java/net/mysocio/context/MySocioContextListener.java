@@ -32,6 +32,7 @@ import org.slf4j.LoggerFactory;
 import com.google.code.morphia.Datastore;
 import com.google.code.morphia.Morphia;
 import com.mongodb.Mongo;
+import com.mongodb.ServerAddress;
 
 /**
  * @author Aladdin
@@ -67,7 +68,7 @@ public class MySocioContextListener implements ServletContextListener {
 				.mapPackage("net.mysocio.ui.data.objects")
 				.mapPackage("net.mysocio.connection");
 		try {
-			Datastore ds = new Morphia().createDatastore(new Mongo("localhost"), "mySocio");
+			Datastore ds = new Morphia().createDatastore(new Mongo("mongodb-mysocio.jelastic.dogado.eu", 27017), "mySocio", "admin", "z1mtq70Yt1".toCharArray());
 			IDataManager manager = new MongoDataManager(ds);
 			DataManagerFactory.init(manager);
 		} catch (Exception e) {
