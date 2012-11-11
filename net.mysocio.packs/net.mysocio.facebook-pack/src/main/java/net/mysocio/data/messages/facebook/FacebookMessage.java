@@ -14,6 +14,7 @@ import com.google.code.morphia.annotations.Entity;
  */
 @Entity("messages")
 public class FacebookMessage extends UserMessage {
+	private String fbId;
 	private String message;
 	private String picture;
 	private String link;
@@ -317,5 +318,23 @@ public class FacebookMessage extends UserMessage {
 	 */
 	public void setLinkToMessage(String linkToMessage) {
 		this.linkToMessage = linkToMessage;
+	}
+
+	@Override
+	public Object getUniqueFieldValue() {
+		return fbId;
+	}
+
+	@Override
+	public String getUniqueFieldName() {
+		return "fbId";
+	}
+
+	public String getFbId() {
+		return fbId;
+	}
+
+	public void setFbId(String fbId) {
+		this.fbId = fbId;
 	}
 }

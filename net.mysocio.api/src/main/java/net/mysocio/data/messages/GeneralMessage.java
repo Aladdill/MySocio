@@ -21,7 +21,6 @@ public abstract class GeneralMessage extends SocioObject implements IUniqueObjec
 	 * 
 	 */
 	private static final long serialVersionUID = 352828420023827718L;
-	private String uniqueId =  new String();
 	private String title =  new String();
 	private String text =  new String();
 	
@@ -48,19 +47,6 @@ public abstract class GeneralMessage extends SocioObject implements IUniqueObjec
 		this.text = text;
 	}
 	
-	/**
-	 * @return the link
-	 */
-	public String getUniqueId() {
-		return uniqueId;
-	}
-	/**
-	 * @param link the link to set
-	 */
-	public void setUniqueId(String uniqueId) {
-		this.uniqueId = uniqueId;
-	}
-
 	public abstract String getLink();
 
 	public String getUiCategory() {
@@ -72,24 +58,17 @@ public abstract class GeneralMessage extends SocioObject implements IUniqueObjec
 	}
 
 	/* (non-Javadoc)
-	 * @see net.mysocio.data.IUniqueObject#getUniqueFieldName()
-	 */
-	@Override
-	public String getUniqueFieldName() {
-		return "uniqueId";
-	}
-
-	/* (non-Javadoc)
 	 * @see net.mysocio.data.IUniqueObject#getUniqueFieldValue()
 	 */
 	@Override
-	public Object getUniqueFieldValue() {
-		return getUniqueId();
-	}
+	abstract public Object getUniqueFieldValue();
+	
+	@Override
+	abstract public String getUniqueFieldName();
 	
 	public String replacePlaceholders(String template) {
 		String message = template.replace("message.title", getTitle());
-		message = message.replace("message.id", getUniqueId());
+		message = message.replace("message.id", getId().toString());
 		message = message.replace("message.text", getText());
 		message = message.replace("message.link", getLink());
 		return message;

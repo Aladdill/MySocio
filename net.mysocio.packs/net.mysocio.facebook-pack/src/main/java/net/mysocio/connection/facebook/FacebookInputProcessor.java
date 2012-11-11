@@ -54,7 +54,7 @@ public class FacebookInputProcessor extends AbstractMessageProcessor {
 	 */
 	private FacebookMessage parseFacebookMessage(JsonNode element) throws ParseException {
 		FacebookMessage message = new FacebookMessage();
-		message.setUniqueId(getAttribute(element, "id"));
+		message.setFbId(getAttribute(element, "id"));
 		message.setDate(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(getAttribute(element, "created_time")).getTime());
 		String type = getAttribute(element, "type");
 		message.setType(type);
@@ -127,7 +127,7 @@ public class FacebookInputProcessor extends AbstractMessageProcessor {
 		while (elements.hasNext()) {
 			JsonNode element = elements.next();
 			FacebookMessage message = parseFacebookMessage(element);
-			logger.debug("Got facebook message from user " + message.getTitle() + " with id " + message.getUniqueId());
+			logger.debug("Got facebook message from user " + message.getTitle() + " with id " + message.getFbId());
 			SocioTag tag = new SocioTag();
 			tag.setValue(message.getTitle());
 			tag.setIconType("facebook.icon.general");

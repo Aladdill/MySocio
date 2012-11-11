@@ -17,9 +17,28 @@ public class RssMessage extends GeneralMessage {
 	 * 
 	 */
 	private static final long serialVersionUID = -8628206019126311936L;
+	
+	/**
+	 * 
+	 */
+	private String link;
 
 	@Override
 	public String getLink() {
-		return getUniqueId();
+		return link;
+	}
+
+	public void setLink(String link) {
+		this.link = link;
+	}
+
+	@Override
+	public Object getUniqueFieldValue() {
+		return link;
+	}
+
+	@Override
+	public String getUniqueFieldName() {
+		return "link";
 	}
 }

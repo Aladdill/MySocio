@@ -21,7 +21,19 @@ public class TestMessage extends GeneralMessage {
 
 	@Override
 	public String getLink() {
-		return getUniqueId();
+		return "blabla";
+	}
+
+	@Override
+	public Object getUniqueFieldValue() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getUniqueFieldName() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

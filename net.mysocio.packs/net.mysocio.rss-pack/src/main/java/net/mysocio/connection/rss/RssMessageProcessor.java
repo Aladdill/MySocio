@@ -45,7 +45,7 @@ public class RssMessageProcessor extends AbstractMessageProcessor {
 	}
 
 	protected void processMessage(ProducerTemplate producerTemplate, SyndEntryImpl entry, RssMessage message) {
-		message.setUniqueId(entry.getLink());
+		message.setLink(entry.getLink());
 		message.setDate(entry.getPublishedDate().getTime());
 		String title = entry.getTitle();
 		if (title == null){

@@ -209,11 +209,11 @@ public class JdoDataManager {
 		return (Source)object;
 	}
 
-	public GeneralMessage createMessage(GeneralMessage message) {
-		GeneralMessage createdMessage = createUniqueObject(message.getClass(),
-				getEqualsExpression("uniqueId", message.getUniqueId()), message);
-		return createdMessage;
-	}
+//	public GeneralMessage createMessage(GeneralMessage message) {
+//		GeneralMessage createdMessage = createUniqueObject(message.getClass(),
+//				getEqualsExpression("uniqueId", message.getUniqueId()), message);
+//		return createdMessage;
+//	}
 
 	public Map<String, UiObject> getUserUiObjects(SocioUser user) {
 		return null;

@@ -184,7 +184,7 @@ public class MongoDataManager implements IDataManager {
 	}
 
 	public void setMessageReadden(String messageId) {
-		Query<UnreaddenMessage> q = ds.createQuery(UnreaddenMessage.class).field("message.uniqueId").equal(messageId);
+		Query<UnreaddenMessage> q = ds.createQuery(UnreaddenMessage.class).field("message.id").equal(new ObjectId(messageId));
 		ds.delete(q);
 	}
 

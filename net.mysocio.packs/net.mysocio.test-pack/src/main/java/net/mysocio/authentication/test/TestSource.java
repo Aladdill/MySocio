@@ -45,7 +45,7 @@ public class TestSource extends Source {
 		message.setDate(System.currentTimeMillis());
 		message.setTitle("Test message Title");
 		message.setText(DefaultResourcesManager.getResource(new Locale("ru"), "mesage.test.long"));
-		message.setUniqueId("http://aladdill.livejournal.com/207656.html");
+//		message.setLink("http://aladdill.livejournal.com/207656.html");
 		return message;
 	}
 
@@ -55,7 +55,7 @@ public class TestSource extends Source {
 	 */
 	private static TestMessage createShortTestMesssage(int i, Source source) {
 		TestMessage message = new TestMessage();
-		message.setUniqueId(source.getUrl() + "Test message Title"  + i);
+//		message.setUniqueId(source.getUrl() + "Test message Title"  + i);
 		message.setDate(System.currentTimeMillis());
 		message.setTitle("Test message Title " + i);
 		message.setText(DefaultResourcesManager.getResource(new Locale("ru"), "mesage.test.short"));
