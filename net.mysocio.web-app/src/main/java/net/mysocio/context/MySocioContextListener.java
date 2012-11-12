@@ -66,17 +66,17 @@ public class MySocioContextListener implements ServletContextListener {
 		morphia.mapPackage("net.mysocio.data")
 				.mapPackage("net.mysocio.ui.data.objects")
 				.mapPackage("net.mysocio.connection");
+		ServletContext servletContext = arg0.getServletContext();
+		DefaultResourcesManager.init(servletContext.getRealPath(""));
+		AuthenticationResourcesManager.init(servletContext.getRealPath(""));
 		try {
-			Datastore ds = new Morphia().createDatastore(new Mongo("mongodb-mysocio.jelastic.dogado.eu", 27017), "mySocio", "admin", "z1mtq70Yt1".toCharArray());
+			Datastore ds = new Morphia().createDatastore(new Mongo(AuthenticationResourcesManager.getResource("server.address"),Integer.parseInt(AuthenticationResourcesManager.getResource("server.port"))), AuthenticationResourcesManager.getResource("db.server.db.name"), AuthenticationResourcesManager.getResource("db.server.admin.username"), AuthenticationResourcesManager.getResource("db.server.admin.password").toCharArray());
 			IDataManager manager = new MongoDataManager(ds);
 			DataManagerFactory.init(manager);
 		} catch (Exception e) {
 			logger.error("Error initializing database", e);
 		}
 		DefaultUiManager.init();
-		ServletContext servletContext = arg0.getServletContext();
-		DefaultResourcesManager.init(servletContext.getRealPath(""));
-		AuthenticationResourcesManager.init(servletContext.getRealPath(""));
 		CamelContextManager.addComponent("activemq", ActiveMQComponent
 				.activeMQComponent("vm://localhost?broker.persistent=true"));
 		CamelContextManager.initContext();

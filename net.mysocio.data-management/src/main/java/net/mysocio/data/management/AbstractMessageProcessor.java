@@ -35,6 +35,7 @@ public abstract class AbstractMessageProcessor implements Processor{
 		UnreaddenMessage unreaddenMessage = new UnreaddenMessage();
 		unreaddenMessage.setMessageDate(message.getDate());
 		unreaddenMessage.setMessage(message);
+		unreaddenMessage.setMessageId(message.getId().toString());
 		unreaddenMessage.setTag(tag);
 		producerTemplate.sendBody(to,unreaddenMessage);
 	}

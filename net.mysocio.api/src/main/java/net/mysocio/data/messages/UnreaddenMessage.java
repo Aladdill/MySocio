@@ -27,6 +27,7 @@ public class UnreaddenMessage extends SocioObject {
 	@Embedded
 	private SocioTag tag;
 	private long messageDate;
+	private String messageId;
 	
 	public String getUserId() {
 		return userId;
@@ -57,5 +58,11 @@ public class UnreaddenMessage extends SocioObject {
 	 */
 	public void setMessage(GeneralMessage message) {
 		this.message = message;
+	}
+	public String getMessageId() {
+		return messageId;
+	}
+	public void setMessageId(String messageId) {
+		this.messageId = messageId;
 	}
 }

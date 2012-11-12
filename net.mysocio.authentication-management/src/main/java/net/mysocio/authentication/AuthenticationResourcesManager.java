@@ -42,4 +42,7 @@ public class AuthenticationResourcesManager {
 	public static String getRedirectUrl(){
 		return authentication.getString("redirect.url");
 	}
+	public static String getResource(String resource){
+		return authentication.getString(resource);
+	}
 }
