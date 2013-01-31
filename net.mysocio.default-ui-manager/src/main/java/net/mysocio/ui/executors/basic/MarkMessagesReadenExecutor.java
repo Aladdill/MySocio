@@ -23,7 +23,11 @@ public class MarkMessagesReadenExecutor implements ICommandExecutor{
 		String messagesIds = connectionData.getRequestParameter("messagesIds");
 		logger.debug("Marking readen message with ids: " + messagesIds);
 		String userId = connectionData.getUserId();
-		MessagesManager.getInstance().setMessagesReadden(userId, messagesIds);
+		try {
+			MessagesManager.getInstance().setMessagesReadden(userId, messagesIds);
+		} catch (Exception e) {
+			throw new CommandExecutionException("Can't set message as readden", e);
+		}
 		return "";
 	}
 }

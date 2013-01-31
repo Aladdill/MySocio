@@ -1,21 +1,31 @@
 /**
  * 
  */
-package net.mysocio.data.management;
+package net.mysocio.data.management.camel;
 
 import net.mysocio.data.IDataManager;
 import net.mysocio.data.SocioTag;
+import net.mysocio.data.management.DataManagerFactory;
 import net.mysocio.data.messages.UnreaddenMessage;
 
 import org.apache.camel.Exchange;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.code.morphia.annotations.Entity;
+import com.google.code.morphia.annotations.Transient;
+
 /**
  * @author Aladdin
  *
  */
+@Entity
 public class DefaultUserMessagesProcessor extends UserRouteProcessor {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 178995248777936666L;
+	@Transient
 	private static final Logger logger = LoggerFactory.getLogger(DefaultUserMessagesProcessor.class);
 
 	/* (non-Javadoc)

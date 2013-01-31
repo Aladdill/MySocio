@@ -42,7 +42,9 @@ public class FacebookMessage extends UserMessage {
 	@Override
 	public String replacePlaceholders(String template) {
 		String message = super.replacePlaceholders(template);
-		message = message.replace("message.link", getLinkToMessage());
+		if (linkToMessage != null){
+			message = message.replace("message.link", getLinkToMessage());
+		}
 		message = message.replace("message.photo.name", getName());
 		message = message.replace("message.photo.link", getLink());
 		message = message.replace("message.photo", getPicture());

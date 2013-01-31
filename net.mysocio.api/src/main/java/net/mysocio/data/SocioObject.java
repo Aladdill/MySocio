@@ -34,14 +34,26 @@ public abstract class SocioObject implements ISocioObject{
 
 	@Override
 	public int hashCode() {
-		if (id == null){
-			return "".hashCode();
-		}
-		return getId().hashCode();
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		return result;
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		return getId().equals(((SocioObject)obj).getId());
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		SocioObject other = (SocioObject) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		return true;
 	}
 }

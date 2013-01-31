@@ -10,12 +10,12 @@ import net.mysocio.connection.writers.Destination;
 import net.mysocio.data.IDataManager;
 import net.mysocio.data.IMessagesManager;
 import net.mysocio.data.SocioUser;
+import net.mysocio.data.StringWrapper;
 import net.mysocio.data.messages.GeneralMessage;
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
 
-import org.apache.camel.ProducerTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -75,14 +75,13 @@ public class MessagesManager implements IMessagesManager {
 		return unreadMessages;
 	}
 	
-	public void setMessagesReadden(String userId, String messagesId){
+	public void setMessagesReadden(String userId, String messagesId) throws Exception{
 		if (messagesId.isEmpty()){
 			return;
 		}
 		String[] ids = messagesId.split(",");
-		ProducerTemplate producerTemplate = CamelContextManager.getProducerTemplate();
 		for (String id : ids) {
-			producerTemplate.sendBody("activemq:" + userId + ".messageReaden",id);
+			DataManagerFactory.getDataManager().sendPackageToRoute("activemq:" + userId + ".messageReaden", new StringWrapper(id));
 		}
 	}
 	private void cacheMessage(GeneralMessage message){

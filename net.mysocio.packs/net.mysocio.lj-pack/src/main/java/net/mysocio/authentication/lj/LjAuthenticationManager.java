@@ -82,7 +82,7 @@ public class LjAuthenticationManager implements IAuthenticationManager {
 		} catch (Exception e) {
 			logger.error("Error verifying LJ Account " + username, e);
 			throw new AddingRssException("LJ Account " + username
-					+ "is not a valid Account.", e);
+					+ " is not a valid Account.", e);
 		}
 
 		ljAccount.setAccountUniqueId(username);

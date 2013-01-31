@@ -45,6 +45,8 @@ public interface IDataManager {
 	public String getPage(String userId, String pageKey);
 
 	public SocioTag getTag(String userId, String value);
+	
+	public CappedCollectionTimeStamp getTimestamp(String collection);
 
 	public Collection<SocioTag> getUserTags(String userId);
 
@@ -59,4 +61,8 @@ public interface IDataManager {
 	public List<UserSource> getSources(String userId);
 
 	public Long countUnreadMessages(String tagId);
+
+	public void createRoute(String from, AbstractProcessor processor, String to, Long delay) throws Exception;
+	
+	public void sendPackageToRoute(String to, SocioObject object) throws Exception;
 }

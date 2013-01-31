@@ -5,8 +5,9 @@ package net.mysocio.connection.facebook;
 
 import net.mysocio.connection.readers.AccountSource;
 import net.mysocio.data.SocioTag;
+import net.mysocio.data.TempRoute;
 import net.mysocio.data.accounts.facebook.FacebookAccount;
-import net.mysocio.data.management.CamelContextManager;
+import net.mysocio.data.management.DataManagerFactory;
 import net.mysocio.data.messages.facebook.FacebookMessage;
 
 import com.google.code.morphia.annotations.Entity;
@@ -39,6 +40,6 @@ public class FacebookSource extends AccountSource {
 		tag1.setValue(account.getUserName());
 		tag1.setIconType("facebook.icon.general");
 		processor.addTag(tag1);
-		CamelContextManager.addRoute("timer://" + getId() + "?fixedRate=true&period=60s", processor, null, 0l);
+		DataManagerFactory.getDataManager().createRoute("timer://" + getId() + "?fixedRate=true&period=60s", processor, null, 0l);
 	}
 }

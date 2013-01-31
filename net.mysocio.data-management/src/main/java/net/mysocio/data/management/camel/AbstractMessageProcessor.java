@@ -1,23 +1,30 @@
 /**
  * 
  */
-package net.mysocio.data.management;
+package net.mysocio.data.management.camel;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import net.mysocio.data.AbstractProcessor;
 import net.mysocio.data.SocioTag;
+import net.mysocio.data.management.DataManagerFactory;
 import net.mysocio.data.messages.GeneralMessage;
 import net.mysocio.data.messages.UnreaddenMessage;
 
-import org.apache.camel.Processor;
-import org.apache.camel.ProducerTemplate;
+import com.google.code.morphia.annotations.Entity;
 
 /**
  * @author Aladdin
  *
  */
-public abstract class AbstractMessageProcessor implements Processor{
+@Entity
+public abstract class AbstractMessageProcessor extends AbstractProcessor{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2112778445393534126L;
+
 	protected List<SocioTag> tags = new ArrayList<SocioTag>();
 	
 	private String to;
@@ -30,14 +37,13 @@ public abstract class AbstractMessageProcessor implements Processor{
 		this.tags.addAll(tags);
 	}
 	
-	protected void addMessageForTag(ProducerTemplate producerTemplate,
-			GeneralMessage message, SocioTag tag) {
+	protected void addMessageForTag(GeneralMessage message, SocioTag tag) throws Exception {
 		UnreaddenMessage unreaddenMessage = new UnreaddenMessage();
 		unreaddenMessage.setMessageDate(message.getDate());
 		unreaddenMessage.setMessage(message);
 		unreaddenMessage.setMessageId(message.getId().toString());
 		unreaddenMessage.setTag(tag);
-		producerTemplate.sendBody(to,unreaddenMessage);
+		DataManagerFactory.getDataManager().sendPackageToRoute(to, unreaddenMessage);
 	}
 	
 	public String getTo() {

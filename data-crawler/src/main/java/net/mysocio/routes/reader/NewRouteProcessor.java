@@ -1,38 +1,31 @@
 /**
  * 
  */
-package net.mysocio.camel;
+package net.mysocio.routes.reader;
 
-import net.mysocio.data.AbstractProcessor;
+import net.mysocio.camel.CamelContextManager;
 import net.mysocio.data.SocioRoute;
 import net.mysocio.data.TempRoute;
 import net.mysocio.data.management.DataManagerFactory;
 
-import org.apache.camel.Exchange;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.code.morphia.annotations.Entity;
-import com.google.code.morphia.annotations.Transient;
 
 /**
  * @author Aladdin
  *
  */
 @Entity
-public class NewRouteProcessor extends AbstractProcessor {
-	@Transient
+public class NewRouteProcessor extends CappedCollectionProcessor {
 	private static final Logger logger = LoggerFactory.getLogger(NewRouteProcessor.class);
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 6648926043159830239L;
-	public void process(Exchange exchange) throws Exception{
-		TempRoute tempRoute = (TempRoute)exchange.getIn().getBody();
+	public long process(Object tempRouteObject) throws Exception {
+		TempRoute tempRoute = getObject(TempRoute.class, tempRouteObject);
 		//We want to ignore routes from nowhere to nowhere 
 		if (tempRoute.getFrom() == null && tempRoute.getTo() == null){
 			logger.debug("Empty route discovered");
-			return;
+			return tempRoute.getCreationDate(); 
 		}
 		SocioRoute route = new SocioRoute();
 		route.setDelay(tempRoute.getDelay());
@@ -41,5 +34,6 @@ public class NewRouteProcessor extends AbstractProcessor {
 		route.setProcessor(tempRoute.getProcessor());
 		DataManagerFactory.getDataManager().saveObject(route);
 		CamelContextManager.addRoute(route);
+		return tempRoute.getCreationDate();
 	}
 }

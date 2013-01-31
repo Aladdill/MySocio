@@ -17,8 +17,6 @@ import net.mysocio.authentication.lj.LjAuthenticationManager;
 import net.mysocio.authentication.twitter.TwitterAuthenticationManager;
 import net.mysocio.authentication.vkontakte.VkontakteAuthenticationManager;
 import net.mysocio.camel.CamelContextManager;
-import net.mysocio.camel.NewPackageProcessor;
-import net.mysocio.camel.NewRouteProcessor;
 import net.mysocio.data.IDataManager;
 import net.mysocio.data.SocioRoute;
 import net.mysocio.data.accounts.facebook.FacebookAccount;
@@ -27,15 +25,19 @@ import net.mysocio.data.accounts.lj.LjAccount;
 import net.mysocio.data.management.AccountsManager;
 import net.mysocio.data.management.DataManagerFactory;
 import net.mysocio.data.management.MongoDataManager;
+import net.mysocio.routes.reader.MongoCappedCollectionReader;
+import net.mysocio.routes.reader.NewPackageProcessor;
+import net.mysocio.routes.reader.NewRouteProcessor;
 
 import org.apache.activemq.camel.component.ActiveMQComponent;
-import org.apache.camel.util.jndi.JndiContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.code.morphia.Datastore;
 import com.google.code.morphia.Morphia;
+import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DB;
+import com.mongodb.DBObject;
 import com.mongodb.Mongo;
 import com.mongodb.MongoURI;
 
@@ -94,18 +96,26 @@ public class DataCrawlerContextListener implements ServletContextListener {
 		}
 		CamelContextManager.addComponent("activemq", ActiveMQComponent
 				.activeMQComponent("vm://localhost?broker.persistent=true"));
+		CamelContextManager.initContext();
 		try {
-			JndiContext context = new JndiContext();
-			Mongo connectionBean = null;
-
-			MongoURI uri = new MongoURI("mongodb://" + dbServer + ":" + 10044);
-			connectionBean = new Mongo(uri);
-			DB connectDB = connectionBean.getDB(dbName);
-			connectDB.authenticate(dbUser, dbPass.toCharArray());
-			context.bind("myConnectionBean", connectionBean);
-			CamelContextManager.initContext(context);
+			MongoURI uri = new MongoURI("mongodb://" + dbServer + ":" + dbPort);
+			Mongo connectionBean = new Mongo(uri);
+			DB db = connectionBean.getDB(dbName);
+			db.authenticate(dbUser, dbPass.toCharArray());
+			if (!db.collectionExists("route_packages")){
+				DBObject options = BasicDBObjectBuilder.start().add("capped", true).add("size", 100000).get();
+				db.createCollection("route_packages", options);
+			}
+			if (!db.collectionExists("temp_routes")){
+				DBObject options = BasicDBObjectBuilder.start().add("capped", true).add("size", 100000).get();
+				db.createCollection("temp_routes", options);
+			}
+			final Thread routesThread = new Thread(new MongoCappedCollectionReader(db, "temp_routes", new NewRouteProcessor()));
+			routesThread.start();
+			final Thread packagesThread = new Thread(new MongoCappedCollectionReader(db, "route_packages", new NewPackageProcessor()));
+			packagesThread.start();
 		} catch (Exception e) {
-			logger.error("Error initializing JNDI context", e);
+			logger.error("Error initializing mongo cursor.", e);
 		}
 		List<SocioRoute> routes = DataManagerFactory.getDataManager().getObjects(SocioRoute.class);
 		try {
@@ -114,27 +124,6 @@ public class DataCrawlerContextListener implements ServletContextListener {
 			}
 		} catch (Exception e) {
 			logger.error("Error initializing existing route", e);
-		}
-		try {
-			SocioRoute routesRoute = new SocioRoute();
-			routesRoute.setFrom("mongodb:myConnectionBean?database="+dbName+"&collection=temp_routes&tailTrackIncreasingField=creationDate&persistentTailTracking=true" +
-					"&persistentId=routesTracker&tailTrackField=lastRouteTrackers");
-			routesRoute.setAutoStartup(false);
-			routesRoute.setProcessor(new NewRouteProcessor());
-			CamelContextManager.addRoute(routesRoute);
-		} catch (Exception e) {
-			logger.error("Error initializing routes route", e);
-		}
-		
-		try {
-			SocioRoute packagesRoute = new SocioRoute();
-			packagesRoute.setFrom("mongodb:myConnectionBean?database="+dbName+"&collection=route_packages&tailTrackIncreasingField=creationDate&persistentTailTracking=true" +
-					"&persistentId=packageTracker&tailTrackField=lastPackageTracker");
-			packagesRoute.setAutoStartup(false);
-			packagesRoute.setProcessor(new NewPackageProcessor());
-			CamelContextManager.addRoute(packagesRoute);
-		} catch (Exception e) {
-			logger.error("Error initializing routes route", e);
 		}
 		AccountsManager.getInstance().addAccount(GoogleAccount.ACCOUNT_TYPE,
 				new GoogleAuthenticationManager());

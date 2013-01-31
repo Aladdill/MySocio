@@ -1,0 +1,56 @@
+/**
+ * 
+ */
+package net.mysocio.data;
+
+import com.google.code.morphia.annotations.Embedded;
+import com.google.code.morphia.annotations.Entity;
+
+/**
+ * @author Aladdin
+ *
+ */
+@Entity("routes")
+public class SocioRoute extends SocioObject {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7294367182716078765L;
+	private String from;
+	@Embedded
+	private AbstractProcessor processor;
+	private String to;
+	private Long delay = 0l;
+	private boolean autoStartup = true;
+	
+	public String getFrom() {
+		return from;
+	}
+	public void setFrom(String from) {
+		this.from = from;
+	}
+	public AbstractProcessor getProcessor() {
+		return processor;
+	}
+	public void setProcessor(AbstractProcessor processor) {
+		this.processor = processor;
+	}
+	public String getTo() {
+		return to;
+	}
+	public void setTo(String to) {
+		this.to = to;
+	}
+	public Long getDelay() {
+		return delay;
+	}
+	public void setDelay(Long delay) {
+		this.delay = delay;
+	}
+	public boolean isAutoStartup() {
+		return autoStartup;
+	}
+	public void setAutoStartup(boolean autoStartup) {
+		this.autoStartup = autoStartup;
+	} 
+}

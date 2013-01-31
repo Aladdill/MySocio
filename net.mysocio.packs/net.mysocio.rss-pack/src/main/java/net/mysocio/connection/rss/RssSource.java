@@ -4,7 +4,7 @@
 package net.mysocio.connection.rss;
 
 import net.mysocio.connection.readers.Source;
-import net.mysocio.data.management.CamelContextManager;
+import net.mysocio.data.management.DataManagerFactory;
 import net.mysocio.data.messages.rss.RssMessage;
 
 import org.slf4j.Logger;
@@ -35,6 +35,6 @@ public class RssSource extends Source {
 		RssMessageProcessor processor = new RssMessageProcessor();
 		processor.setTo(to);
 		processor.addTags(getTags());
-		CamelContextManager.addRoute("rss:" + getUrl() + "?consumer.delay=2000", processor , null);
+		DataManagerFactory.getDataManager().createRoute("rss:" + getUrl() + "?consumer.delay=2000", processor , null, 0l);
 	}
 }

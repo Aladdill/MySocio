@@ -9,16 +9,24 @@ import java.util.List;
 import java.util.Locale;
 
 import net.mysocio.connection.readers.Source;
+import net.mysocio.data.AbstractProcessor;
+import net.mysocio.data.CappedCollectionTimeStamp;
 import net.mysocio.data.IDataManager;
 import net.mysocio.data.ISocioObject;
 import net.mysocio.data.IUniqueObject;
+import net.mysocio.data.RoutePackage;
+import net.mysocio.data.SocioObject;
 import net.mysocio.data.SocioTag;
 import net.mysocio.data.SocioUser;
+import net.mysocio.data.TempRoute;
 import net.mysocio.data.UserAccount;
 import net.mysocio.data.UserContact;
 import net.mysocio.data.UserSource;
 import net.mysocio.data.accounts.Account;
 import net.mysocio.data.contacts.Contact;
+import net.mysocio.data.management.camel.DefaultUserMessagesProcessor;
+import net.mysocio.data.management.camel.MarkMessageReaddenProcessor;
+import net.mysocio.data.management.exceptions.DuplicateMySocioObjectException;
 import net.mysocio.data.messages.GeneralMessage;
 import net.mysocio.data.messages.UnreaddenMessage;
 import net.mysocio.data.ui.UiObject;
@@ -81,12 +89,32 @@ public class MongoDataManager implements IDataManager {
 		
 		DefaultUserMessagesProcessor processor = new DefaultUserMessagesProcessor();
 		processor.setUserId(userId);
-		CamelContextManager.addRoute("activemq:" + userId + ".newMessage", processor, null, 0l);
+		createRoute("activemq:" + userId + ".newMessage", processor, null, 0l);
 		MarkMessageReaddenProcessor readdenProcessor = new MarkMessageReaddenProcessor();
 		readdenProcessor.setUserId(userId);
-		CamelContextManager.addRoute("activemq:" + userId + ".messageReaden", readdenProcessor, null, 0l);
+		createRoute("activemq:" + userId + ".messageReaden", readdenProcessor, null, 0l);
 		logger.debug("User created");
 		return user;
+	}
+
+	public void createRoute(String from, AbstractProcessor processor, String to, Long delay)
+			throws DuplicateMySocioObjectException {
+		TempRoute route = new TempRoute();
+		route.setFrom(from);
+		route.setProcessor(processor);
+		saveObject(processor);
+		route.setTo(to);
+		route.setDelay(delay);
+		route.setCreationDate(System.currentTimeMillis());
+		saveObject(route);
+	}
+	
+	public void sendPackageToRoute(String to, SocioObject object) throws DuplicateMySocioObjectException{
+		RoutePackage routePackage = new RoutePackage();
+		routePackage.setTo(to);
+		routePackage.setObject(object);
+		routePackage.setCreationDate(System.currentTimeMillis());
+		saveObject(routePackage);
 	}
 
 	/**
@@ -132,6 +160,11 @@ public class MongoDataManager implements IDataManager {
 
 	public<T> T getObject(Class<T> T, String id) {
 		Query<T>  q = (Query<T>)ds.createQuery(T).field("id").equal(new ObjectId(id));
+		return q.get();
+	}
+	
+	public CappedCollectionTimeStamp getTimestamp(String collection) {
+		Query<CappedCollectionTimeStamp>  q = (Query<CappedCollectionTimeStamp>)ds.createQuery(CappedCollectionTimeStamp.class).field("collection").equal(collection);
 		return q.get();
 	}
 
@@ -182,7 +215,7 @@ public class MongoDataManager implements IDataManager {
 		}
 		ds.save(object);
 	}
-
+	
 	public void setMessageReadden(String messageId) {
 		Query<UnreaddenMessage> q = ds.createQuery(UnreaddenMessage.class).field("messageId").equal(messageId);
 		ds.delete(q);

@@ -12,7 +12,7 @@ import net.mysocio.data.CorruptedDataException;
 import net.mysocio.data.IDataManager;
 import net.mysocio.data.SocioUser;
 import net.mysocio.data.management.DataManagerFactory;
-import net.mysocio.data.management.DuplicateMySocioObjectException;
+import net.mysocio.data.management.exceptions.DuplicateMySocioObjectException;
 import net.mysocio.data.ui.UiObject;
 import net.mysocio.data.ui.UserPage;
 import net.mysocio.ui.data.objects.AccountLine;

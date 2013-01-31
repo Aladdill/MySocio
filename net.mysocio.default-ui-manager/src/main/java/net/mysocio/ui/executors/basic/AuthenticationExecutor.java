@@ -5,7 +5,7 @@ package net.mysocio.ui.executors.basic;
 
 import net.mysocio.data.IConnectionData;
 import net.mysocio.data.management.AccountsManager;
-import net.mysocio.data.management.InvalidNetworkException;
+import net.mysocio.data.management.exceptions.InvalidNetworkException;
 import net.mysocio.ui.management.CommandExecutionException;
 import net.mysocio.ui.management.ICommandExecutor;
 

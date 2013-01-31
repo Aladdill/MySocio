@@ -9,10 +9,9 @@ import java.util.Iterator;
 
 import net.mysocio.authentication.facebook.FacebookAuthenticationManager;
 import net.mysocio.data.SocioTag;
-import net.mysocio.data.management.AbstractMessageProcessor;
-import net.mysocio.data.management.CamelContextManager;
-import net.mysocio.data.management.DuplicateMySocioObjectException;
 import net.mysocio.data.management.MessagesManager;
+import net.mysocio.data.management.camel.AbstractMessageProcessor;
+import net.mysocio.data.management.exceptions.DuplicateMySocioObjectException;
 import net.mysocio.data.messages.facebook.FacebookMessage;
 import net.mysocio.ui.data.objects.facebook.FacebookUiCheckinMessage;
 import net.mysocio.ui.data.objects.facebook.FacebookUiLinkMessage;
@@ -21,18 +20,26 @@ import net.mysocio.ui.data.objects.facebook.FacebookUiStatusMessage;
 import net.mysocio.ui.data.objects.facebook.FacebookUiVideoMessage;
 
 import org.apache.camel.Exchange;
-import org.apache.camel.ProducerTemplate;
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.code.morphia.annotations.Entity;
+import com.google.code.morphia.annotations.Transient;
+
 /**
  * @author Aladdin
  *
  */
+@Entity
 public class FacebookInputProcessor extends AbstractMessageProcessor {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1914368846859623850L;
+	@Transient
 	private static final Logger logger = LoggerFactory
 			.getLogger(FacebookInputProcessor.class);
 	private static final long MONTH = 30*24*3600l;
@@ -60,7 +67,7 @@ public class FacebookInputProcessor extends AbstractMessageProcessor {
 		message.setType(type);
 		message.setPicture(getAttribute(element, "picture"));
 		JsonNode actions = element.get("actions");
-		if (actions.has(0)){
+		if (actions != null && actions.has(0)){
 			//here we suppose what every actions array has "Comments" as first object and it has "link" field 
 			message.setLinkToMessage(getAttribute(actions.get(0), "link"));
 		}
@@ -123,7 +130,6 @@ public class FacebookInputProcessor extends AbstractMessageProcessor {
 		JsonNode root = mapper.readTree(response);
 		JsonNode entry = root.get("data");
 		Iterator<JsonNode> elements = entry.getElements();
-		ProducerTemplate producerTemplate = CamelContextManager.getProducerTemplate();
 		while (elements.hasNext()) {
 			JsonNode element = elements.next();
 			FacebookMessage message = parseFacebookMessage(element);
@@ -137,9 +143,9 @@ public class FacebookInputProcessor extends AbstractMessageProcessor {
 				//if it's duplicate message - we ignore it
 				return;
 			}
-			addMessageForTag(producerTemplate, message, tag);
+			addMessageForTag(message, tag);
 			for (SocioTag sourceTag : tags) {
-				addMessageForTag(producerTemplate, message, sourceTag);
+				addMessageForTag(message, sourceTag);
 			}
 		}
 		lastUpdate = toInSec*1000;

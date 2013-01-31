@@ -6,16 +6,16 @@ package net.mysocio.connection.rss;
 import java.util.List;
 
 import net.mysocio.data.SocioTag;
-import net.mysocio.data.management.AbstractMessageProcessor;
-import net.mysocio.data.management.CamelContextManager;
 import net.mysocio.data.management.MessagesManager;
+import net.mysocio.data.management.camel.AbstractMessageProcessor;
 import net.mysocio.data.messages.rss.RssMessage;
 
 import org.apache.camel.Exchange;
-import org.apache.camel.ProducerTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.code.morphia.annotations.Entity;
+import com.google.code.morphia.annotations.Transient;
 import com.sun.syndication.feed.synd.SyndEntryImpl;
 import com.sun.syndication.feed.synd.SyndFeed;
 
@@ -23,7 +23,13 @@ import com.sun.syndication.feed.synd.SyndFeed;
  * @author Aladdin
  *
  */
+@Entity
 public class RssMessageProcessor extends AbstractMessageProcessor {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6216755406044921125L;
+	@Transient
 	static final Logger logger = LoggerFactory.getLogger(RssMessageProcessor.class);
 	
 	public void process(Exchange exchange) throws Exception {
@@ -32,19 +38,17 @@ public class RssMessageProcessor extends AbstractMessageProcessor {
     	if (logger.isDebugEnabled()){
 			logger.debug("Got " + entries.size() + " messages for feed: " + feed.getTitle());
 		}
-    	ProducerTemplate producerTemplate = CamelContextManager.getProducerTemplate();
-    	processMessages(feed, entries, producerTemplate);
+    	processMessages(feed, entries);
 	}
 
-	protected void processMessages(SyndFeed feed, List<SyndEntryImpl> entries,
-			ProducerTemplate producerTemplate) {
+	protected void processMessages(SyndFeed feed, List<SyndEntryImpl> entries) throws Exception {
 		for (SyndEntryImpl entry : entries) {
     		RssMessage message = new RssMessage();
-    		processMessage(producerTemplate, entry, message);
+    		processMessage(entry, message);
 		}
 	}
 
-	protected void processMessage(ProducerTemplate producerTemplate, SyndEntryImpl entry, RssMessage message) {
+	protected void processMessage(SyndEntryImpl entry, RssMessage message) throws Exception {
 		message.setLink(entry.getLink());
 		message.setDate(entry.getPublishedDate().getTime());
 		String title = entry.getTitle();
@@ -66,7 +70,7 @@ public class RssMessageProcessor extends AbstractMessageProcessor {
 			return;
 		}
 		for (SocioTag tag : tags) {
-			addMessageForTag(producerTemplate, message, tag);
+			addMessageForTag(message, tag);
 		}
 	}
 }

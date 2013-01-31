@@ -19,19 +19,21 @@ import net.mysocio.data.accounts.facebook.FacebookAccount;
 import net.mysocio.data.accounts.google.GoogleAccount;
 import net.mysocio.data.accounts.lj.LjAccount;
 import net.mysocio.data.management.AccountsManager;
-import net.mysocio.data.management.CamelContextManager;
 import net.mysocio.data.management.DataManagerFactory;
 import net.mysocio.data.management.DefaultResourcesManager;
 import net.mysocio.data.management.MongoDataManager;
 import net.mysocio.ui.managers.basic.DefaultUiManager;
 
-import org.apache.activemq.camel.component.ActiveMQComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.code.morphia.Datastore;
 import com.google.code.morphia.Morphia;
+import com.mongodb.BasicDBObjectBuilder;
+import com.mongodb.DB;
+import com.mongodb.DBObject;
 import com.mongodb.Mongo;
+import com.mongodb.MongoURI;
 
 /**
  * @author Aladdin
@@ -47,7 +49,6 @@ public class MySocioContextListener implements ServletContextListener {
 	 */
 	@Override
 	public void contextDestroyed(ServletContextEvent arg0) {
-		CamelContextManager.stopContext();
 		DataManagerFactory.closeDataConnection();
 	}
 
@@ -70,16 +71,36 @@ public class MySocioContextListener implements ServletContextListener {
 		DefaultResourcesManager.init(servletContext.getRealPath(""));
 		AuthenticationResourcesManager.init(servletContext.getRealPath(""));
 		try {
-			Datastore ds = new Morphia().createDatastore(new Mongo(AuthenticationResourcesManager.getResource("server.address"),Integer.parseInt(AuthenticationResourcesManager.getResource("server.port"))), AuthenticationResourcesManager.getResource("db.server.db.name"), AuthenticationResourcesManager.getResource("db.server.admin.username"), AuthenticationResourcesManager.getResource("db.server.admin.password").toCharArray());
+			String dbServer = AuthenticationResourcesManager.getResource("db.server.address");
+			int dbPort = Integer.parseInt(AuthenticationResourcesManager.getResource("db.server.port"));
+			String dbName = AuthenticationResourcesManager.getResource("db.server.db.name");
+			String dbUser = AuthenticationResourcesManager.getResource("db.server.admin.username");
+			String dbPass = AuthenticationResourcesManager.getResource("db.server.admin.password");
+			Datastore ds = new Morphia().createDatastore(new Mongo(
+					dbServer,
+					dbPort),
+					dbName,
+					dbUser,
+					dbPass.toCharArray());
+			ds.ensureCaps();
 			IDataManager manager = new MongoDataManager(ds);
 			DataManagerFactory.init(manager);
+			MongoURI uri = new MongoURI("mongodb://" + dbServer + ":" + dbPort);
+			Mongo connectionBean = new Mongo(uri);
+			DB db = connectionBean.getDB(dbName);
+			db.authenticate(dbUser, dbPass.toCharArray());
+			if (!db.collectionExists("route_packages")){
+				DBObject options = BasicDBObjectBuilder.start().add("capped", true).add("size", 100000).get();
+				db.createCollection("route_packages", options);
+			}
+			if (!db.collectionExists("temp_routes")){
+				DBObject options = BasicDBObjectBuilder.start().add("capped", true).add("size", 100000).get();
+				db.createCollection("temp_routes", options);
+			}
 		} catch (Exception e) {
 			logger.error("Error initializing database", e);
 		}
 		DefaultUiManager.init();
-		CamelContextManager.addComponent("activemq", ActiveMQComponent
-				.activeMQComponent("vm://localhost?broker.persistent=true"));
-		CamelContextManager.initContext();
 		AccountsManager.getInstance().addAccount(GoogleAccount.ACCOUNT_TYPE,
 				new GoogleAuthenticationManager());
 		AccountsManager.getInstance().addAccount(FacebookAccount.ACCOUNT_TYPE,

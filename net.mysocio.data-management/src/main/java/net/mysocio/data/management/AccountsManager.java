@@ -10,6 +10,7 @@ import java.util.Set;
 import net.mysocio.data.IAuthenticationManager;
 import net.mysocio.data.IConnectionData;
 import net.mysocio.data.accounts.Account;
+import net.mysocio.data.management.exceptions.InvalidNetworkException;
 
 /**
  * @author Aladdin

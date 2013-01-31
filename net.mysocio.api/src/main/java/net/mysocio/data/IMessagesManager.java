@@ -15,7 +15,7 @@ import net.mysocio.data.messages.GeneralMessage;
 public interface IMessagesManager {
 	public void postMessage(GeneralMessage message, Destination destination);
 	public List<GeneralMessage> getMessagesForSelectedTag(String userId, String tagId);
-	public void setMessagesReadden(String userId, String messageId);
+	public void setMessagesReadden(String userId, String messageId) throws Exception;
 	public List<String> storeMessages(List<GeneralMessage> messages) throws Exception;
 	public void storeMessage(GeneralMessage message) throws Exception;
 }
