@@ -10,8 +10,10 @@ import net.mysocio.connection.writers.Destination;
 import net.mysocio.data.IDataManager;
 import net.mysocio.data.IMessagesManager;
 import net.mysocio.data.SocioUser;
-import net.mysocio.data.StringWrapper;
+import net.mysocio.data.SocioPair;
+import net.mysocio.data.management.camel.AbstractMessageProcessor;
 import net.mysocio.data.messages.GeneralMessage;
+import net.mysocio.data.messages.UnreaddenMessage;
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
@@ -54,10 +56,10 @@ public class MessagesManager implements IMessagesManager {
 		dataManager.saveObject(message);
 	}
 
-	public List<GeneralMessage> getMessagesForSelectedTag(String userId, String tagId) {
+	public List<UnreaddenMessage> getMessagesForSelectedTag(String userId, String tagId) {
 		IDataManager dataManager = DataManagerFactory.getDataManager();
 		SocioUser user = dataManager.getObject(SocioUser.class, userId);
-		List<GeneralMessage> unreadMessages = dataManager.getUnreadMessages(user, tagId);
+		List<UnreaddenMessage> unreadMessages = dataManager.getUnreadMessages(user, tagId);
 //		for (String id : unreadMessages) {
 //			IMessage message = getCacheMessage(id);
 //			if (message != null){
@@ -74,14 +76,14 @@ public class MessagesManager implements IMessagesManager {
 //		}
 		return unreadMessages;
 	}
-	
+	@Override
 	public void setMessagesReadden(String userId, String messagesId) throws Exception{
 		if (messagesId.isEmpty()){
 			return;
 		}
 		String[] ids = messagesId.split(",");
 		for (String id : ids) {
-			DataManagerFactory.getDataManager().sendPackageToRoute("activemq:" + userId + ".messageReaden", new StringWrapper(id));
+			DataManagerFactory.getDataManager().sendPackageToRoute(AbstractMessageProcessor.ACTIVEMQ_READEN_MESSAGE, new SocioPair(userId, id));
 		}
 	}
 	private void cacheMessage(GeneralMessage message){

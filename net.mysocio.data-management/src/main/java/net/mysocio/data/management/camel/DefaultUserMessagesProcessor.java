@@ -34,10 +34,16 @@ public class DefaultUserMessagesProcessor extends UserRouteProcessor {
 	public void process(Exchange exchange) throws Exception {
 		IDataManager dataManager = DataManagerFactory.getDataManager();
 		UnreaddenMessage ureaddenMessage = (UnreaddenMessage)exchange.getIn().getBody();
+		String messageId = ureaddenMessage.getMessage().getId().toString();
 		if (logger.isDebugEnabled()){
-			logger.debug("Got message with uid " + ureaddenMessage.getMessage().getId());
+			logger.debug("Got message with uid " + messageId);
 		}
 		String userId = getUserId();
+		
+		if (dataManager.isMessageExists(userId, messageId)){
+			return;
+		}
+		
 		ureaddenMessage.setUserId(userId);
 		SocioTag tag = dataManager.getTag(userId,ureaddenMessage.getTag().getValue());
 		if (tag == null){

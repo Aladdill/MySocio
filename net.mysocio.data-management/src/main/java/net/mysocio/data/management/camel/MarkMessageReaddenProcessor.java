@@ -3,8 +3,9 @@
  */
 package net.mysocio.data.management.camel;
 
+import net.mysocio.data.AbstractProcessor;
 import net.mysocio.data.IDataManager;
-import net.mysocio.data.StringWrapper;
+import net.mysocio.data.SocioPair;
 import net.mysocio.data.management.DataManagerFactory;
 
 import org.apache.camel.Exchange;
@@ -19,7 +20,7 @@ import com.google.code.morphia.annotations.Transient;
  *
  */
 @Entity
-public class MarkMessageReaddenProcessor extends UserRouteProcessor {
+public class MarkMessageReaddenProcessor extends AbstractProcessor {
 	/**
 	 * 
 	 */
@@ -32,10 +33,12 @@ public class MarkMessageReaddenProcessor extends UserRouteProcessor {
 	 */
 	public void process(Exchange exchange) throws Exception {
 		IDataManager dataManager = DataManagerFactory.getDataManager();
-		String messageId = ((StringWrapper)exchange.getIn().getBody()).getString();
+		SocioPair pair = (SocioPair)exchange.getIn().getBody();
+		String userId = pair.getValue1();
+		String messageId = pair.getValue2();
 		if (logger.isDebugEnabled()){
-			logger.debug("Marking readen message with id " + messageId);
+			logger.debug("Marking readen message with id " + messageId + " for user id " + userId);
 		}
-		dataManager.setMessageReadden(messageId);
+		dataManager.setMessageReadden(userId, messageId);
 	}
 }

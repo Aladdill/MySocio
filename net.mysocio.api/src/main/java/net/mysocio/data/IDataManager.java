@@ -9,7 +9,7 @@ import java.util.Locale;
 
 import net.mysocio.connection.readers.Source;
 import net.mysocio.data.accounts.Account;
-import net.mysocio.data.messages.GeneralMessage;
+import net.mysocio.data.messages.UnreaddenMessage;
 import net.mysocio.data.ui.UiObject;
 
 /**
@@ -38,9 +38,9 @@ public interface IDataManager {
 
 	public<T extends ISocioObject> void saveObject(T object) throws Exception;
 
-	public void setMessageReadden(String messageId);
+	public void setMessageReadden(String userId, String messageId);
 
-	public List<GeneralMessage> getUnreadMessages(SocioUser user, String tagId);
+	public List<UnreaddenMessage> getUnreadMessages(SocioUser user, String tagId);
 
 	public String getPage(String userId, String pageKey);
 
@@ -65,4 +65,6 @@ public interface IDataManager {
 	public void createRoute(String from, AbstractProcessor processor, String to, Long delay) throws Exception;
 	
 	public void sendPackageToRoute(String to, SocioObject object) throws Exception;
+
+	boolean isMessageExists(String userId, String messageId);
 }

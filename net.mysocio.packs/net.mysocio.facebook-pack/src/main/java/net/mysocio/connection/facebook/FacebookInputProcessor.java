@@ -3,11 +3,10 @@
  */
 package net.mysocio.connection.facebook;
 
+import java.net.URL;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Iterator;
+import java.util.List;
 
-import net.mysocio.authentication.facebook.FacebookAuthenticationManager;
 import net.mysocio.data.SocioTag;
 import net.mysocio.data.management.MessagesManager;
 import net.mysocio.data.management.camel.AbstractMessageProcessor;
@@ -20,14 +19,19 @@ import net.mysocio.ui.data.objects.facebook.FacebookUiStatusMessage;
 import net.mysocio.ui.data.objects.facebook.FacebookUiVideoMessage;
 
 import org.apache.camel.Exchange;
-import org.codehaus.jackson.JsonFactory;
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Transient;
+
+import facebook4j.Application;
+import facebook4j.Facebook;
+import facebook4j.FacebookFactory;
+import facebook4j.Post;
+import facebook4j.Post.Action;
+import facebook4j.ResponseList;
+import facebook4j.auth.AccessToken;
 
 /**
  * @author Aladdin
@@ -45,6 +49,7 @@ public class FacebookInputProcessor extends AbstractMessageProcessor {
 	private static final long MONTH = 30*24*3600l;
 	private Long lastUpdate = 0l;
 	private String token;
+	private Facebook facebook;
 
 	public String getToken() {
 		return token;
@@ -59,36 +64,53 @@ public class FacebookInputProcessor extends AbstractMessageProcessor {
 	 * @param element
 	 * @throws ParseException
 	 */
-	private FacebookMessage parseFacebookMessage(JsonNode element) throws ParseException {
+	private FacebookMessage parseFacebookMessage(Post post) throws ParseException {
 		FacebookMessage message = new FacebookMessage();
-		message.setFbId(getAttribute(element, "id"));
-		message.setDate(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(getAttribute(element, "created_time")).getTime());
-		String type = getAttribute(element, "type");
+		message.setFbId(post.getId());
+		message.setDate(post.getCreatedTime().getTime());
+		String type = post.getType();
 		message.setType(type);
-		message.setPicture(getAttribute(element, "picture"));
-		JsonNode actions = element.get("actions");
-		if (actions != null && actions.has(0)){
-			//here we suppose what every actions array has "Comments" as first object and it has "link" field 
-			message.setLinkToMessage(getAttribute(actions.get(0), "link"));
+		URL picture = post.getPicture();
+		if (picture != null){
+			message.setPicture(picture.toString());
 		}
-		message.setCaption(getAttribute(element, "caption"));
-		message.setText(getAttribute(element, "message"));
-		message.setApplication(getAttribute(element, "application"));
-		message.setDescription(getAttribute(element, "description"));
-		String title = getAttribute(element.get("from"), "name");
-		String userId = getAttribute(element.get("from"), "id");
+		List<Action> actions = post.getActions();
+		if (!actions.isEmpty()){
+			//here we suppose what every actions array has "Comments" as first object and it has "link" field 
+			message.setLinkToMessage(actions.get(0).getLink());
+		}else{
+			message.setLinkToMessage(actions.get(0).getLink());
+		}
+		message.setCaption(post.getCaption());
+		message.setText(post.getMessage());
+		Application application = post.getApplication();
+		if (application != null){
+			message.setApplication(application.getName());
+		}
+		message.setDescription(post.getDescription());
+		String title = post.getFrom().getName();
+		String userId = post.getFrom().getId();
 		message.setUserPic("https://graph.facebook.com/" + userId + "/picture");
 		message.setTitle(title);
 		message.setUserId(userId);
-		message.setStory(getAttribute(element, "story"));
-		message.setLink(getAttribute(element, "link"));
-		message.setName(getAttribute(element, "name"));
-		message.setSource(getAttribute(element, "source"));
-		message.setProperties(getAttribute(element, "properties"));
-		message.setPrivacy(getAttribute(element, "privacy"));
-		message.setLikes(getAttribute(element, "likes"));
-		message.setPlace(getAttribute(element, "place"));
-		message.setPlace(getAttribute(element, "place"));
+		message.setStory(post.getStory());
+		
+		URL link = post.getLink();
+		if (link != null){
+			message.setLink(link.toString());
+		}
+		message.setName(post.getName());
+		URL source = post.getSource();
+		if (source != null){
+			message.setSource(source.toString());
+		}
+//		List<Property> properties = post.getProperties();
+//		message.setProperties(properties);
+//		message.setPrivacy(post.getPrivacy());
+//		PagableList<IdNameEntity> likes = post.getLikes();
+//		message.setLikes(likes);
+//		Place place = post.getPlace();
+//		message.setPlace(place);
 		if (type.equals("photo")){
 			message.setUiObjectName(FacebookUiPhotoMessage.NAME);
 		}else if (type.equals("video")){
@@ -103,36 +125,21 @@ public class FacebookInputProcessor extends AbstractMessageProcessor {
 		return message;
 	}
 	
-	/**
-	 * @param element
-	 * @param string
-	 * @return
-	 */
-	public String getAttribute(JsonNode element, String string) {
-		JsonNode node = element.get(string);
-		String ret = "";
-		if (node != null){
-			ret = node.getTextValue();
-		}
-		return ret;
-	}
-
 	public void process(Exchange exchange) throws Exception {
-		long toInSec = System.currentTimeMillis()/1000;
-		long fromInSec = lastUpdate/1000;
-		String url = "https://graph.facebook.com/me/home?format=json";
-		if (fromInSec == 0 || (toInSec - fromInSec) > MONTH){
-			fromInSec = toInSec - MONTH;
+		long to = System.currentTimeMillis();
+		long from = lastUpdate;
+		if (facebook == null){
+			facebook = new FacebookFactory().getInstance();
+			facebook.setOAuthAccessToken(new AccessToken(token, null));
 		}
-		url += "&since="+ fromInSec;
-		String response = new FacebookAuthenticationManager().callUrl(token, url);
-		ObjectMapper mapper = new ObjectMapper(new JsonFactory());
-		JsonNode root = mapper.readTree(response);
-		JsonNode entry = root.get("data");
-		Iterator<JsonNode> elements = entry.getElements();
-		while (elements.hasNext()) {
-			JsonNode element = elements.next();
-			FacebookMessage message = parseFacebookMessage(element);
+		if (from == 0 || (to - from) > MONTH){
+			from = to - MONTH;
+		}
+//		Date fromDate = new Date(from);
+//		logger.debug("Trying get FB messages from " + fromDate);
+		ResponseList<Post> home = facebook.getHome(/*new Reading().since(fromDate)*/);
+		for (Post post : home) {
+			FacebookMessage message = parseFacebookMessage(post);
 			logger.debug("Got facebook message from user " + message.getTitle() + " with id " + message.getFbId());
 			SocioTag tag = new SocioTag();
 			tag.setValue(message.getTitle());
@@ -141,6 +148,7 @@ public class FacebookInputProcessor extends AbstractMessageProcessor {
 				MessagesManager.getInstance().storeMessage(message);
 			} catch (DuplicateMySocioObjectException e) {
 				//if it's duplicate message - we ignore it
+				logger.debug("Got duplicate Facebook message.",e);
 				return;
 			}
 			addMessageForTag(message, tag);
@@ -148,6 +156,6 @@ public class FacebookInputProcessor extends AbstractMessageProcessor {
 				addMessageForTag(message, sourceTag);
 			}
 		}
-		lastUpdate = toInSec*1000;
+		lastUpdate = to*1000;
 	}
 }

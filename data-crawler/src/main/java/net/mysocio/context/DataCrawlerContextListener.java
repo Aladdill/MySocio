@@ -25,6 +25,8 @@ import net.mysocio.data.accounts.lj.LjAccount;
 import net.mysocio.data.management.AccountsManager;
 import net.mysocio.data.management.DataManagerFactory;
 import net.mysocio.data.management.MongoDataManager;
+import net.mysocio.data.management.camel.AbstractMessageProcessor;
+import net.mysocio.data.management.camel.MarkMessageReaddenProcessor;
 import net.mysocio.routes.reader.MongoCappedCollectionReader;
 import net.mysocio.routes.reader.NewPackageProcessor;
 import net.mysocio.routes.reader.NewRouteProcessor;
@@ -119,6 +121,12 @@ public class DataCrawlerContextListener implements ServletContextListener {
 		}
 		List<SocioRoute> routes = DataManagerFactory.getDataManager().getObjects(SocioRoute.class);
 		try {
+			MarkMessageReaddenProcessor readdenProcessor = new MarkMessageReaddenProcessor();
+			SocioRoute readenMessagesRoute = new SocioRoute();
+			readenMessagesRoute.setFrom(AbstractMessageProcessor.ACTIVEMQ_READEN_MESSAGE);
+			readenMessagesRoute.setProcessor(readdenProcessor);
+			readenMessagesRoute.setDelay(0l);
+			CamelContextManager.addRoute(readenMessagesRoute);
 			for (SocioRoute route : routes) {
 				CamelContextManager.addRoute(route);
 			}

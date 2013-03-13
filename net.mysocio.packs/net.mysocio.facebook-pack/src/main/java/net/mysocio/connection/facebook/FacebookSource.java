@@ -5,7 +5,6 @@ package net.mysocio.connection.facebook;
 
 import net.mysocio.connection.readers.AccountSource;
 import net.mysocio.data.SocioTag;
-import net.mysocio.data.TempRoute;
 import net.mysocio.data.accounts.facebook.FacebookAccount;
 import net.mysocio.data.management.DataManagerFactory;
 import net.mysocio.data.messages.facebook.FacebookMessage;

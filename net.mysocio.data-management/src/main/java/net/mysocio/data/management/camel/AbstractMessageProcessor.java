@@ -20,6 +20,8 @@ import com.google.code.morphia.annotations.Entity;
  */
 @Entity
 public abstract class AbstractMessageProcessor extends AbstractProcessor{
+	public static final String ACTIVEMQ_READEN_MESSAGE = "activemq:readenMessage";
+
 	/**
 	 * 
 	 */
@@ -36,7 +38,6 @@ public abstract class AbstractMessageProcessor extends AbstractProcessor{
 	public void addTags(List<SocioTag> tags){
 		this.tags.addAll(tags);
 	}
-	
 	protected void addMessageForTag(GeneralMessage message, SocioTag tag) throws Exception {
 		UnreaddenMessage unreaddenMessage = new UnreaddenMessage();
 		unreaddenMessage.setMessageDate(message.getDate());

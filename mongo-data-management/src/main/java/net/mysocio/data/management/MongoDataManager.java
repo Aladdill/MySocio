@@ -25,7 +25,6 @@ import net.mysocio.data.UserSource;
 import net.mysocio.data.accounts.Account;
 import net.mysocio.data.contacts.Contact;
 import net.mysocio.data.management.camel.DefaultUserMessagesProcessor;
-import net.mysocio.data.management.camel.MarkMessageReaddenProcessor;
 import net.mysocio.data.management.exceptions.DuplicateMySocioObjectException;
 import net.mysocio.data.messages.GeneralMessage;
 import net.mysocio.data.messages.UnreaddenMessage;
@@ -90,9 +89,6 @@ public class MongoDataManager implements IDataManager {
 		DefaultUserMessagesProcessor processor = new DefaultUserMessagesProcessor();
 		processor.setUserId(userId);
 		createRoute("activemq:" + userId + ".newMessage", processor, null, 0l);
-		MarkMessageReaddenProcessor readdenProcessor = new MarkMessageReaddenProcessor();
-		readdenProcessor.setUserId(userId);
-		createRoute("activemq:" + userId + ".messageReaden", readdenProcessor, null, 0l);
 		logger.debug("User created");
 		return user;
 	}
@@ -147,6 +143,12 @@ public class MongoDataManager implements IDataManager {
 		userSource.setUserId(userId);
 		userSource.setSource(source);
 		saveObject(userSource);
+	}
+	
+	@Override
+	public boolean isMessageExists(String userId, String messageId){
+		Query<UnreaddenMessage>  q = ds.createQuery(UnreaddenMessage.class).field("userId").equal(userId).field(messageId).equal(messageId);
+		return q.countAll() > 0;
 	}
 
 	/**
@@ -215,13 +217,13 @@ public class MongoDataManager implements IDataManager {
 		}
 		ds.save(object);
 	}
-	
-	public void setMessageReadden(String messageId) {
-		Query<UnreaddenMessage> q = ds.createQuery(UnreaddenMessage.class).field("messageId").equal(messageId);
+	@Override
+	public void setMessageReadden(String userId, String messageId) {
+		Query<UnreaddenMessage> q = ds.createQuery(UnreaddenMessage.class).field("messageId").equal(messageId).field("userId").equal(userId);
 		ds.delete(q);
 	}
 
-	public List<GeneralMessage> getUnreadMessages(SocioUser user, String tagId) {
+	public List<UnreaddenMessage> getUnreadMessages(SocioUser user, String tagId) {
 		Query<UnreaddenMessage> q = ds.createQuery(UnreaddenMessage.class).field("userId").equal(user.getId().toString());
 		if (!tagId.equals(SocioUser.ALL_TAGS)){
 			q.field("tag.id").equal(new ObjectId(tagId));
@@ -239,7 +241,7 @@ public class MongoDataManager implements IDataManager {
 				messages.add(unreaddenMessage.getMessage());
 			}
 		}
-		return messages;
+		return messagesList;
 	}
 	
 	public Long countUnreadMessages(String tagId) {
