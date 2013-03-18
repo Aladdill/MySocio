@@ -36,7 +36,7 @@ public interface IDataManager {
 	
 	public void addAccountToUser(Account account, String userId) throws Exception;
 
-	public<T extends ISocioObject> void saveObject(T object) throws Exception;
+	public<T extends ISocioObject> void saveObject(T object);
 
 	public void setMessageReadden(String userId, String messageId);
 
