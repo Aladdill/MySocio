@@ -12,6 +12,7 @@ import net.mysocio.data.IMessagesManager;
 import net.mysocio.data.SocioUser;
 import net.mysocio.data.SocioPair;
 import net.mysocio.data.management.camel.AbstractMessageProcessor;
+import net.mysocio.data.management.exceptions.DuplicateMySocioObjectException;
 import net.mysocio.data.messages.GeneralMessage;
 import net.mysocio.data.messages.UnreaddenMessage;
 import net.sf.ehcache.Cache;
@@ -53,7 +54,11 @@ public class MessagesManager implements IMessagesManager {
 
 	public void storeMessage(GeneralMessage message) throws Exception {
 		IDataManager dataManager = DataManagerFactory.getDataManager();
-		dataManager.saveObject(message);
+		try {
+			dataManager.saveObject(message);
+		} catch (DuplicateMySocioObjectException e) {
+			logger.info("Duplicate message of type" + message.getClass().getName());
+		}
 	}
 
 	public List<UnreaddenMessage> getMessagesForSelectedTag(String userId, String tagId) {

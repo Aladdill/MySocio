@@ -147,7 +147,7 @@ public class MongoDataManager implements IDataManager {
 	
 	@Override
 	public boolean isMessageExists(String userId, String messageId){
-		Query<UnreaddenMessage>  q = ds.createQuery(UnreaddenMessage.class).field("userId").equal(userId).field(messageId).equal(messageId);
+		Query<UnreaddenMessage>  q = ds.createQuery(UnreaddenMessage.class).field("userId").equal(userId).field("messageId").equal(messageId);
 		return q.countAll() > 0;
 	}
 

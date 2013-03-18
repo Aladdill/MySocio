@@ -4,6 +4,7 @@
 package net.mysocio.data.messages.rss;
 
 import net.mysocio.data.messages.GeneralMessage;
+import net.mysocio.ui.data.objects.rss.RssUiMessage;
 
 import com.google.code.morphia.annotations.Entity;
 
@@ -40,5 +41,10 @@ public class RssMessage extends GeneralMessage {
 	@Override
 	public String getUniqueFieldName() {
 		return "link";
+	}
+
+	@Override
+	public String getUiName() {
+		return RssUiMessage.NAME;
 	}
 }

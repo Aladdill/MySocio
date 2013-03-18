@@ -12,7 +12,6 @@ import net.mysocio.data.CorruptedDataException;
 import net.mysocio.data.IDataManager;
 import net.mysocio.data.SocioUser;
 import net.mysocio.data.management.DataManagerFactory;
-import net.mysocio.data.management.exceptions.DuplicateMySocioObjectException;
 import net.mysocio.data.ui.UiObject;
 import net.mysocio.data.ui.UserPage;
 import net.mysocio.ui.data.objects.AccountLine;
@@ -31,6 +30,7 @@ import net.mysocio.ui.data.objects.facebook.FacebookUiMessage;
 import net.mysocio.ui.data.objects.facebook.FacebookUiPhotoMessage;
 import net.mysocio.ui.data.objects.facebook.FacebookUiStatusMessage;
 import net.mysocio.ui.data.objects.facebook.FacebookUiVideoMessage;
+import net.mysocio.ui.data.objects.rss.RssUiMessage;
 
 
 
@@ -73,6 +73,8 @@ public class DefaultUiManager extends AbstractUiManager {
 		defaultPages.put(facebookUiMessage.getCategory()+facebookUiMessage.getName(),facebookUiMessage);
 		facebookUiMessage = new FacebookUiVideoMessage();
 		defaultPages.put(facebookUiMessage.getCategory()+facebookUiMessage.getName(),facebookUiMessage);
+		RssUiMessage rssUiMessage = new RssUiMessage();
+		defaultPages.put(rssUiMessage.getCategory()+rssUiMessage.getName(),rssUiMessage);
 		DefaultSiteBody defaultSiteBody = new DefaultSiteBody();
 		defaultPages.put(defaultSiteBody.getCategory()+defaultSiteBody.getName(),defaultSiteBody);
 	}

@@ -45,10 +45,18 @@ public class FacebookMessage extends UserMessage {
 		if (linkToMessage != null){
 			message = message.replace("message.link", getLinkToMessage());
 		}
-		message = message.replace("message.photo.name", getName());
-		message = message.replace("message.photo.link", getLink());
-		message = message.replace("message.photo", getPicture());
-		message = message.replace("message.caption", getCaption());
+		if (getName() != null){
+			message = message.replace("message.photo.name", getName());
+		}
+		if (getLink() != null){
+			message = message.replace("message.photo.link", getLink());
+		}
+		if (getPicture() != null){
+			message = message.replace("message.photo", getPicture());
+		}
+		if (getCaption() != null){
+			message = message.replace("message.caption", getCaption());
+		}
 		return message;
 	}
 

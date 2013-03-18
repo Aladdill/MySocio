@@ -98,6 +98,8 @@ public class FacebookInputProcessor extends AbstractMessageProcessor {
 		URL link = post.getLink();
 		if (link != null){
 			message.setLink(link.toString());
+		}else{
+			message.setLink(link.toString());
 		}
 		message.setName(post.getName());
 		URL source = post.getSource();
