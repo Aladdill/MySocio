@@ -10,6 +10,7 @@ import net.mysocio.data.management.AccountsManager;
 import net.mysocio.data.management.DataManagerFactory;
 import net.mysocio.ui.management.CommandExecutionException;
 import net.mysocio.ui.management.ICommandExecutor;
+import net.mysocio.ui.management.UnapprovedUserException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,8 +45,11 @@ public class CreateAccountExecutor implements ICommandExecutor {
 				dataManager.addAccountToUser(account, userId);
 			}
 			connectionData.setUserId(userId);
-		} catch (Exception e) {
+		}catch (Exception e) {
 			logger.error("Failed to create account.", e);
+			if (e instanceof UnapprovedUserException){
+				throw new CommandExecutionException(e.getMessage());
+			}
 			throw new CommandExecutionException(e);
 		}
 		connectionData.removeSessionAttribute(AccountsManager.IDENTIFIER);

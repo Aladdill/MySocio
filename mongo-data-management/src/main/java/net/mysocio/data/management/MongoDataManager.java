@@ -221,6 +221,11 @@ public class MongoDataManager implements IDataManager {
 	public void setMessageReadden(String userId, String messageId) {
 		Query<UnreaddenMessage> q = ds.createQuery(UnreaddenMessage.class).field("messageId").equal(messageId).field("userId").equal(userId);
 		ds.delete(q);
+		//TODO Next lines are just to save space in unpaid mongoDB on CloudBees  
+		Query<UnreaddenMessage> isMore = ds.createQuery(UnreaddenMessage.class).field("messageId").equal(messageId);
+		if (isMore.countAll() <= 0){
+			ds.delete(GeneralMessage.class, new ObjectId(messageId));
+		}
 	}
 
 	public List<UnreaddenMessage> getUnreadMessages(SocioUser user, String tagId) {

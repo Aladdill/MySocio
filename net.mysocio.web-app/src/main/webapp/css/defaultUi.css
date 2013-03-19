@@ -619,6 +619,13 @@ a.Undecorated {
 	float: none;
 }
 
+.inactive {
+	pointer-events: none;
+	cursor: default;
+	opacity : 0.4;
+    filter: alpha(opacity=40);
+}
+
 .LoginBaloon {
 	position: relative;
 	top: -57px;

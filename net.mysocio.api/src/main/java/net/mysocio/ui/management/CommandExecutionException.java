@@ -31,7 +31,8 @@ public class CommandExecutionException extends Exception {
 	 * @param cause
 	 */
 	public CommandExecutionException(Throwable cause) {
-		super(cause);
+		//TODO change this shit
+		super("HI, this is beta version, you encountered an error, please send mail to aladdin@mysocio.net with description of your nauty doings.");
 	}
 
 	/**

@@ -6,6 +6,7 @@ package net.mysocio.authentication.facebook;
 import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.Set;
 
 import net.mysocio.authentication.AbstractOauth2Manager;
@@ -16,6 +17,7 @@ import net.mysocio.data.accounts.facebook.FacebookFriendList;
 import net.mysocio.data.contacts.Contact;
 import net.mysocio.data.contacts.facebook.FacebookContact;
 import net.mysocio.data.management.DataManagerFactory;
+import net.mysocio.ui.management.UnapprovedUserException;
 
 import org.scribe.builder.api.Api;
 import org.scribe.builder.api.FacebookApi;
@@ -69,6 +71,10 @@ public class FacebookAuthenticationManager extends AbstractOauth2Manager {
 		logger.debug("user data taken");
 		FacebookAccount account;
 		User user = facebook.getMe();
+		String email = user.getEmail();
+		if (!isApprovedUser(email)){
+			throw new UnapprovedUserException();
+		}
 		String id = user.getId();
 		account = (FacebookAccount) DataManagerFactory.getDataManager().getAccount(id);
 		if (account != null) {
@@ -78,9 +84,9 @@ public class FacebookAuthenticationManager extends AbstractOauth2Manager {
 		account = new FacebookAccount();
 		account.setToken(token);
 		account.setAccountUniqueId(id);
-		account.setUserName(user.getUsername());
+		account.setUserName(user.getName());
 		account.setUserpicUrl("http://graph.facebook.com/" + id + "/picture");
-		account.setEmail(user.getEmail());
+		account.setEmail(email);
 		logger.debug("parsing friends list");
 		account.setContactsLists(parseFriendLists(facebook));
 		logger.debug("friends list parsed");
@@ -91,6 +97,16 @@ public class FacebookAuthenticationManager extends AbstractOauth2Manager {
 		logger.debug("friends parsed");
 		DataManagerFactory.getDataManager().saveObject(account);
 		return account;
+	}
+
+	private boolean isApprovedUser(String email) {
+		try {
+			ResourceBundle approvedBundle = ResourceBundle.getBundle("approved");
+			return approvedBundle.getString("approved.users").contains(email);
+		} catch (Exception e) {
+			logger.error("No authentication properties were found.",e);
+		}
+		return false;
 	}
 
 	private List<Contact> parseFriends(Facebook facebook) throws Exception {
@@ -112,7 +128,11 @@ public class FacebookAuthenticationManager extends AbstractOauth2Manager {
 			FacebookFriendList friendList = new FacebookFriendList();
 			friendList.setFacebookId(friendlist.getId());
 			friendList.setName(friendlist.getName());
-			DataManagerFactory.getDataManager().saveObject(friendList);
+			try {
+				DataManagerFactory.getDataManager().saveObject(friendList);
+			} catch (Exception e) {
+				// nothing to do, just ignore
+			}
 			friendsLists.add(friendList);
 		}
 		return friendsLists;
