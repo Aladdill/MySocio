@@ -10,6 +10,7 @@ import java.util.List;
 import net.mysocio.data.SocioTag;
 import net.mysocio.data.management.MessagesManager;
 import net.mysocio.data.management.camel.AbstractMessageProcessor;
+import net.mysocio.data.management.exceptions.DuplicateMySocioObjectException;
 import net.mysocio.data.messages.facebook.FacebookMessage;
 import net.mysocio.ui.data.objects.facebook.FacebookUiCheckinMessage;
 import net.mysocio.ui.data.objects.facebook.FacebookUiLinkMessage;
@@ -145,7 +146,13 @@ public class FacebookInputProcessor extends AbstractMessageProcessor {
 			SocioTag tag = new SocioTag();
 			tag.setValue(message.getTitle());
 			tag.setIconType("facebook.icon.general");
-			MessagesManager.getInstance().storeMessage(message);
+			try {
+				MessagesManager.getInstance().storeMessage(message);
+			} catch (DuplicateMySocioObjectException e) {
+				//if it's duplicate message - we ignore it
+				logger.debug("Got duplicate Facebook message.",e);
+				return;
+			}
 			addMessageForTag(message, tag);
 			for (SocioTag sourceTag : tags) {
 				addMessageForTag(message, sourceTag);

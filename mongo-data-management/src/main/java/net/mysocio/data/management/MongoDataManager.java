@@ -25,6 +25,7 @@ import net.mysocio.data.UserSource;
 import net.mysocio.data.accounts.Account;
 import net.mysocio.data.contacts.Contact;
 import net.mysocio.data.management.camel.DefaultUserMessagesProcessor;
+import net.mysocio.data.management.exceptions.DuplicateMySocioObjectException;
 import net.mysocio.data.messages.GeneralMessage;
 import net.mysocio.data.messages.UnreaddenMessage;
 import net.mysocio.data.ui.UiObject;
@@ -92,7 +93,8 @@ public class MongoDataManager implements IDataManager {
 		return user;
 	}
 
-	public void createRoute(String from, AbstractProcessor processor, String to, Long delay) {
+	public void createRoute(String from, AbstractProcessor processor, String to, Long delay)
+			throws DuplicateMySocioObjectException {
 		TempRoute route = new TempRoute();
 		route.setFrom(from);
 		route.setProcessor(processor);
@@ -103,7 +105,7 @@ public class MongoDataManager implements IDataManager {
 		saveObject(route);
 	}
 	
-	public void sendPackageToRoute(String to, SocioObject object) {
+	public void sendPackageToRoute(String to, SocioObject object) throws DuplicateMySocioObjectException{
 		RoutePackage routePackage = new RoutePackage();
 		routePackage.setTo(to);
 		routePackage.setObject(object);
@@ -178,7 +180,7 @@ public class MongoDataManager implements IDataManager {
 		return ds.find(T).asList();
 	}
 
-	public void saveUiObject(UiObject uiObject) {
+	public void saveUiObject(UiObject uiObject) throws DuplicateMySocioObjectException{
 		String category = uiObject.getCategory();
 		String name = uiObject.getName();
 		if (getUiObject(category, name) != null) {
@@ -193,7 +195,7 @@ public class MongoDataManager implements IDataManager {
 	 * 
 	 * @see net.mysocio.data.management.IDataManager#saveObjects(java.util.List)
 	 */
-	public <T extends ISocioObject> void saveObjects(Class<T> T, List<T> objects) {
+	public <T extends ISocioObject> void saveObjects(Class<T> T, List<T> objects) throws DuplicateMySocioObjectException {
 		for (T object : objects) {
 			saveObject(object);
 		}
@@ -203,13 +205,14 @@ public class MongoDataManager implements IDataManager {
 		ds.delete(object);
 	}
 
-	public <T extends ISocioObject> void saveObject(T object) {
+	public <T extends ISocioObject> void saveObject(T object) throws DuplicateMySocioObjectException {
 		if (object instanceof IUniqueObject){
 			IUniqueObject uniqueObject = (IUniqueObject)object;
 			Query<T> q = (Query<T>)ds.createQuery(object.getClass()).field(uniqueObject.getUniqueFieldName()).equal(uniqueObject.getUniqueFieldValue());
 			T objectT = (T) q.get();
 			if (objectT != null) {
 				logger.info("Duplicate object of type: " + object.getClass() + " for query: " + q.toString());
+				throw new DuplicateMySocioObjectException("Duplicate object of type: " + object.getClass() + " for query: " + q.toString());
 			}
 		}
 		ds.save(object);
