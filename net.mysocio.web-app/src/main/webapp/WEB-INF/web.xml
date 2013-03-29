@@ -14,7 +14,7 @@
 	<servlet>
 		<display-name>ImportOpmlHandler</display-name>
 		<servlet-name>ImportOpmlHandler</servlet-name>
-		<servlet-class>net.mysocio.ui.RequestHandler</servlet-class>
+		<servlet-class>net.mysocio.ui.ImportOpmlHandler</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>RequestHandler</servlet-name>

@@ -22,6 +22,7 @@ import com.sun.syndication.feed.opml.Opml;
 import com.sun.syndication.feed.opml.Outline;
 import com.sun.syndication.feed.synd.SyndFeed;
 import com.sun.syndication.io.SyndFeedInput;
+import com.sun.syndication.io.XmlReader;
 import com.sun.syndication.io.impl.OPML20Parser;
 
 /**
@@ -32,21 +33,10 @@ public class RssUtils {
 	private static final Logger logger = LoggerFactory
 			.getLogger(RssUtils.class);
 
-	public static void addRssFeed(String userId, String url)
+	public static void addRssFeed(String userId, String url, String title)
 			throws AddingRssException {
-		SyndFeedInput input = new SyndFeedInput();
-		SyndFeed feed = null;
-		try {
-			feed = input.build(new InputStreamReader(new URL(url).openStream(),
-					"UTF-8"));
-		} catch (Exception e) {
-			logger.error("Error verifying feed" + url, e);
-			throw new AddingRssException("URL " + url
-					+ "is not a valid RSS url.", e);
-		}
 		RssSource source = new RssSource();
 		source.setUrl(url);
-		String title = feed.getTitle();
 		source.setName(title);
 		SocioTag tag = new SocioTag();
 		tag.setIconType("rss.icon");
@@ -64,13 +54,27 @@ public class RssUtils {
 			throw new AddingRssException(e);
 		}
 	}
+	public static void addRssFeed(String userId, String url)
+			throws AddingRssException {
+		String title = "";
+		try {
+			SyndFeedInput input = new SyndFeedInput();
+			SyndFeed feed = input.build(new XmlReader(new URL(url)));
+			title = feed.getTitle();
+		} catch (Exception e) {
+			String message = "Error geting RSS title for url " + url;
+			logger.error(message, e);
+			throw new AddingRssException(message, e);
+		}
+		addRssFeed(userId, url, title);
+	}
 	public static void importOpml(String userId, String url) throws Exception{
 		URL feedURL = new URL(url);
 		importOpml(userId, feedURL.openStream());
 	}
 	public static void importOpml(String userId, InputStream stream) throws Exception{
 		SAXBuilder builder = new SAXBuilder();
-		Document document = builder.build(stream);
+		Document document = builder.build(new InputStreamReader(stream, "UTF-8"));
 		importOpml(userId, document);
 	}
 	private static void importOpml(String userId, Document document) throws Exception {
@@ -81,7 +85,7 @@ public class RssUtils {
 			List<Outline> children = outline.getChildren();
 			if (children.size() > 0) {
 				for (Outline child : children) {
-					addRssFeed(userId, child.getXmlUrl());
+					addRssFeed(userId, child.getXmlUrl(), child.getTitle());
 				}
 			}
 		}

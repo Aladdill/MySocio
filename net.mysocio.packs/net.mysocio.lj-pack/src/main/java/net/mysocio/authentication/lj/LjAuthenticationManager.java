@@ -3,7 +3,6 @@
  */
 package net.mysocio.authentication.lj;
 
-import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.List;
 
@@ -26,6 +25,7 @@ import com.sun.syndication.feed.opml.Opml;
 import com.sun.syndication.feed.opml.Outline;
 import com.sun.syndication.feed.synd.SyndFeed;
 import com.sun.syndication.io.SyndFeedInput;
+import com.sun.syndication.io.XmlReader;
 import com.sun.syndication.io.impl.OPML20Parser;
 
 /**
@@ -74,9 +74,8 @@ public class LjAuthenticationManager implements IAuthenticationManager {
 		ljAccount = new LjAccount();
 		try {
 			SyndFeedInput input = new SyndFeedInput();
-			SyndFeed feed = input.build(new InputStreamReader(new URL("http://"
-					+ username + ".livejournal.com/data/rss").openStream(),
-					"UTF-8"));
+			SyndFeed feed = input.build(new XmlReader(new URL("http://"
+					+ username + ".livejournal.com/data/rss")));
 			ljAccount.setUserpicUrl(feed.getImage().getUrl());
 
 		} catch (Exception e) {

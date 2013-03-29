@@ -30,7 +30,7 @@ public class RssSource extends Source {
 
 	public void createRoute(String to) throws Exception {
 		if (logger.isDebugEnabled()){
-			logger.debug("Creating route for RSS feed on url" + getUrl());
+			logger.debug("Creating route for RSS feed on url " + getUrl());
 		}
 		RssMessageProcessor processor = new RssMessageProcessor();
 		processor.setTo(to);

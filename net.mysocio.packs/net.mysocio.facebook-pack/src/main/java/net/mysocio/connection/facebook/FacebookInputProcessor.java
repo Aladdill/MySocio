@@ -75,11 +75,11 @@ public class FacebookInputProcessor extends AbstractMessageProcessor {
 			message.setPicture(picture.toString());
 		}
 		List<Action> actions = post.getActions();
-		if (!actions.isEmpty()){
+		if (actions != null && !actions.isEmpty()){
 			//here we suppose what every actions array has "Comments" as first object and it has "link" field 
 			message.setLinkToMessage(actions.get(0).getLink());
 		}else{
-			message.setLinkToMessage(actions.get(0).getLink());
+			message.setLinkToMessage("https://www.facebook.com/" + post.getId());
 		}
 		message.setCaption(post.getCaption());
 		message.setText(post.getMessage());
@@ -155,9 +155,10 @@ public class FacebookInputProcessor extends AbstractMessageProcessor {
 			}
 			addMessageForTag(message, tag);
 			for (SocioTag sourceTag : tags) {
+				logger.debug("Adding Message for processor tag " + sourceTag.getValue());
 				addMessageForTag(message, sourceTag);
 			}
 		}
-		lastUpdate = to*1000;
+		lastUpdate = to;
 	}
 }

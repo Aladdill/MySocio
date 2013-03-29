@@ -36,7 +36,7 @@ public class DefaultCommandIterpreter implements ICommandInterpreter{
 			response = commandObject.getExecutor().execute(connectionData);
 		} catch (Exception e) {
 			logger.error("Command execution failed", e);
-			throw new CommandExecutionException(e);
+			throw new CommandExecutionException(e.getMessage());
 		}
 		return response;
 	}

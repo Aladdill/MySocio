@@ -24,6 +24,7 @@ import net.mysocio.ui.data.objects.DefaultSiteBody;
 import net.mysocio.ui.data.objects.NewAccountLine;
 import net.mysocio.ui.data.objects.RssLine;
 import net.mysocio.ui.data.objects.UserUiMessage;
+import net.mysocio.ui.data.objects.ImportOPML;
 import net.mysocio.ui.data.objects.facebook.FacebookUiCheckinMessage;
 import net.mysocio.ui.data.objects.facebook.FacebookUiLinkMessage;
 import net.mysocio.ui.data.objects.facebook.FacebookUiMessage;
@@ -55,6 +56,8 @@ public class DefaultUiManager extends AbstractUiManager {
 		defaultPages.put(rssLine.getCategory()+rssLine.getName(),rssLine);
 		AddRssLine addRssLine = new AddRssLine();
 		defaultPages.put(addRssLine.getCategory()+addRssLine.getName(),addRssLine);
+		ImportOPML importOPML = new ImportOPML();
+		defaultPages.put(importOPML.getCategory()+importOPML.getName(),importOPML);
 		ContactLine contactLine = new ContactLine();
 		defaultPages.put(contactLine.getCategory()+contactLine.getName(),contactLine);
 		DefaultMessage defaultMessage = new DefaultMessage();

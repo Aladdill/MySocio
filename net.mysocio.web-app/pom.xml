@@ -36,11 +36,7 @@
 		<dependency>
 			<groupId>net.mysocio</groupId>
 			<artifactId>lj-pack</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>net.mysocio</groupId>
-			<artifactId>test-pack</artifactId>
-		</dependency>
+		</dependency>		
 		<dependency>
 			<groupId>net.mysocio</groupId>
 			<artifactId>data-management</artifactId>
@@ -83,7 +79,6 @@
 		<dependency>
 			<groupId>commons-fileupload</groupId>
 			<artifactId>commons-fileupload</artifactId>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>rome</groupId>

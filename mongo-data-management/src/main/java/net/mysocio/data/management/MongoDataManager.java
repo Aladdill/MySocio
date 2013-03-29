@@ -137,7 +137,17 @@ public class MongoDataManager implements IDataManager {
 	}
 	
 	public void addSourceToUser(String userId, Source source) throws Exception{
-		saveObject(source);
+		try {
+			saveObject(source);
+		} catch (DuplicateMySocioObjectException e) {
+			//Cool!!! we already have this source no need to save it, let's see if user already has it.
+			Query<UserSource> q = ds.createQuery(UserSource.class).field("userId").equal(userId).field("source").equal(source);
+			UserSource userSource = q.get();
+			if (userSource != null){
+				logger.debug("User trying to add existing source.");
+				return;
+			}
+		}
 		source.createRoute("activemq:" + userId  + ".newMessage");
 		UserSource userSource = new UserSource();
 		userSource.setUserId(userId);
@@ -211,6 +221,7 @@ public class MongoDataManager implements IDataManager {
 			Query<T> q = (Query<T>)ds.createQuery(object.getClass()).field(uniqueObject.getUniqueFieldName()).equal(uniqueObject.getUniqueFieldValue());
 			T objectT = (T) q.get();
 			if (objectT != null) {
+				((SocioObject)object).setId(objectT.getId());
 				logger.info("Duplicate object of type: " + object.getClass() + " for query: " + q.toString());
 				throw new DuplicateMySocioObjectException("Duplicate object of type: " + object.getClass() + " for query: " + q.toString());
 			}
@@ -246,6 +257,8 @@ public class MongoDataManager implements IDataManager {
 				messages.add(unreaddenMessage.getMessage());
 			}
 		}
+		user.setSelectedTag(tagId);
+		ds.save(user);
 		return messagesList;
 	}
 	
@@ -279,13 +292,7 @@ public class MongoDataManager implements IDataManager {
 	}
 
 	public void removeSource(String userId, String sourceId) {
-		Query<UserSource> q = ds.createQuery(UserSource.class).field("userId").equal(userId);
-		List<UserSource> sources = q.asList();
-		for (UserSource userSource : sources) {
-			if (userSource.getSource().getId().toString().equals(sourceId)){
-				ds.delete(userSource.getSource());
-			}
-		}
+		ds.delete(UserSource.class, new ObjectId(sourceId));
 	}
 
 	public List<UserContact> getContacts(String userId) {

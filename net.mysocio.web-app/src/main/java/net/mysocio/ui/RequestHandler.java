@@ -8,6 +8,7 @@ import net.mysocio.ui.management.CommandExecutionException;
 import net.mysocio.ui.management.CommandIterpreterFactory;
 import net.mysocio.ui.management.ICommandInterpreter;
 
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,7 +55,7 @@ public class RequestHandler extends AbstractHandler {
 							+ userId);
 				}
 			}
-		} catch (Exception e) {
+		} catch (CommandExecutionException e) {
 			if (userId != null) {
 				request.getSession().setAttribute("user", userId);
 				if (logger.isDebugEnabled()) {
@@ -62,7 +63,7 @@ public class RequestHandler extends AbstractHandler {
 							+ userId);
 				}
 			}
-			throw new CommandExecutionException(e);
+			throw e;
 		}finally{
 			synchronized(connectionData){
 				String pendingCommand = connectionData.getSessionAttribute(command);

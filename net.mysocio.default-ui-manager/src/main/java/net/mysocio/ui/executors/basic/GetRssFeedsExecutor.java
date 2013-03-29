@@ -15,6 +15,7 @@ import net.mysocio.data.UserSource;
 import net.mysocio.data.management.DataManagerFactory;
 import net.mysocio.data.management.DefaultResourcesManager;
 import net.mysocio.ui.data.objects.AddRssLine;
+import net.mysocio.ui.data.objects.ImportOPML;
 import net.mysocio.ui.data.objects.RssLine;
 import net.mysocio.ui.management.CommandExecutionException;
 import net.mysocio.ui.management.ICommandExecutor;
@@ -40,24 +41,26 @@ public class GetRssFeedsExecutor implements ICommandExecutor {
 		AbstractUiManager uiManager = new DefaultUiManager();
 		IDataManager dataManager = DataManagerFactory.getDataManager();
 		List<UserSource> sources = dataManager.getSources(userId);
-		String page = "";
+		StringBuffer page = new StringBuffer();
 		try {
-			page = uiManager.getPage(AddRssLine.CATEGORY, AddRssLine.NAME, userId);
 			Locale locale = new Locale(((SocioUser)dataManager.getObject(SocioUser.class, userId)).getLocale());
-			page = page.replace("rss.icon", DefaultResourcesManager.getResource(locale, ("rss.icon")));
+			String addRss = uiManager.getPage(AddRssLine.CATEGORY, AddRssLine.NAME, userId);
+			page.append(addRss.replace("rss.icon", DefaultResourcesManager.getResource(locale, ("rss.icon"))));
+			String importOPML = uiManager.getPage(ImportOPML.CATEGORY, ImportOPML.NAME, userId);
+			page.append(importOPML.replace("import.opml", DefaultResourcesManager.getResource(locale, ("import.opml"))));
 			String feed = uiManager.getPage(RssLine.CATEGORY, RssLine.NAME, userId);
 			for (UserSource source : sources) {
 				if (source.getSource() instanceof RssSource){
 					String currentFeed = feed.replace("rss.name", source.getSource().getName());
 					currentFeed = currentFeed.replace("rss.id", source.getId().toString());
 					currentFeed = currentFeed.replace("rss.icon", DefaultResourcesManager.getResource(locale, ("rss.icon")));
-					page += currentFeed;
+					page.append(currentFeed);
 				}
 			}
 		} catch (CorruptedDataException e) {
 			logger.error("Failed showing RSS feeds.",e);
 			throw new CommandExecutionException(e);
 		}
-		return page;
+		return page.toString();
 	}
 }

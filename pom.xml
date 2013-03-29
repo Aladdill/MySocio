@@ -20,17 +20,6 @@
 			</snapshots>
 		</repository>
 		<repository>
-			<id>DataNucleus_Repos2</id>
-			<name>DataNucleus Repository</name>
-			<url>http://www.datanucleus.org/downloads/maven2</url>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-		<repository>
 			<id>google-api-services</id>
 			<url>http://mavenrepo.google-api-java-client.googlecode.com/hg</url>
 			<releases>

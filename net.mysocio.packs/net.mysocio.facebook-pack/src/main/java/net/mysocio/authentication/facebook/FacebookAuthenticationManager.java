@@ -73,6 +73,7 @@ public class FacebookAuthenticationManager extends AbstractOauth2Manager {
 		User user = facebook.getMe();
 		String email = user.getEmail();
 		if (!isApprovedUser(email)){
+			logger.info("User with email " + email + "wasn't approved and knocked.");
 			throw new UnapprovedUserException();
 		}
 		String id = user.getId();

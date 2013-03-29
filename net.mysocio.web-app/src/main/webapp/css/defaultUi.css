@@ -410,9 +410,9 @@ tr.Footer {
 
 .SourcesBox {
 	margin-left: 32px;
-	overflow: hidden;
+	overflow: scroll;
 	width: 183px;
-	height: auto;
+	height: 600px;
 }
 
 .MessagesBox {

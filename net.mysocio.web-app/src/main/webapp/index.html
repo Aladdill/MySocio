@@ -10,8 +10,18 @@
 <script src="lib/jquery.jstree.js"></script>
 <script src="lib/utilities.js"></script>
 <script src="lib/jquery.timers-1.2.js"></script>
+<script src="lib/jquery.i18n.properties-min-1.0.9.js"></script>
+<script src="lib/jquery.cookie.js"></script>
+<script type="text/javascript">
+	var $dialog;
+	jQuery(document).ready(function() {
+		loadBundles('en');
+		refreshLoginCookie();
+	});
+</script>
 </head>
 <body onload="loadStartPage()">
 	<div id="SiteBody" class="FullSize"></div>
+	<iframe src='' width='0' height='0' tabindex='-1' title='empty' class='Invisible' name='hiddenFrame' id='hiddenFrame'></iframe>
 </body>
 </html>

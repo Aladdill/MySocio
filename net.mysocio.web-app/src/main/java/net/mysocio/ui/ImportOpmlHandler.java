@@ -54,10 +54,10 @@ public class ImportOpmlHandler extends AbstractHandler {
 				}
 			} catch (Exception e) {
 				logger.error("Error importing OPML file.", e);
-				throw new CommandExecutionException(e);
+				return "<html><head><script>parent.closeWaitDialog();parent.showWaitDialog('Error', '" + CommandExecutionException.BETA_ERROR + "');</script></head><body></body></html>";
 			}
 		}
-		return "";
+		return "<html><head><script>parent.closeWaitDialog();</script></head><body></body></html>";
 	}
 
 	/*
@@ -69,5 +69,4 @@ public class ImportOpmlHandler extends AbstractHandler {
 	protected Logger getLogger() {
 		return logger;
 	}
-
 }

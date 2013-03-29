@@ -59,6 +59,7 @@ function initSourcesData(data) {
 	});
 }
 function login(identifierValue) {
+	setLoginCookie(identifierValue);
 	startAuthentication(identifierValue);
 }
 function startAuthentication(identifierValue) {
@@ -68,19 +69,19 @@ function startAuthentication(identifierValue) {
 		if (isNoContent(data)) {
 			return;
 		}
-		window.open(data, "name", "height=500,width=500");
+		window.open(data, "name", "height=600,width=800");
 	}).error(onFailure);
 }
 function authenticationDone() {
-	var $dialog = creatingAccount();
+	showWaitDialog("creating.account.title", "creating.account.message");
 	$.post("execute?command=addAccount")
 	.success(function(data) {
 		if (isNoContent(data)) {
 			return;
 		}
-	})
-	.error(onFailure)
-	.complete(function() { $dialog.dialog("close"); loadMainPage();});
+		closeWaitDialog();
+		loadMainPage();
+	}).error(function(data) { $dialog.dialog("close"); onFailure(data);});
 }
 function addAccount(identifierValue) {
 	if (identifierValue == "lj") {
@@ -89,10 +90,34 @@ function addAccount(identifierValue) {
 		startAuthentication(identifierValue);
 	}
 }
+function openLjAuthentication() {
+	var $dialog = $('<div>Username</div>');
+	var $input = $('<input type="text">');
+	$dialog.append($input)
+	$dialog.dialog({
+		title : 'Add Livejournal Account',
+		buttons : {
+			"Ok" : function() {
+				var $waitDialog = creatingAccount();
+				$.post("execute?command=addAccount", {
+					identifier : 'lj',
+					username : $input.val()
+				}).success(function(data) {
+				}).error(onFailure)
+				.complete(function() { $waitDialog.dialog("close"); });
+				$(this).dialog("close");
+			}
+		}
+	});
+}
 function addRssFeed() {
 	$.post("execute?command=addRssFeed", {
 		url : $("#rssUrl").attr("value")
 	}).success(setDataContainer).error(onFailure);
+}
+function importOPML() {
+	importingOPML();
+	$("form#importOPMLform").submit();
 }
 function removeRssFeed(feedId) {
 	$.post("execute?command=removeRssFeed", {
@@ -104,6 +129,7 @@ function setDataContainer(data) {
 		return;
 	}
 	$("#data_container").html(data);
+	closeWaitDialog();
 }
 function isNoContent(data) {
 	return (data.status == 204);
@@ -140,42 +166,32 @@ function showDiv(id) {
 	$("#" + id).css("display", "block");
 }
 function onFailure(data) {
-	var $dialog = $('<div></div>').html(data.responseText).dialog({
-		title : 'Error'
-	});
+	showError(data.responseText);
 }
-function creatingAccount() {
-	var $dialog = $('<div></div>').html("Please wait, while account been created.").dialog({
-		title : 'Creating Account',
+function showError(error) {
+	showWaitDialog("Error", error);
+}
+function importingOPML() {
+	showWaitDialog("importing.opml.title", "importing.opml.message");
+}
+function showWaitDialog(titleString, message) {
+	$dialog = $("<div id='waitDialog'></div>").html(jQuery.i18n.prop(message)).dialog({
+		title : jQuery.i18n.prop(titleString),
 		modal : true
 	});
-	return $dialog;
 }
-function openLjAuthentication() {
-	var $dialog = $('<div>Username</div>');
-	var $input = $('<input type="text">');
-	$dialog.append($input)
-	$dialog.dialog({
-		title : 'Add Livejournal Account',
-		buttons : {
-			"Ok" : function() {
-				var $waitDialog = creatingAccount();
-				$.post("execute?command=addAccount", {
-					identifier : 'lj',
-					username : $input.val()
-				}).success(function(data) {
-				}).error(onFailure)
-				.complete(function() { $waitDialog.dialog("close"); });
-				$(this).dialog("close");
-			}
-		}
-	});
+function closeWaitDialog(){
+	$dialog.dialog("close");
 }
 function showSettings() {
 	hideSources();
 	showTabs();
 	$("#upper_link").html($("#back_to_main_link").html());
+	clearDataContainer();
 	showAccounts();
+}
+function clearDataContainer(){
+	$("#data_container").html("");
 }
 function showRssFeeds() {
 	$("#post_container").addClass("Invisible");
@@ -183,6 +199,7 @@ function showRssFeeds() {
 }
 function showMainPage() {
 	hideTabs();
+	clearDataContainer();
 	showSources();
 	$("#post_container").removeClass("Invisible");
 	$("#upper_link").html($("#settings_link").html());
@@ -269,7 +286,12 @@ function logout() {
 	openUrlInDiv("#SiteBody", "execute?command=logout", [ initPage ]);
 }
 function loadStartPage() {
-	openUrlInDiv("#SiteBody", "execute?command=openStartPage", [ initPage ]);
+	var login_value = $.cookie('login_cookie');
+	if (login_value != undefined){
+		login(login_value);
+	}else{
+		openUrlInDiv("#SiteBody", "execute?command=openStartPage", [ initPage ]);
+	}
 }
 function getMessages(id) {
 	$(".Message").remove();
@@ -292,4 +314,25 @@ function showAccounts() {
 function showContacts() {
 	$("#post_container").addClass("Invisible");
 	openUrlInDiv("#data_container", "execute?command=getContacts", []);
+}
+function loadBundles(lang) {
+	jQuery.i18n.properties({
+	    name:'textResources', 
+	    path:'properties/', 
+	    mode:'map',
+	    language:lang
+	});
+}
+function setLoginCookie(login_value){
+	$.cookie('login_cookie', login_value, { expires: 30, path: '/' });
+}
+function removeLoginCookie(){
+	$.removeCookie('login_cookie');
+}
+function refreshLoginCookie(){
+	var login_value = $.cookie('login_cookie');
+	if (login_value != undefined){
+		removeLoginCookie();
+		setLoginCookie(login_value);
+	}
 }
