@@ -29,12 +29,13 @@ public class LjSource extends RssSource {
 	}
 	
 	public void createRoute(String to) throws Exception {
+		String url = getUrl();
 		if (logger.isDebugEnabled()){
-			logger.debug("Creating route for LJ feed on url" + getUrl());
+			logger.debug("Creating route for LJ feed on url" + url);
 		}
 		LjMessageProcessor processor = new LjMessageProcessor();
 		processor.setTo(to);
-		processor.addTags(getTags());
-		DataManagerFactory.getDataManager().createRoute("rss:" + getUrl() + "?consumer.delay=2000", processor, null, 0l);
+		processor.setTag(url);
+		DataManagerFactory.getDataManager().createRoute("rss:" + url + "?consumer.delay=2000", processor, null, 0l);
 	}
 }

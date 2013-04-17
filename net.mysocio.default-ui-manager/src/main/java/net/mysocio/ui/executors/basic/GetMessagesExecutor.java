@@ -3,8 +3,6 @@
  */
 package net.mysocio.ui.executors.basic;
 
-import java.sql.Date;
-import java.text.DateFormat;
 import java.util.Collections;
 import java.util.List;
 
@@ -34,7 +32,6 @@ public class GetMessagesExecutor implements ICommandExecutor {
 		StringBuffer output = new StringBuffer();
 		List<UnreaddenMessage> messages = getMessages(connectionData);
 		AbstractUiManager uiManager = new DefaultUiManager();
-		DateFormat formatter = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, connectionData.getLocale());
 		String messagePage = "";
 		for (UnreaddenMessage message : messages) {
 			try {
@@ -44,10 +41,10 @@ public class GetMessagesExecutor implements ICommandExecutor {
 				throw new CommandExecutionException(e);
 			}
 			String pageHtml = message.getMessage().replacePlaceholders(messagePage);
-			String date = formatter.format(new Date(message.getMessage().getDate()));
 			pageHtml = pageHtml.replace("message.id", message.getMessage().getId().toString());
-			pageHtml = pageHtml.replace("date.long", Long.toString(message.getMessage().getDate()));
-			pageHtml = pageHtml.replace("message.date", date);
+			String dateString = Long.toString(message.getMessage().getDate());
+			pageHtml = pageHtml.replace("date.long", dateString);
+			pageHtml = pageHtml.replace("message.date", dateString);
 			output.append(pageHtml);
 		}
 		return output.toString();
@@ -58,6 +55,6 @@ public class GetMessagesExecutor implements ICommandExecutor {
 		if (tagId == null){
 			return Collections.emptyList();
 		}
-		return MessagesManager.getInstance().getMessagesForSelectedTag(connectionData.getUserId(), tagId);
+		return MessagesManager.getInstance().getMessagesForSelectedTag(connectionData.getUserId(), tagId, connectionData.getUserTags());
 	}
 }

@@ -4,12 +4,17 @@
 package net.mysocio.data.accounts.facebook;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import net.mysocio.connection.facebook.FacebookSource;
 import net.mysocio.connection.readers.Source;
+import net.mysocio.data.ContactsList;
 import net.mysocio.data.SocioTag;
+import net.mysocio.data.UserTags;
 import net.mysocio.data.accounts.Oauth2Account;
+import net.mysocio.data.contacts.Contact;
 
 import com.google.code.morphia.annotations.Entity;
 
@@ -40,14 +45,7 @@ public class FacebookAccount extends Oauth2Account {
 		FacebookSource source = new FacebookSource();
 		source.setAccount(this);
 		source.setName(getUserName());
-		SocioTag tag = new SocioTag();
-		tag.setValue("facebook.tag");
-		tag.setIconType("facebook.icon.general");
-		source.addTag(tag);
-		SocioTag tag1 = new SocioTag();
-		tag1.setValue(getUserName());
-		tag1.setIconType("facebook.icon.general");
-		source.addTag(tag1);
+		source.setUrl("http://graph.facebook.com/" + getAccountUniqueId());
 		sources.add(source);
 		return sources;
 	}
@@ -55,5 +53,28 @@ public class FacebookAccount extends Oauth2Account {
 	@Override
 	public String getIconUrl() {
 		return "facebook.icon.account";
+	}
+
+	@Override
+	public SocioTag createAccountTagset(UserTags userTags) {
+		SocioTag accountTypeTag = createAccountTypeTag(userTags);
+		SocioTag sourceTag = userTags.createTag(getAccountUniqueId(), getUserName(), accountTypeTag);
+		List<ContactsList> contactsLists = getContactsLists();
+		Map<String,SocioTag> friendsTags = new HashMap<String,SocioTag>();
+		List<Contact> contacts = getContacts();
+		for (Contact contact : contacts) {
+			String contactId = contact.getUniqueFieldValue().toString();
+			SocioTag contactTag = userTags.createTag(contactId, contact.getName(), sourceTag);
+			friendsTags.put(contactId, contactTag);
+		}
+		
+		for (ContactsList contactsList : contactsLists) {
+			SocioTag listTag = userTags.createTag(contactsList.getId().toString(), contactsList.getName(), accountTypeTag);
+			List<String> ids = ((FacebookFriendList)contactsList).getIds();
+			for (String id : ids) {
+				listTag.addChild(friendsTags.get(id));
+			}
+		}
+		return accountTypeTag;
 	}
 }

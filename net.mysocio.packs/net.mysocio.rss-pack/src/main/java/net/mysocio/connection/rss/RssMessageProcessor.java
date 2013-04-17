@@ -5,7 +5,6 @@ package net.mysocio.connection.rss;
 
 import java.util.List;
 
-import net.mysocio.data.SocioTag;
 import net.mysocio.data.management.MessagesManager;
 import net.mysocio.data.management.camel.AbstractMessageProcessor;
 import net.mysocio.data.messages.rss.RssMessage;
@@ -31,6 +30,8 @@ public class RssMessageProcessor extends AbstractMessageProcessor {
 	private static final long serialVersionUID = 6216755406044921125L;
 	@Transient
 	static final Logger logger = LoggerFactory.getLogger(RssMessageProcessor.class);
+	
+	private String tag;
 	
 	public void process(Exchange exchange) throws Exception {
 		SyndFeed feed = (SyndFeed)exchange.getIn().getBody();
@@ -69,8 +70,14 @@ public class RssMessageProcessor extends AbstractMessageProcessor {
 			//if it's duplicate message - we ignore it
 			return;
 		}
-		for (SocioTag tag : tags) {
-			addMessageForTag(message, tag);
-		}
+		addMessageForTag(message, tag);
+	}
+
+	public String getTag() {
+		return tag;
+	}
+
+	public void setTag(String tag) {
+		this.tag = tag;
 	}
 }

@@ -3,15 +3,15 @@
  */
 package net.mysocio.data.accounts.google;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.google.code.morphia.annotations.Entity;
-
 import net.mysocio.connection.readers.Source;
 import net.mysocio.data.SocioTag;
+import net.mysocio.data.UserTags;
 import net.mysocio.data.accounts.Oauth2Account;
+
+import com.google.code.morphia.annotations.Entity;
 
 /**
  * @author Aladdin
@@ -46,24 +46,16 @@ public class GoogleAccount extends Oauth2Account{
 	@Override
 	public List<Source> getSources() {
 		// TODO Auto-generated method stub
-		return Collections.EMPTY_LIST;
+		return Collections.emptyList();
 	}
 	
-	public List<SocioTag> getDefaultTags() {
-		List<SocioTag> tags = new ArrayList<SocioTag>();
-		SocioTag tag = new SocioTag();
-		tag.setValue("google.tag");
-		tag.setIconType("google.icon.general");
-		tags.add(tag);
-		SocioTag accTag = new SocioTag();
-		accTag.setValue(getUserName());
-		accTag.setIconType("google.icon.account");
-		tags.add(accTag);
-		return tags;
-	}
-
 	@Override
 	public String getIconUrl() {
 		return "google.icon.account";
+	}
+
+	@Override
+	public SocioTag createAccountTagset(UserTags userTags) {
+		return createAccountTypeTag(userTags);
 	}
 }

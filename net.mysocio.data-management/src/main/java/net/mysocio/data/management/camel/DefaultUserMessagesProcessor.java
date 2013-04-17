@@ -4,8 +4,8 @@
 package net.mysocio.data.management.camel;
 
 import net.mysocio.data.IDataManager;
-import net.mysocio.data.SocioTag;
 import net.mysocio.data.management.DataManagerFactory;
+import net.mysocio.data.messages.GeneralMessage;
 import net.mysocio.data.messages.UnreaddenMessage;
 
 import org.apache.camel.Exchange;
@@ -34,24 +34,17 @@ public class DefaultUserMessagesProcessor extends UserRouteProcessor {
 	public void process(Exchange exchange) throws Exception {
 		IDataManager dataManager = DataManagerFactory.getDataManager();
 		UnreaddenMessage ureaddenMessage = (UnreaddenMessage)exchange.getIn().getBody();
-		String messageId = ureaddenMessage.getMessage().getId().toString();
+		GeneralMessage message = ureaddenMessage.getMessage();
 		if (logger.isDebugEnabled()){
-			logger.debug("Got message with uid " + messageId);
+			logger.debug("Got message with uid " + message.getUniqueFieldValue().toString());
 		}
 		String userId = getUserId();
 		
-		if (dataManager.isMessageExists(userId, messageId)){
+		if (dataManager.isNewMessage(userId, message)){
 			return;
 		}
 		
 		ureaddenMessage.setUserId(userId);
-		SocioTag tag = dataManager.getTag(userId,ureaddenMessage.getTag().getValue());
-		if (tag == null){
-			tag = ureaddenMessage.getTag();
-			tag.setUserId(userId);
-			dataManager.saveObject(tag);
-		}
-		ureaddenMessage.setTag(tag);
 		dataManager.saveObject(ureaddenMessage);
 	}
 }

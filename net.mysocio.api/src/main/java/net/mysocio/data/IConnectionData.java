@@ -18,6 +18,10 @@ public interface IConnectionData {
 	public abstract void setSessionAttribute(String attributeName, String attributeValue);
 
 	public abstract String getUserId();
+	public abstract UserTags getUserTags();
+	public abstract String getSelectedTag();
+	public abstract void setUserTags(UserTags tags);
+	public abstract void setSelectedTag(String tag);
 
 	public abstract void cleanSession();
 
@@ -26,4 +30,6 @@ public interface IConnectionData {
 	public abstract Locale getLocale();
 
 	public void removeSessionAttribute(String attributeName);
+
+	public abstract String getCookieValue(String name);
 }

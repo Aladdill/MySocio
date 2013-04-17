@@ -85,7 +85,7 @@ public class DefaultResourcesManager{
 			resourceValue = resources.getString(resource);
 		} catch (MissingResourceException e) {
 			resourceValue = resource;
-			logger.info("Resource missing for key: " + resource);
+			logger.debug("Resource missing for key: " + resource);
 		}
 		return resourceValue;
 	}

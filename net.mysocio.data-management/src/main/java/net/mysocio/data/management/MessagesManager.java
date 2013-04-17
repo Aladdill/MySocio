@@ -11,6 +11,7 @@ import net.mysocio.data.IDataManager;
 import net.mysocio.data.IMessagesManager;
 import net.mysocio.data.SocioPair;
 import net.mysocio.data.SocioUser;
+import net.mysocio.data.UserTags;
 import net.mysocio.data.management.camel.AbstractMessageProcessor;
 import net.mysocio.data.messages.GeneralMessage;
 import net.mysocio.data.messages.UnreaddenMessage;
@@ -18,15 +19,12 @@ import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * @author Aladdin
  *
  */
 public class MessagesManager implements IMessagesManager {
-	private static final Logger logger = LoggerFactory.getLogger(MessagesManager.class);
+//	private static final Logger logger = LoggerFactory.getLogger(MessagesManager.class);
 	private static MessagesManager instance = new MessagesManager();
 	
 	private MessagesManager(){}
@@ -56,10 +54,10 @@ public class MessagesManager implements IMessagesManager {
 		dataManager.saveObject(message);
 	}
 
-	public List<UnreaddenMessage> getMessagesForSelectedTag(String userId, String tagId) {
+	public List<UnreaddenMessage> getMessagesForSelectedTag(String userId, String tagId, UserTags tags) {
 		IDataManager dataManager = DataManagerFactory.getDataManager();
 		SocioUser user = dataManager.getObject(SocioUser.class, userId);
-		List<UnreaddenMessage> unreadMessages = dataManager.getUnreadMessages(user, tagId);
+		List<UnreaddenMessage> unreadMessages = dataManager.getUnreadMessages(user, tagId, tags);
 //		for (String id : unreadMessages) {
 //			IMessage message = getCacheMessage(id);
 //			if (message != null){

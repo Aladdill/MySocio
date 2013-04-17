@@ -53,7 +53,7 @@ function initSourcesData(data) {
 			}).bind("select_node.jstree", function(e, data) {
 		if (!$("#sources_tree").data("treeRefreshInitiated")) {
 			getMessages(data.rslt.obj[0].id);
-		} else {
+		}else{
 			$("#sources_tree").data("treeRefreshInitiated", false);
 		}
 	});
@@ -69,12 +69,37 @@ function startAuthentication(identifierValue) {
 		if (isNoContent(data)) {
 			return;
 		}
-		window.open(data, "name", "height=600,width=800");
+		window.open(data, "name", "height=600,width=900");
 	}).error(onFailure);
 }
+
+function startHiddenAuthentication(identifierValue) {
+	$.cookie('hidden_login_cookie', "true", { path: '/' });
+	$.post("execute?command=startAuthentication", {
+		identifier : identifierValue,
+	}).success(function(data) {
+		if (isNoContent(data)) {
+			return;
+		}
+		$("#hiddenFrame").attr('src', data);
+	}).error(onFailure);
+}
+
 function authenticationDone() {
 	showWaitDialog("creating.account.title", "creating.account.message");
 	$.post("execute?command=addAccount")
+	.success(function(data) {
+		if (isNoContent(data)) {
+			return;
+		}
+		closeWaitDialog();
+		showAccounts();
+	}).error(function(data) { $dialog.dialog("close"); onFailure(data);});
+}
+function executeLogin() {
+	showWaitDialog("login.dialog.title", "login.dialog.message");
+	$.removeCookie('hidden_login_cookie');
+	$.post("execute?command=login")
 	.success(function(data) {
 		if (isNoContent(data)) {
 			return;
@@ -166,6 +191,10 @@ function showDiv(id) {
 	$("#" + id).css("display", "block");
 }
 function onFailure(data) {
+	if (data.responseText == "restart"){
+		loadStartPage();
+		return;
+	}
 	showError(data.responseText);
 }
 function showError(error) {
@@ -272,6 +301,10 @@ function markMessageReadden(id) {
 	$.post("execute?command=markMessagesReaden&messagesIds=" + id).error(
 			onFailure);
 }
+function markAllMessagesReadden() {
+	$.post("execute?command=markMessagesReaden&markAll=true").error(
+			onFailure);
+}
 function initPage() {
 	if ($("#login_center_div").size() != 0) {
 		centerLoginCircle();
@@ -282,13 +315,17 @@ function initPage() {
 function loadMainPage() {
 	openUrlInDiv("#SiteBody", "execute?command=openMainPage", [ initPage ]);
 }
+function searchTree(){
+	$("#sources_tree").jstree("search",$("#search_field").attr("value"));
+}
 function logout() {
 	openUrlInDiv("#SiteBody", "execute?command=logout", [ initPage ]);
 }
 function loadStartPage() {
 	var login_value = $.cookie('login_cookie');
 	if (login_value != undefined){
-		login(login_value);
+		setLoginCookie(login_value);
+		startHiddenAuthentication(login_value);
 	}else{
 		openUrlInDiv("#SiteBody", "execute?command=openStartPage", [ initPage ]);
 	}
@@ -300,12 +337,12 @@ function getMessages(id) {
 				if (isNoContent(data)) {
 					return;
 				}
-				$(data).sort(sortAlpha).insertBefore("#filler");
+				$(data).insertBefore("#filler");
+				$.each($(".MessageDate"), function(index, value) {var millies = new Number($(value).html());
+				var date = new Date(millies);
+				$(value).html(date.toLocaleString());});
+				gapi.plusone.go();
 			}).error(onFailure);
-}
-function sortAlpha(a, b) {
-	return $(a).find(".LongDate").first().html() < $(b).find(".LongDate")
-			.first().html() ? 1 : -1;
 }
 function showAccounts() {
 	$("#post_container").addClass("Invisible");

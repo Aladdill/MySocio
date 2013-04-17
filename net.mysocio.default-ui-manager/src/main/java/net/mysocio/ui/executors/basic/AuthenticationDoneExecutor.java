@@ -34,6 +34,20 @@ public class AuthenticationDoneExecutor implements ICommandExecutor {
 		}
 		String code = connectionData.getRequestParameter("code");
 		connectionData.setSessionAttribute("code", code);
-		return DefaultResourcesManager.getPage("closingLoginWindow.html");
+		String cookieValue = connectionData.getCookieValue("hidden_login_cookie");
+		if (connectionData.getUserId() == null){
+			if (cookieValue != null){
+				logger.debug("Cookie for hidden login found.");
+				return DefaultResourcesManager.getPage("hiddenLoginWindow.html");
+			}
+			logger.debug("No cookie for hidden login found.");
+			return DefaultResourcesManager.getPage("closingLoginWindow.html");
+		}
+		if (cookieValue != null){
+			logger.debug("Cookie for hidden login found.");
+			return DefaultResourcesManager.getPage("hiddenLoginWindow.html");
+		}
+		logger.debug("Adding account.");
+		return DefaultResourcesManager.getPage("closingAddAccountWindow.html");
 	}
 }

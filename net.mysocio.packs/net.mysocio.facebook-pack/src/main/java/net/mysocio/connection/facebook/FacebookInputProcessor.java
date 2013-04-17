@@ -7,7 +7,6 @@ import java.net.URL;
 import java.text.ParseException;
 import java.util.List;
 
-import net.mysocio.data.SocioTag;
 import net.mysocio.data.management.MessagesManager;
 import net.mysocio.data.management.camel.AbstractMessageProcessor;
 import net.mysocio.data.management.exceptions.DuplicateMySocioObjectException;
@@ -143,9 +142,6 @@ public class FacebookInputProcessor extends AbstractMessageProcessor {
 		for (Post post : home) {
 			FacebookMessage message = parseFacebookMessage(post);
 			logger.debug("Got facebook message from user " + message.getTitle() + " with id " + message.getFbId());
-			SocioTag tag = new SocioTag();
-			tag.setValue(message.getTitle());
-			tag.setIconType("facebook.icon.general");
 			try {
 				MessagesManager.getInstance().storeMessage(message);
 			} catch (DuplicateMySocioObjectException e) {
@@ -153,11 +149,7 @@ public class FacebookInputProcessor extends AbstractMessageProcessor {
 				logger.debug("Got duplicate Facebook message.",e);
 				return;
 			}
-			addMessageForTag(message, tag);
-			for (SocioTag sourceTag : tags) {
-				logger.debug("Adding Message for processor tag " + sourceTag.getValue());
-				addMessageForTag(message, sourceTag);
-			}
+			addMessageForTag(message, message.getUserId());
 		}
 		lastUpdate = to;
 	}

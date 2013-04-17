@@ -3,12 +3,14 @@
  */
 package net.mysocio.ui.executors.basic;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import net.mysocio.data.CorruptedDataException;
 import net.mysocio.data.IConnectionData;
 import net.mysocio.data.IDataManager;
-import net.mysocio.data.UserContact;
+import net.mysocio.data.UserAccount;
+import net.mysocio.data.contacts.Contact;
 import net.mysocio.data.management.DataManagerFactory;
 import net.mysocio.ui.data.objects.ContactLine;
 import net.mysocio.ui.management.CommandExecutionException;
@@ -34,7 +36,11 @@ public class GetContactsExecutor implements ICommandExecutor {
 		String page = "";
 		String userId = connectionData.getUserId();
 		IDataManager dataManager = DataManagerFactory.getDataManager();
-		List<UserContact> contacts = dataManager.getContacts(userId);
+		List<Contact> contacts = new ArrayList<Contact>();
+		List<UserAccount> accounts = dataManager.getAccounts(userId);
+		for (UserAccount userAccount : accounts) {
+			contacts.addAll(userAccount.getAccount().getContacts());
+		}
 		AbstractUiManager uiManager = new DefaultUiManager();
 		String contactHTML;
 		try {
@@ -43,10 +49,10 @@ public class GetContactsExecutor implements ICommandExecutor {
 			logger.error("Failed showing contacts",e);
 			throw new CommandExecutionException(e);
 		}
-		for (UserContact contact : contacts) {
+		for (Contact contact : contacts) {
 			String currentContactHTML = contactHTML;
-			currentContactHTML = currentContactHTML.replace("contact.userpic", contact.getContacts().get(0).getUserpicUrl());
-			currentContactHTML = currentContactHTML.replace("contact.username", contact.getContacts().get(0).getName());
+			currentContactHTML = currentContactHTML.replace("contact.userpic", contact.getUserpicUrl());
+			currentContactHTML = currentContactHTML.replace("contact.username", contact.getName());
 			page += currentContactHTML;
 		}
 		return page;

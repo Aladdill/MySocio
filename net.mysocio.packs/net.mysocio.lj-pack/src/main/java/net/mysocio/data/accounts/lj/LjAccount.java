@@ -9,6 +9,7 @@ import java.util.List;
 import net.mysocio.connection.lj.LjSource;
 import net.mysocio.connection.readers.Source;
 import net.mysocio.data.SocioTag;
+import net.mysocio.data.UserTags;
 import net.mysocio.data.accounts.Account;
 import net.mysocio.data.contacts.Contact;
 
@@ -45,14 +46,6 @@ public class LjAccount extends Account {
 			LjSource source = new LjSource();
 			source.setUrl(friend.getUrl());
 			source.setName(friend.getName());
-			SocioTag tag = new SocioTag();
-			tag.setIconType("lj.icon");
-			tag.setValue("lj.tag");
-			source.addTag(tag);
-			SocioTag tag1 = new SocioTag();
-			tag1.setIconType("lj.icon");
-			tag1.setValue(friend.getName());
-			source.addTag(tag1);
 			sources.add(source);
 		}
 		return sources;
@@ -64,5 +57,16 @@ public class LjAccount extends Account {
 	@Override
 	public String getIconUrl() {
 		return "lj.icon.account";
+	}
+
+	@Override
+	public SocioTag createAccountTagset(UserTags userTags) {
+		SocioTag accountTag = createAccountTypeTag(userTags);
+		SocioTag userTag = userTags.createTag(getUserName(), getUserName(), accountTag);
+		List<Source> sources = getSources();
+		for (Source source : sources) {
+			userTags.createTag(source.getUniqueFieldValue().toString(), source.getName(), userTag);
+		}
+		return accountTag;
 	}
 }

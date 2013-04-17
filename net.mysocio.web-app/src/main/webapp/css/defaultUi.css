@@ -220,6 +220,17 @@ a.InnerLink {
 	width: 680px;
 	background-color: #ececec;
 }
+.MarkAllReadButton {
+	height: 25px;
+	width: 130px;
+	background-color: #a67eb0;
+	float: left;
+	text-align: center;
+	padding-top: 5px;
+	color: #ffffff;
+	font: bold 16px Calibri;
+	cursor: pointer;
+}
 .PostButton {
 	height: 25px;
 	width: 72px;
@@ -229,6 +240,7 @@ a.InnerLink {
 	padding-top: 5px;
 	color: #ffffff;
 	font: bold 16px Calibri;
+	cursor: pointer;
 }
 
 .LoginCenterDiv {

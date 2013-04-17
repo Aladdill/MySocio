@@ -5,15 +5,16 @@ package net.mysocio.ui.executors.basic;
 
 import java.io.IOException;
 import java.io.StringWriter;
-import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 import net.mysocio.data.IConnectionData;
 import net.mysocio.data.IDataManager;
 import net.mysocio.data.SocioTag;
-import net.mysocio.data.SocioUser;
+import net.mysocio.data.UserTags;
 import net.mysocio.data.management.DataManagerFactory;
 import net.mysocio.data.management.DefaultResourcesManager;
 import net.mysocio.ui.management.CommandExecutionException;
@@ -36,17 +37,14 @@ public class GetTagsExecutor implements ICommandExecutor {
 	 */
 	private Map<String, Long> tagsMessagesCount = new HashMap<String, Long>();
 	private Locale locale;
-	private Collection<SocioTag> tags;
+	private UserTags tags;
 	@Override
 	public String execute(IConnectionData connectionManager) throws CommandExecutionException{
 		IDataManager dataManager = DataManagerFactory.getDataManager();
-		String userId = connectionManager.getUserId();
-		SocioUser user = dataManager.getObject(SocioUser.class, userId);
-		locale = new Locale(user.getLocale());
-		tags = dataManager.getUserTags(userId);
-		for (SocioTag tag : tags) {
-			
-			String tagId = tag.getId().toString();
+		locale = new Locale(connectionManager.getLocale().toString());
+		tags = connectionManager.getUserTags();
+		for (SocioTag tag : tags.getLeaves()) {
+			String tagId = tag.getUniqueId();
 			Long num = dataManager.countUnreadMessages(tagId);
 			tagsMessagesCount.put(tagId, num);
 		}
@@ -60,12 +58,16 @@ public class GetTagsExecutor implements ICommandExecutor {
 			jsonGenerator.writeArrayFieldStart("data");
 			addRootNode(jsonGenerator);
 			jsonGenerator.writeEndArray();//for data
+			jsonGenerator.writeObjectFieldStart("ajax");
+			jsonGenerator.writeStringField("url", "execute?command=getSources");
+			jsonGenerator.writeEndObject();// for ajax
 			jsonGenerator.writeEndObject();//for json_data
 			jsonGenerator.writeArrayFieldStart("plugins");
 			jsonGenerator.writeString("themes");
 			jsonGenerator.writeString("json_data");
 			jsonGenerator.writeString("ui");
 			jsonGenerator.writeString("crrm");
+			jsonGenerator.writeString("search");
 			jsonGenerator.writeEndArray();//for plugins
 			jsonGenerator.writeObjectFieldStart("themes");
 			jsonGenerator.writeStringField("theme", "default");
@@ -74,12 +76,13 @@ public class GetTagsExecutor implements ICommandExecutor {
 			jsonGenerator.writeEndObject();//for themes
 			jsonGenerator.writeObjectFieldStart("core");
 			jsonGenerator.writeArrayFieldStart("initially_open");
-			jsonGenerator.writeString(user.getSelectedTag());
+			String selectedTag = connectionManager.getSelectedTag();
+			jsonGenerator.writeString(selectedTag);
 			jsonGenerator.writeEndArray();//for initially_open
 			jsonGenerator.writeEndObject();//for core
 			jsonGenerator.writeObjectFieldStart("ui");
 			jsonGenerator.writeArrayFieldStart("initially_select");
-			jsonGenerator.writeString(user.getSelectedTag());
+			jsonGenerator.writeString(selectedTag);
 			jsonGenerator.writeEndArray();//for initially_select
 			jsonGenerator.writeEndObject();//for ui
 			jsonGenerator.writeEndObject();//final
@@ -109,6 +112,10 @@ public class GetTagsExecutor implements ICommandExecutor {
 		if (unreadMessagesNum > 0){
 			jsonGenerator.writeStringField("style", "font-weight: bold;");
 			title = "(" + unreadMessagesNum + ")" + title;
+		}else{
+			if (unreadMessagesNum == 0l && !tags.isShowAll()){
+				jsonGenerator.writeStringField("style", "display: none;");
+			}
 		}
 		jsonGenerator.writeEndObject();// for field 'attr'
 		jsonGenerator.writeObjectFieldStart("data");
@@ -120,29 +127,42 @@ public class GetTagsExecutor implements ICommandExecutor {
 	}
 	private void addRootNode(JsonGenerator jsonGenerator) throws Exception{
 		jsonGenerator.writeStartObject();
-		addNodeChildren(jsonGenerator);
-		addNodeData(jsonGenerator, SocioUser.ALL_TAGS, SocioUser.ALL_TAGS, null, 0l);
+		Long unreadMessagesNum = addNodeChildren(jsonGenerator, tags.getChildren(), null);
+		addNodeData(jsonGenerator, DefaultResourcesManager.getResource(locale, tags.getValue()), tags.getValue(), null, unreadMessagesNum);
 		jsonGenerator.writeStringField("state", "open");
 		jsonGenerator.writeEndObject();
 	}
 	
-	private void addTagNode(JsonGenerator jsonGenerator, SocioTag tag) throws Exception{
-		jsonGenerator.writeStartObject();
-		String tagId = tag.getId().toString();
-		Long unreadMessagesNum = tagsMessagesCount.get(tagId);
-		if (unreadMessagesNum == null){
-			unreadMessagesNum = 0l;
+	private Long addTagNode(JsonGenerator jsonGenerator, SocioTag tag, String icon) throws Exception{
+		//if icon is null we in one of subroot tags which are accounts tags
+		if (icon == null){
+			icon = tag.getIconType();
 		}
-		addNodeData(jsonGenerator, DefaultResourcesManager.getResource(locale, tag.getValue()), tagId, DefaultResourcesManager.getResource(locale, tag.getIconType()), unreadMessagesNum);
+		
+		Long unreadMessagesNum = tagsMessagesCount.get(tag.getUniqueId());
+		List<SocioTag> children = tag.getChildren();
+		
+		jsonGenerator.writeStartObject();
+		// We are counting messages only for leaves, so either it's in tagsMessagesCount
+		// or we count by children 
+		if (!children.isEmpty()){
+			unreadMessagesNum = addNodeChildren(jsonGenerator, children, icon);
+		}
+		String tagId = tag.getUniqueId();
+		addNodeData(jsonGenerator, DefaultResourcesManager.getResource(locale, tag.getValue()), tagId, DefaultResourcesManager.getResource(locale, icon), unreadMessagesNum);
 		jsonGenerator.writeEndObject();
+		return unreadMessagesNum;
 	}
 	
-	private void addNodeChildren(JsonGenerator jsonGenerator) throws Exception{
+	private Long addNodeChildren(JsonGenerator jsonGenerator, List<SocioTag> children, String icon) throws Exception{
+		Long unreadMessagesNum = 0l;
 		jsonGenerator.writeArrayFieldStart("children");
-		for (SocioTag tag : tags) {
-			addTagNode(jsonGenerator, tag);
+		Collections.sort(children);
+		for (SocioTag tag : children) {
+			unreadMessagesNum += addTagNode(jsonGenerator, tag, icon);
 		}
 		jsonGenerator.writeEndArray(); // for field 'children'
+		return unreadMessagesNum;
 	}
 
 	/**

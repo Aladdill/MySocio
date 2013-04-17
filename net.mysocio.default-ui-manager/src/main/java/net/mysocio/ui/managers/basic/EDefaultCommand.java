@@ -10,6 +10,7 @@ import net.mysocio.ui.executors.basic.GetMessagesExecutor;
 import net.mysocio.ui.executors.basic.GetRssFeedsExecutor;
 import net.mysocio.ui.executors.basic.GetTagsExecutor;
 import net.mysocio.ui.executors.basic.LoadMainPageExecutor;
+import net.mysocio.ui.executors.basic.LoginExecutor;
 import net.mysocio.ui.executors.basic.LoginPageExecutor;
 import net.mysocio.ui.executors.basic.LogoutPageExecutor;
 import net.mysocio.ui.executors.basic.MarkMessagesReadenExecutor;
@@ -31,6 +32,7 @@ public enum EDefaultCommand {
 	addRssFeed(new AddRssFeedExecutor()),
 	removeRssFeed(new RemoveRssFeedExecutor()),
 	addAccount(new CreateAccountExecutor()),
+	login(new LoginExecutor()),
 	removeAccount(new RemoveAccountExecutor()),
 	getSources(new GetTagsExecutor(), DefaultCommandIterpreter.JSON),
 	markMessagesReaden(new MarkMessagesReadenExecutor(), DefaultCommandIterpreter.JSON);

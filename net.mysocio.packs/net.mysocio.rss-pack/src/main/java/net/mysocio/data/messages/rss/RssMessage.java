@@ -47,4 +47,9 @@ public class RssMessage extends GeneralMessage {
 	public String getUiName() {
 		return RssUiMessage.NAME;
 	}
+	public String replacePlaceholders(String template) {
+		String message = super.replacePlaceholders(template);
+		message = message.replace("message.link", getLink());
+		return message;
+	}
 }

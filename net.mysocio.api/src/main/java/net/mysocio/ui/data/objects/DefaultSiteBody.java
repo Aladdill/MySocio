@@ -33,6 +33,8 @@ public class DefaultSiteBody extends SiteBody{
 		addTextLabel("subscriptions.title");
 		addTextLabel("post.here");
 		addTextLabel("post.button");
+		addTextLabel("mark.all.read.button");
+		addTextLabel("search.for.tag");
 	}
 	@Override
 	public String getPageFile() {

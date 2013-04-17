@@ -4,7 +4,6 @@
 package net.mysocio.data.management;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 
@@ -20,13 +19,12 @@ import net.mysocio.data.SocioTag;
 import net.mysocio.data.SocioUser;
 import net.mysocio.data.TempRoute;
 import net.mysocio.data.UserAccount;
-import net.mysocio.data.UserContact;
-import net.mysocio.data.UserSource;
+import net.mysocio.data.UserTags;
 import net.mysocio.data.accounts.Account;
-import net.mysocio.data.contacts.Contact;
 import net.mysocio.data.management.camel.DefaultUserMessagesProcessor;
 import net.mysocio.data.management.exceptions.DuplicateMySocioObjectException;
 import net.mysocio.data.messages.GeneralMessage;
+import net.mysocio.data.messages.ReaddenMessage;
 import net.mysocio.data.messages.UnreaddenMessage;
 import net.mysocio.data.ui.UiObject;
 import net.mysocio.data.ui.UserPage;
@@ -36,6 +34,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.code.morphia.Datastore;
+import com.google.code.morphia.Key;
 import com.google.code.morphia.query.Query;
 
 /**
@@ -84,8 +83,9 @@ public class MongoDataManager implements IDataManager {
 		saveObject(account);
 		user.setMainAccount(account);
 		saveObject(user);
-		addAccountToUser(account, userId);
-		
+		UserTags userTags = new UserTags();
+		userTags.setUserId(user.getId().toString());
+		addAccountToUser(account, userId, userTags);
 		DefaultUserMessagesProcessor processor = new DefaultUserMessagesProcessor();
 		processor.setUserId(userId);
 		createRoute("activemq:" + userId + ".newMessage", processor, null, 0l);
@@ -118,21 +118,20 @@ public class MongoDataManager implements IDataManager {
 	 * @param user
 	 * @throws Exception 
 	 */
-	public void addAccountToUser(Account account, String userId) throws Exception {
+	public void addAccountToUser(Account account, String userId, UserTags userTags) throws Exception {
+		Query<UserAccount> q = ds.createQuery(UserAccount.class).field("account").equal(account);
+		if(q.get() != null){
+			logger.debug("Attempt was made to add existing account of type " + account.getAccountType() + " to user " + userId);
+			return;
+		}
 		UserAccount userAccount = new UserAccount();
 		userAccount.setUserId(userId);
 		userAccount.setAccount(account);
 		saveObject(userAccount);
-		List<Source> sources = account.getSources();
-		for (Source source : sources) {
+		account.createAccountTagset(userTags);
+		saveObject(userTags);
+		for (Source source : account.getSources()) {
 			addSourceToUser(userId, source);
-		}
-		List<Contact> contacts = account.getContacts();
-		for (Contact contact : contacts) {
-			UserContact userContact = new UserContact();
-			userContact.addContact(contact);
-			userContact.setUserId(userId);
-			saveObject(userContact);
 		}
 	}
 	
@@ -141,26 +140,22 @@ public class MongoDataManager implements IDataManager {
 			saveObject(source);
 		} catch (DuplicateMySocioObjectException e) {
 			//Cool!!! we already have this source no need to save it, let's see if user already has it.
-			Query<UserSource> q = ds.createQuery(UserSource.class).field("userId").equal(userId).field("source").equal(source);
-			UserSource userSource = q.get();
-			if (userSource != null){
+			UserTags userTags = getUserTags(userId);
+			if (userTags.getTag(source.getUrl()) != null){
 				logger.debug("User trying to add existing source.");
 				return;
 			}
 		}
 		source.createRoute("activemq:" + userId  + ".newMessage");
-		UserSource userSource = new UserSource();
-		userSource.setUserId(userId);
-		userSource.setSource(source);
-		saveObject(userSource);
 	}
 	
 	@Override
-	public boolean isMessageExists(String userId, String messageId){
-		Query<UnreaddenMessage>  q = ds.createQuery(UnreaddenMessage.class).field("userId").equal(userId).field("messageId").equal(messageId);
-		return q.countAll() > 0;
+	public boolean isNewMessage(String userId, GeneralMessage message){
+		Query<UnreaddenMessage>  isUnread = ds.createQuery(UnreaddenMessage.class).field("userId").equal(userId).field("message").equal(message);
+		Query<ReaddenMessage>  isRead = ds.createQuery(ReaddenMessage.class).field("userId").equal(userId).field("messageUniqueId").equal(message.getUniqueFieldValue().toString());
+		return (isUnread.countAll() > 0 && isRead.countAll() > 0);
 	}
-
+	
 	/**
 	 * @param account
 	 * @return
@@ -230,40 +225,80 @@ public class MongoDataManager implements IDataManager {
 	}
 	@Override
 	public void setMessageReadden(String userId, String messageId) {
-		Query<UnreaddenMessage> q = ds.createQuery(UnreaddenMessage.class).field("messageId").equal(messageId).field("userId").equal(userId);
+		Query<UnreaddenMessage> q = ds.createQuery(UnreaddenMessage.class).field("message").equal(new Key<GeneralMessage>(GeneralMessage.class, new ObjectId(messageId))).field("userId").equal(userId);
 		ds.delete(q);
+		ReaddenMessage readdenMessage = new ReaddenMessage();
+		readdenMessage.setUserId(userId);
+		readdenMessage.setMessageUniqueId(ds.get(GeneralMessage.class, new ObjectId(messageId)).getUniqueFieldValue().toString());
+		ds.save(readdenMessage);
 		//TODO Next lines are just to save space in unpaid mongoDB on CloudBees  
-		Query<UnreaddenMessage> isMore = ds.createQuery(UnreaddenMessage.class).field("messageId").equal(messageId);
+		Query<UnreaddenMessage> isMore = ds.createQuery(UnreaddenMessage.class).field("message").equal(new Key<GeneralMessage>(GeneralMessage.class, new ObjectId(messageId)));
 		if (isMore.countAll() <= 0){
 			ds.delete(GeneralMessage.class, new ObjectId(messageId));
 		}
 	}
-
-	public List<UnreaddenMessage> getUnreadMessages(SocioUser user, String tagId) {
-		Query<UnreaddenMessage> q = ds.createQuery(UnreaddenMessage.class).field("userId").equal(user.getId().toString());
-		if (!tagId.equals(SocioUser.ALL_TAGS)){
-			q.field("tag.id").equal(new ObjectId(tagId));
+	
+	@Override
+	public void setMessagesReadden(String userId, String tagId, UserTags tags) {
+		Query<UnreaddenMessage> q = ds.createQuery(UnreaddenMessage.class).field("userId").equal(userId);
+		if (!tagId.equals(UserTags.ALL_TAGS)){
+			SocioTag tag = tags.getTag(tagId);
+			List<String> tagsIds = new ArrayList<String>();
+			List<SocioTag> leaves = tag.getLeaves();
+			for (SocioTag leaf : leaves) {
+				tagsIds.add(leaf.getUniqueId());
+			}
+			q.field("tagId").hasAnyOf(tagsIds);
 		}
-		if (user.getOrder().equals(SocioUser.ASCENDING_ORDER)){
-			q.order("messageDate");
-		}else{
+		List<UnreaddenMessage> unreadMessages = q.asList();
+		List<GeneralMessage> messages = new ArrayList<GeneralMessage>();
+		List<ReaddenMessage> readdenMessages = new ArrayList<ReaddenMessage>();
+		for (UnreaddenMessage unreaddenMessage : unreadMessages) {
+			GeneralMessage message = unreaddenMessage.getMessage();
+			messages.add(message);
+			ReaddenMessage readdenMessage = new ReaddenMessage();
+			readdenMessage.setUserId(userId);
+			readdenMessage.setMessageUniqueId(message.getUniqueFieldValue().toString());
+			readdenMessages.add(readdenMessage);
+		}
+		ds.save(readdenMessages);
+		ds.delete(q);
+		for (GeneralMessage message : messages) {
+			//TODO Next lines are just to save space in unpaid mongoDB on CloudBees  
+			Query<UnreaddenMessage> isMore = ds.createQuery(UnreaddenMessage.class).field("message").equal(message);
+			if (isMore.countAll() <= 0){
+				ds.delete(message);
+			}
+		}
+	}
+
+	public List<UnreaddenMessage> getUnreadMessages(SocioUser user, String tagId, UserTags tags) {
+		Query<UnreaddenMessage> q = ds.createQuery(UnreaddenMessage.class).field("userId").equal(user.getId().toString());
+		String order = tags.getOrder();
+		if (!tagId.equals(UserTags.ALL_TAGS)){
+			SocioTag tag = tags.getTag(tagId);
+			order = tag.getOrder();
+			List<String> tagsIds = new ArrayList<String>();
+			List<SocioTag> leaves = tag.getLeaves();
+			for (SocioTag leaf : leaves) {
+				tagsIds.add(leaf.getUniqueId());
+			}
+			q.field("tagId").hasAnyOf(tagsIds);
+		}
+		if (order.equals(SocioTag.ASCENDING_ORDER)){
 			q.order("-messageDate");
+		}else{
+			q.order("messageDate");
 		}
 		q.limit(user.getRange());
 		List<UnreaddenMessage> messagesList = q.asList();
-		List<GeneralMessage> messages = new ArrayList<GeneralMessage>();
-		for (UnreaddenMessage unreaddenMessage : messagesList) {
-			if (!messages.contains(unreaddenMessage.getMessage())){
-				messages.add(unreaddenMessage.getMessage());
-			}
-		}
 		user.setSelectedTag(tagId);
 		ds.save(user);
 		return messagesList;
 	}
-	
+
 	public Long countUnreadMessages(String tagId) {
-		return ds.createQuery(UnreaddenMessage.class).field("tag.id").equal(new ObjectId(tagId)).countAll();
+		return ds.createQuery(UnreaddenMessage.class).field("tagId").equal(tagId).countAll();
 	}
 
 	public String getPage(String userId, String pageKey) {
@@ -275,33 +310,14 @@ public class MongoDataManager implements IDataManager {
 		return userPage.getPageHTML();
 	}
 
-	public SocioTag getTag(String userId, String value) {
-		Query<SocioTag> q = ds.createQuery(SocioTag.class).field("userId").equal(userId).field("value").equal(value);
+	public UserTags getUserTags(String userId) {
+		Query<UserTags> q = ds.createQuery(UserTags.class).field("userId").equal(userId);
 		return q.get();
-	}
-	
-	public Collection<SocioTag> getUserTags(String userId) {
-		Query<SocioTag> q = ds.createQuery(SocioTag.class).field("userId").equal(userId);
-		return q.asList();
 	}
 
 
 	public List<UserAccount> getAccounts(String userId) {
 		Query<UserAccount> q = ds.createQuery(UserAccount.class).field("userId").equal(userId);
-		return q.asList();
-	}
-
-	public void removeSource(String userId, String sourceId) {
-		ds.delete(UserSource.class, new ObjectId(sourceId));
-	}
-
-	public List<UserContact> getContacts(String userId) {
-		Query<UserContact> q = ds.createQuery(UserContact.class).field("userId").equal(userId);
-		return q.asList();
-	}
-
-	public List<UserSource> getSources(String userId) {
-		Query<UserSource> q = ds.createQuery(UserSource.class).field("userId").equal(userId);
 		return q.asList();
 	}
 }

@@ -10,7 +10,9 @@ import net.mysocio.connection.readers.Source;
 import net.mysocio.data.ContactsList;
 import net.mysocio.data.IDisplayedObject;
 import net.mysocio.data.SocioObject;
+import net.mysocio.data.SocioTag;
 import net.mysocio.data.SocioUser;
+import net.mysocio.data.UserTags;
 import net.mysocio.data.contacts.Contact;
 import net.mysocio.ui.data.objects.NewAccountLine;
 
@@ -128,5 +130,10 @@ public abstract class Account extends SocioObject implements IDisplayedObject{
 	}
 	public void addContactsList(ContactsList contactsList) {
 		this.contactsLists.add(contactsList);
+	}
+	
+	public abstract SocioTag createAccountTagset(UserTags userTags);
+	protected SocioTag createAccountTypeTag(UserTags userTags){
+		return userTags.createTag(getAccountType()+".tag", getAccountType()+".tag", getAccountType()+".icon.general");
 	}
 }

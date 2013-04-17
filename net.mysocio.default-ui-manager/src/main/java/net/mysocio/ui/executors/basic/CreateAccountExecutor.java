@@ -33,18 +33,14 @@ public class CreateAccountExecutor implements ICommandExecutor {
 			throws CommandExecutionException {
 		try {
 			String userId = connectionData.getUserId();
-			Account account = AccountsManager.getInstance().getAccount(connectionData);
-			IDataManager dataManager;
-			if (userId == null) {
-				logger.debug("Creating account for new user.");
-				dataManager = DataManagerFactory.getDataManager();
-				userId = dataManager.getUser(account,connectionData.getLocale()).getId().toString();
-			} else {
-				logger.debug("Creating account for user: " + userId);
-				dataManager = DataManagerFactory.getDataManager();
-				dataManager.addAccountToUser(account, userId);
+			if (userId != null) {
+				logger.debug("Creating account for user with id: " + userId);
+				Account account = AccountsManager.getInstance().getAccount(connectionData);
+				IDataManager dataManager = DataManagerFactory.getDataManager();
+				dataManager.addAccountToUser(account, userId, connectionData.getUserTags());
+			}else{
+				logger.debug("Attempt was made to create account before login.");
 			}
-			connectionData.setUserId(userId);
 		}catch (Exception e) {
 			logger.error("Failed to create account.", e);
 			if (e instanceof UnapprovedUserException){

@@ -4,11 +4,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.mysocio.data.IConnectionData;
+import net.mysocio.data.SocioUser;
+import net.mysocio.data.management.DataManagerFactory;
 import net.mysocio.ui.management.CommandExecutionException;
 import net.mysocio.ui.management.CommandIterpreterFactory;
 import net.mysocio.ui.management.ICommandInterpreter;
+import net.mysocio.ui.managers.basic.EDefaultCommand;
 
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,6 +45,14 @@ public class RequestHandler extends AbstractHandler {
 			userId = (String) request.getSession().getAttribute("user");
 			if (userId != null) {
 				connectionData.setUserId(userId);
+				connectionData.setUserTags(DataManagerFactory.getDataManager().getUserTags(userId));
+				connectionData.setSelectedTag(DataManagerFactory.getDataManager().getObject(SocioUser.class, userId).getSelectedTag());
+			}else{
+				if (!command.equals(EDefaultCommand.startAuthentication.name()) && 
+						!command.equals(EDefaultCommand.login.name()) &&
+						!command.equals(EDefaultCommand.authenticationDone.name())){
+					throw new CommandExecutionException("restart");
+				}
 			}
 			ICommandInterpreter commandInterpreter = CommandIterpreterFactory.getCommandInterpreter(connectionData);
 			response.setContentType(commandInterpreter.getCommandResponseType(command));

@@ -98,7 +98,8 @@ public class DefaultUiManager extends AbstractUiManager {
 			userPage.setPageHTML(pageHTML);
 			userPage.setPageKey(pageKey);
 			try {
-				dataManager.saveObject(userPage);
+				//TODO while working on UI I don't need to save it, remove later 
+//				dataManager.saveObject(userPage);
 			} catch (Exception e) {
 				throw new CorruptedDataException("Impossible situation object doesn't exist, but can't be saved!", e);
 			}

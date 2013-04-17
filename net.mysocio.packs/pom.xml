@@ -12,7 +12,6 @@
 	<description>Packages for networks and data integration</description>
 	<modules>
 		<module>net.mysocio.facebook-pack</module>
-		<module>net.mysocio.test-pack</module>
 		<module>net.mysocio.google-pack</module>
 		<module>net.mysocio.rss-pack</module>
 		<module>net.mysocio.lj-pack</module>

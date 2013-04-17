@@ -6,8 +6,8 @@
 			</div>
 			<div class="HeaderLine"></div>
 			<div id="SearchBox">
-				<input type="text" class="Search"> <a id="search_button"
-					href="#" class="Search"> <img alt="search"
+				<input id="search_field" placeholder="search.for.tag" type="text" class="Search"> <a id="search_button"
+					href="#" class="Search" onclick="searchTree()"> <img alt="search"
 					src="images/main/search-idle.png"> </a>
 			</div>
 			<div class="UserBox">
@@ -26,7 +26,8 @@
 			</div>
 			<div id="subscriptions_title" class="Subsciptions">subscriptions.title</div>
 			<div id="subscriptions_underline" class="SubsciptionsUnderline"></div>
-			<div id="sources_tree" class="SourcesBox"></div></td>
+			<div id="sources_tree" class="SourcesBox">
+			</div></td>
 		<td class="SecondColumn MiddleColumn">
 			<div class="HeaderMiddleColumn"></div>
 			<div class="HeaderMiddleColumnWithShade"></div>
@@ -61,6 +62,7 @@
 			<div id="post_container" class="PostBox">
 				<textarea placeholder="post.here"></textarea>
 				<div id="post_buttons" class="PostButtons">
+					<div id="mark_all_read_button" class="MarkAllReadButton" onclick="markAllMessagesReadden()">mark.all.read.button</div>
 					<div id="post_button" class="PostButton">post.button</div>
 				</div>
 			</div>

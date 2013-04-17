@@ -5,6 +5,7 @@ package net.mysocio.ui.executors.basic;
 
 import net.mysocio.data.IConnectionData;
 import net.mysocio.data.IDataManager;
+import net.mysocio.data.UserTags;
 import net.mysocio.data.management.DataManagerFactory;
 import net.mysocio.ui.management.CommandExecutionException;
 import net.mysocio.ui.management.ICommandExecutor;
@@ -21,9 +22,15 @@ public class RemoveRssFeedExecutor implements ICommandExecutor {
 	@Override
 	public String execute(IConnectionData connectionData)
 			throws CommandExecutionException {
-		String userId = connectionData.getUserId();
 		IDataManager dataManager = DataManagerFactory.getDataManager();
-		dataManager.removeSource(userId, connectionData.getRequestParameter("id"));
+		String tagId = connectionData.getRequestParameter("id");
+		UserTags userTags = connectionData.getUserTags();
+		userTags.removeTag(tagId);
+		try {
+			dataManager.saveObject(userTags);
+		} catch (Exception e) {
+			throw new CommandExecutionException(e);
+		}
 		return new GetRssFeedsExecutor().execute(connectionData);
 	}
 

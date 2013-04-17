@@ -3,12 +3,12 @@
  */
 package net.mysocio.data;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 
 import net.mysocio.connection.readers.Source;
 import net.mysocio.data.accounts.Account;
+import net.mysocio.data.messages.GeneralMessage;
 import net.mysocio.data.messages.UnreaddenMessage;
 import net.mysocio.data.ui.UiObject;
 
@@ -34,31 +34,23 @@ public interface IDataManager {
 	
 	public<T extends ISocioObject> List<T> getObjects(Class<T> T);
 	
-	public void addAccountToUser(Account account, String userId) throws Exception;
+	public void addAccountToUser(Account account, String userId, UserTags userTags) throws Exception;
 
 	public<T extends ISocioObject> void saveObject(T object) throws Exception;
 
 	public void setMessageReadden(String userId, String messageId);
 
-	public List<UnreaddenMessage> getUnreadMessages(SocioUser user, String tagId);
+	public List<UnreaddenMessage> getUnreadMessages(SocioUser user, String tagId, UserTags tags);
 
 	public String getPage(String userId, String pageKey);
 
-	public SocioTag getTag(String userId, String value);
-	
 	public CappedCollectionTimeStamp getTimestamp(String collection);
 
-	public Collection<SocioTag> getUserTags(String userId);
+	public UserTags getUserTags(String userId);
 
 	public List<UserAccount> getAccounts(String userId);
 	
 	public void addSourceToUser(String userId, Source source) throws Exception;
-
-	public void removeSource(String userId, String sourceId);
-
-	public List<UserContact> getContacts(String userId);
-
-	public List<UserSource> getSources(String userId);
 
 	public Long countUnreadMessages(String tagId);
 
@@ -66,5 +58,7 @@ public interface IDataManager {
 	
 	public void sendPackageToRoute(String to, SocioObject object) throws Exception;
 
-	boolean isMessageExists(String userId, String messageId);
+	boolean isNewMessage(String userId, GeneralMessage message);
+
+	void setMessagesReadden(String userId, String tagId, UserTags tags);
 }

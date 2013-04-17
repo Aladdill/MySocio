@@ -14,4 +14,6 @@ public abstract class Destination extends NamedObject{
 	private static final long serialVersionUID = -5472185950579096505L;
 
 	public abstract void postMessage(GeneralMessage message);
+	public abstract void like(String url);
+	public abstract void share(String url);
 }
