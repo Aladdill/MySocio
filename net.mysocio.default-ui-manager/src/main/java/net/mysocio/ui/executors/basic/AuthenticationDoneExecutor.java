@@ -33,8 +33,17 @@ public class AuthenticationDoneExecutor implements ICommandExecutor {
 			throw new CommandExecutionException("Are you sure you want to log in?");
 		}
 		String code = connectionData.getRequestParameter("code");
-		connectionData.setSessionAttribute("code", code);
 		String cookieValue = connectionData.getCookieValue("hidden_login_cookie");
+		if (code == null){
+			String page = null;
+			if (cookieValue != null){
+				page = DefaultResourcesManager.getPage("showAuthError.html");
+			}else{
+				page = DefaultResourcesManager.getPage("showClosingAuthError.html");
+			}
+			return page.replace("error.string", "Authentication failed with error: " + connectionData.getRequestParameter("error_message"));
+		}
+		connectionData.setSessionAttribute("code", code);
 		if (connectionData.getUserId() == null){
 			if (cookieValue != null){
 				logger.debug("Cookie for hidden login found.");

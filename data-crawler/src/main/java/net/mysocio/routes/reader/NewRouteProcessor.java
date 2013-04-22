@@ -4,6 +4,7 @@
 package net.mysocio.routes.reader;
 
 import net.mysocio.camel.CamelContextManager;
+import net.mysocio.data.IDataManager;
 import net.mysocio.data.SocioRoute;
 import net.mysocio.data.TempRoute;
 import net.mysocio.data.management.DataManagerFactory;
@@ -32,8 +33,10 @@ public class NewRouteProcessor extends CappedCollectionProcessor {
 		route.setFrom(tempRoute.getFrom());
 		route.setTo(tempRoute.getTo());
 		route.setProcessor(tempRoute.getProcessor());
-		DataManagerFactory.getDataManager().saveObject(route);
-		CamelContextManager.addRoute(route);
+		IDataManager dataManager = DataManagerFactory.getDataManager();
+		dataManager.saveObject(route);
+		route.setCamelRouteId(CamelContextManager.addRoute(route));
+		dataManager.saveObject(route);
 		return tempRoute.getCreationDate();
 	}
 }

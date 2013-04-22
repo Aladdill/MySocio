@@ -105,11 +105,11 @@ public class DataCrawlerContextListener implements ServletContextListener {
 			DB db = connectionBean.getDB(dbName);
 			db.authenticate(dbUser, dbPass.toCharArray());
 			if (!db.collectionExists("route_packages")){
-				DBObject options = BasicDBObjectBuilder.start().add("capped", true).add("size", 100000).get();
+				DBObject options = BasicDBObjectBuilder.start().add("capped", true).add("size", 10000000).get();
 				db.createCollection("route_packages", options);
 			}
 			if (!db.collectionExists("temp_routes")){
-				DBObject options = BasicDBObjectBuilder.start().add("capped", true).add("size", 100000).get();
+				DBObject options = BasicDBObjectBuilder.start().add("capped", true).add("size", 10000000).get();
 				db.createCollection("temp_routes", options);
 			}
 			final Thread routesThread = new Thread(new MongoCappedCollectionReader(db, "temp_routes", new NewRouteProcessor()));
@@ -119,7 +119,8 @@ public class DataCrawlerContextListener implements ServletContextListener {
 		} catch (Exception e) {
 			logger.error("Error initializing mongo cursor.", e);
 		}
-		List<SocioRoute> routes = DataManagerFactory.getDataManager().getObjects(SocioRoute.class);
+		IDataManager dataManager = DataManagerFactory.getDataManager();
+		List<SocioRoute> routes = dataManager.getObjects(SocioRoute.class);
 		try {
 			MarkMessageReaddenProcessor readdenProcessor = new MarkMessageReaddenProcessor();
 			SocioRoute readenMessagesRoute = new SocioRoute();
@@ -128,8 +129,9 @@ public class DataCrawlerContextListener implements ServletContextListener {
 			readenMessagesRoute.setDelay(0l);
 			CamelContextManager.addRoute(readenMessagesRoute);
 			for (SocioRoute route : routes) {
-				CamelContextManager.addRoute(route);
+				route.setCamelRouteId(CamelContextManager.addRoute(route));
 			}
+			dataManager.saveObjects(SocioRoute.class, routes);
 		} catch (Exception e) {
 			logger.error("Error initializing existing route", e);
 		}

@@ -13,7 +13,6 @@ import org.apache.camel.Exchange;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Transient;
 import com.sun.syndication.feed.synd.SyndEntryImpl;
 import com.sun.syndication.feed.synd.SyndFeed;
@@ -22,7 +21,6 @@ import com.sun.syndication.feed.synd.SyndFeed;
  * @author Aladdin
  *
  */
-@Entity
 public class RssMessageProcessor extends AbstractMessageProcessor {
 	/**
 	 * 
@@ -45,13 +43,22 @@ public class RssMessageProcessor extends AbstractMessageProcessor {
 	protected void processMessages(SyndFeed feed, List<SyndEntryImpl> entries) throws Exception {
 		for (SyndEntryImpl entry : entries) {
     		RssMessage message = new RssMessage();
+    		message.setFeedTitle(feed.getTitle());
     		processMessage(entry, message);
 		}
 	}
 
 	protected void processMessage(SyndEntryImpl entry, RssMessage message) throws Exception {
 		message.setLink(entry.getLink());
-		message.setDate(entry.getPublishedDate().getTime());
+		if (entry.getPublishedDate() != null){
+			message.setDate(entry.getPublishedDate().getTime());
+		}else{
+			if (entry.getUpdatedDate() != null){
+				message.setDate(entry.getUpdatedDate().getTime());
+			}else{
+				message.setDate(System.currentTimeMillis());
+			}
+		}
 		String title = entry.getTitle();
 		if (title == null){
 			title = "";

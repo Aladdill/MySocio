@@ -8,7 +8,6 @@ import java.util.List;
 import net.mysocio.connection.rss.RssMessageProcessor;
 import net.mysocio.data.messages.lj.LjMessage;
 
-import com.google.code.morphia.annotations.Entity;
 import com.sun.syndication.feed.synd.SyndEntryImpl;
 import com.sun.syndication.feed.synd.SyndFeed;
 import com.sun.syndication.feed.synd.SyndImage;
@@ -17,7 +16,6 @@ import com.sun.syndication.feed.synd.SyndImage;
  * @author Aladdin
  *
  */
-@Entity
 public class LjMessageProcessor extends RssMessageProcessor {
 	/**
 	 * 

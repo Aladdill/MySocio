@@ -3,6 +3,7 @@
  */
 package net.mysocio.ui.executors.basic;
 
+import net.mysocio.connection.readers.Source;
 import net.mysocio.data.IConnectionData;
 import net.mysocio.data.IDataManager;
 import net.mysocio.data.UserTags;
@@ -28,6 +29,8 @@ public class RemoveRssFeedExecutor implements ICommandExecutor {
 		userTags.removeTag(tagId);
 		try {
 			dataManager.saveObject(userTags);
+			Source source = dataManager.getSource(tagId);
+			source.removeRoute(connectionData.getUserId());
 		} catch (Exception e) {
 			throw new CommandExecutionException(e);
 		}

@@ -7,6 +7,8 @@ import java.net.URL;
 import java.text.ParseException;
 import java.util.List;
 
+import net.mysocio.data.accounts.facebook.FacebookAccount;
+import net.mysocio.data.management.DataManagerFactory;
 import net.mysocio.data.management.MessagesManager;
 import net.mysocio.data.management.camel.AbstractMessageProcessor;
 import net.mysocio.data.management.exceptions.DuplicateMySocioObjectException;
@@ -21,11 +23,11 @@ import org.apache.camel.Exchange;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Transient;
 
 import facebook4j.Application;
 import facebook4j.Facebook;
+import facebook4j.FacebookException;
 import facebook4j.FacebookFactory;
 import facebook4j.Post;
 import facebook4j.Post.Action;
@@ -36,7 +38,6 @@ import facebook4j.auth.AccessToken;
  * @author Aladdin
  *
  */
-@Entity
 public class FacebookInputProcessor extends AbstractMessageProcessor {
 	/**
 	 * 
@@ -48,6 +49,7 @@ public class FacebookInputProcessor extends AbstractMessageProcessor {
 	private static final long MONTH = 30*24*3600l;
 	private Long lastUpdate = 0l;
 	private String token;
+	private String accountId;
 	private Facebook facebook;
 
 	public String getToken() {
@@ -138,7 +140,19 @@ public class FacebookInputProcessor extends AbstractMessageProcessor {
 		}
 //		Date fromDate = new Date(from);
 //		logger.debug("Trying get FB messages from " + fromDate);
-		ResponseList<Post> home = facebook.getHome(/*new Reading().since(fromDate)*/);
+		ResponseList<Post> home = null;
+		try {
+			home = facebook.getHome(/*new Reading().since(fromDate)*/);
+		} catch (FacebookException e) {
+			logger.warn("Can't connect to facebook ", e);
+			if (getAccountId()!= null){
+				FacebookAccount account = DataManagerFactory.getDataManager().getObject(FacebookAccount.class, getAccountId());
+				token = account.getToken();
+				facebook = new FacebookFactory().getInstance();
+				facebook.setOAuthAccessToken(new AccessToken(token, null));
+				home = facebook.getHome();
+			}
+		}
 		for (Post post : home) {
 			FacebookMessage message = parseFacebookMessage(post);
 			logger.debug("Got facebook message from user " + message.getTitle() + " with id " + message.getFbId());
@@ -152,5 +166,13 @@ public class FacebookInputProcessor extends AbstractMessageProcessor {
 			addMessageForTag(message, message.getUserId());
 		}
 		lastUpdate = to;
+	}
+
+	public String getAccountId() {
+		return accountId;
+	}
+
+	public void setAccountId(String accountId) {
+		this.accountId = accountId;
 	}
 }

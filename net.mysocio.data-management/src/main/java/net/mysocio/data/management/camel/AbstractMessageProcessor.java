@@ -8,13 +8,10 @@ import net.mysocio.data.management.DataManagerFactory;
 import net.mysocio.data.messages.GeneralMessage;
 import net.mysocio.data.messages.UnreaddenMessage;
 
-import com.google.code.morphia.annotations.Entity;
-
 /**
  * @author Aladdin
  *
  */
-@Entity
 public abstract class AbstractMessageProcessor extends AbstractProcessor{
 	public static final String ACTIVEMQ_READEN_MESSAGE = "activemq:readenMessage";
 

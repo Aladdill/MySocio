@@ -23,6 +23,7 @@ public class RssUiMessage extends DefaultMessage {
 	public RssUiMessage() {
 		super();
 		setName(NAME);
+		addTextLabel("rss.message.from");
 	}
 	
 	@Override

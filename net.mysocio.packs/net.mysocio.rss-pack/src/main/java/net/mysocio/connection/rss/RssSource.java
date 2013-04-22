@@ -38,4 +38,9 @@ public class RssSource extends Source {
 		processor.setTag(url);
 		DataManagerFactory.getDataManager().createRoute("rss:" + url + "?consumer.delay=2000", processor , null, 0l);
 	}
+
+	@Override
+	public void removeRoute(String userId) throws Exception {
+		DataManagerFactory.getDataManager().removeRoute("rss:" + getUrl() + "?consumer.delay=2000", userId);		
+	}
 }

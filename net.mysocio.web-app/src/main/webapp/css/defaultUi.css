@@ -151,7 +151,7 @@ span.DefaultAccount {
 
 .RSS {
 	float: left;
-	width: 600px;
+	width: 200px;
 	height: auto;
 	margin-left: 28px;
 	margin-top: 20px;
@@ -191,7 +191,7 @@ span.RSSType {
 	margin-left: 34px;
 	margin-bottom: 9px;
 	height: 1px;
-	width: 182px;
+	width: 282px;
 	background: #d1c2d4;
 }
 
@@ -400,7 +400,7 @@ a.Search {
 td.FirstColumn {
 	background-image: url("../images/main/dark-texture.jpg");
 	background-repeat: repeat;
-	width: 249px;
+	width: 349px;
 }
 
 td.SecondColumn {
@@ -422,15 +422,19 @@ tr.Footer {
 
 .SourcesBox {
 	margin-left: 32px;
-	overflow: scroll;
-	width: 183px;
-	height: 600px;
+	height: 580px;
 }
 
-.MessagesBox {
+.gplusbutton {
+	margin: 6px 0px 0px 10px;
+}
+/* .MessagesBox {
 	overflow: auto;
+} */
+.rssTitle {
+	font-family: arial,sans-serif;
+	color: #00aeef;
 }
-
 .Tabs {
 	float: left;
 }
@@ -499,7 +503,8 @@ tr.Footer {
 
 .MessageText {
 	height: auto;
-	font: 13px Calibri;
+	font-family: arial,sans-serif;
+	font-size: 13px;
 	overflow: hidden;
 	color: #292929;
 	float: left;
@@ -557,7 +562,6 @@ img.NetworkIconReaden {
 	height: 20px;
 	padding-top: 17px;
 	padding-bottom: 20px;
-	color: #00aeef;
 }
 
 .MessageTitleReaden {
@@ -571,8 +575,9 @@ img.NetworkIconReaden {
 
 .MessageTitle a{
 	text-decoration: none;
-	color: inherit;
-	font: 19px Calibri;
+	color: #00aeef;
+	font-family: arial,sans-serif;
+	font-weight: bold;
 	float: left;
 	margin-left: 5px;
 	margin-top: 2px;
@@ -793,6 +798,7 @@ span.PromoText {
 	width: 22px;
 	background: url("../images/settings/remove-idle.png") no-repeat 0 0;
 	float: left;
+	cursor: pointer;
 }
 .MinusButton:HOVER {
 	background: url("../images/settings/remove-rollover.png") no-repeat 0 0;
@@ -856,3 +862,16 @@ a#login_vkontakte:HOVER img {
 
 /* adding elipsis to tree leafs*/
 .mysocio-tree-node {width:150px;text-overflow: ellipsis; overflow: hidden; -o-text-overflow: ellipsis;}
+
+#sources_tree_scroll {width: 316px; height: 580px;}
+#sources_tree_scroll .viewport { width: 300px; height: 580px; overflow: hidden; position: relative; }
+#messages_scroll .viewport {overflow: hidden; position: relative; }
+.overview { list-style: none; position: absolute; left: 0; top: 0; }
+.thumb .end,
+.thumb { background-color: #a67eb0; }
+.scrollbar { position: relative; float: right; width: 8px; }
+.track { background-color: #D8EEFD; height: 100%; width:8px; position: relative; padding: 0 1px; }
+.thumb { height: 20px; width: 8px; cursor: pointer; overflow: hidden; position: absolute; top: 0; }
+.thumb .end { overflow: hidden; height: 5px; width: 13px; }
+.disable{ display: none; }
+.noSelect { user-select: none; -o-user-select: none; -moz-user-select: none; -khtml-user-select: none; -webkit-user-select: none; }

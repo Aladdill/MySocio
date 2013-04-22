@@ -36,6 +36,8 @@ public abstract class Source extends NamedObject implements IUniqueObject{
 	}
 
 	public abstract void createRoute(String to) throws Exception;
+	
+	public abstract void removeRoute(String userId) throws Exception;
 
 	/* (non-Javadoc)
 	 * @see net.mysocio.data.IUniqueObject#getUniqueFieldName()

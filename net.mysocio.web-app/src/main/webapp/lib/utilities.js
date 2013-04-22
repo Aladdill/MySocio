@@ -10,13 +10,13 @@ function collapseMessage(id) {
 	$("#" + id).find(".MessageCollapse").addClass("Invisible");
 	$("#" + id).removeClass("Expand");
 }
-function openUrlInDiv(divId, url, functions) {
-	$.post(url).success(function(data) {
+function openUrlInDiv(divId, url, afterfunction) {
+	$.post(url).done(function(data) {
 		if (isNoContent(data)) {
 			return;
 		}
 		$(divId).html(data);
-	}).error(onFailure).complete(functions);
+	}).fail(onFailure).done(afterfunction);
 }
 function resizeTabs() {
 	$("#accounts_tab_div").css("height",
@@ -44,18 +44,20 @@ function centerLoginCircle() {
 					- $("#login_center_div").innerHeight() / 2);
 }
 function initSources() {
-	$.post("execute?command=getSources", {}, initSourcesData, "json").error(
+	$.post("execute?command=getSources", {}, initSourcesData, "json").fail(
 			onFailure);
 }
 function initSourcesData(data) {
 	$("#sources_tree").jstree(data).bind("loaded.jstree",
-			function(event, data) {
+			function(event, data) {$("#sources_tree_scroll").tinyscrollbar();
 			}).bind("select_node.jstree", function(e, data) {
 		if (!$("#sources_tree").data("treeRefreshInitiated")) {
 			getMessages(data.rslt.obj[0].id);
 		}else{
 			$("#sources_tree").data("treeRefreshInitiated", false);
 		}
+	}).bind("after_open.jstree after_close.jstree", function (e) {
+		$("#sources_tree_scroll").tinyscrollbar_update();
 	});
 }
 function login(identifierValue) {
@@ -65,48 +67,48 @@ function login(identifierValue) {
 function startAuthentication(identifierValue) {
 	$.post("execute?command=startAuthentication", {
 		identifier : identifierValue,
-	}).success(function(data) {
+	}).done(function(data) {
 		if (isNoContent(data)) {
 			return;
 		}
 		window.open(data, "name", "height=600,width=900");
-	}).error(onFailure);
+	}).fail(onFailure);
 }
 
 function startHiddenAuthentication(identifierValue) {
 	$.cookie('hidden_login_cookie', "true", { path: '/' });
 	$.post("execute?command=startAuthentication", {
 		identifier : identifierValue,
-	}).success(function(data) {
+	}).done(function(data) {
 		if (isNoContent(data)) {
 			return;
 		}
 		$("#hiddenFrame").attr('src', data);
-	}).error(onFailure);
+	}).fail(onFailure);
 }
 
 function authenticationDone() {
-	showWaitDialog("creating.account.title", "creating.account.message");
+	showWaitDialog("dialog.creating.account.title", "dialog.creating.account.message");
 	$.post("execute?command=addAccount")
-	.success(function(data) {
+	.done(function(data) {
 		if (isNoContent(data)) {
 			return;
 		}
 		closeWaitDialog();
 		showAccounts();
-	}).error(function(data) { $dialog.dialog("close"); onFailure(data);});
+	}).fail(function(data) { $dialog.dialog("close"); onFailure(data);});
 }
 function executeLogin() {
-	showWaitDialog("login.dialog.title", "login.dialog.message");
+	showWaitDialog("dialog.login.title", "dialog.login.message");
 	$.removeCookie('hidden_login_cookie');
 	$.post("execute?command=login")
-	.success(function(data) {
+	.done(function(data) {
 		if (isNoContent(data)) {
 			return;
 		}
 		closeWaitDialog();
 		loadMainPage();
-	}).error(function(data) { $dialog.dialog("close"); onFailure(data);});
+	}).fail(function(data) { $dialog.dialog("close"); onFailure(data);});
 }
 function addAccount(identifierValue) {
 	if (identifierValue == "lj") {
@@ -127,9 +129,9 @@ function openLjAuthentication() {
 				$.post("execute?command=addAccount", {
 					identifier : 'lj',
 					username : $input.val()
-				}).success(function(data) {
-				}).error(onFailure)
-				.complete(function() { $waitDialog.dialog("close"); });
+				}).done(function(data) {
+				}).fail(onFailure)
+				.done(function() { $waitDialog.dialog("close"); });
 				$(this).dialog("close");
 			}
 		}
@@ -138,16 +140,17 @@ function openLjAuthentication() {
 function addRssFeed() {
 	$.post("execute?command=addRssFeed", {
 		url : $("#rssUrl").attr("value")
-	}).success(setDataContainer).error(onFailure);
+	}).done(setDataContainer).fail(onFailure);
 }
 function importOPML() {
 	importingOPML();
 	$("form#importOPMLform").submit();
 }
 function removeRssFeed(feedId) {
+	showWaitDialog('dialog.removing.feed.title','dialog.removing.feed.message');
 	$.post("execute?command=removeRssFeed", {
 		id : feedId
-	}).success(setDataContainer).error(onFailure);
+	}).done(setDataContainer).fail(onFailure);
 }
 function setDataContainer(data) {
 	if (isNoContent(data)) {
@@ -195,13 +198,20 @@ function onFailure(data) {
 		loadStartPage();
 		return;
 	}
+	$.removeCookie('login_cookie');
+	$.removeCookie('hidden_login_cookie');
 	showError(data.responseText);
 }
 function showError(error) {
-	showWaitDialog("Error", error);
+	showWaitDialog("dialog.error.title", error);
+}
+function showAuthError(error) {
+	$.removeCookie('login_cookie');
+	$.removeCookie('hidden_login_cookie');
+	showWaitDialog("dialog.error.title", error);
 }
 function importingOPML() {
-	showWaitDialog("importing.opml.title", "importing.opml.message");
+	showWaitDialog("dialog.importing.opml.title", "dialog.importing.opml.message");
 }
 function showWaitDialog(titleString, message) {
 	$dialog = $("<div id='waitDialog'></div>").html(jQuery.i18n.prop(message)).dialog({
@@ -217,14 +227,14 @@ function showSettings() {
 	showTabs();
 	$("#upper_link").html($("#back_to_main_link").html());
 	clearDataContainer();
-	showAccounts();
+	showRssFeeds();
 }
 function clearDataContainer(){
 	$("#data_container").html("");
 }
 function showRssFeeds() {
 	$("#post_container").addClass("Invisible");
-	openUrlInDiv("#data_container", "execute?command=getRssFeeds", []);
+	openUrlInDiv("#data_container", "execute?command=getRssFeeds");
 }
 function showMainPage() {
 	hideTabs();
@@ -243,16 +253,21 @@ function openMainPage() {
 }
 function initMessagesContainer() {
 	var messageContainer = $("#data_container");
-	messageContainer.css("height", $("body").innerHeight() - 158);
+	var height = $("body").innerHeight() - 198;
+	messageContainer.css("height", height);
+	$("#messages_scroll .viewport").first().css("height", height);
+	$("#messages_scroll").css("height", height);
 	$("#filler").css("height", messageContainer.innerHeight() - 10);
-	messageContainer.scroll(messageScroll);
+	$("#messages_scroll").bind("tinyscroll", messageScroll);
 }
 function messageScroll() {
-	var previous = 0;
 	$.each($(".Message"), function(index, value) {
 		var message = $("#" + value.id);
-		var current = message.position().top + 100;
-		if ((previous * current <= 0 && value.id != "filler")) {
+		var messagePosition = message.position().top;
+		var viewPosition = message[0].offsetParent.offsetTop;
+		var messageRelativeTop = viewPosition + messagePosition;
+		var messageRelativeBottom = messageRelativeTop + message[0].offsetHeight;
+		if (messageRelativeTop < 0 && messageRelativeBottom > 0 && value.id != "filler") {
 			message.addClass("SelectedMessage");
 			message.find(".MessageTitle").addClass("MessageTitleSelected");
 			message.find(".MessageTitle").find(".NetworkIconReaden")
@@ -294,16 +309,22 @@ function messageScroll() {
 						"MessageCollapseSelected");
 			}
 		}
-		previous = current;
 	});
 }
 function markMessageReadden(id) {
-	$.post("execute?command=markMessagesReaden&messagesIds=" + id).error(
-			onFailure);
+	postWithTextReturn("execute?command=markMessagesReaden&messagesIds=" + id);
+}
+function postWithTextReturn(url){
+    $.ajax({
+    	  type: "POST",
+    	  url: url,
+    	  dataType: "text",
+    	  error: onFailure 
+    	}).always(closeWaitDialog);
 }
 function markAllMessagesReadden() {
-	$.post("execute?command=markMessagesReaden&markAll=true").error(
-			onFailure);
+	showWaitDialog("dialog.marking.all.messages.read.title", "dialog.marking.all.messages.read.message");
+	postWithTextReturn("execute?command=markMessagesReaden&markAll=true");
 }
 function initPage() {
 	if ($("#login_center_div").size() != 0) {
@@ -313,13 +334,13 @@ function initPage() {
 	}
 }
 function loadMainPage() {
-	openUrlInDiv("#SiteBody", "execute?command=openMainPage", [ initPage ]);
+	openUrlInDiv("#SiteBody", "execute?command=openMainPage", initPage);
 }
 function searchTree(){
-	$("#sources_tree").jstree("search",$("#search_field").attr("value"));
+	$("#sources_tree").jstree("search",$("#search_field").prop("value"));
 }
 function logout() {
-	openUrlInDiv("#SiteBody", "execute?command=logout", [ initPage ]);
+	openUrlInDiv("#SiteBody", "execute?command=logout", initPage);
 }
 function loadStartPage() {
 	var login_value = $.cookie('login_cookie');
@@ -327,12 +348,13 @@ function loadStartPage() {
 		setLoginCookie(login_value);
 		startHiddenAuthentication(login_value);
 	}else{
-		openUrlInDiv("#SiteBody", "execute?command=openStartPage", [ initPage ]);
+		openUrlInDiv("#SiteBody", "execute?command=openStartPage", initPage);
 	}
 }
 function getMessages(id) {
 	$(".Message").remove();
-	$.post("execute?command=getMessages&sourceId=" + id).success(
+	showWaitDialog("dialog.getting.messages.title", "dialog.getting.messages.message");
+	$.post("execute?command=getMessages&sourceId=" + id).done(
 			function(data) {
 				if (isNoContent(data)) {
 					return;
@@ -341,16 +363,18 @@ function getMessages(id) {
 				$.each($(".MessageDate"), function(index, value) {var millies = new Number($(value).html());
 				var date = new Date(millies);
 				$(value).html(date.toLocaleString());});
+				$("#messages_scroll").tinyscrollbar();
 				gapi.plusone.go();
-			}).error(onFailure);
+			}).always(closeWaitDialog)
+			.fail(onFailure);
 }
 function showAccounts() {
 	$("#post_container").addClass("Invisible");
-	openUrlInDiv("#data_container", "execute?command=getAccounts", []);
+	openUrlInDiv("#data_container", "execute?command=getAccounts");
 }
 function showContacts() {
 	$("#post_container").addClass("Invisible");
-	openUrlInDiv("#data_container", "execute?command=getContacts", []);
+	openUrlInDiv("#data_container", "execute?command=getContacts");
 }
 function loadBundles(lang) {
 	jQuery.i18n.properties({

@@ -61,4 +61,10 @@ public interface IDataManager {
 	boolean isNewMessage(String userId, GeneralMessage message);
 
 	void setMessagesReadden(String userId, String tagId, UserTags tags);
+
+	public abstract void removeRoute(String from, String userId);
+
+	public abstract Source getSource(String url);
+
+	public boolean isRouteExist(String from, String to);
 }

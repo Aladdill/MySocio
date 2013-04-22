@@ -50,7 +50,8 @@ public class RequestHandler extends AbstractHandler {
 			}else{
 				if (!command.equals(EDefaultCommand.startAuthentication.name()) && 
 						!command.equals(EDefaultCommand.login.name()) &&
-						!command.equals(EDefaultCommand.authenticationDone.name())){
+						!command.equals(EDefaultCommand.authenticationDone.name()) &&
+						!command.equals(EDefaultCommand.openStartPage.name())){
 					throw new CommandExecutionException("restart");
 				}
 			}

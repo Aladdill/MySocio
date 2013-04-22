@@ -12,14 +12,12 @@ import org.apache.camel.Exchange;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.code.morphia.annotations.Entity;
 import com.google.code.morphia.annotations.Transient;
 
 /**
  * @author Aladdin
  *
  */
-@Entity
 public class DefaultUserMessagesProcessor extends UserRouteProcessor {
 	/**
 	 * 
@@ -41,10 +39,8 @@ public class DefaultUserMessagesProcessor extends UserRouteProcessor {
 		String userId = getUserId();
 		
 		if (dataManager.isNewMessage(userId, message)){
-			return;
+			ureaddenMessage.setUserId(userId);
+			dataManager.saveObject(ureaddenMessage);
 		}
-		
-		ureaddenMessage.setUserId(userId);
-		dataManager.saveObject(ureaddenMessage);
 	}
 }

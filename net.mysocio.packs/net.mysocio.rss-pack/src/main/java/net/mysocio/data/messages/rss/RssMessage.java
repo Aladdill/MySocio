@@ -23,6 +23,7 @@ public class RssMessage extends GeneralMessage {
 	 * 
 	 */
 	private String link;
+	private String feedTitle;
 
 	@Override
 	public String getLink() {
@@ -50,6 +51,19 @@ public class RssMessage extends GeneralMessage {
 	public String replacePlaceholders(String template) {
 		String message = super.replacePlaceholders(template);
 		message = message.replace("message.link", getLink());
+		if (getFeedTitle() != null){
+			message = message.replace("feed.title", getFeedTitle());
+		}else{
+			message = message.replace("feed.title", "Unknown");
+		}
 		return message;
+	}
+
+	public String getFeedTitle() {
+		return feedTitle;
+	}
+
+	public void setFeedTitle(String feedTitle) {
+		this.feedTitle = feedTitle;
 	}
 }

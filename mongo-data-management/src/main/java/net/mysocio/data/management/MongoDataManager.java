@@ -15,6 +15,7 @@ import net.mysocio.data.ISocioObject;
 import net.mysocio.data.IUniqueObject;
 import net.mysocio.data.RoutePackage;
 import net.mysocio.data.SocioObject;
+import net.mysocio.data.SocioRoute;
 import net.mysocio.data.SocioTag;
 import net.mysocio.data.SocioUser;
 import net.mysocio.data.TempRoute;
@@ -98,11 +99,20 @@ public class MongoDataManager implements IDataManager {
 		TempRoute route = new TempRoute();
 		route.setFrom(from);
 		route.setProcessor(processor);
-		saveObject(processor);
 		route.setTo(to);
 		route.setDelay(delay);
 		route.setCreationDate(System.currentTimeMillis());
 		saveObject(route);
+	}
+	@Override
+	public void removeRoute(String from, String userId){
+		Query<SocioRoute> q = ds.createQuery(SocioRoute.class).field("from").equal(from).field("processor.to").equal("activemq:" + userId + ".newMessage");
+		ds.delete(q);
+	}
+	@Override
+	public Source getSource(String url){
+		Query<Source> q = ds.createQuery(Source.class).field("url").equal(url);
+		return q.get();
 	}
 	
 	public void sendPackageToRoute(String to, SocioObject object) throws DuplicateMySocioObjectException{
@@ -153,7 +163,7 @@ public class MongoDataManager implements IDataManager {
 	public boolean isNewMessage(String userId, GeneralMessage message){
 		Query<UnreaddenMessage>  isUnread = ds.createQuery(UnreaddenMessage.class).field("userId").equal(userId).field("message").equal(message);
 		Query<ReaddenMessage>  isRead = ds.createQuery(ReaddenMessage.class).field("userId").equal(userId).field("messageUniqueId").equal(message.getUniqueFieldValue().toString());
-		return (isUnread.countAll() > 0 && isRead.countAll() > 0);
+		return (isUnread.countAll() <= 0 && isRead.countAll() <= 0);
 	}
 	
 	/**
@@ -319,5 +329,14 @@ public class MongoDataManager implements IDataManager {
 	public List<UserAccount> getAccounts(String userId) {
 		Query<UserAccount> q = ds.createQuery(UserAccount.class).field("userId").equal(userId);
 		return q.asList();
+	}
+
+	@Override
+	public boolean isRouteExist(String from, String to) {
+		Query<SocioRoute>  routes = ds.createQuery(SocioRoute.class).field("from").equal(from);
+		if (to != null){
+			routes.field("to").equal(to);
+		}
+		return (routes.countAll() > 0);
 	}
 }

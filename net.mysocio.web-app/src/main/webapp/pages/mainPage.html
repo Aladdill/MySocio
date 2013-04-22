@@ -1,5 +1,5 @@
 <table class="DefaultTable FullSize">
-	<tr>
+	<tr style="height: auto" >
 		<td class="FirstColumn">
 			<div class="LogoBox">
 				<img alt="Octopus" src="images/main/Logo.png" class="Logo">
@@ -26,22 +26,33 @@
 			</div>
 			<div id="subscriptions_title" class="Subsciptions">subscriptions.title</div>
 			<div id="subscriptions_underline" class="SubsciptionsUnderline"></div>
-			<div id="sources_tree" class="SourcesBox">
-			</div></td>
+			<div id="sources_tree_scroll">
+				<div class="scrollbar">
+					<div class="track">
+						<div class="thumb">
+							<div class="end"></div>
+						</div>
+					</div>
+				</div>
+				<div class="viewport">
+					<div id="sources_tree" class="SourcesBox overview"></div>
+				</div>
+			</div>
+		</td>
 		<td class="SecondColumn MiddleColumn">
 			<div class="HeaderMiddleColumn"></div>
 			<div class="HeaderMiddleColumnWithShade"></div>
 			<div class="HeaderLine MiddleHeaderLine"></div>
 			<div id="tabs" class="Tabs">
 				<div class="BlueButtonTop"></div>
-				<div id="accounts_tab_div" class="BlueButtonCenter">
+				<div id="accounts_tab_div" class="BlueButtonCenter inactive">
 					<span id="accounts_tab_span" class="tab"><a href="#"
 						class="Undecorated" onclick="showAccounts()">tab.accounts</a>
 					</span>
 				</div>
 				<div class="BlueButtonBottom"></div>
 				<div class="GrayButtonTop"></div>
-				<div id="contacts_tab_div" class="GrayButtonCenter">
+				<div id="contacts_tab_div" class="GrayButtonCenter inactive">
 					<span id="contacts_tab_span" class="tab"><a href="#"
 						class="Undecorated" onclick="showContacts()">tab.contacts</a>
 					</span>
@@ -66,9 +77,21 @@
 					<div id="post_button" class="PostButton">post.button</div>
 				</div>
 			</div>
-			<div id="data_container" class="MessagesBox">
-				<div id="filler" class="filler"></div>
-			</div></td>
+			<div id="messages_scroll">
+				<div class="scrollbar">
+					<div class="track">
+						<div class="thumb">
+							<div class="end"></div>
+						</div>
+					</div>
+				</div>
+				<div class="viewport">
+					<div id="data_container" class="MessagesBox overview">
+						<div id="filler" class="filler"></div>
+					</div>
+				</div>
+			</div>
+		</td>
 	</tr>
 	<tr class="Footer">
 		<td class="PageFooter">

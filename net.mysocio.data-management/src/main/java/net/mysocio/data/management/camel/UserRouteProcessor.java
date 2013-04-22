@@ -5,13 +5,10 @@ package net.mysocio.data.management.camel;
 
 import net.mysocio.data.AbstractProcessor;
 
-import com.google.code.morphia.annotations.Entity;
-
 /**
  * @author Aladdin
  *
  */
-@Entity("processors")
 public abstract class UserRouteProcessor extends AbstractProcessor {
 	/**
 	 * 

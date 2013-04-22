@@ -22,6 +22,7 @@ public class SocioRoute extends SocioObject {
 	private String to;
 	private Long delay = 0l;
 	private boolean autoStartup = true;
+	private String camelRouteId;
 	
 	public String getFrom() {
 		return from;
@@ -52,5 +53,11 @@ public class SocioRoute extends SocioObject {
 	}
 	public void setAutoStartup(boolean autoStartup) {
 		this.autoStartup = autoStartup;
+	}
+	public String getCamelRouteId() {
+		return camelRouteId;
+	}
+	public void setCamelRouteId(String camelRouteId) {
+		this.camelRouteId = camelRouteId;
 	} 
 }

@@ -1,14 +1,12 @@
 package net.mysocio.data;
 
+import java.io.Serializable;
+
 import org.apache.camel.Processor;
 
-import com.google.code.morphia.annotations.Entity;
-
-@Entity("processors")
-public abstract class AbstractProcessor extends SocioObject implements Processor{
+public abstract class AbstractProcessor implements Processor, Serializable{
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1749103184863281301L;
-}
+	private static final long serialVersionUID = 2076814374967849891L;}

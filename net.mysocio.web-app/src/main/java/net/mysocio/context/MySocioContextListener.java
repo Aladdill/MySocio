@@ -90,11 +90,11 @@ public class MySocioContextListener implements ServletContextListener {
 			DB db = connectionBean.getDB(dbName);
 			db.authenticate(dbUser, dbPass.toCharArray());
 			if (!db.collectionExists("route_packages")){
-				DBObject options = BasicDBObjectBuilder.start().add("capped", true).add("size", 100000).get();
+				DBObject options = BasicDBObjectBuilder.start().add("capped", true).add("size", 10000000).get();
 				db.createCollection("route_packages", options);
 			}
 			if (!db.collectionExists("temp_routes")){
-				DBObject options = BasicDBObjectBuilder.start().add("capped", true).add("size", 100000).get();
+				DBObject options = BasicDBObjectBuilder.start().add("capped", true).add("size", 10000000).get();
 				db.createCollection("temp_routes", options);
 			}
 		} catch (Exception e) {

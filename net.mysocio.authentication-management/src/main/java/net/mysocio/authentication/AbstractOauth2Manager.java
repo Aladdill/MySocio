@@ -58,6 +58,8 @@ public abstract class AbstractOauth2Manager implements IAuthenticationManager {
         .callback(getMysocioRedirect() + "&" + AccountsManager.IDENTIFIER + "=" + getUserIdentifier())
         .scope(getScope())
         .build();
+		logger.debug("Id = " + getMysocioId());
+		logger.debug("Id = " + getMySocioSecret());
 		return service;
 	}
 
