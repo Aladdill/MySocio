@@ -10,7 +10,7 @@ import net.mysocio.data.messages.lj.LjMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.code.morphia.annotations.Entity;
+import com.github.jmkgreen.morphia.annotations.Entity;
 
 /**
  * @author Aladdin

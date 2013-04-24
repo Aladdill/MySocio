@@ -3,7 +3,7 @@
  */
 package net.mysocio.data;
 
-import com.google.code.morphia.annotations.Entity;
+import com.github.jmkgreen.morphia.annotations.Entity;
 
 /**
  * @author Aladdin

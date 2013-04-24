@@ -5,7 +5,7 @@ package net.mysocio.data;
 
 import org.bson.types.ObjectId;
 
-import com.google.code.morphia.annotations.Id;
+import com.github.jmkgreen.morphia.annotations.Id;
 
 
 

@@ -10,7 +10,7 @@
 	<artifactId>mongo-data-management</artifactId>
 	<dependencies>
 		<dependency>
-			<groupId>com.google.code.morphia</groupId>
+			<groupId>com.github.jmkgreen.morphia</groupId>
 			<artifactId>morphia</artifactId>
 		</dependency>
 		<dependency>

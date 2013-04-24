@@ -52,7 +52,7 @@ public interface IDataManager {
 	
 	public void addSourceToUser(String userId, Source source) throws Exception;
 
-	public Long countUnreadMessages(String tagId);
+	public Long countUnreadMessages(String userId, String tagId);
 
 	public void createRoute(String from, AbstractProcessor processor, String to, Long delay) throws Exception;
 	
@@ -66,5 +66,5 @@ public interface IDataManager {
 
 	public abstract Source getSource(String url);
 
-	public boolean isRouteExist(String from, String to);
+	public boolean isRouteExist(String from, AbstractProcessor processor);
 }

@@ -13,7 +13,7 @@ import net.mysocio.data.UserTags;
 import net.mysocio.data.accounts.Account;
 import net.mysocio.data.contacts.Contact;
 
-import com.google.code.morphia.annotations.Entity;
+import com.github.jmkgreen.morphia.annotations.Entity;
 
 /**
  * @author Aladdin

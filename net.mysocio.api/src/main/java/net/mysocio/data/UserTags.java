@@ -6,8 +6,7 @@ package net.mysocio.data;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.code.morphia.annotations.Embedded;
-import com.google.code.morphia.annotations.Entity;
+import com.github.jmkgreen.morphia.annotations.Entity;
 
 /**
  * @author Aladdin
@@ -21,7 +20,7 @@ public class UserTags extends SocioObject {
 	private boolean showAll = false;
 	private String order = SocioTag.ASCENDING_ORDER;
 	
-	@Embedded
+	@com.github.jmkgreen.morphia.annotations.Embedded
 	private List<SocioTag> children = new ArrayList<SocioTag>();
 	/**
 	 * 

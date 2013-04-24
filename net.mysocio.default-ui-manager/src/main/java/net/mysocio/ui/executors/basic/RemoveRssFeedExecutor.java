@@ -11,12 +11,16 @@ import net.mysocio.data.management.DataManagerFactory;
 import net.mysocio.ui.management.CommandExecutionException;
 import net.mysocio.ui.management.ICommandExecutor;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
 /**
  * @author Aladdin
  *
  */
 public class RemoveRssFeedExecutor implements ICommandExecutor {
-//	private static final Logger logger = LoggerFactory.getLogger(RemoveRssFeedExecutor.class);
+	private static final Logger logger = LoggerFactory.getLogger(RemoveRssFeedExecutor.class);
 	/** 
 	 * For now, I'm just removing rss feed from User, in future maybe reference counted management should be implemented   
 	 */
@@ -32,6 +36,7 @@ public class RemoveRssFeedExecutor implements ICommandExecutor {
 			Source source = dataManager.getSource(tagId);
 			source.removeRoute(connectionData.getUserId());
 		} catch (Exception e) {
+			logger.error("Can't remove rss feed.",e);
 			throw new CommandExecutionException(e);
 		}
 		return new GetRssFeedsExecutor().execute(connectionData);

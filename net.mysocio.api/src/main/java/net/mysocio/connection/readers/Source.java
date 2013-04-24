@@ -6,7 +6,7 @@ package net.mysocio.connection.readers;
 import net.mysocio.data.IUniqueObject;
 import net.mysocio.data.NamedObject;
 
-import com.google.code.morphia.annotations.Entity;
+import com.github.jmkgreen.morphia.annotations.Entity;
 
 /**
  * @author Aladdin

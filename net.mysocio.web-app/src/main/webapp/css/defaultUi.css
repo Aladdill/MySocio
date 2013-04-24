@@ -35,7 +35,7 @@ td.SourcesBox {
 	position: relative;
 	background: transparent;
 	margin-top: 37px;
-	width: 211px;
+	width: 315px;
 	float: none;
 }
 
@@ -428,9 +428,6 @@ tr.Footer {
 .gplusbutton {
 	margin: 6px 0px 0px 10px;
 }
-/* .MessagesBox {
-	overflow: auto;
-} */
 .rssTitle {
 	font-family: arial,sans-serif;
 	color: #00aeef;
@@ -869,7 +866,7 @@ a#login_vkontakte:HOVER img {
 .overview { list-style: none; position: absolute; left: 0; top: 0; }
 .thumb .end,
 .thumb { background-color: #a67eb0; }
-.scrollbar { position: relative; float: right; width: 8px; }
+.scrollbar { position: relative; float: right; width: 10px; }
 .track { background-color: #D8EEFD; height: 100%; width:8px; position: relative; padding: 0 1px; }
 .thumb { height: 20px; width: 8px; cursor: pointer; overflow: hidden; position: absolute; top: 0; }
 .thumb .end { overflow: hidden; height: 5px; width: 13px; }

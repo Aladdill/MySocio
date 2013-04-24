@@ -3,8 +3,8 @@
  */
 package net.mysocio.data;
 
-import com.google.code.morphia.annotations.CappedAt;
-import com.google.code.morphia.annotations.Entity;
+import com.github.jmkgreen.morphia.annotations.CappedAt;
+import com.github.jmkgreen.morphia.annotations.Entity;
 
 /**
  * @author Aladdin

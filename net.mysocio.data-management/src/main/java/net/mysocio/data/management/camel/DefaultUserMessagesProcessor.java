@@ -12,7 +12,7 @@ import org.apache.camel.Exchange;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.code.morphia.annotations.Transient;
+import com.github.jmkgreen.morphia.annotations.Transient;
 
 /**
  * @author Aladdin

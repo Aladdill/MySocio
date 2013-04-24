@@ -34,9 +34,9 @@ import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.code.morphia.Datastore;
-import com.google.code.morphia.Key;
-import com.google.code.morphia.query.Query;
+import com.github.jmkgreen.morphia.Datastore;
+import com.github.jmkgreen.morphia.Key;
+import com.github.jmkgreen.morphia.query.Query;
 
 /**
  * @author Aladdin
@@ -210,9 +210,13 @@ public class MongoDataManager implements IDataManager {
 	 * 
 	 * @see net.mysocio.data.management.IDataManager#saveObjects(java.util.List)
 	 */
-	public <T extends ISocioObject> void saveObjects(Class<T> T, List<T> objects) throws DuplicateMySocioObjectException {
+	public <T extends ISocioObject> void saveObjects(Class<T> T, List<T> objects) {
 		for (T object : objects) {
-			saveObject(object);
+			try {
+				saveObject(object);
+			} catch (DuplicateMySocioObjectException e) {
+				logger.info("Duplicate object was found");
+			}
 		}
 	}
 
@@ -307,8 +311,8 @@ public class MongoDataManager implements IDataManager {
 		return messagesList;
 	}
 
-	public Long countUnreadMessages(String tagId) {
-		return ds.createQuery(UnreaddenMessage.class).field("tagId").equal(tagId).countAll();
+	public Long countUnreadMessages(String userId, String tagId) {
+		return ds.createQuery(UnreaddenMessage.class).field("tagId").equal(tagId).field("userId").equal(userId).countAll();
 	}
 
 	public String getPage(String userId, String pageKey) {
@@ -332,10 +336,10 @@ public class MongoDataManager implements IDataManager {
 	}
 
 	@Override
-	public boolean isRouteExist(String from, String to) {
+	public boolean isRouteExist(String from, AbstractProcessor processor) {
 		Query<SocioRoute>  routes = ds.createQuery(SocioRoute.class).field("from").equal(from);
-		if (to != null){
-			routes.field("to").equal(to);
+		if (processor != null){
+			routes.field("processor").equal(processor);
 		}
 		return (routes.countAll() > 0);
 	}

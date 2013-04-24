@@ -5,7 +5,7 @@ package net.mysocio.ui.data.objects;
 
 import net.mysocio.data.ui.UiObject;
 
-import com.google.code.morphia.annotations.Entity;
+import com.github.jmkgreen.morphia.annotations.Entity;
 
 /**
  * @author Aladdin

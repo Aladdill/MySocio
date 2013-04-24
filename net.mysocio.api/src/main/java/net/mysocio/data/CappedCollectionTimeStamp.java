@@ -1,6 +1,6 @@
 package net.mysocio.data;
 
-import com.google.code.morphia.annotations.Entity;
+import com.github.jmkgreen.morphia.annotations.Entity;
 
 @Entity(value="time_stamps")
 public class CappedCollectionTimeStamp extends SocioObject {

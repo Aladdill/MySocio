@@ -7,7 +7,7 @@ import net.mysocio.data.IUniqueObject;
 import net.mysocio.data.SocioObject;
 import net.mysocio.ui.data.objects.DefaultMessage;
 
-import com.google.code.morphia.annotations.Entity;
+import com.github.jmkgreen.morphia.annotations.Entity;
 
 
 

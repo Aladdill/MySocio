@@ -16,8 +16,8 @@ import net.mysocio.data.UserTags;
 import net.mysocio.data.contacts.Contact;
 import net.mysocio.ui.data.objects.NewAccountLine;
 
-import com.google.code.morphia.annotations.Entity;
-import com.google.code.morphia.annotations.Reference;
+import com.github.jmkgreen.morphia.annotations.Entity;
+import com.github.jmkgreen.morphia.annotations.Reference;
 
 /**
  * @author Aladdin

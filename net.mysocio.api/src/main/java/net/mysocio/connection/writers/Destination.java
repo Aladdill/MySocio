@@ -3,7 +3,7 @@ package net.mysocio.connection.writers;
 import net.mysocio.data.NamedObject;
 import net.mysocio.data.messages.GeneralMessage;
 
-import com.google.code.morphia.annotations.Entity;
+import com.github.jmkgreen.morphia.annotations.Entity;
 
 @Entity("destinations")
 public abstract class Destination extends NamedObject{

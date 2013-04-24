@@ -7,9 +7,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.code.morphia.annotations.Embedded;
-import com.google.code.morphia.annotations.Entity;
-import com.google.code.morphia.annotations.Id;
+import com.github.jmkgreen.morphia.annotations.Entity;
+import com.github.jmkgreen.morphia.annotations.Id;
 
 
 /**
@@ -28,7 +27,7 @@ public class SocioTag implements Serializable, Comparable<SocioTag>{
 	private String iconType;
 	@Id
 	private String uniqueId;
-	@Embedded
+	@com.github.jmkgreen.morphia.annotations.Embedded
 	private List<SocioTag> children = new ArrayList<SocioTag>();
 	private String order = SocioTag.ASCENDING_ORDER;
 	

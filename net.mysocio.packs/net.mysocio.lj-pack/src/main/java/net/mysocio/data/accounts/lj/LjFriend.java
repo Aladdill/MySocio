@@ -9,7 +9,7 @@ import net.mysocio.connection.readers.Source;
 import net.mysocio.connection.writers.Destination;
 import net.mysocio.data.contacts.Contact;
 
-import com.google.code.morphia.annotations.Entity;
+import com.github.jmkgreen.morphia.annotations.Entity;
 
 /**
  * @author Aladdin

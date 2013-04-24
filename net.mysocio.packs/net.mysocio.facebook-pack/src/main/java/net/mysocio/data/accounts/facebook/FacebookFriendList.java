@@ -8,7 +8,7 @@ import java.util.List;
 
 import net.mysocio.data.ContactsList;
 
-import com.google.code.morphia.annotations.Entity;
+import com.github.jmkgreen.morphia.annotations.Entity;
 
 
 

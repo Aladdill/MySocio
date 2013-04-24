@@ -45,7 +45,7 @@ public class GetTagsExecutor implements ICommandExecutor {
 		tags = connectionManager.getUserTags();
 		for (SocioTag tag : tags.getLeaves()) {
 			String tagId = tag.getUniqueId();
-			Long num = dataManager.countUnreadMessages(tagId);
+			Long num = dataManager.countUnreadMessages(connectionManager.getUserId(), tagId);
 			tagsMessagesCount.put(tagId, num);
 		}
 		JsonFactory f = new JsonFactory();

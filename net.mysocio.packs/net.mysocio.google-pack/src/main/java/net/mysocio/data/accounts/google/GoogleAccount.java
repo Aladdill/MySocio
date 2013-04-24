@@ -11,7 +11,7 @@ import net.mysocio.data.SocioTag;
 import net.mysocio.data.UserTags;
 import net.mysocio.data.accounts.Oauth2Account;
 
-import com.google.code.morphia.annotations.Entity;
+import com.github.jmkgreen.morphia.annotations.Entity;
 
 /**
  * @author Aladdin
