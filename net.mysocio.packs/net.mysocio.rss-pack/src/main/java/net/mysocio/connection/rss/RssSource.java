@@ -36,7 +36,7 @@ public class RssSource extends Source {
 		RssMessageProcessor processor = new RssMessageProcessor();
 		processor.setTo(to);
 		processor.setTag(url);
-		DataManagerFactory.getDataManager().createRoute("rss:" + url + "?consumer.delay=2000", processor , null, 0l);
+		DataManagerFactory.getDataManager().createRoute("rss:" + url + "?consumer.delay=2000", processor, 0l);
 	}
 
 	@Override

@@ -19,7 +19,6 @@ public class GeneralRouteBuilder extends RouteBuilder {
 	static final Logger logger = LoggerFactory
 			.getLogger(GeneralRouteBuilder.class);
 	private String from;
-	private String to;
 	private Processor processor;
 	private Long delay;
 	private boolean autoStartup;
@@ -30,7 +29,6 @@ public class GeneralRouteBuilder extends RouteBuilder {
 	public GeneralRouteBuilder(SocioRoute route) {
 		super();
 		this.from = route.getFrom();
-		this.to = route.getTo();
 		this.processor = route.getProcessor();
 		this.delay = route.getDelay();
 		this.autoStartup = route.isAutoStartup();
@@ -44,12 +42,9 @@ public class GeneralRouteBuilder extends RouteBuilder {
 	@Override
 	public void configure() throws Exception {
 		if (logger.isDebugEnabled()) {
-			logger.debug("Creating route from: " + from + " to: " + to);
+			logger.debug("Creating route from: " + from);
 		}
 		RouteDefinition routeDefinition = from(from).autoStartup(autoStartup).process(processor).delayer(delay);;
-		if (to != null) {
-			routeDefinition = routeDefinition.to(to);
-		}
 		this.routeId = routeDefinition.getId();
 	}
 

@@ -151,6 +151,8 @@ public class SocioTag implements Serializable, Comparable<SocioTag>{
 		for (SocioTag child : children) {
 			if (child.getUniqueId().equals(uniqueId)){
 				childFound = child;
+			}else{
+				child.removeDesendant(uniqueId);
 			}
 		}
 		if (childFound != null){

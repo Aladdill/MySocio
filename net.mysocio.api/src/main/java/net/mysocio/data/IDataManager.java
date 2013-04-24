@@ -54,7 +54,7 @@ public interface IDataManager {
 
 	public Long countUnreadMessages(String userId, String tagId);
 
-	public void createRoute(String from, AbstractProcessor processor, String to, Long delay) throws Exception;
+	public void createRoute(String from, AbstractProcessor processor, Long delay) throws Exception;
 	
 	public void sendPackageToRoute(String to, SocioObject object) throws Exception;
 

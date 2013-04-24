@@ -27,8 +27,7 @@ public class NewRouteProcessor extends CappedCollectionProcessor {
 		IDataManager dataManager = DataManagerFactory.getDataManager();
 		//We want to ignore routes from nowhere to nowhere
 		String from = tempRoute.getFrom();
-		String to = tempRoute.getTo();
-		if (from == null && to == null){
+		if (from == null){
 			logger.debug("Empty route discovered");
 			return tempRoute.getCreationDate(); 
 		}
@@ -37,7 +36,6 @@ public class NewRouteProcessor extends CappedCollectionProcessor {
 			SocioRoute route = new SocioRoute();
 			route.setDelay(tempRoute.getDelay());
 			route.setFrom(from);
-			route.setTo(to);
 			route.setProcessor(processor);
 			dataManager.saveObject(route);
 			route.setCamelRouteId(CamelContextManager.addRoute(route));

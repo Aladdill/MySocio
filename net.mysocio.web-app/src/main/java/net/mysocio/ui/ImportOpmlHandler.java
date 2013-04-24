@@ -57,7 +57,7 @@ public class ImportOpmlHandler extends AbstractHandler {
 				return "<html><head><script>parent.closeWaitDialog();parent.showWaitDialog('Error', '" + CommandExecutionException.BETA_ERROR + "');</script></head><body></body></html>";
 			}
 		}
-		return "<html><head><script>parent.closeWaitDialog();</script></head><body></body></html>";
+		return "<html><head><script>parent.showRssFeeds();parent.closeWaitDialog();</script></head><body></body></html>";
 	}
 
 	/*

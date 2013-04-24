@@ -31,7 +31,7 @@ public class FacebookSource extends AccountSource {
 		processor.setTo(to);
 		processor.setToken(account.getToken());
 		processor.setAccountId(account.getId().toString());
-		DataManagerFactory.getDataManager().createRoute("timer://" + getId() + "?fixedRate=true&period=60s", processor, null, 0l);
+		DataManagerFactory.getDataManager().createRoute("timer://" + getId() + "?fixedRate=true&period=60s", processor, 0l);
 	}
 
 	@Override

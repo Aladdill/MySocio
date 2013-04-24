@@ -19,7 +19,6 @@ public class SocioRoute extends SocioObject {
 	private String from;
 	@Embedded
 	private AbstractProcessor processor;
-	private String to;
 	private Long delay = 0l;
 	private boolean autoStartup = true;
 	private String camelRouteId;
@@ -35,12 +34,6 @@ public class SocioRoute extends SocioObject {
 	}
 	public void setProcessor(AbstractProcessor processor) {
 		this.processor = processor;
-	}
-	public String getTo() {
-		return to;
-	}
-	public void setTo(String to) {
-		this.to = to;
 	}
 	public Long getDelay() {
 		return delay;

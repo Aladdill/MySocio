@@ -20,9 +20,6 @@ public abstract class AbstractMessageProcessor extends AbstractProcessor{
 	 */
 	private static final long serialVersionUID = -2112778445393534126L;
 
-	
-	private String to;
-	
 	protected void addMessageForTag(GeneralMessage message, String tag) throws Exception {
 		UnreaddenMessage unreaddenMessage = new UnreaddenMessage();
 		unreaddenMessage.setMessageDate(message.getDate());
@@ -31,11 +28,28 @@ public abstract class AbstractMessageProcessor extends AbstractProcessor{
 		DataManagerFactory.getDataManager().sendPackageToRoute(to, unreaddenMessage);
 	}
 	
-	public String getTo() {
-		return to;
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((to == null) ? 0 : to.hashCode());
+		return result;
 	}
 
-	public void setTo(String to) {
-		this.to = to;
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		AbstractMessageProcessor other = (AbstractMessageProcessor) obj;
+		if (to == null) {
+			if (other.to != null)
+				return false;
+		} else if (!to.equals(other.to))
+			return false;
+		return true;
 	}
 }

@@ -89,17 +89,16 @@ public class MongoDataManager implements IDataManager {
 		addAccountToUser(account, userId, userTags);
 		DefaultUserMessagesProcessor processor = new DefaultUserMessagesProcessor();
 		processor.setUserId(userId);
-		createRoute("activemq:" + userId + ".newMessage", processor, null, 0l);
+		createRoute("activemq:" + userId + ".newMessage", processor, 0l);
 		logger.debug("User created");
 		return user;
 	}
 
-	public void createRoute(String from, AbstractProcessor processor, String to, Long delay)
+	public void createRoute(String from, AbstractProcessor processor, Long delay)
 			throws DuplicateMySocioObjectException {
 		TempRoute route = new TempRoute();
 		route.setFrom(from);
 		route.setProcessor(processor);
-		route.setTo(to);
 		route.setDelay(delay);
 		route.setCreationDate(System.currentTimeMillis());
 		saveObject(route);
@@ -339,7 +338,7 @@ public class MongoDataManager implements IDataManager {
 	public boolean isRouteExist(String from, AbstractProcessor processor) {
 		Query<SocioRoute>  routes = ds.createQuery(SocioRoute.class).field("from").equal(from);
 		if (processor != null){
-			routes.field("processor").equal(processor);
+			routes.field("processor.to").equal(processor.getTo());
 		}
 		return (routes.countAll() > 0);
 	}
