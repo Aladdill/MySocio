@@ -8,6 +8,7 @@ import java.util.List;
 
 import net.mysocio.data.CorruptedDataException;
 import net.mysocio.data.IConnectionData;
+import net.mysocio.data.UserTags;
 import net.mysocio.data.management.MessagesManager;
 import net.mysocio.data.messages.UnreaddenMessage;
 import net.mysocio.ui.management.CommandExecutionException;
@@ -55,6 +56,11 @@ public class GetMessagesExecutor implements ICommandExecutor {
 		if (tagId == null){
 			return Collections.emptyList();
 		}
-		return MessagesManager.getInstance().getMessagesForSelectedTag(connectionData.getUserId(), tagId, connectionData.getUserTags());
+		UserTags userTags = connectionData.getUserTags();
+		if (tagId.equals("currentSelection")){
+			tagId = userTags.getSelectedTag();
+		}
+		
+		return MessagesManager.getInstance().getMessagesForSelectedTag(connectionData.getUserId(), tagId, userTags);
 	}
 }

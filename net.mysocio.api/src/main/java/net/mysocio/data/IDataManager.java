@@ -40,7 +40,7 @@ public interface IDataManager {
 
 	public void setMessageReadden(String userId, String messageId);
 
-	public List<UnreaddenMessage> getUnreadMessages(SocioUser user, String tagId, UserTags tags);
+	public List<UnreaddenMessage> getUnreadMessages(String userId, String tagId, UserTags tags);
 
 	public String getPage(String userId, String pageKey);
 

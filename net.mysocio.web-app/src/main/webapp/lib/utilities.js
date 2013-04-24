@@ -255,12 +255,13 @@ function initMessagesContainer() {
 	var messageContainer = $("#data_container");
 	var height = $("body").innerHeight() - 198;
 	messageContainer.css("height", height);
-	$("#messages_scroll .viewport").first().css("height", height);
-	$("#messages_scroll").css("height", height);
 	$("#filler").css("height", messageContainer.innerHeight() - 10);
-	$("#messages_scroll").bind("tinyscroll", messageScroll);
+	messageContainer.bind("jsp-scroll-y", messageScroll);
 }
-function messageScroll() {
+function messageScroll(event, scrollPositionY, isAtTop, isAtBottom) {
+	if (isAtBottom == true){
+		getMessages('currentSelection');
+	}
 	$.each($(".Message"), function(index, value) {
 		var message = $("#" + value.id);
 		var messagePosition = message.position().top;
@@ -363,7 +364,7 @@ function getMessages(id) {
 				$.each($(".MessageDate"), function(index, value) {var millies = new Number($(value).html());
 				var date = new Date(millies);
 				$(value).html(date.toLocaleString());});
-				$("#messages_scroll").tinyscrollbar();
+				$('#data_container').jScrollPane();
 				gapi.plusone.go();
 			}).always(closeWaitDialog)
 			.fail(onFailure);

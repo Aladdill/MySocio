@@ -21,18 +21,8 @@ public class SocioUser extends NamedObject{
 	private static final long serialVersionUID = -2886854604233072581L;
 	@Reference
 	private Account mainAccount;
-	private int range = 25;
-	private String selectedTag = UserTags.ALL_TAGS;
 	private String locale;
 	
-	public String getSelectedTag() {
-		return selectedTag;
-	}
-
-	public void setSelectedTag(String selectedTag) {
-		this.selectedTag = selectedTag;
-	}
-
 	public String getLocale() {
 		return locale;
 	}
@@ -47,13 +37,5 @@ public class SocioUser extends NamedObject{
 
 	public void setMainAccount(Account mainAccount) {
 		this.mainAccount = mainAccount;
-	}
-
-	public int getRange() {
-		return range;
-	}
-
-	public void setRange(int range) {
-		this.range = range;
 	}
 }

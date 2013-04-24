@@ -10,7 +10,6 @@ import net.mysocio.connection.writers.Destination;
 import net.mysocio.data.IDataManager;
 import net.mysocio.data.IMessagesManager;
 import net.mysocio.data.SocioPair;
-import net.mysocio.data.SocioUser;
 import net.mysocio.data.UserTags;
 import net.mysocio.data.management.camel.AbstractMessageProcessor;
 import net.mysocio.data.messages.GeneralMessage;
@@ -56,8 +55,7 @@ public class MessagesManager implements IMessagesManager {
 
 	public List<UnreaddenMessage> getMessagesForSelectedTag(String userId, String tagId, UserTags tags) {
 		IDataManager dataManager = DataManagerFactory.getDataManager();
-		SocioUser user = dataManager.getObject(SocioUser.class, userId);
-		List<UnreaddenMessage> unreadMessages = dataManager.getUnreadMessages(user, tagId, tags);
+		List<UnreaddenMessage> unreadMessages = dataManager.getUnreadMessages(userId, tagId, tags);
 //		for (String id : unreadMessages) {
 //			IMessage message = getCacheMessage(id);
 //			if (message != null){

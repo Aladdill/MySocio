@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.mysocio.data.IConnectionData;
 import net.mysocio.data.SocioUser;
+import net.mysocio.data.UserTags;
 import net.mysocio.data.management.DataManagerFactory;
 import net.mysocio.ui.management.CommandExecutionException;
 import net.mysocio.ui.management.CommandIterpreterFactory;
@@ -45,8 +46,9 @@ public class RequestHandler extends AbstractHandler {
 			userId = (String) request.getSession().getAttribute("user");
 			if (userId != null) {
 				connectionData.setUserId(userId);
-				connectionData.setUserTags(DataManagerFactory.getDataManager().getUserTags(userId));
-				connectionData.setSelectedTag(DataManagerFactory.getDataManager().getObject(SocioUser.class, userId).getSelectedTag());
+				UserTags userTags = DataManagerFactory.getDataManager().getUserTags(userId);
+				connectionData.setUserTags(userTags);
+				connectionData.setSelectedTag(userTags.getSelectedTag());
 			}else{
 				if (!command.equals(EDefaultCommand.startAuthentication.name()) && 
 						!command.equals(EDefaultCommand.login.name()) &&

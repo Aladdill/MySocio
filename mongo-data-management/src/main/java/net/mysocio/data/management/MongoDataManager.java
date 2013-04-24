@@ -285,8 +285,8 @@ public class MongoDataManager implements IDataManager {
 		}
 	}
 
-	public List<UnreaddenMessage> getUnreadMessages(SocioUser user, String tagId, UserTags tags) {
-		Query<UnreaddenMessage> q = ds.createQuery(UnreaddenMessage.class).field("userId").equal(user.getId().toString());
+	public List<UnreaddenMessage> getUnreadMessages(String userId, String tagId, UserTags tags) {
+		Query<UnreaddenMessage> q = ds.createQuery(UnreaddenMessage.class).field("userId").equal(userId.toString());
 		String order = tags.getOrder();
 		if (!tagId.equals(UserTags.ALL_TAGS)){
 			SocioTag tag = tags.getTag(tagId);
@@ -303,10 +303,10 @@ public class MongoDataManager implements IDataManager {
 		}else{
 			q.order("messageDate");
 		}
-		q.limit(user.getRange());
+		q.limit(tags.getRange());
 		List<UnreaddenMessage> messagesList = q.asList();
-		user.setSelectedTag(tagId);
-		ds.save(user);
+		tags.setSelectedTag(tagId);
+		ds.save(tags);
 		return messagesList;
 	}
 

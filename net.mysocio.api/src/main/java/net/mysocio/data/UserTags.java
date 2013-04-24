@@ -19,6 +19,8 @@ public class UserTags extends SocioObject {
 	private String value;
 	private boolean showAll = false;
 	private String order = SocioTag.ASCENDING_ORDER;
+	private int range = 25;
+	private String selectedTag = UserTags.ALL_TAGS;
 	
 	@com.github.jmkgreen.morphia.annotations.Embedded
 	private List<SocioTag> children = new ArrayList<SocioTag>();
@@ -153,5 +155,21 @@ public class UserTags extends SocioObject {
 
 	public void setOrder(String order) {
 		this.order = order;
+	}
+	
+	public int getRange() {
+		return range;
+	}
+
+	public void setRange(int range) {
+		this.range = range;
+	}
+	
+	public String getSelectedTag() {
+		return selectedTag;
+	}
+
+	public void setSelectedTag(String selectedTag) {
+		this.selectedTag = selectedTag;
 	}
 }
