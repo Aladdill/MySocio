@@ -36,11 +36,11 @@ public class RssSource extends Source {
 		RssMessageProcessor processor = new RssMessageProcessor();
 		processor.setTo(to);
 		processor.setTag(url);
-		DataManagerFactory.getDataManager().createRoute("rss:" + url + "?consumer.delay=2000", processor, 0l);
+		DataManagerFactory.getDataManager().createRoute("rss:" + url + "?splitEntries=false&consumer.delay=2000", processor, 0l);
 	}
 
 	@Override
 	public void removeRoute(String userId) throws Exception {
-		DataManagerFactory.getDataManager().removeRoute("rss:" + getUrl() + "?consumer.delay=2000", userId);		
+		DataManagerFactory.getDataManager().removeRoute("rss:" + getUrl() + "?splitEntries=false&consumer.delay=2000", userId);		
 	}
 }

@@ -120,7 +120,7 @@ function addAccount(identifierValue) {
 function openLjAuthentication() {
 	var $dialog = $('<div>Username</div>');
 	var $input = $('<input type="text">');
-	$dialog.append($input)
+	$dialog.append($input);
 	$dialog.dialog({
 		title : 'Add Livejournal Account',
 		buttons : {
@@ -253,9 +253,10 @@ function openMainPage() {
 }
 function initMessagesContainer() {
 	var messageContainer = $("#data_container");
-	var height = $("body").innerHeight() - 198;
+	var height = $("body").innerHeight() - 196;
 	messageContainer.css("height", height);
 	$("#filler").css("height", messageContainer.innerHeight() - 10);
+	messageContainer.jScrollPane();
 	messageContainer.bind("jsp-scroll-y", messageScroll);
 }
 function messageScroll(event, scrollPositionY, isAtTop, isAtBottom) {
@@ -353,18 +354,21 @@ function loadStartPage() {
 	}
 }
 function getMessages(id) {
-	$(".Message").remove();
 	showWaitDialog("dialog.getting.messages.title", "dialog.getting.messages.message");
 	$.post("execute?command=getMessages&sourceId=" + id).done(
 			function(data) {
 				if (isNoContent(data)) {
 					return;
 				}
+				if (id != 'currentSelection'){
+					$("#data_container").data('jsp').scrollTo(0, 0);
+					$(".Message").remove();
+				}
 				$(data).insertBefore("#filler");
 				$.each($(".MessageDate"), function(index, value) {var millies = new Number($(value).html());
 				var date = new Date(millies);
 				$(value).html(date.toLocaleString());});
-				$('#data_container').jScrollPane();
+				$("#data_container").data('jsp').reinitialise();
 				gapi.plusone.go();
 			}).always(closeWaitDialog)
 			.fail(onFailure);
