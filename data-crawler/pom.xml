@@ -29,10 +29,6 @@
 		</dependency>
 		<dependency>
 			<groupId>net.mysocio</groupId>
-			<artifactId>test-pack</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>net.mysocio</groupId>
 			<artifactId>data-management</artifactId>
 		</dependency>
 		<dependency>

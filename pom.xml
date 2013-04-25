@@ -77,7 +77,6 @@
 		<module>net.mysocio.packs</module>
 		<module>net.mysocio.default-ui-manager</module>
 		<module>net.mysocio.web-app</module>
-		<!-- <module>jdo-data-management</module> -->
 		<module>mongo-data-management</module>
 		<module>data-crawler</module>
 	</modules>
