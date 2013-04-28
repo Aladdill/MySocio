@@ -82,11 +82,16 @@
 					<input id="rssUrl" type="text" autocomplete="off" title="enter.rss.url" placeholder="enter.rss.url">
 					<div class="PlusButton" onclick="addRssFeed()"></div>
 					<div class="ContentMenuDivider"></div>
-					<input id="shown_import_opml"/><span class="ImportOpmlButton">import.opml</span>
-					<div class="PlusButton" onclick="importOPML()"></div>
+					<input id="shown_import_opml"/>
 					<form id="importOPMLform" method="POST" enctype="multipart/form-data" action="importOpml" target="hiddenFrame">
 						<input id="import_opml" type="file" name="upfile" class="ImportOpml">
 					</form>
+					<div class="ChoseOpmlFile" >
+						<div class="LeftChoseOpmlFile"></div>
+						<div class="MiddleChoseOpmlFile">choose.file</div>
+						<div class="RightChoseOpmlFile"></div>
+					</div>
+					<span class="ImportOpmlButton" onclick="importOPML()">import.opml</span>
 				</div>
 			</div>
 			<div class="PostBoxTriangle"></div>

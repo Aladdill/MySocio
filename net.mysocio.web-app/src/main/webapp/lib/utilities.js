@@ -150,7 +150,9 @@ function removeRssFeed(feedId) {
 	showWaitDialog('dialog.removing.feed.title','dialog.removing.feed.message');
 	$.post("execute?command=removeRssFeed", {
 		id : feedId
-	}).done(setDataContainer).fail(onFailure);
+	}).done(showRssFeeds)
+	.done(closeWaitDialog)
+	.fail(onFailure);
 }
 function setDataContainer(data) {
 	if (isNoContent(data)) {
@@ -237,8 +239,31 @@ function showRssFeeds() {
 	$(".PostBoxTriangle").addClass("Invisible");
 	$("#rss_content_menu").removeClass("Invisible");
 	$("#main_content_menu").addClass("Invisible");
-	openUrlInDiv($("#data_container .jspPane"), "execute?command=getRssFeeds",refreshDataContainerScroll);
-	refreshDataContainerScroll();
+	$("#data_container").unbind();
+	$.post("execute?command=getRssFeeds").done(
+			function(data) {
+				if (isNoContent(data)) {
+					return;
+				}
+				clearDataContainer();
+				var leftColumn = $("<div />").addClass("RssColumn");
+				var rightColumn = $("<div />").addClass("RssColumn");
+				$("#data_container .jspPane").append(leftColumn);
+				$("#data_container .jspPane").append(rightColumn);
+				$.each($(data), function(index, value) {
+					var rssLine = $(value);
+					if ((index + 2) % 4 == 0 || (index +1) % 4 == 0){
+						rssLine.children(".RSSType").addClass("GrayLine");
+					}
+					if (index % 2 == 0){
+						leftColumn.append(rssLine);
+					}else{
+						rightColumn.append(rssLine);
+					}
+				}
+				)
+				refreshDataContainerScroll()
+			}).fail(onFailure);
 }
 function orderBy(order){
 	showWaitDialog("dialog.general.wait.title", "dialog.general.wait.message");
@@ -255,6 +280,7 @@ function showMainPage() {
 	$("#upper_link").html($("#settings_link").html());
 	$("#data_container .jspPane").html("<div id='filler' class='filler'></div>");
 	$("#filler").css("height", $("#data_container").innerHeight() - 10);
+	$("#data_container").bind("jsp-scroll-y", messageScroll);
 	refreshDataContainerScroll();
 }
 function openMainPage() {
@@ -265,7 +291,7 @@ function openMainPage() {
 }
 function initMessagesContainer() {
 	var messageContainer = $("#data_container");
-	$("#import_opml").change(function (){$("#shown_import_opml").prop("value", $("#import_opml").prop("value"));});
+	$("#import_opml").change(function (){$("#shown_import_opml").prop("value", $("#import_opml").prop("value").substring(12));});
 	var height = $("body").innerHeight() - 226;
 	messageContainer.css("height", height);
 	$("#filler").css("height", messageContainer.innerHeight() - 10);

@@ -151,21 +151,32 @@ span.DefaultAccount {
 
 .RSS {
 	float: left;
-	width: 200px;
+	width: 322px;
 	height: auto;
 	margin-left: 28px;
-	margin-top: 20px;
+}
+.RSSType {
+	float: left;
+	width: 285px;
+	padding-left: 10px;
+}
+.RSS:HOVER > .MinusButton{
+	display: block;
+}
+.RssColumn {
+	width: 322px;
+	margin-right: 72px;
+	margin-top: 52px;
+	float: left;
+}
+.GrayLine {
+	background-color: #e5e5e5;
 }
 .floatLeft{
 	float: left;
 }
 .fullWidth {
 	width: 100%;
-}
-span.RSSType {
-	float: left;
-	margin-top: 7px;
-	margin-left: 10px;
 }
 .MessageUserpic {
 	float: left;
@@ -247,6 +258,48 @@ a.InnerLink {
 
 .InnerContentMenu input {
 	float: left;
+	margin-left: 15px;
+}
+#rssUrl {
+	width: 300px;
+}
+.ChoseOpmlFile {
+	z-index: 1;
+	float: left;
+	height: 19px;
+	margin-top: 4px;
+	left: -92px;
+	position: relative;
+}
+.LeftChoseOpmlFile {
+	background: url("../images/opmlButton/choose-file-left-idle.png");
+	width: 10px;
+	height: 19px;
+	float: left;
+}
+.RightChoseOpmlFile {
+	background: url("../images/opmlButton/choose-file-right-idle.png");
+	width: 10px;
+	height: 19px;
+	float: left;
+}
+.MiddleChoseOpmlFile {
+	background: url("../images/opmlButton/choose-file-center-idle.png");
+	background-repeat: repeat-x;
+	float: left;
+	font: bold 15px Calibri;
+	color: #ffffff;
+	height: 19px;
+}
+.ChoseOpmlFile:HOVER > .LeftChoseOpmlFile {
+	background: url("../images/opmlButton/choose-file-left-hover.png");
+}
+.ChoseOpmlFile:HOVER > .RightChoseOpmlFile {
+	background: url("../images/opmlButton/choose-file-roght-hover.png");
+}
+.ChoseOpmlFile:HOVER > .MiddleChoseOpmlFile {
+	background: url("../images/opmlButton/choose-file-center-hover.png");
+	background-repeat: repeat-x;
 }
 .ImportOpml {
 	position: relative;
@@ -255,12 +308,16 @@ a.InnerLink {
 	filter:alpha(opacity: 0);
 	opacity: 0;
 	z-index: 2;
-	left: -97px;
+	height: 19px;
+	width: 100px;
+	cursor: pointer;
+	margin: 0px;
 }
 
 .ImportOpmlButton {
 	z-index: 1;
-	width: 85px;
+	position: relative;
+	left: -92px;
 }
 
 .PostButton {
@@ -837,6 +894,7 @@ span.PromoText {
 .PlusButton {
 	height: 22px;
 	width: 22px;
+	margin: 3px 14px 0px 10px;
 	background: url("../images/settings/add-idle.png") no-repeat 0 0;
 	float: left;
 }
@@ -847,7 +905,8 @@ span.PromoText {
 	height: 22px;
 	width: 22px;
 	background: url("../images/settings/remove-idle.png") no-repeat 0 0;
-	float: left;
+	float: right;
+	margin-left: 5px;
 	cursor: pointer;
 }
 .MinusButton:HOVER {
