@@ -50,6 +50,7 @@ public class FacebookInputProcessor extends AbstractMessageProcessor {
 	private Long lastUpdate = 0l;
 	private String token;
 	private String accountId;
+	@Transient
 	private Facebook facebook;
 
 	public String getToken() {

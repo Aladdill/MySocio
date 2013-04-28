@@ -205,32 +205,46 @@ a.InnerLink {
 	width: 672px;
 	font: 13px Calibri;
 	color: #a5a4a4;
-	margin: 35px 0px 2px 28px;
+	margin: 10px 0px 2px 28px;
 }
 
 .PostBox : :FOCUS {
 	color: #000000;
 }
 .PostBox textarea{
-	border: 4px solid #ececec;
-	width: 668px;
+	border: 0px;
+	width: 672px;
+	background-color: #ececec;
+	resize: none;
+	padding: 4px;
+	height: 60px;
+	margin: 0px 0px 2px 0px;
+}
+.PostBoxTriangle {
+	width: 0;
+	height: 0;
+	border-top: 10px solid transparent;
+	border-bottom: 10px solid transparent;
+	border-right: 10px solid #ececec;
+	float: left;
+	position: relative;
+	left: 18px;
+	top: 35px;
 }
 .PostButtons {
 	height: 30px;
 	width: 680px;
 	background-color: #ececec;
 }
-.MarkAllReadButton {
-	height: 25px;
-	width: 130px;
-	background-color: #a67eb0;
+.InnerContentMenu span{
 	float: left;
 	text-align: center;
-	padding-top: 5px;
-	color: #ffffff;
-	font: bold 16px Calibri;
+	padding: 5px 10px 8px 10px;
+	color: #000000;
+	font: bold 15px Calibri;
 	cursor: pointer;
 }
+
 .PostButton {
 	height: 25px;
 	width: 72px;
@@ -267,12 +281,23 @@ a.InnerLink {
 	
 }
 
-.HeaderLine {
-	height: 4px;
+.SecondContentLine {
+	height: 2px;
 	width: 100%;
-	background: #00aeef;
+	background: #89bd3f;
 }
-
+.ContentMenu {
+	height: 31px;
+	width: auto;
+	background: #89bd3f;
+	margin-left: 28px;
+}
+.ContentMenuDivider {
+	width: 1px;
+	height: 31px;
+	background-color: #b6d38e;
+	float: left;
+}
 .HeaderMiddleColumn {
 	height: 44px;
 	width: 100%;
@@ -506,6 +531,16 @@ tr.Footer {
 	color: #292929;
 	float: left;
 	width: 100%;
+}
+.RssMessageFrom {
+	height: auto;
+	font-family: arial,sans-serif;
+	font-size: 13px;
+	overflow: hidden;
+	color: #292929;
+	float: left;
+	width: 100%;
+	padding-left: 6px;
 }
 .Expand {
 	height: auto;

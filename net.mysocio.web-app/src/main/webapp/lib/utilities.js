@@ -10,12 +10,12 @@ function collapseMessage(id) {
 	$("#" + id).find(".MessageCollapse").addClass("Invisible");
 	$("#" + id).removeClass("Expand");
 }
-function openUrlInDiv(divId, url, afterfunction) {
+function openUrlInDiv(div, url, afterfunction) {
 	$.post(url).done(function(data) {
 		if (isNoContent(data)) {
 			return;
 		}
-		$(divId).html(data);
+		div.html(data);
 	}).fail(onFailure).done(afterfunction);
 }
 function resizeTabs() {
@@ -139,8 +139,8 @@ function openLjAuthentication() {
 }
 function addRssFeed() {
 	$.post("execute?command=addRssFeed", {
-		url : $("#rssUrl").attr("value")
-	}).done(setDataContainer).fail(onFailure);
+		url : $("#rssUrl").prop("value")
+	}).done(showRssFeeds).fail(onFailure);
 }
 function importOPML() {
 	importingOPML();
@@ -156,7 +156,7 @@ function setDataContainer(data) {
 	if (isNoContent(data)) {
 		return;
 	}
-	$("#data_container").html(data);
+	$("#data_container .jspPane").html(data);
 	closeWaitDialog();
 }
 function isNoContent(data) {
@@ -230,20 +230,33 @@ function showSettings() {
 	showRssFeeds();
 }
 function clearDataContainer(){
-	$("#data_container").html("");
+	$("#data_container .jspPane").html("");
 }
 function showRssFeeds() {
 	$("#post_container").addClass("Invisible");
-	openUrlInDiv("#data_container", "execute?command=getRssFeeds");
+	$(".PostBoxTriangle").addClass("Invisible");
+	$("rss_content_menu").removeClass("Invisible");
+	$("main_content_menu").addClass("Invisible");
+	openUrlInDiv($("#data_container .jspPane"), "execute?command=getRssFeeds",refreshDataContainerScroll);
+	refreshDataContainerScroll();
+}
+function orderBy(order){
+	showWaitDialog("dialog.general.wait.title", "dialog.general.wait.message");
+	postWithTextReturn("execute?command=setOrder&order="+order);
 }
 function showMainPage() {
 	hideTabs();
 	clearDataContainer();
 	showSources();
 	$("#post_container").removeClass("Invisible");
+	$(".PostBoxTriangle").removeClass("Invisible");
+	$("rss_content_menu").addClass("Invisible");
+	$("main_content_menu").removeClass("Invisible");
 	$("#upper_link").html($("#settings_link").html());
-	$("#data_container").html("<div id='filler' class='filler'></div>");
+	$("#data_container .jspPane").html("<div id='filler' class='filler'></div>");
 	$("#filler").css("height", $("#data_container").innerHeight() - 10);
+//	$("#content_menu").html();
+	refreshDataContainerScroll();
 }
 function openMainPage() {
 	resizeTabs();
@@ -253,7 +266,7 @@ function openMainPage() {
 }
 function initMessagesContainer() {
 	var messageContainer = $("#data_container");
-	var height = $("body").innerHeight() - 196;
+	var height = $("body").innerHeight() - 226;
 	messageContainer.css("height", height);
 	$("#filler").css("height", messageContainer.innerHeight() - 10);
 	messageContainer.jScrollPane();
@@ -336,13 +349,13 @@ function initPage() {
 	}
 }
 function loadMainPage() {
-	openUrlInDiv("#SiteBody", "execute?command=openMainPage", initPage);
+	openUrlInDiv($("#SiteBody"), "execute?command=openMainPage", initPage);
 }
 function searchTree(){
 	$("#sources_tree").jstree("search",$("#search_field").prop("value"));
 }
 function logout() {
-	openUrlInDiv("#SiteBody", "execute?command=logout", initPage);
+	openUrlInDiv($("#SiteBody"), "execute?command=logout", initPage);
 }
 function loadStartPage() {
 	var login_value = $.cookie('login_cookie');
@@ -350,11 +363,15 @@ function loadStartPage() {
 		setLoginCookie(login_value);
 		startHiddenAuthentication(login_value);
 	}else{
-		openUrlInDiv("#SiteBody", "execute?command=openStartPage", initPage);
+		openUrlInDiv($("#SiteBody"), "execute?command=openStartPage", initPage);
 	}
 }
 function getMessages(id) {
+	if ($("#data_container").data("gettingMessages")){
+		return;
+	}
 	showWaitDialog("dialog.getting.messages.title", "dialog.getting.messages.message");
+	$("#data_container").data("gettingMessages", true);
 	$.post("execute?command=getMessages&sourceId=" + id).done(
 			function(data) {
 				if (isNoContent(data)) {
@@ -368,18 +385,21 @@ function getMessages(id) {
 				$.each($(".MessageDate"), function(index, value) {var millies = new Number($(value).html());
 				var date = new Date(millies);
 				$(value).html(date.toLocaleString());});
-				$("#data_container").data('jsp').reinitialise();
+				refreshDataContainerScroll()
 				gapi.plusone.go();
-			}).always(closeWaitDialog)
+			}).always(closeWaitDialog).always(function (){$("#data_container").data("gettingMessages", false);})
 			.fail(onFailure);
+}
+function refreshDataContainerScroll(){
+	$("#data_container").data('jsp').reinitialise();
 }
 function showAccounts() {
 	$("#post_container").addClass("Invisible");
-	openUrlInDiv("#data_container", "execute?command=getAccounts");
+	openUrlInDiv($("#data_container .jspPane"), "execute?command=getAccounts");
 }
 function showContacts() {
 	$("#post_container").addClass("Invisible");
-	openUrlInDiv("#data_container", "execute?command=getContacts");
+	openUrlInDiv($("#data_container .jspPane"), "execute?command=getContacts");
 }
 function loadBundles(lang) {
 	jQuery.i18n.properties({

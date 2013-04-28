@@ -16,6 +16,7 @@ import net.mysocio.ui.executors.basic.LogoutPageExecutor;
 import net.mysocio.ui.executors.basic.MarkMessagesReadenExecutor;
 import net.mysocio.ui.executors.basic.RemoveAccountExecutor;
 import net.mysocio.ui.executors.basic.RemoveRssFeedExecutor;
+import net.mysocio.ui.executors.basic.SetOrderExecutor;
 import net.mysocio.ui.management.ICommandExecutor;
 
 
@@ -28,6 +29,7 @@ public enum EDefaultCommand {
 	openMainPage(new LoadMainPageExecutor()),
 	getContacts(new GetContactsExecutor()),
 	getRssFeeds(new GetRssFeedsExecutor()),
+	setOrder(new SetOrderExecutor()),
 	getAccounts(new GetAccountsExecutor()),
 	addRssFeed(new AddRssFeedExecutor()),
 	removeRssFeed(new RemoveRssFeedExecutor()),

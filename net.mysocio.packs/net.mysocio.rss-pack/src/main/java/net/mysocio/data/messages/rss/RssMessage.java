@@ -24,6 +24,7 @@ public class RssMessage extends GeneralMessage {
 	 */
 	private String link;
 	private String feedTitle;
+	private String language = "en";
 
 	@Override
 	public String getLink() {
@@ -56,6 +57,11 @@ public class RssMessage extends GeneralMessage {
 		}else{
 			message = message.replace("feed.title", "Unknown");
 		}
+		if (language.equals("he") || language.equals("ar")){
+			message = message.replace("message.direction", "rtl");
+		}else{
+			message = message.replace("message.direction", "ltr");
+		}
 		return message;
 	}
 
@@ -65,5 +71,13 @@ public class RssMessage extends GeneralMessage {
 
 	public void setFeedTitle(String feedTitle) {
 		this.feedTitle = feedTitle;
+	}
+
+	public String getLanguage() {
+		return language;
+	}
+
+	public void setLanguage(String language) {
+		this.language = language;
 	}
 }

@@ -113,7 +113,7 @@ public class GetTagsExecutor implements ICommandExecutor {
 			jsonGenerator.writeStringField("style", "font-weight: bold;");
 			title = "(" + unreadMessagesNum + ")" + title;
 		}else{
-			if (unreadMessagesNum == 0l && (!tags.isShowAll() || id.equals(UserTags.ALL_TAGS))){
+			if (unreadMessagesNum == 0l && !tags.isShowAll() && !id.equals(UserTags.ALL_TAGS)){
 				jsonGenerator.writeStringField("style", "display: none;");
 			}
 		}

@@ -8,12 +8,14 @@ import java.util.List;
 import net.mysocio.data.management.MessagesManager;
 import net.mysocio.data.management.camel.AbstractMessageProcessor;
 import net.mysocio.data.messages.rss.RssMessage;
+import net.mysocio.utils.rss.RssUtils;
 
 import org.apache.camel.Exchange;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.github.jmkgreen.morphia.annotations.Transient;
+import com.sun.syndication.feed.synd.SyndContent;
 import com.sun.syndication.feed.synd.SyndEntryImpl;
 import com.sun.syndication.feed.synd.SyndFeed;
 
@@ -44,6 +46,10 @@ public class RssMessageProcessor extends AbstractMessageProcessor {
 		for (SyndEntryImpl entry : entries) {
     		RssMessage message = new RssMessage();
     		message.setFeedTitle(feed.getTitle());
+    		String language = feed.getLanguage();
+    		if (language != null){
+    			message.setLanguage(language);
+    		}
     		processMessage(entry, message);
 		}
 	}
@@ -64,7 +70,12 @@ public class RssMessageProcessor extends AbstractMessageProcessor {
 			title = "";
 		}
 		message.setTitle(title);
-		String text = entry.getDescription().getValue();
+		SyndContent description = entry.getDescription();
+		if (description == null){
+			//if message has no text - we ignore it
+			return;
+		}
+		String text = description.getValue();
 		message.setText(text);
 		
 		if (logger.isDebugEnabled()){
@@ -75,7 +86,6 @@ public class RssMessageProcessor extends AbstractMessageProcessor {
 			MessagesManager.getInstance().storeMessage(message);
 		} catch (Exception e) {
 			//if it's duplicate message - we ignore it
-			return;
 		}
 		addMessageForTag(message, tag);
 	}

@@ -4,7 +4,6 @@
 			<div class="LogoBox">
 				<img alt="Octopus" src="images/main/Logo.png" class="Logo">
 			</div>
-			<div class="HeaderLine"></div>
 			<div id="SearchBox">
 				<input id="search_field" placeholder="search.for.tag" type="text" class="Search"> <a id="search_button"
 					href="#" class="Search" onclick="searchTree()"> <img alt="search"
@@ -70,10 +69,30 @@
 		<td class="ThirdColumn">
 			<div class="ContentHeader"></div>
 			<div class="ContentLine"></div>
+			<div class="SecondContentLine"></div>
+			<div class="ContentMenu">
+				<div id="main_content_menu" class="InnerContentMenu">
+					<span onclick="markAllMessagesReadden()">mark.all.read.button</span>
+					<div class="ContentMenuDivider"></div>
+					<span onclick="orderBy('descending')">order.by.oldest.button</span>
+					<div class="ContentMenuDivider"></div>
+					<span onclick="orderBy('ascending')">order.by.newest.button</span>
+				</div>
+				<div id="rss_content_menu" class="InnerContentMenu Invisible">
+					<input id="rssUrl" type="text" autocomplete="off" title="Enter Rss URL here" placeholder="Enter Rss URL here">
+					<div class="PlusButton" onclick="addRssFeed()"></div>
+					<div class="ContentMenuDivider"></div>
+					<span onclick="$('import_opml').click();">import.opml</span>
+					<div class="PlusButton" onclick="importOPML()"></div>
+					<form id="importOPMLform" method="POST" enctype="multipart/form-data" action="importOpml" target="hiddenFrame">
+						<input id="import_opml" type="file" name="upfile" class="Invisible">
+					</form>
+				</div>
+			</div>
+			<div class="PostBoxTriangle"></div>
 			<div id="post_container" class="PostBox">
 				<textarea placeholder="post.here"></textarea>
 				<div id="post_buttons" class="PostButtons">
-					<div id="mark_all_read_button" class="MarkAllReadButton" onclick="markAllMessagesReadden()">mark.all.read.button</div>
 					<div id="post_button" class="PostButton">post.button</div>
 				</div>
 			</div>
