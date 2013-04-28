@@ -79,13 +79,13 @@
 					<span onclick="orderBy('ascending')">order.by.newest.button</span>
 				</div>
 				<div id="rss_content_menu" class="InnerContentMenu Invisible">
-					<input id="rssUrl" type="text" autocomplete="off" title="Enter Rss URL here" placeholder="Enter Rss URL here">
+					<input id="rssUrl" type="text" autocomplete="off" title="enter.rss.url" placeholder="enter.rss.url">
 					<div class="PlusButton" onclick="addRssFeed()"></div>
 					<div class="ContentMenuDivider"></div>
-					<span onclick="$('import_opml').click();">import.opml</span>
+					<input id="shown_import_opml"/><span class="ImportOpmlButton">import.opml</span>
 					<div class="PlusButton" onclick="importOPML()"></div>
 					<form id="importOPMLform" method="POST" enctype="multipart/form-data" action="importOpml" target="hiddenFrame">
-						<input id="import_opml" type="file" name="upfile" class="Invisible">
+						<input id="import_opml" type="file" name="upfile" class="ImportOpml">
 					</form>
 				</div>
 			</div>

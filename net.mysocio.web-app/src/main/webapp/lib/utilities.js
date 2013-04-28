@@ -235,8 +235,8 @@ function clearDataContainer(){
 function showRssFeeds() {
 	$("#post_container").addClass("Invisible");
 	$(".PostBoxTriangle").addClass("Invisible");
-	$("rss_content_menu").removeClass("Invisible");
-	$("main_content_menu").addClass("Invisible");
+	$("#rss_content_menu").removeClass("Invisible");
+	$("#main_content_menu").addClass("Invisible");
 	openUrlInDiv($("#data_container .jspPane"), "execute?command=getRssFeeds",refreshDataContainerScroll);
 	refreshDataContainerScroll();
 }
@@ -250,12 +250,11 @@ function showMainPage() {
 	showSources();
 	$("#post_container").removeClass("Invisible");
 	$(".PostBoxTriangle").removeClass("Invisible");
-	$("rss_content_menu").addClass("Invisible");
-	$("main_content_menu").removeClass("Invisible");
+	$("#rss_content_menu").addClass("Invisible");
+	$("#main_content_menu").removeClass("Invisible");
 	$("#upper_link").html($("#settings_link").html());
 	$("#data_container .jspPane").html("<div id='filler' class='filler'></div>");
 	$("#filler").css("height", $("#data_container").innerHeight() - 10);
-//	$("#content_menu").html();
 	refreshDataContainerScroll();
 }
 function openMainPage() {
@@ -266,6 +265,7 @@ function openMainPage() {
 }
 function initMessagesContainer() {
 	var messageContainer = $("#data_container");
+	$("#import_opml").change(function (){$("#shown_import_opml").prop("value", $("#import_opml").prop("value"));});
 	var height = $("body").innerHeight() - 226;
 	messageContainer.css("height", height);
 	$("#filler").css("height", messageContainer.innerHeight() - 10);

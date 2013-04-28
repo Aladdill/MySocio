@@ -236,13 +236,31 @@ a.InnerLink {
 	width: 680px;
 	background-color: #ececec;
 }
-.InnerContentMenu span{
+.InnerContentMenu span {
 	float: left;
 	text-align: center;
 	padding: 5px 10px 8px 10px;
 	color: #000000;
 	font: bold 15px Calibri;
 	cursor: pointer;
+}
+
+.InnerContentMenu input {
+	float: left;
+}
+.ImportOpml {
+	position: relative;
+	text-align: right;
+	-moz-opacity:0 ;
+	filter:alpha(opacity: 0);
+	opacity: 0;
+	z-index: 2;
+	left: -97px;
+}
+
+.ImportOpmlButton {
+	z-index: 1;
+	width: 85px;
 }
 
 .PostButton {
@@ -902,7 +920,7 @@ a#login_vkontakte:HOVER img {
 .thumb .end,
 .thumb { background-color: #a67eb0; }
 .scrollbar { position: relative; float: right; width: 10px; }
-.track { background-color: #D8EEFD; height: 100%; width:8px; position: relative; padding: 0 1px; }
+.track { background-color: #dde; height: 100%; width:8px; position: relative; padding: 0 1px; }
 .thumb { height: 20px; width: 8px; cursor: pointer; overflow: hidden; position: absolute; top: 0; }
 .thumb .end { overflow: hidden; height: 5px; width: 13px; }
 .disable{ display: none; }

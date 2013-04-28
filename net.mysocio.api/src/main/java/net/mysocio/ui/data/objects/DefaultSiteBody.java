@@ -36,6 +36,8 @@ public class DefaultSiteBody extends SiteBody{
 		addTextLabel("mark.all.read.button");
 		addTextLabel("order.by.oldest.button");
 		addTextLabel("order.by.newest.button");
+		addTextLabel("import.opml");
+		addTextLabel("enter.rss.url");
 		addTextLabel("search.for.tag");
 	}
 	@Override
