@@ -69,4 +69,10 @@ public class LjAccount extends Account {
 		}
 		return accountTag;
 	}
+
+	@Override
+	public void postToAccount(String message) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
 }

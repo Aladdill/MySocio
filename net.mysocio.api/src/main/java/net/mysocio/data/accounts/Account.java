@@ -136,4 +136,5 @@ public abstract class Account extends SocioObject implements IDisplayedObject{
 	protected SocioTag createAccountTypeTag(UserTags userTags){
 		return userTags.createTag(getAccountType()+".tag", getAccountType()+".tag", getAccountType()+".icon.general");
 	}
+	public abstract void postToAccount(String message) throws Exception;
 }

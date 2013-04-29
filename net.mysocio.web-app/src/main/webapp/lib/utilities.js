@@ -164,6 +164,9 @@ function setDataContainer(data) {
 function isNoContent(data) {
 	return (data.status == 204);
 }
+function isEmpty(str) {
+    return (!str || 0 === str.length);
+}
 function hideTabs() {
 	hideDiv("tabs");
 }
@@ -205,6 +208,9 @@ function onFailure(data) {
 	showError(data.responseText);
 }
 function showError(error) {
+	if (isEmpty(error)){
+		return;
+	}
 	showWaitDialog("dialog.error.title", error);
 }
 function showAuthError(error) {
@@ -447,4 +453,14 @@ function refreshLoginCookie(){
 		removeLoginCookie();
 		setLoginCookie(login_value);
 	}
+}
+function postMessage(){
+	var message = $("#post_text").prop("value");
+	if (isEmpty(message)){
+		showError("dialog.message.empty");
+	}
+	$.post("execute?command=postMessage&message=" + message).done(
+			function(data) {showWaitDialog("dialog.message.posted.title", "dialog.message.posted.message");})
+			.always(function(data) {$("#post_text").prop("value", "");})
+			.fail(onFailure);
 }

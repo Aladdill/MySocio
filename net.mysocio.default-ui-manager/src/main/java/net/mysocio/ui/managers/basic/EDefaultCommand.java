@@ -17,6 +17,7 @@ import net.mysocio.ui.executors.basic.MarkMessagesReadenExecutor;
 import net.mysocio.ui.executors.basic.RemoveAccountExecutor;
 import net.mysocio.ui.executors.basic.RemoveRssFeedExecutor;
 import net.mysocio.ui.executors.basic.SetOrderExecutor;
+import net.mysocio.ui.executors.basic.postMessageExecutor;
 import net.mysocio.ui.management.ICommandExecutor;
 
 
@@ -37,7 +38,8 @@ public enum EDefaultCommand {
 	login(new LoginExecutor()),
 	removeAccount(new RemoveAccountExecutor()),
 	getSources(new GetTagsExecutor(), DefaultCommandIterpreter.JSON),
-	markMessagesReaden(new MarkMessagesReadenExecutor(), DefaultCommandIterpreter.JSON);
+	markMessagesReaden(new MarkMessagesReadenExecutor(), DefaultCommandIterpreter.JSON),
+	postMessage(new postMessageExecutor());
 	private ICommandExecutor executor;
 	private String responseType = DefaultCommandIterpreter.TEXT_HTML;
 	private EDefaultCommand(ICommandExecutor executor){

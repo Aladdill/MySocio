@@ -18,6 +18,11 @@ import net.mysocio.data.contacts.Contact;
 
 import com.github.jmkgreen.morphia.annotations.Entity;
 
+import facebook4j.Facebook;
+import facebook4j.FacebookException;
+import facebook4j.FacebookFactory;
+import facebook4j.auth.AccessToken;
+
 /**
  * @author Aladdin
  *
@@ -76,5 +81,12 @@ public class FacebookAccount extends Oauth2Account {
 			}
 		}
 		return accountTypeTag;
+	}
+
+	@Override
+	public void postToAccount(String message) throws FacebookException {
+		Facebook facebook = new FacebookFactory().getInstance();
+		facebook.setOAuthAccessToken(new AccessToken(getToken(), null));
+		facebook.postStatusMessage(message);
 	}
 }
