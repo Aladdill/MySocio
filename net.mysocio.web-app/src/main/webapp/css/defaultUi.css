@@ -570,7 +570,9 @@ tr.Footer {
 .SelectedMessage {
 	
 }
-
+.MessageButton {
+	cursor: pointer;
+}
 .MessageButtons {
 	height: 27px;
 	background-color: #ececec;

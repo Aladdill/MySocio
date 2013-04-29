@@ -19,8 +19,8 @@ import org.slf4j.LoggerFactory;
  * @author Aladdin
  *
  */
-public class postMessageExecutor implements ICommandExecutor {
-	private static final Logger logger = LoggerFactory.getLogger(postMessageExecutor.class);
+public class PostMessageExecutor implements ICommandExecutor {
+	private static final Logger logger = LoggerFactory.getLogger(PostMessageExecutor.class);
 	@Override
 	public String execute(IConnectionData connectionData)
 			throws CommandExecutionException {

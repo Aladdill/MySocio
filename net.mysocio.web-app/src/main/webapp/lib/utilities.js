@@ -464,3 +464,6 @@ function postMessage(){
 			.always(function(data) {$("#post_text").prop("value", "");})
 			.fail(onFailure);
 }
+function likeMessage(id, like){
+	$.post("execute?command=likeMessage&messageId=" + id + "&like=" + like).fail(onFailure);
+}

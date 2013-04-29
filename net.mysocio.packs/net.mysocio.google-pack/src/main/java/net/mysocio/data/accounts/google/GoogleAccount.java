@@ -10,6 +10,7 @@ import net.mysocio.connection.readers.Source;
 import net.mysocio.data.SocioTag;
 import net.mysocio.data.UserTags;
 import net.mysocio.data.accounts.Oauth2Account;
+import net.mysocio.data.messages.GeneralMessage;
 
 import com.github.jmkgreen.morphia.annotations.Entity;
 
@@ -61,6 +62,12 @@ public class GoogleAccount extends Oauth2Account{
 
 	@Override
 	public void postToAccount(String message) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void like(GeneralMessage message, boolean like) throws Exception {
 		// TODO Auto-generated method stub
 		
 	}

@@ -8,6 +8,7 @@ import net.mysocio.data.IDataManager;
 import net.mysocio.data.SocioUser;
 import net.mysocio.data.accounts.Account;
 import net.mysocio.data.management.DataManagerFactory;
+import net.mysocio.data.messages.GeneralMessage;
 import net.mysocio.ui.management.CommandExecutionException;
 import net.mysocio.ui.management.ICommandExecutor;
 
@@ -19,18 +20,20 @@ import org.slf4j.LoggerFactory;
  * @author Aladdin
  *
  */
-public class likeMessageExecutor implements ICommandExecutor {
-	private static final Logger logger = LoggerFactory.getLogger(likeMessageExecutor.class);
+public class LikeMessageExecutor implements ICommandExecutor {
+	private static final Logger logger = LoggerFactory.getLogger(LikeMessageExecutor.class);
 	@Override
 	public String execute(IConnectionData connectionData)
 			throws CommandExecutionException {
 		IDataManager dataManager = DataManagerFactory.getDataManager();
 		String accounts = connectionData.getRequestParameter("accounts");
-		String message = connectionData.getRequestParameter("message");
+		String messageId = connectionData.getRequestParameter("messageId");
+		String like = connectionData.getRequestParameter("like");
 		SocioUser user = dataManager.getObject(SocioUser.class, connectionData.getUserId());
+		GeneralMessage message = dataManager.getObject(GeneralMessage.class, messageId);
 		Account account = user.getMainAccount();
 		try {
-			account.postToAccount(message);
+			account.like(message, Boolean.parseBoolean(like));
 		} catch (Exception e) {
 			logger.error("Couldn't post to account with id " + account.getId(),e);
 			throw new CommandExecutionException(e);

@@ -9,6 +9,7 @@ import net.mysocio.ui.executors.basic.GetContactsExecutor;
 import net.mysocio.ui.executors.basic.GetMessagesExecutor;
 import net.mysocio.ui.executors.basic.GetRssFeedsExecutor;
 import net.mysocio.ui.executors.basic.GetTagsExecutor;
+import net.mysocio.ui.executors.basic.LikeMessageExecutor;
 import net.mysocio.ui.executors.basic.LoadMainPageExecutor;
 import net.mysocio.ui.executors.basic.LoginExecutor;
 import net.mysocio.ui.executors.basic.LoginPageExecutor;
@@ -17,7 +18,7 @@ import net.mysocio.ui.executors.basic.MarkMessagesReadenExecutor;
 import net.mysocio.ui.executors.basic.RemoveAccountExecutor;
 import net.mysocio.ui.executors.basic.RemoveRssFeedExecutor;
 import net.mysocio.ui.executors.basic.SetOrderExecutor;
-import net.mysocio.ui.executors.basic.postMessageExecutor;
+import net.mysocio.ui.executors.basic.PostMessageExecutor;
 import net.mysocio.ui.management.ICommandExecutor;
 
 
@@ -39,7 +40,8 @@ public enum EDefaultCommand {
 	removeAccount(new RemoveAccountExecutor()),
 	getSources(new GetTagsExecutor(), DefaultCommandIterpreter.JSON),
 	markMessagesReaden(new MarkMessagesReadenExecutor(), DefaultCommandIterpreter.JSON),
-	postMessage(new postMessageExecutor());
+	postMessage(new PostMessageExecutor()),
+	likeMessage(new LikeMessageExecutor());
 	private ICommandExecutor executor;
 	private String responseType = DefaultCommandIterpreter.TEXT_HTML;
 	private EDefaultCommand(ICommandExecutor executor){

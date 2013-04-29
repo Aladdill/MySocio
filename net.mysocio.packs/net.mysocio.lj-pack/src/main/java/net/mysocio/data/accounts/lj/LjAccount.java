@@ -12,6 +12,7 @@ import net.mysocio.data.SocioTag;
 import net.mysocio.data.UserTags;
 import net.mysocio.data.accounts.Account;
 import net.mysocio.data.contacts.Contact;
+import net.mysocio.data.messages.GeneralMessage;
 
 import com.github.jmkgreen.morphia.annotations.Entity;
 
@@ -72,6 +73,12 @@ public class LjAccount extends Account {
 
 	@Override
 	public void postToAccount(String message) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void like(GeneralMessage message, boolean like) throws Exception {
 		// TODO Auto-generated method stub
 		
 	}

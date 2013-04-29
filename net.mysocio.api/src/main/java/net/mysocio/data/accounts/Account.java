@@ -14,6 +14,7 @@ import net.mysocio.data.SocioTag;
 import net.mysocio.data.SocioUser;
 import net.mysocio.data.UserTags;
 import net.mysocio.data.contacts.Contact;
+import net.mysocio.data.messages.GeneralMessage;
 import net.mysocio.ui.data.objects.NewAccountLine;
 
 import com.github.jmkgreen.morphia.annotations.Entity;
@@ -137,4 +138,5 @@ public abstract class Account extends SocioObject implements IDisplayedObject{
 		return userTags.createTag(getAccountType()+".tag", getAccountType()+".tag", getAccountType()+".icon.general");
 	}
 	public abstract void postToAccount(String message) throws Exception;
+	public abstract void like(GeneralMessage message) throws Exception;
 }
