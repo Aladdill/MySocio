@@ -107,7 +107,8 @@ public class GetTagsExecutor implements ICommandExecutor {
 			String id, String icon, Long unreadMessagesNum) throws IOException,
 			JsonGenerationException {
 		jsonGenerator.writeObjectFieldStart("attr");
-		jsonGenerator.writeStringField("id", id);
+		jsonGenerator.writeStringField("id", Integer.toString(id.hashCode()));
+		jsonGenerator.writeStringField("uniqueId", id);
 		String title = name;
 		if (unreadMessagesNum > 0){
 			jsonGenerator.writeStringField("style", "font-weight: bold;");

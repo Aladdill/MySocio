@@ -55,12 +55,10 @@ public class RssUtils {
 	public static void addRssFeed(String userId, String url, UserTags userTags)
 			throws AddingRssException {
 		try {
-			IDataManager dataManager = DataManagerFactory.getDataManager();
 			SyndFeed feed = buldFeed(url);
 			String title = feed.getTitle();
 			SocioTag rssFeeds = getRssTag(userTags);
-			SocioTag parent = userTags.createTag("RSS_new_rss_feeds", "New Feeds", rssFeeds);
-			addRssFeed(userId, url, title, parent, userTags);
+			addRssFeed(userId, url, title, rssFeeds, userTags);
 		} catch (Exception e) {
 			String message = "Error adding RSS title for url " + url;
 			logger.error(message, e);

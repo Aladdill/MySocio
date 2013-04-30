@@ -44,18 +44,14 @@ function centerLoginCircle() {
 					- $("#login_center_div").innerHeight() / 2);
 }
 function initSources() {
-	$.post("execute?command=getSources", {}, initSourcesData, "json").fail(
+	$.post("execute?command=getTags", {}, initSourcesData, "json").fail(
 			onFailure);
 }
 function initSourcesData(data) {
 	$("#sources_tree").jstree(data).bind("loaded.jstree",
 			function(event, data) {$("#sources_tree_scroll").tinyscrollbar();
 			}).bind("select_node.jstree", function(e, data) {
-		if (!$("#sources_tree").data("treeRefreshInitiated")) {
-			getMessages(data.rslt.obj[0].id);
-		}else{
-			$("#sources_tree").data("treeRefreshInitiated", false);
-		}
+			getMessages(data.rslt.obj[0].attributes.uniqueId.value, true);
 	}).bind("after_open.jstree after_close.jstree", function (e) {
 		$("#sources_tree_scroll").tinyscrollbar_update();
 	});
@@ -140,7 +136,9 @@ function openLjAuthentication() {
 function addRssFeed() {
 	$.post("execute?command=addRssFeed", {
 		url : $("#rssUrl").prop("value")
-	}).done(showRssFeeds).fail(onFailure);
+	}).done(showRssFeeds)
+	.always(function(){$("#rssUrl").prop("value", "");})
+	.fail(onFailure);
 }
 function importOPML() {
 	importingOPML();
@@ -186,11 +184,18 @@ function showSources() {
 	showDiv("subscriptions_title");
 	initSources();
 	// Start refreshing sources when user logs in
-	$("#sources_tree").everyTime("60s", "refreshSources", refreshSources, 0);
+	$("#sources_tree").everyTime("60s", "refreshTags", refreshTags, 0);
 }
-function refreshSources() {
-	$("#sources_tree").data("treeRefreshInitiated", true);
-	initSources();
+function refreshTags(selected) {
+	$.post("execute?command=refreshTags&selected=" + selected, {}, refreshTagsData, "json").fail(
+			onFailure);
+}
+function refreshTagsData(data) {
+	$.each(data,function(index,item){
+		var node = $("#" + item.id);
+		$("#sources_tree").jstree("rename_node",node, item.name);
+		node.attr("style",item.style);
+	});
 }
 function hideDiv(id) {
 	$("#" + id).css("display", "none");
@@ -267,13 +272,19 @@ function showRssFeeds() {
 						rightColumn.append(rssLine);
 					}
 				}
-				)
-				refreshDataContainerScroll()
+				);
+				refreshDataContainerScroll();
 			}).fail(onFailure);
 }
 function orderBy(order){
 	showWaitDialog("dialog.general.wait.title", "dialog.general.wait.message");
-	postWithTextReturn("execute?command=setOrder&order="+order);
+	 $.ajax({
+   	  type: "POST",
+   	  url: "execute?command=setOrder&order="+order,
+   	  dataType: "text",
+   	  error: onFailure 
+   	}).always(closeWaitDialog)
+   	.done(function(){getMessages('currentSelection', true);});
 }
 function showMainPage() {
 	hideTabs();
@@ -306,7 +317,7 @@ function initMessagesContainer() {
 }
 function messageScroll(event, scrollPositionY, isAtTop, isAtBottom) {
 	if (isAtBottom == true){
-		getMessages('currentSelection');
+		getMessages('currentSelection', false);
 	}
 	$.each($(".Message"), function(index, value) {
 		var message = $("#" + value.id);
@@ -323,6 +334,8 @@ function messageScroll(event, scrollPositionY, isAtTop, isAtBottom) {
 					.removeClass("Invisible");
 			message.find(".MessageText").removeClass("MessageTextReaden");
 			message.find(".MessageText").addClass("MessageTextSelected");
+			message.find(".RssMessageFrom").removeClass("MessageTextReaden");
+			message.find(".RssMessageFrom").addClass("MessageTextSelected");
 			message.find(".MessageButtons").addClass(
 					"MessageButtonsSelected");
 			message.find(".MessageExpand")
@@ -346,32 +359,34 @@ function messageScroll(event, scrollPositionY, isAtTop, isAtBottom) {
 				message.find(".MessageTitle").find(".NetworkIcon")
 						.addClass("Invisible");
 				message.find(".MessageText").addClass("MessageTextReaden");
-				message.find(".MessageText").removeClass(
-						"MessageTextSelected");
-				message.find(".MessageButtons").removeClass(
-						"MessageButtonsSelected");
-				message.find(".MessageExpand").removeClass(
-						"MessageExpandSelected");
-				message.find(".MessageCollapse").removeClass(
-						"MessageCollapseSelected");
+				message.find(".MessageText").removeClass("MessageTextSelected");
+				message.find(".RssMessageFrom").addClass("MessageTextReaden");
+				message.find(".RssMessageFrom").removeClass("MessageTextSelected");
+				message.find(".MessageButtons").removeClass("MessageButtonsSelected");
+				message.find(".MessageExpand").removeClass("MessageExpandSelected");
+				message.find(".MessageCollapse").removeClass("MessageCollapseSelected");
 			}
 		}
 	});
 }
 function markMessageReadden(id) {
-	postWithTextReturn("execute?command=markMessagesReaden&messagesIds=" + id);
-}
-function postWithTextReturn(url){
-    $.ajax({
-    	  type: "POST",
-    	  url: url,
-    	  dataType: "text",
-    	  error: onFailure 
-    	}).always(closeWaitDialog);
+	$.ajax({
+  	  type: "POST",
+  	  url: "execute?command=markMessagesReaden&messagesIds=" + id,
+  	  dataType: "text",
+  	  error: onFailure 
+  	}).always(closeWaitDialog)
+  	.done(function(){refreshTags(false);});
 }
 function markAllMessagesReadden() {
 	showWaitDialog("dialog.marking.all.messages.read.title", "dialog.marking.all.messages.read.message");
-	postWithTextReturn("execute?command=markMessagesReaden&markAll=true");
+	$.ajax({
+	  	  type: "POST",
+	  	  url: "execute?command=markMessagesReaden&markAll=true",
+	  	  dataType: "text",
+	  	  error: onFailure 
+	  	}).always(closeWaitDialog)
+	  	.done(function(){refreshTags(false);});
 }
 function initPage() {
 	if ($("#login_center_div").size() != 0) {
@@ -398,7 +413,7 @@ function loadStartPage() {
 		openUrlInDiv($("#SiteBody"), "execute?command=openStartPage", initPage);
 	}
 }
-function getMessages(id) {
+function getMessages(id, resetContainer) {
 	if ($("#data_container").data("gettingMessages")){
 		return;
 	}
@@ -409,7 +424,7 @@ function getMessages(id) {
 				if (isNoContent(data)) {
 					return;
 				}
-				if (id != 'currentSelection'){
+				if (resetContainer == true){
 					$("#data_container").data('jsp').scrollTo(0, 0);
 					$(".Message").remove();
 				}
@@ -417,7 +432,7 @@ function getMessages(id) {
 				$.each($(".MessageDate"), function(index, value) {var millies = new Number($(value).html());
 				var date = new Date(millies);
 				$(value).html(date.toLocaleString());});
-				refreshDataContainerScroll()
+				refreshDataContainerScroll();
 				gapi.plusone.go();
 			}).always(closeWaitDialog).always(function (){$("#data_container").data("gettingMessages", false);})
 			.fail(onFailure);
@@ -465,5 +480,5 @@ function postMessage(){
 			.fail(onFailure);
 }
 function likeMessage(id, like){
-	$.post("execute?command=likeMessage&messageId=" + id + "&like=" + like).fail(onFailure);
+	$.post("execute?command=likeMessage&messageId=" + id).fail(onFailure);
 }

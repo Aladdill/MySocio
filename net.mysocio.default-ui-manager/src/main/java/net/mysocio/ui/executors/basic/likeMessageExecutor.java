@@ -28,12 +28,11 @@ public class LikeMessageExecutor implements ICommandExecutor {
 		IDataManager dataManager = DataManagerFactory.getDataManager();
 		String accounts = connectionData.getRequestParameter("accounts");
 		String messageId = connectionData.getRequestParameter("messageId");
-		String like = connectionData.getRequestParameter("like");
 		SocioUser user = dataManager.getObject(SocioUser.class, connectionData.getUserId());
 		GeneralMessage message = dataManager.getObject(GeneralMessage.class, messageId);
 		Account account = user.getMainAccount();
 		try {
-			account.like(message, Boolean.parseBoolean(like));
+			account.like(message);
 		} catch (Exception e) {
 			logger.error("Couldn't post to account with id " + account.getId(),e);
 			throw new CommandExecutionException(e);

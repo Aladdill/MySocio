@@ -15,6 +15,7 @@ import net.mysocio.ui.executors.basic.LoginExecutor;
 import net.mysocio.ui.executors.basic.LoginPageExecutor;
 import net.mysocio.ui.executors.basic.LogoutPageExecutor;
 import net.mysocio.ui.executors.basic.MarkMessagesReadenExecutor;
+import net.mysocio.ui.executors.basic.RefreshTagsExecutor;
 import net.mysocio.ui.executors.basic.RemoveAccountExecutor;
 import net.mysocio.ui.executors.basic.RemoveRssFeedExecutor;
 import net.mysocio.ui.executors.basic.SetOrderExecutor;
@@ -38,8 +39,9 @@ public enum EDefaultCommand {
 	addAccount(new CreateAccountExecutor()),
 	login(new LoginExecutor()),
 	removeAccount(new RemoveAccountExecutor()),
-	getSources(new GetTagsExecutor(), DefaultCommandIterpreter.JSON),
-	markMessagesReaden(new MarkMessagesReadenExecutor(), DefaultCommandIterpreter.JSON),
+	getTags(new GetTagsExecutor(), DefaultCommandIterpreter.JSON),
+	refreshTags(new RefreshTagsExecutor(), DefaultCommandIterpreter.JSON),
+	markMessagesReaden(new MarkMessagesReadenExecutor()),
 	postMessage(new PostMessageExecutor()),
 	likeMessage(new LikeMessageExecutor());
 	private ICommandExecutor executor;

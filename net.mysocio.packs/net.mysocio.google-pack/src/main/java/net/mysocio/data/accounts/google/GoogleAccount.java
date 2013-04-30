@@ -67,7 +67,7 @@ public class GoogleAccount extends Oauth2Account{
 	}
 
 	@Override
-	public void like(GeneralMessage message, boolean like) throws Exception {
+	public void like(GeneralMessage message) throws Exception {
 		// TODO Auto-generated method stub
 		
 	}
