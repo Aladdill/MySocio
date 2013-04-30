@@ -76,7 +76,7 @@ public class GetTagsExecutor implements ICommandExecutor {
 			jsonGenerator.writeEndObject();//for themes
 			jsonGenerator.writeObjectFieldStart("core");
 			jsonGenerator.writeArrayFieldStart("initially_open");
-			String selectedTag = connectionManager.getSelectedTag();
+			String selectedTag = Integer.toString(connectionManager.getSelectedTag().hashCode());
 			jsonGenerator.writeString(selectedTag);
 			jsonGenerator.writeEndArray();//for initially_open
 			jsonGenerator.writeEndObject();//for core

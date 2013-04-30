@@ -80,4 +80,9 @@ public class RssMessage extends GeneralMessage {
 	public void setLanguage(String language) {
 		this.language = language;
 	}
+
+	@Override
+	public String getButtons() {
+		return super.getButtons() + "<div class='gplusbutton' ><div class='g-plusone' data-href='message.link' data-size='small' data-annotation='none'></div></div>";
+	}
 }

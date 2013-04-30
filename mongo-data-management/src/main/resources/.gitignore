@@ -1,3 +1,4 @@
 /authentication.properties
 /authentication.properties.production
 /authentication.production.properties
+/authentication.staging.properties

@@ -66,9 +66,19 @@ public abstract class GeneralMessage extends SocioObject implements IUniqueObjec
 	@Override
 	abstract public String getUniqueFieldName();
 	
+	public String getButtons(){
+		return "<div class=\"MessageButton\" onclick=\"likeMessage('message.id')\"><img alt=\"Like\" src=\"images/message/Like.png\"><div>message.like</div></div>";
+	}
+	
 	public String replacePlaceholders(String template) {
 		String message = template.replace("message.title", getTitle());
+		message = message.replace("message.buttons", getButtons());
 		message = message.replace("message.text", getText());
+		message = message.replace("message.id", getId().toString());
+		String dateString = Long.toString(getDate());
+		message = message.replace("date.long", dateString);
+		message = message.replace("message.date", dateString);
+		
 		return message;
 	}
 }

@@ -588,9 +588,11 @@ tr.Footer {
 }
 
 .MessageButtons div {
-	margin-top: 7px;
-	margin-right: 6px;
 	float: left;
+}
+
+.MessageButton div {
+	margin-top: 7px;
 }
 
 .MessageButtons img{

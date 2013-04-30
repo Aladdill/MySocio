@@ -9,6 +9,7 @@ import java.util.List;
 import net.mysocio.data.CorruptedDataException;
 import net.mysocio.data.IConnectionData;
 import net.mysocio.data.UserTags;
+import net.mysocio.data.management.DefaultResourcesManager;
 import net.mysocio.data.management.MessagesManager;
 import net.mysocio.data.messages.UnreaddenMessage;
 import net.mysocio.ui.management.CommandExecutionException;
@@ -42,10 +43,7 @@ public class GetMessagesExecutor implements ICommandExecutor {
 				throw new CommandExecutionException(e);
 			}
 			String pageHtml = message.getMessage().replacePlaceholders(messagePage);
-			pageHtml = pageHtml.replace("message.id", message.getMessage().getId().toString());
-			String dateString = Long.toString(message.getMessage().getDate());
-			pageHtml = pageHtml.replace("date.long", dateString);
-			pageHtml = pageHtml.replace("message.date", dateString);
+			pageHtml = pageHtml.replace("message.like", DefaultResourcesManager.getResource(connectionData.getLocale(), "message.like"));
 			output.append(pageHtml);
 		}
 		return output.toString();

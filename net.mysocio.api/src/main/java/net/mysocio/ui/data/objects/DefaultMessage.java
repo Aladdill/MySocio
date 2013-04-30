@@ -25,14 +25,6 @@ public class DefaultMessage extends UiObject{
 		super();
 		setName(NAME);
 		setCategory(CATEGORY);
-		addTextLabel("message.star");
-		addTextLabel("message.like");
-		addTextLabel("message.unlike");
-		addTextLabel("message.edit.tags");
-		addTextLabel("message.share");
-		addTextLabel("message.keep.unread");
-		addTextLabel("message.expand");
-		addTextLabel("message.collapse");
 	}
 	@Override
 	public String getPageFile() {
