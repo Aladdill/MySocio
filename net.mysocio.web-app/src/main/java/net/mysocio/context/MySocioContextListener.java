@@ -83,6 +83,7 @@ public class MySocioContextListener implements ServletContextListener {
 					dbUser,
 					dbPass.toCharArray());
 			ds.ensureCaps();
+			ds.ensureIndexes();
 			IDataManager manager = new MongoDataManager(ds);
 			DataManagerFactory.init(manager);
 			MongoURI uri = new MongoURI("mongodb://" + dbServer + ":" + dbPort);

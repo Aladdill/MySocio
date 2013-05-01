@@ -35,6 +35,9 @@ public class RssMessageProcessor extends AbstractMessageProcessor {
 	
 	public void process(Exchange exchange) throws Exception {
 		SyndFeed feed = (SyndFeed)exchange.getIn().getBody();
+		if (feed == null){
+			return;
+		}
 		List<SyndEntryImpl> entries = feed.getEntries();
     	if (logger.isDebugEnabled()){
 			logger.debug("Got " + entries.size() + " messages for feed: " + feed.getTitle());

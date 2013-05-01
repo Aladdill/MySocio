@@ -6,6 +6,8 @@ package net.mysocio.data.messages;
 import net.mysocio.data.UserObject;
 
 import com.github.jmkgreen.morphia.annotations.Entity;
+import com.github.jmkgreen.morphia.annotations.Index;
+import com.github.jmkgreen.morphia.annotations.Indexes;
 import com.github.jmkgreen.morphia.annotations.Reference;
 
 /**
@@ -13,6 +15,7 @@ import com.github.jmkgreen.morphia.annotations.Reference;
  *
  */
 @Entity("unreadden_messages")
+@Indexes(@Index("userId, tagId"))
 public class UnreaddenMessage extends UserObject {
 
 	/**
