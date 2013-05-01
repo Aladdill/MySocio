@@ -178,17 +178,23 @@ function hideSources() {
 	// Stop refreshing sources when user in other tab
 	$("#sources_tree").stopTime("refreshSources");
 }
-function showSources() {
+function showSources(isInit) {
 	showDiv("sources_tree");
 	showDiv("subscriptions_underline");
 	showDiv("subscriptions_title");
-	initSources();
-	// Start refreshing sources when user logs in
-	$("#sources_tree").everyTime("60s", "refreshTags", refreshTags, 0);
+	if (isInit){ 
+		initSources();
+		// Start refreshing sources when user logs in
+		$("#sources_tree").everyTime("60s", "refreshTags", refreshTags, 0);
+	}
 }
 function refreshTags(selected) {
+	if ($("#sources_tree").data("treeRefreshInitiated")) {
+		return;
+	}
+	$("#sources_tree").data("treeRefreshInitiated", true);
 	$.post("execute?command=refreshTags&selected=" + selected, {}, refreshTagsData, "json").fail(
-			onFailure);
+			onFailure).always(function(){$("#sources_tree").data("treeRefreshInitiated", false);});
 }
 function refreshTagsData(data) {
 	$.each(data,function(index,item){
@@ -289,7 +295,7 @@ function orderBy(order){
 function showMainPage() {
 	hideTabs();
 	clearDataContainer();
-	showSources();
+	showSources(true);
 	$("#post_container").removeClass("Invisible");
 	$(".PostBoxTriangle").removeClass("Invisible");
 	$("#rss_content_menu").addClass("Invisible");
@@ -304,7 +310,7 @@ function openMainPage() {
 	resizeTabs();
 	hideTabs();
 	initMessagesContainer();
-	showSources();
+	showSources(true);
 }
 function initMessagesContainer() {
 	var messageContainer = $("#data_container");

@@ -89,11 +89,21 @@ public class RssUtils {
 		SocioTag rssFeeds = getRssTag(userTags);
 		for (Outline outline : outlines) {
 			List<Outline> children = outline.getChildren();
+			String title = outline.getTitle();
+			if (title == null){
+				title = outline.getText();
+			}
 			if (children.size() > 0) {
-				SocioTag parent = userTags.createTag("RSS_" + outline.getTitle().replace(" ", "_"), outline.getTitle(), rssFeeds);
+				SocioTag parent = userTags.createTag("RSS_" + title.replace(" ", "_"), title, rssFeeds);
 				for (Outline child : children) {
-					addRssFeed(userId, child.getXmlUrl(), child.getTitle(), parent, userTags);
+					String childTitle = child.getTitle();
+					if (childTitle == null){
+						childTitle = child.getText();
+					}
+					addRssFeed(userId, child.getXmlUrl(), childTitle, parent, userTags);
 				}
+			}else{
+				addRssFeed(userId, outline.getXmlUrl(), title, rssFeeds, userTags);
 			}
 		}
 	}
