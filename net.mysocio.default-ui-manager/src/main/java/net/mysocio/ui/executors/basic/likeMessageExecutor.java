@@ -31,6 +31,9 @@ public class LikeMessageExecutor implements ICommandExecutor {
 		SocioUser user = dataManager.getObject(SocioUser.class, connectionData.getUserId());
 		GeneralMessage message = dataManager.getObject(GeneralMessage.class, messageId);
 		Account account = user.getMainAccount();
+		if (message == null){
+			throw new CommandExecutionException("dialog.sorry.message.was.already.deleted");
+		}
 		try {
 			account.like(message);
 		} catch (Exception e) {
