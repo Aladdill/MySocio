@@ -67,4 +67,6 @@ public interface IDataManager {
 	public abstract Source getSource(String url);
 
 	public boolean isRouteExist(String from, AbstractProcessor processor);
+
+	public abstract UserPermissions getUserPermissions(String mail);
 }

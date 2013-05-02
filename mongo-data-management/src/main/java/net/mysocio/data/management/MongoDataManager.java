@@ -20,6 +20,7 @@ import net.mysocio.data.SocioTag;
 import net.mysocio.data.SocioUser;
 import net.mysocio.data.TempRoute;
 import net.mysocio.data.UserAccount;
+import net.mysocio.data.UserPermissions;
 import net.mysocio.data.UserTags;
 import net.mysocio.data.accounts.Account;
 import net.mysocio.data.management.camel.DefaultUserMessagesProcessor;
@@ -108,6 +109,7 @@ public class MongoDataManager implements IDataManager {
 		Query<SocioRoute> q = ds.createQuery(SocioRoute.class).field("from").equal(from).field("processor.to").equal("activemq:" + userId + ".newMessage");
 		ds.delete(q);
 	}
+	
 	@Override
 	public Source getSource(String url){
 		Query<Source> q = ds.createQuery(Source.class).field("url").equal(url);
@@ -171,6 +173,12 @@ public class MongoDataManager implements IDataManager {
 	 */
 	public Account getAccount(String accountUniqueId) {
 		Query<Account> q = ds.createQuery(Account.class).field("accountUniqueId").equal(accountUniqueId);
+		return q.get();
+	}
+	
+	@Override
+	public UserPermissions getUserPermissions(String mail) {
+		Query<UserPermissions> q = ds.createQuery(UserPermissions.class).field("mail").equal(mail);
 		return q.get();
 	}
 
@@ -304,7 +312,11 @@ public class MongoDataManager implements IDataManager {
 			q.order("messageDate");
 		}
 		q.limit(tags.getRange());
-		List<UnreaddenMessage> messagesList = q.asList();
+		List<UnreaddenMessage> messagesList = new ArrayList<UnreaddenMessage>();
+		Iterable<UnreaddenMessage> messages = q.fetch();
+		for (UnreaddenMessage unreaddenMessage : messages) {
+			messagesList.add(unreaddenMessage);
+		}
 		tags.setSelectedTag(tagId);
 		ds.save(tags);
 		return messagesList;

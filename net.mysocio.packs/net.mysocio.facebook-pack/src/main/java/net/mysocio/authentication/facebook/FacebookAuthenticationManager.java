@@ -11,6 +11,7 @@ import java.util.Set;
 
 import net.mysocio.authentication.AbstractOauth2Manager;
 import net.mysocio.data.ContactsList;
+import net.mysocio.data.IDataManager;
 import net.mysocio.data.accounts.Account;
 import net.mysocio.data.accounts.facebook.FacebookAccount;
 import net.mysocio.data.accounts.facebook.FacebookFriendList;
@@ -72,16 +73,17 @@ public class FacebookAuthenticationManager extends AbstractOauth2Manager {
 		FacebookAccount account;
 		User user = facebook.getMe();
 		String email = user.getEmail();
-		if (!isApprovedUser(email)){
-			logger.info("User with email " + email + "wasn't approved and knocked.");
+		IDataManager dataManager = DataManagerFactory.getDataManager();
+		if (dataManager.getUserPermissions(email) == null){
+			logger.error("User with email " + email + "wasn't approved and knocked.");
 			throw new UnapprovedUserException();
 		}
 		String id = user.getId();
-		account = (FacebookAccount) DataManagerFactory.getDataManager().getAccount(id);
+		account = (FacebookAccount) dataManager.getAccount(id);
 		if (account != null) {
 			logger.debug("Account found.");
 			account.setToken(token);
-			DataManagerFactory.getDataManager().saveObject(account);
+			dataManager.saveObject(account);
 			return account;
 		}
 		account = new FacebookAccount();
@@ -95,10 +97,10 @@ public class FacebookAuthenticationManager extends AbstractOauth2Manager {
 		logger.debug("friends list parsed");
 		logger.debug("parsing friends");
 		List<Contact> friends = parseFriends(facebook);
-		DataManagerFactory.getDataManager().saveObjects(Contact.class, friends);
+		dataManager.saveObjects(Contact.class, friends);
 		account.setContacts(friends);
 		logger.debug("friends parsed");
-		DataManagerFactory.getDataManager().saveObject(account);
+		dataManager.saveObject(account);
 		return account;
 	}
 
