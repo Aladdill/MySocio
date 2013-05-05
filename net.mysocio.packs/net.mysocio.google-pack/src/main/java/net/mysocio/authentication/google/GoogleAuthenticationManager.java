@@ -17,7 +17,6 @@ import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.JsonToken;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.scribe.builder.api.Api;
-import org.scribe.builder.api.GoogleApi;
 import org.scribe.model.OAuthRequest;
 import org.scribe.model.Response;
 import org.scribe.model.Token;
@@ -43,7 +42,7 @@ public class GoogleAuthenticationManager extends AbstractOauth2Manager{
 	}
 	@Override
 	protected Class<? extends Api> getApiClass() {
-		return GoogleApi.class;
+		return GoogleOauth2Api.class;
 	}
 	
 	protected Account getAccount(Token accessToken) throws Exception {
@@ -57,7 +56,7 @@ public class GoogleAuthenticationManager extends AbstractOauth2Manager{
 			for (String name : headers) {
 				logger.error(response.getHeader(name));
 			}
-			throw new ConnectException("Error getting Facebook data for url: "
+			throw new ConnectException("Error getting Google data for url: "
 					+ url);
 		}
 		ObjectMapper mapper = new ObjectMapper(new JsonFactory());
