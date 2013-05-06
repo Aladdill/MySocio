@@ -48,10 +48,10 @@ public class GoogleAuthenticationManager extends AbstractOauth2Manager{
 	protected Account getAccount(Token accessToken) throws Exception {
 		String url = "https://www.googleapis.com/oauth2/v2/userinfo";
 		OAuthRequest request = new OAuthRequest(Verb.GET, url);
-		request.addHeader("Authorization", "OAuth " + accessToken);
+		request.addHeader("Authorization", "OAuth " + accessToken.getToken());
 		Response response = request.send();
 		if (response.getCode() != 200) {
-			logger.error("Error getting Facebook data for url: " + url);
+			logger.error("Error getting Google data for url: " + url + " token: " + accessToken.getToken());
 			Set<String> headers = response.getHeaders().keySet();
 			for (String name : headers) {
 				logger.error(response.getHeader(name));

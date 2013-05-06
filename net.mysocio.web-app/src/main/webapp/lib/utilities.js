@@ -199,7 +199,7 @@ function refreshTags(selected) {
 function refreshTagsData(data) {
 	$.each(data,function(index,item){
 		var node = $("#" + item.id);
-		$("#sources_tree").jstree("rename_node",node, item.name);
+		$("#" + item.id + " > a").text(item.name);
 		node.attr("style",item.style);
 	});
 }
