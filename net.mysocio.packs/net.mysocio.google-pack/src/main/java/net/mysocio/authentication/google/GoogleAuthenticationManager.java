@@ -73,6 +73,23 @@ public class GoogleAuthenticationManager extends AbstractOauth2Manager{
 		return account;
 	}
 	
+	public String getGoogleReaderFeeds(String userId, Token accessToken) throws Exception{
+		String url = "https://www.google.com/reader/api/0/subscription/list";
+		OAuthRequest request = new OAuthRequest(Verb.GET, url);
+		request.addHeader("Authorization", "OAuth " + accessToken.getToken());
+		Response response = request.send();
+		if (response.getCode() != 200) {
+			logger.error("Error getting Google data for url: " + url + " token: " + accessToken.getToken());
+			Set<String> headers = response.getHeaders().keySet();
+			for (String name : headers) {
+				logger.error(response.getHeader(name));
+			}
+			throw new ConnectException("Error getting Google data for url: "
+					+ url);
+		}
+		return response.getBody();
+	}
+	
 	private String getRefreshToken(String response) throws Exception{
 		JsonFactory f = new JsonFactory();
 		JsonParser jp = f.createJsonParser(response);

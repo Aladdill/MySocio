@@ -3,9 +3,10 @@
  */
 package net.mysocio.data.accounts.google;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
+import net.mysocio.connection.google.GoogleSource;
 import net.mysocio.connection.readers.Source;
 import net.mysocio.data.SocioTag;
 import net.mysocio.data.UserTags;
@@ -46,8 +47,13 @@ public class GoogleAccount extends Oauth2Account{
 
 	@Override
 	public List<Source> getSources() {
-		// TODO Auto-generated method stub
-		return Collections.emptyList();
+		List<Source> sources = new ArrayList<Source>();
+		GoogleSource source = new GoogleSource();
+		source.setAccount(this);
+		source.setName(getUserName());
+		source.setUrl("http://graph.facebook.com/" + getAccountUniqueId());
+		sources.add(source);
+		return sources;
 	}
 	
 	@Override
@@ -57,18 +63,18 @@ public class GoogleAccount extends Oauth2Account{
 
 	@Override
 	public SocioTag createAccountTagset(UserTags userTags) {
-		return createAccountTypeTag(userTags);
+		SocioTag accountTypeTag = createAccountTypeTag(userTags);
+		SocioTag sourceTag = userTags.createTag(getAccountUniqueId(), getUserName(), accountTypeTag);
+		return accountTypeTag;
 	}
 
 	@Override
 	public void postToAccount(String message) throws Exception {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void like(GeneralMessage message) throws Exception {
 		// TODO Auto-generated method stub
-		
 	}
 }

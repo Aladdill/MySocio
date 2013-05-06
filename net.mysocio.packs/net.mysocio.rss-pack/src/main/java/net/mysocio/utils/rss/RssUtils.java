@@ -6,9 +6,13 @@ package net.mysocio.utils.rss;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 import net.mysocio.connection.rss.RssSource;
 import net.mysocio.data.IDataManager;
@@ -20,6 +24,9 @@ import org.jdom.Document;
 import org.jdom.input.SAXBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 
 import com.sun.syndication.feed.opml.Opml;
 import com.sun.syndication.feed.opml.Outline;
@@ -104,6 +111,40 @@ public class RssUtils {
 				}
 			}else{
 				addRssFeed(userId, outline.getXmlUrl(), title, rssFeeds, userTags);
+			}
+		}
+	}
+	public static void importGoogleReaderFeeds(String userId, String data) throws Exception{
+		IDataManager dataManager = DataManagerFactory.getDataManager();
+		UserTags userTags = dataManager.getUserTags(userId);
+		SocioTag rssFeeds = getRssTag(userTags);
+		DocumentBuilderFactory dbFactory = DocumentBuilderFactory
+				.newInstance();
+		InputSource is = new InputSource();
+	    is.setCharacterStream(new StringReader(data));
+		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+		org.w3c.dom.Document doc = dBuilder.parse(is);
+		NodeList nList = doc.getChildNodes();
+		nList = nList.item(0).getChildNodes();
+		nList = nList.item(0).getChildNodes();
+		for (int i = 0; i < nList.getLength(); i++) {
+			Node item = nList.item(i);
+			if (item.getNodeName().equals("object")) {
+				Node urlTag = item.getChildNodes().item(0);
+				String url = urlTag.getChildNodes().item(0).getNodeValue();
+				Node titleTag = item.getChildNodes().item(1);
+				String title = titleTag.getChildNodes().item(0).getNodeValue();
+				Node categoriesTag = item.getChildNodes().item(2);
+				NodeList categories = categoriesTag.getChildNodes();
+				for (int j = 0; j < categories.getLength(); j++) {
+					Node item1 = categories.item(j);
+					if (item1.getNodeName().equals("object")) {
+						Node lableTag = item1.getChildNodes().item(1);
+						String label = lableTag.getChildNodes().item(0).getNodeValue();
+						SocioTag parent = userTags.createTag("RSS_" + label.replace(" ", "_"), label, rssFeeds);
+						addRssFeed(userId, url, title, parent, userTags);
+					}
+				}
 			}
 		}
 	}
