@@ -8,8 +8,11 @@ import java.net.ConnectException;
 import java.util.Set;
 
 import net.mysocio.authentication.AbstractOauth2Manager;
+import net.mysocio.data.IDataManager;
 import net.mysocio.data.accounts.Account;
 import net.mysocio.data.accounts.google.GoogleAccount;
+import net.mysocio.data.management.DataManagerFactory;
+import net.mysocio.ui.management.UnapprovedUserException;
 
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonNode;
@@ -48,10 +51,11 @@ public class GoogleAuthenticationManager extends AbstractOauth2Manager{
 	protected Account getAccount(Token accessToken) throws Exception {
 		String url = "https://www.googleapis.com/oauth2/v2/userinfo";
 		OAuthRequest request = new OAuthRequest(Verb.GET, url);
-		request.addHeader("Authorization", "OAuth " + accessToken.getToken());
+		String token = accessToken.getToken();
+		request.addHeader("Authorization", "OAuth " + token);
 		Response response = request.send();
 		if (response.getCode() != 200) {
-			logger.error("Error getting Google data for url: " + url + " token: " + accessToken.getToken());
+			logger.error("Error getting Google data for url: " + url + " token: " + token);
 			Set<String> headers = response.getHeaders().keySet();
 			for (String name : headers) {
 				logger.error(response.getHeader(name));
@@ -61,33 +65,31 @@ public class GoogleAuthenticationManager extends AbstractOauth2Manager{
 		}
 		ObjectMapper mapper = new ObjectMapper(new JsonFactory());
 		JsonNode root = mapper.readTree(response.getBody());
+		String uniqueId = root.get("id").getValueAsText();
+		String email = root.get("email").getValueAsText();
+		IDataManager dataManager = DataManagerFactory.getDataManager();
+		if (dataManager.getUserPermissions(email) == null){
+			logger.error("User with email " + email + "wasn't approved and knocked.");
+			throw new UnapprovedUserException();
+		}
+		GoogleAccount account = (GoogleAccount) dataManager.getAccount(uniqueId);
+		if (account != null) {
+			logger.debug("Account found.");
+			account.setToken(token);
+			dataManager.saveObject(account);
+			return account;
+		}
 		String name = root.get("name").getValueAsText();
 		logger.debug("got contacts with title" + name);
-		GoogleAccount account = new GoogleAccount();
-		account.setToken(accessToken.getToken());
+		account = new GoogleAccount();
+		account.setToken(token);
 		account.setRefreshToken(getRefreshToken(accessToken.getRawResponse()));
 		account.setUserName(name);
-		account.setAccountUniqueId(root.get("email").getValueAsText());
-		account.setAccountUniqueId(root.get("id").getValueAsText());
+		account.setEmail(email);
+		account.setAccountUniqueId(uniqueId);
 		account.setUserpicUrl(root.get("picture").getValueAsText());
+		dataManager.saveObject(account);
 		return account;
-	}
-	
-	public String getGoogleReaderFeeds(String userId, Token accessToken) throws Exception{
-		String url = "https://www.google.com/reader/api/0/subscription/list";
-		OAuthRequest request = new OAuthRequest(Verb.GET, url);
-		request.addHeader("Authorization", "OAuth " + accessToken.getToken());
-		Response response = request.send();
-		if (response.getCode() != 200) {
-			logger.error("Error getting Google data for url: " + url + " token: " + accessToken.getToken());
-			Set<String> headers = response.getHeaders().keySet();
-			for (String name : headers) {
-				logger.error(response.getHeader(name));
-			}
-			throw new ConnectException("Error getting Google data for url: "
-					+ url);
-		}
-		return response.getBody();
 	}
 	
 	private String getRefreshToken(String response) throws Exception{

@@ -125,24 +125,28 @@ public class RssUtils {
 		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 		org.w3c.dom.Document doc = dBuilder.parse(is);
 		NodeList nList = doc.getChildNodes();
-		nList = nList.item(0).getChildNodes();
-		nList = nList.item(0).getChildNodes();
-		for (int i = 0; i < nList.getLength(); i++) {
-			Node item = nList.item(i);
-			if (item.getNodeName().equals("object")) {
-				Node urlTag = item.getChildNodes().item(0);
-				String url = urlTag.getChildNodes().item(0).getNodeValue();
-				Node titleTag = item.getChildNodes().item(1);
-				String title = titleTag.getChildNodes().item(0).getNodeValue();
-				Node categoriesTag = item.getChildNodes().item(2);
-				NodeList categories = categoriesTag.getChildNodes();
-				for (int j = 0; j < categories.getLength(); j++) {
-					Node item1 = categories.item(j);
-					if (item1.getNodeName().equals("object")) {
-						Node lableTag = item1.getChildNodes().item(1);
-						String label = lableTag.getChildNodes().item(0).getNodeValue();
-						SocioTag parent = userTags.createTag("RSS_" + label.replace(" ", "_"), label, rssFeeds);
-						addRssFeed(userId, url, title, parent, userTags);
+		if (nList.getLength() > 0){
+			nList = nList.item(0).getChildNodes();
+			if (nList.getLength() > 0){
+				nList = nList.item(0).getChildNodes();
+				for (int i = 0; i < nList.getLength(); i++) {
+					Node item = nList.item(i);
+					if (item.getNodeName().equals("object")) {
+						Node urlTag = item.getChildNodes().item(0);
+						String url = urlTag.getChildNodes().item(0).getNodeValue().substring(5);
+						Node titleTag = item.getChildNodes().item(1);
+						String title = titleTag.getChildNodes().item(0).getNodeValue();
+						Node categoriesTag = item.getChildNodes().item(2);
+						NodeList categories = categoriesTag.getChildNodes();
+						for (int j = 0; j < categories.getLength(); j++) {
+							Node item1 = categories.item(j);
+							if (item1.getNodeName().equals("object")) {
+								Node lableTag = item1.getChildNodes().item(1);
+								String label = lableTag.getChildNodes().item(0).getNodeValue();
+								SocioTag parent = userTags.createTag("RSS_" + label.replace(" ", "_"), label, rssFeeds);
+								addRssFeed(userId, url, title, parent, userTags);
+							}
+						}
 					}
 				}
 			}

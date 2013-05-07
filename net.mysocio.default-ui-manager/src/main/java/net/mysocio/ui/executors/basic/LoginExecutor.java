@@ -7,11 +7,13 @@ import net.mysocio.data.IConnectionData;
 import net.mysocio.data.IDataManager;
 import net.mysocio.data.UserTags;
 import net.mysocio.data.accounts.Account;
+import net.mysocio.data.accounts.google.GoogleAccount;
 import net.mysocio.data.management.AccountsManager;
 import net.mysocio.data.management.DataManagerFactory;
 import net.mysocio.ui.management.CommandExecutionException;
 import net.mysocio.ui.management.ICommandExecutor;
 import net.mysocio.ui.management.UnapprovedUserException;
+import net.mysocio.utils.rss.RssUtils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +42,12 @@ public class LoginExecutor implements ICommandExecutor {
 				Account account = AccountsManager.getInstance().getAccount(connectionData);
 				userId = dataManager.getUser(account,connectionData.getLocale()).getId().toString();
 				UserTags userTags = dataManager.getUserTags(userId);
+				if (account instanceof GoogleAccount){
+					String data = ((GoogleAccount)account).getGoogleReaderFeeds(userId);
+					if (data != null){
+						RssUtils.importGoogleReaderFeeds(userId, data);
+					}
+				}
 				connectionData.setUserTags(userTags);
 				connectionData.setUserId(userId);
 			}else{

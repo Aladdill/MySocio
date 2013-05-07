@@ -376,20 +376,13 @@ function messageScroll(event, scrollPositionY, isAtTop, isAtBottom) {
 	});
 }
 function markMessageReadden(id) {
-	if (readenMessages == 10){
-		readenMessages = 0;
-		refreshTags(false);
-	}else{
-		readenMessages ++;
-	}
-	
 	$.ajax({
   	  type: "POST",
   	  url: "execute?command=markMessagesReaden&messagesIds=" + id,
   	  dataType: "text",
   	  error: onFailure 
-  	}).always(closeWaitDialog);
-  	//.done(refreshTags);
+  	}).always(closeWaitDialog)
+  	.done(refreshTags);
 }
 function markAllMessagesReadden() {
 	showWaitDialog("dialog.marking.all.messages.read.title", "dialog.marking.all.messages.read.message");

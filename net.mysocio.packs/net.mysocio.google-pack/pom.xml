@@ -18,15 +18,5 @@
 			<groupId>net.mysocio</groupId>
 			<artifactId>authentication-management</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>com.google.api-client</groupId>
-			<artifactId>google-api-client</artifactId>
-			<version>1.11.0-beta</version>
-		</dependency>
-		<dependency>
-			<groupId>com.google.apis</groupId>
-			<artifactId>google-api-services-plus</artifactId>
-			<version>v1-rev22-1.8.0-beta</version>
-		</dependency>
 	</dependencies>
 </project>
