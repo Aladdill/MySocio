@@ -14,24 +14,24 @@ import com.github.jmkgreen.morphia.annotations.Entity;
  */
 @Entity("messages")
 public class FacebookMessage extends UserMessage {
-	private String fbId;
-	private String message;
-	private String picture;
-	private String link;
-	private String name;
-	private String caption;
-	private String description;
-	private String source;
-	private String properties;
-	private String icon;
-	private String privacy;
-	private String type;
-	private String likes;
-	private String place;
-	private String story;
-	private String application;
-	private String updated_time;
-	private String linkToMessage;
+	private String fbId = "";
+	private String message = "";
+	private String picture = "";
+	private String link = "";
+	private String name = "";
+	private String caption = "";
+	private String description= "";
+	private String source = "";
+	private String properties = "";
+	private String icon = "";
+	private String privacy = "";
+	private String type = "";
+	private String likes = "";
+	private String place = "";
+	private String story = "";
+	private String application = "";
+	private String updated_time = "";
+	private String linkToMessage = "";
 	private String uiObjectName = FacebookUiMessage.NAME;
 
 	/**
@@ -42,21 +42,18 @@ public class FacebookMessage extends UserMessage {
 	@Override
 	public String replacePlaceholders(String template) {
 		String message = super.replacePlaceholders(template);
-		if (linkToMessage != null){
-			message = message.replace("message.link", getLinkToMessage());
+		message = message.replace("message.outer.link", getLinkToMessage());
+		message = message.replace("message.name", getName());
+		message = message.replace("message.link", getLink());
+		String picture = getPicture();
+		if (getType().equals("video")){
+			message = message.replace("message.picture", picture);
+		}else{
+			//for some reason pictures shown in FB and ones in api messages are not the same
+			message = message.replace("message.picture", picture.replace("_s.", "_n."));
 		}
-		if (getName() != null){
-			message = message.replace("message.photo.name", getName());
-		}
-		if (getLink() != null){
-			message = message.replace("message.photo.link", getLink());
-		}
-		if (getPicture() != null){
-			message = message.replace("message.photo", getPicture());
-		}
-		if (getCaption() != null){
-			message = message.replace("message.caption", getCaption());
-		}
+		message = message.replace("message.caption", getCaption());
+		message = message.replace("message.description", getDescription());
 		return message;
 	}
 

@@ -554,8 +554,8 @@ tr.Footer {
 }
 .FbVideoIcon {
 	position: relative;
-	left: 0px;
-	top: 0px;
+	left: 5px;
+	top: 5px;
 	float: left;
 	z-index: 1;
 }
