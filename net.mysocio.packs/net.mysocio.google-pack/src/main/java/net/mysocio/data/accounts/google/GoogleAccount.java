@@ -61,7 +61,7 @@ public class GoogleAccount extends Oauth2Account{
 		GoogleSource source = new GoogleSource();
 		source.setAccount(this);
 		source.setName(getUserName());
-		source.setUrl("http://graph.facebook.com/" + getAccountUniqueId());
+		source.setUrl("https://plus.google.com/" + getAccountUniqueId());
 		sources.add(source);
 		return sources;
 	}
