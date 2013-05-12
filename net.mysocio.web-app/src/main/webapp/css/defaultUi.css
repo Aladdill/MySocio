@@ -978,7 +978,7 @@ a#login_vkontakte:HOVER img {
 
 #sources_tree_scroll {width: 316px; height: 580px;}
 #sources_tree_scroll .viewport { width: 300px; height: 580px; overflow: hidden; position: relative; }
-.scroll-pane {overflow: auto;}
+.scroll-pane {overflow: auto; outline: none;}
 .overview { list-style: none; position: absolute; left: 0; top: 0; }
 .thumb .end,
 .thumb { background-color: #a67eb0; }

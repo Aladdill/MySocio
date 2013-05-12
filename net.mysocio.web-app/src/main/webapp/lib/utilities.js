@@ -323,7 +323,7 @@ function initMessagesContainer() {
 }
 function messageScroll(event, scrollPositionY, isAtTop, isAtBottom) {
 	if (isAtBottom == true){
-		getMessages('currentSelection', false);
+		refreshDataContainerScroll();
 	}
 	$.each($(".Message"), function(index, value) {
 		var message = $("#" + value.id);
@@ -351,8 +351,10 @@ function messageScroll(event, scrollPositionY, isAtTop, isAtBottom) {
 			if (message.data("wasSelected") == undefined) {
 				markMessageReadden(value.id);
 				message.data("wasSelected", "true");
-				message.find(".MessageTitle")
-						.addClass("MessageTitleReaden");
+				message.find(".MessageTitle").addClass("MessageTitleReaden");
+				if ($(this).next().attr("id") == "filler"){
+					getMessages('currentSelection', false);
+				}
 			}
 		} else {
 			if (message.hasClass("SelectedMessage")) {
@@ -436,8 +438,12 @@ function getMessages(id, resetContainer) {
 				}
 				$(data).insertBefore("#filler");
 				$.each($(".MessageDate"), function(index, value) {var millies = new Number($(value).html());
-				var date = new Date(millies);
-				$(value).html(date.toLocaleString());});
+					var date = new Date(millies);
+					var dateString = date.toLocaleString();
+					if (dateString != "Invalid Date"){	
+						$(value).html(dateString);
+					}
+				});				
 				refreshDataContainerScroll();
 				gapi.plusone.go();
 			}).always(closeWaitDialog).always(function (){$("#data_container").data("gettingMessages", false);})
