@@ -383,8 +383,7 @@ function markMessageReadden(id) {
   	  url: "execute?command=markMessagesReaden&messagesIds=" + id,
   	  dataType: "text",
   	  error: onFailure 
-  	}).always(closeWaitDialog)
-  	.done(refreshTags);
+  	}).done(refreshTags);
 }
 function markAllMessagesReadden() {
 	showWaitDialog("dialog.marking.all.messages.read.title", "dialog.marking.all.messages.read.message");

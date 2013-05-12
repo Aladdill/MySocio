@@ -213,7 +213,7 @@ a.InnerLink {
 }
 
 .PostBox {
-	width: 672px;
+	max-width: 908px;
 	font: 13px Calibri;
 	color: #a5a4a4;
 	margin: 10px 0px 2px 28px;
@@ -224,7 +224,8 @@ a.InnerLink {
 }
 .PostBox textarea{
 	border: 0px;
-	width: 672px;
+	max-width: 900px;
+	width: 100%;
 	background-color: #ececec;
 	resize: none;
 	padding: 4px;
@@ -244,7 +245,7 @@ a.InnerLink {
 }
 .PostButtons {
 	height: 30px;
-	width: 680px;
+	width: 100%;
 	background-color: #ececec;
 }
 .InnerContentMenu span {
@@ -550,7 +551,7 @@ tr.Footer {
 	float: left;
 }
 .MessageInnerBox {
-	width: 680px;
+	max-width: 908px;
 }
 .FbVideoIcon {
 	position: relative;
@@ -559,7 +560,9 @@ tr.Footer {
 	float: left;
 	z-index: 1;
 }
-
+.ui-dialog-titlebar-close {
+	outline: none;
+}
 .FbVideoPicture {
 	position: relative;
 	left: -35px;
