@@ -73,7 +73,9 @@ public abstract class GeneralMessage extends SocioObject implements IUniqueObjec
 	public String replacePlaceholders(String template) {
 		String message = template.replace("message.title", getTitle());
 		message = message.replace("message.buttons", getButtons());
-		message = message.replace("message.text", getText());
+		String text2 = getText().replace("<script>", "");
+		text2 = getText().replace("</script>", "");
+		message = message.replace("message.text", text2);
 		message = message.replace("message.id", getId().toString());
 		String dateString = Long.toString(getDate());
 		message = message.replace("date.long", dateString);

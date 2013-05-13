@@ -349,11 +349,12 @@ function messageScroll(event, scrollPositionY, isAtTop, isAtBottom) {
 			message.find(".MessageCollapse").addClass(
 					"MessageCollapseSelected");
 			if (message.data("wasSelected") == undefined) {
-				markMessageReadden(value.id);
 				message.data("wasSelected", "true");
 				message.find(".MessageTitle").addClass("MessageTitleReaden");
 				if ($(this).next().attr("id") == "filler"){
-					getMessages('currentSelection', false);
+					markMessageReaddenAndGetMore(value.id);
+				}else{
+					markMessageReadden(value.id);
 				}
 			}
 		} else {
@@ -384,6 +385,14 @@ function markMessageReadden(id) {
   	  dataType: "text",
   	  error: onFailure 
   	}).done(refreshTags);
+}
+function markMessageReaddenAndGetMore(id) {
+	$.ajax({
+  	  type: "POST",
+  	  url: "execute?command=markMessagesReaden&messagesIds=" + id,
+  	  dataType: "text",
+  	  error: onFailure 
+  	}).done(function(){refreshTags(); getMessages('currentSelection', false);});
 }
 function markAllMessagesReadden() {
 	showWaitDialog("dialog.marking.all.messages.read.title", "dialog.marking.all.messages.read.message");
