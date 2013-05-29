@@ -1,11 +1,12 @@
 <div class="Account">
 	<div class="AccountUserpic">
-		<img class="icon" alt="Account Icon"	src="account.icon">
+		<div class="icon" style="background: url('../account.icon') no-repeat;"></div>
 		<img class="userpic" alt="Userpic" src="account.userpic">
 	</div>
 	<div class="AccountData">
-		<span>account.username</span><br>
-		<a class="InnerLink" href="#" onclick="setMainAccount('account.id')">account.make.primary</a><br>
-		<a class="InnerLink" href="#" onclick="removeAccount('account.id')">account.remove</a>		
+		<div class="username">account.username</div>
+		<span class="button" onclick="setMainAccount('account.id')">account.make.primary</span>
+		<span class="separator">|</span> 
+		<span class="button" onclick="removeAccount('account.id')">account.remove</span>		
 	</div>
 </div>

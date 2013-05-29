@@ -20,7 +20,6 @@ import net.mysocio.ui.data.objects.DefaultAccountLine;
 import net.mysocio.ui.data.objects.DefaultLoginPage;
 import net.mysocio.ui.data.objects.DefaultMessage;
 import net.mysocio.ui.data.objects.DefaultSiteBody;
-import net.mysocio.ui.data.objects.NewAccountLine;
 import net.mysocio.ui.data.objects.RssLine;
 import net.mysocio.ui.data.objects.UserUiMessage;
 import net.mysocio.ui.data.objects.facebook.FacebookUiCheckinMessage;
@@ -44,8 +43,6 @@ public class DefaultUiManager extends AbstractUiManager {
 		defaultPages = new HashMap<String, UiObject>();
 		DefaultLoginPage defaultLoginPage = new DefaultLoginPage();
 		defaultPages.put(defaultLoginPage.getCategory()+defaultLoginPage.getName(),defaultLoginPage);
-		NewAccountLine newAccountLine = new NewAccountLine();
-		defaultPages.put(newAccountLine.getCategory()+newAccountLine.getName(),newAccountLine);
 		AccountLine accountLine = new AccountLine();
 		defaultPages.put(accountLine.getCategory()+accountLine.getName(),accountLine);
 		DefaultAccountLine defaultAccountLine = new DefaultAccountLine();

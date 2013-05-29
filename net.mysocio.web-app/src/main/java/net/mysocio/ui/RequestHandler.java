@@ -30,6 +30,7 @@ public class RequestHandler extends AbstractHandler {
 	protected String handleRequest(HttpServletRequest request,HttpServletResponse response) throws CommandExecutionException {
 		String commandOutput;
 		String command = request.getParameter("command");
+		logger.debug("command is: " + command);
 		IConnectionData connectionData = new ConnectionData(request);
 		synchronized(connectionData){
 			String pendingCommand = connectionData.getSessionAttribute(command);

@@ -15,8 +15,8 @@ import net.mysocio.data.messages.UnreaddenMessage;
  */
 public interface IMessagesManager {
 	public void postMessage(GeneralMessage message, Destination destination);
-	public List<UnreaddenMessage> getMessagesForSelectedTag(String userId, String tagId, UserTags tags);
+	public List<GeneralMessage> getMessagesForSelectedTag(String userId, String tagId, UserTags tags);
 	public void setMessagesReadden(String userId, String messageId) throws Exception;
 	public List<String> storeMessages(List<GeneralMessage> messages) throws Exception;
-	public void storeMessage(GeneralMessage message) throws Exception;
+	public<T extends GeneralMessage> void storeMessage(T message) throws Exception;
 }

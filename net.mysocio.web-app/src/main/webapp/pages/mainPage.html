@@ -44,26 +44,20 @@
 			<div class="HeaderLine MiddleHeaderLine"></div>
 			<div id="tabs" class="Tabs">
 				<div class="BlueButtonTop"></div>
-				<div id="accounts_tab_div" class="BlueButtonCenter inactive">
-					<span id="accounts_tab_span" class="tab"><a href="#"
-						class="Undecorated" onclick="showAccounts()">tab.accounts</a>
-					</span>
+				<div id="accounts_tab_div" class="BlueButtonCenter">
+					<span id="accounts_tab_span" class="tab button" onclick="showAccounts()">tab.accounts</span>
 				</div>
 				<div class="BlueButtonBottom"></div>
-				<div class="GrayButtonTop"></div>
+				<!-- <div class="GrayButtonTop"></div>
 				<div id="contacts_tab_div" class="GrayButtonCenter inactive">
-					<span id="contacts_tab_span" class="tab"><a href="#"
-						class="Undecorated" onclick="showContacts()">tab.contacts</a>
-					</span>
+					<span id="contacts_tab_span" class="tab button" onclick="showContacts()">tab.contacts</span>
+				</div>
+				<div class="GrayButtonBottom"></div> -->
+				<div class="GrayButtonTop"></div>
+				<div id="feeds_tab_div" class="GrayButtonCenter">
+					<span id="feeds_tab_span" class="tab button" onclick="showRssFeeds()">tab.rss.feeds</span>
 				</div>
 				<div class="GrayButtonBottom"></div>
-				<div class="BlueButtonTop"></div>
-				<div id="feeds_tab_div" class="BlueButtonCenter">
-					<span id="feeds_tab_span" class="tab"><a href="#"
-						class="Undecorated" onclick="showRssFeeds()">tab.rss.feeds</a>
-					</span>
-				</div>
-				<div class="BlueButtonBottom"></div>
 			</div>
 		</td>
 		<td class="ThirdColumn">
@@ -71,14 +65,14 @@
 			<div class="ContentLine"></div>
 			<div class="SecondContentLine"></div>
 			<div class="ContentMenu">
-				<div id="main_content_menu" class="InnerContentMenu">
+				<div id="main_content_menu" class="InnerContentMenu content_menu">
 					<span onclick="markAllMessagesReadden()">mark.all.read.button</span>
 					<div class="ContentMenuDivider"></div>
 					<span onclick="orderBy('descending')">order.by.oldest.button</span>
 					<div class="ContentMenuDivider"></div>
 					<span onclick="orderBy('ascending')">order.by.newest.button</span>
 				</div>
-				<div id="rss_content_menu" class="InnerContentMenu Invisible">
+				<div id="rss_content_menu" class="InnerContentMenu content_menu Invisible">
 					<input id="rssUrl" type="text" autocomplete="off" title="enter.rss.url" placeholder="enter.rss.url">
 					<div class="PlusButton" onclick="addRssFeed()"></div>
 					<div class="ContentMenuDivider"></div>
@@ -92,6 +86,27 @@
 						<div class="RightChoseOpmlFile"></div>
 					</div>
 					<span class="ImportOpmlButton" onclick="importOPML()">import.opml</span>
+				</div>
+				<div id="accounts_content_menu" class="InnerContentMenu content_menu Invisible">
+					<div onclick="addAccount('facebook')" class="button">
+						<div class="AddFacebookIcon AddAccountIcon"></div>
+						<span>add.facebook.account</span>
+					</div>
+					<div class="ContentMenuDivider"></div>
+					<div onclick="addAccount('google')" class="button">
+						<div class="AddGoogleIcon AddAccountIcon"></div>
+						<span>add.google.account</span>
+					</div>
+					<div class="ContentMenuDivider"></div>
+					<div onclick="addAccount('twitter')" class="button">
+						<div class="AddTwitterIcon AddAccountIcon"></div>
+						<span>add.twitter.account</span>
+					</div>
+					<div class="ContentMenuDivider"></div>
+					<div onclick="addAccount('vkontakte')" class="button">
+						<div class="AddVkontakteIcon AddAccountIcon"></div>
+						<span>add.vkontakte.account</span>
+					</div>
 				</div>
 			</div>
 			<div class="PostBoxTriangle"></div>

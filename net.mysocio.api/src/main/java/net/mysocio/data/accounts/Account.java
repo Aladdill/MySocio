@@ -8,14 +8,12 @@ import java.util.List;
 
 import net.mysocio.connection.readers.Source;
 import net.mysocio.data.ContactsList;
-import net.mysocio.data.IDisplayedObject;
 import net.mysocio.data.SocioObject;
 import net.mysocio.data.SocioTag;
 import net.mysocio.data.SocioUser;
 import net.mysocio.data.UserTags;
 import net.mysocio.data.contacts.Contact;
 import net.mysocio.data.messages.GeneralMessage;
-import net.mysocio.ui.data.objects.NewAccountLine;
 
 import com.github.jmkgreen.morphia.annotations.Entity;
 import com.github.jmkgreen.morphia.annotations.Reference;
@@ -25,7 +23,7 @@ import com.github.jmkgreen.morphia.annotations.Reference;
  *
  */
 @Entity("accounts")
-public abstract class Account extends SocioObject implements IDisplayedObject{
+public abstract class Account extends SocioObject{
 	/**
 	 * 
 	 */
@@ -88,16 +86,6 @@ public abstract class Account extends SocioObject implements IDisplayedObject{
 
 	public String getIconUrl(){return null;}
 	
-	@Override
-	public String getUiCategory() {
-		return NewAccountLine.CATEGORY;
-	}
-
-	@Override
-	public String getUiName() {
-		return NewAccountLine.NAME;
-	}
-
 	/**
 	 * @return the contacts
 	 */

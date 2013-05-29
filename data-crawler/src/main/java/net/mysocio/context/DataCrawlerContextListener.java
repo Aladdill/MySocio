@@ -92,19 +92,13 @@ public class DataCrawlerContextListener implements ServletContextListener {
 					dbPass.toCharArray());
 			ds.ensureCaps();
 			ds.ensureIndexes();
-			IDataManager manager = new MongoDataManager(ds);
-			DataManagerFactory.init(manager);
-		} catch (Exception e) {
-			logger.error("Error initializing database", e);
-		}
-		CamelContextManager.addComponent("activemq", ActiveMQComponent
-				.activeMQComponent("vm://localhost?broker.persistent=true"));
-		CamelContextManager.initContext();
-		try {
+			
 			MongoURI uri = new MongoURI("mongodb://" + dbServer + ":" + dbPort);
 			Mongo connectionBean = new Mongo(uri);
 			DB db = connectionBean.getDB(dbName);
 			db.authenticate(dbUser, dbPass.toCharArray());
+			IDataManager manager = new MongoDataManager(ds, db);
+			DataManagerFactory.init(manager);
 			if (!db.collectionExists("route_packages")){
 				DBObject options = BasicDBObjectBuilder.start().add("capped", true).add("size", 10000000).get();
 				db.createCollection("route_packages", options);
@@ -120,6 +114,9 @@ public class DataCrawlerContextListener implements ServletContextListener {
 		} catch (Exception e) {
 			logger.error("Error initializing mongo cursor.", e);
 		}
+		CamelContextManager.addComponent("activemq", ActiveMQComponent
+				.activeMQComponent("vm://localhost?broker.persistent=true"));
+		CamelContextManager.initContext();
 		IDataManager dataManager = DataManagerFactory.getDataManager();
 		List<SocioRoute> routes = dataManager.getObjects(SocioRoute.class);
 		try {

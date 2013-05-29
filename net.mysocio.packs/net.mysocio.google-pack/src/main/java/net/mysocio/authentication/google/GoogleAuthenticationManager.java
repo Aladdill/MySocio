@@ -12,7 +12,6 @@ import net.mysocio.data.IDataManager;
 import net.mysocio.data.accounts.Account;
 import net.mysocio.data.accounts.google.GoogleAccount;
 import net.mysocio.data.management.DataManagerFactory;
-import net.mysocio.ui.management.UnapprovedUserException;
 
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonNode;
@@ -68,10 +67,7 @@ public class GoogleAuthenticationManager extends AbstractOauth2Manager{
 		String uniqueId = root.get("id").getValueAsText();
 		String email = root.get("email").getValueAsText();
 		IDataManager dataManager = DataManagerFactory.getDataManager();
-		if (dataManager.getUserPermissions(email) == null){
-			logger.error("User with email " + email + "wasn't approved and knocked.");
-			throw new UnapprovedUserException();
-		}
+		checkUserInvitation(email, dataManager);
 		GoogleAccount account = (GoogleAccount) dataManager.getAccount(uniqueId);
 		if (account != null) {
 			logger.debug("Account found.");

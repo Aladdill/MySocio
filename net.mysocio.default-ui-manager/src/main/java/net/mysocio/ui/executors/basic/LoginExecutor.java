@@ -5,6 +5,7 @@ package net.mysocio.ui.executors.basic;
 
 import net.mysocio.data.IConnectionData;
 import net.mysocio.data.IDataManager;
+import net.mysocio.data.SocioUser;
 import net.mysocio.data.UserTags;
 import net.mysocio.data.accounts.Account;
 import net.mysocio.data.accounts.google.GoogleAccount;
@@ -40,14 +41,20 @@ public class LoginExecutor implements ICommandExecutor {
 				logger.debug("Logging in user.");
 				IDataManager dataManager = DataManagerFactory.getDataManager();
 				Account account = AccountsManager.getInstance().getAccount(connectionData);
-				userId = dataManager.getUser(account,connectionData.getLocale()).getId().toString();
-				UserTags userTags = dataManager.getUserTags(userId);
-				if (account instanceof GoogleAccount){
-					String data = ((GoogleAccount)account).getGoogleReaderFeeds(userId);
-					if (data != null){
-						RssUtils.importGoogleReaderFeeds(userId, data);
+				SocioUser user = account.getUser();
+				if (user != null) {
+					logger.debug("Account found");
+				}else{
+					user = dataManager.createUser(account,connectionData.getLocale());
+					if (account instanceof GoogleAccount){
+						String data = ((GoogleAccount)account).getGoogleReaderFeeds(userId);
+						if (data != null){
+							RssUtils.importGoogleReaderFeeds(userId, data);
+						}
 					}
 				}
+				userId = user.getId().toString();
+				UserTags userTags = dataManager.getUserTags(userId);
 				connectionData.setUserTags(userTags);
 				connectionData.setUserId(userId);
 			}else{

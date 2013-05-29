@@ -9,7 +9,6 @@ import java.util.Locale;
 import net.mysocio.connection.readers.Source;
 import net.mysocio.data.accounts.Account;
 import net.mysocio.data.messages.GeneralMessage;
-import net.mysocio.data.messages.UnreaddenMessage;
 import net.mysocio.data.ui.UiObject;
 
 /**
@@ -22,7 +21,7 @@ public interface IDataManager {
 
 	public void deleteObject(Object object);
 
-	public SocioUser getUser(Account account, Locale locale) throws Exception;
+	public SocioUser createUser(Account account, Locale locale) throws Exception;
 	
 	public Account getAccount(String accountUniqueId);
 
@@ -40,7 +39,7 @@ public interface IDataManager {
 
 	public void setMessageReadden(String userId, String messageId);
 
-	public List<UnreaddenMessage> getUnreadMessages(String userId, String tagId, UserTags tags);
+	public List<GeneralMessage> getUnreadMessages(String userId, String tagId, UserTags tags);
 
 	public String getPage(String userId, String pageKey);
 

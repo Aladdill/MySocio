@@ -60,17 +60,19 @@ td.SourcesBox {
 	float: left;
 }
 .AccountUserpic .icon {
-	right: 23px;
-	top: 32px;
+	float: none;
+	margin-top: 27px;
 	position: relative;
-	z-index: 1;
-	padding-bottom: 15px;
+	z-index: 100;
+	height: 22px;
+	width: 25px;
+	margin-left: -3px;
 }
 .AccountUserpic .userpic {
 	width: 50px;
 	height: 50px;
-	border: 2px solid #00aeef;
-	float: left;
+	float: none;
+	margin-top: -51px;
 }
 .AccountUserpic {
 	float: left;
@@ -88,10 +90,16 @@ td.SourcesBox {
 	border: 2px solid #D1C2D4;
 	float: left;
 }
-.AccountData span{
+.AccountData .span{
 	font: 14px Calibri;
-	color: #7d4089;
 	float: left;
+}
+.AccountData .username{
+	color: #7d4089;
+	width: 170px;
+}
+.AccountData .separator{
+	margin: 0px 10px;
 }
 
 span.AccountType {
@@ -107,7 +115,7 @@ span.DefaultAccount {
 }
 .Account {
 	float: left;
-	width: 600px;
+	width: 250px;
 	height: auto;
 	margin-left: 16px;
 	margin-top: 20px;
@@ -129,10 +137,11 @@ span.DefaultAccount {
 }
 .AccountData {
 	position: relative;
-	left: 5px;
-	width: 100px;
+	width: 170px;
 	height: 100%;
 	float: left;
+	margin-left: 10px;
+	margin-top: 17px;
 }
 
 .ContactData {
@@ -703,95 +712,128 @@ a.Undecorated {
 }
 
 .LoginPage {
-	background: url("../images/loginPage/darker-texture-login.jpg");
-	vertical-align: middle;
+	border: 0px;
+	border-top: 4px;
+	border-style: solid;
+	border-color: #692b76;
+	background: url("../images/loginPage/green-texture1.jpg");
+	height: 495px;
+	width: 100%;
+	top: 0;
 }
-
-.AuthCircle {
-	background: url("../images/loginPage/big-circle.png");
-	height: 340px;
-	width: 340px;
-	margin-bottom: 54px;
-	margin-left: 168px;
+.LoginCenteredDiv {
+	margin: 0px auto;
+	width: 1000px;
 }
-
-.LoginOctopus {
-	position: relative;
-	top: 15px;
-	left: 132px;
+.LoginLogo {
+	background: url("../images/loginPage/big-login-logo.png") no-repeat;
+	width: 311px;
+	height: 111px;
 	float: left;
 }
-
+.LoginLeft {
+	float: left;
+	margin-top: 67px;
+	width: 698px;
+}
+.LoginRight {
+	float: right;
+	margin-top: 114px;
+	width: 302px;
+}
+.LoginButton {
+	width: 302px;
+	height: 41px;
+	float: right;
+	margin-bottom: 28px;
+}
 .LoginGoogle {
-	position: relative;
-	top: 29px;
-	left: 166px;
-	float: none;
+	background: url("../images/loginPage/google-idle-new.png") no-repeat;
 }
-
+.LoginGoogle:HOVER {
+	background: url("../images/loginPage/google-hover.png") no-repeat;
+}
 .LoginFacebook {
-	position: relative;
-	top: -60px;
-	left: 76px;
-	float: none;
+	background: url("../images/loginPage/fb-idle.png") no-repeat;
 }
-
+.LoginFacebook:HOVER {
+	background: url("../images/loginPage/fb-hover.png") no-repeat;
+}
 .LoginTwitter {
-	position: relative;
-	top: -55px;
-	left: 164px;
-	float: none;
+	background: url("../images/loginPage/twitter-dis.png") no-repeat;
 }
-
-.LoginLJ {
-	position: relative;
-	top: 100px;
-	left: 23px;
-	float: none;
+.LoginVkontakte {
+	background: url("../images/loginPage/vkontakte-dis.png") no-repeat;
 }
-
+.AddAccountIcon {
+	width: 28px;
+	height: 27px;
+	float: left;
+	margin-left: 10px;
+}
+.AddFacebookIcon {
+	background: url("../images/main/add-fb.png") no-repeat;
+}
+.AddGoogleIcon {
+	background: url("../images/main/add-google.png") no-repeat;
+}
+.AddTwitterIcon {
+	background: url("../images/main/add-twitter.png") no-repeat;
+}
+.AddVkontakteIcon {
+	background: url("../images/main/add-vkontakte.png") no-repeat;
+}
+.button {
+	cursor: pointer;
+}
 .inactive {
 	pointer-events: none;
 	cursor: default;
-	opacity : 0.4;
-    filter: alpha(opacity=40);
 }
-
-.LoginBaloon {
-	position: relative;
-	top: -57px;
-	left: 44px;
-	float: none;
-	width: 100px;
-	height: 78px;
-	background: url("../images/loginPage/baloon.jpg") no-repeat 0 0;
-}
-
-span.Baloon {
-	width: 80px;
-	height: 78px;
-	position: relative;
+.MotoUpper {
+	font-family: Verdana;
+	font-size: 53px;
+	margin-top: 62px;
+	color: #fff;
 	float: left;
-	top: -70px;
-	left: 17px;
-	font: 12px Verdana;
-	color: #7d4d8b;
 }
-
-.LoginVkontakte {
-	position: relative;
-	top: -104px;
-	left: 179px;
-	float: none;
+.MotoLower {
+	font-family: Verdana;
+	font-size: 53px;
+	color: #2b2b2b;
+	float: left;
 }
-
-.LoginLinkedin {
-	position: relative;
-	top: -96px;
-	left: 165px;
-	float: none;
+.MiddleShadow {
+	background: url("../images/loginPage/green-texture_buttom.png");
+	width: 100%;
+	height: 26px;
+	float: left;
 }
-
+.LoginTextDiv {
+	width: 1000px;
+	margin: 0px auto;
+}
+/* font-family: 'Domine', serif;
+font-family: 'Marcellus', serif;
+font-family: 'Quando', serif;
+font-family: 'Donegal One', serif; */
+.TextColumn {
+	width: 294px;
+	float: left;
+	font-family: 'Domine', serif;
+	font-size: 14px;
+	margin-top: 10px;
+}
+.TextColumnSpace {
+	width: 59px;
+	height: 300px;;
+	float: left;
+}
+.TextColumn h1{
+	font-family: 'Quando', serif;
+	font-size: 22px;
+	color: #139deb;
+}
 td.PageHeader {
 	height: 100px;
 	width: 100%;

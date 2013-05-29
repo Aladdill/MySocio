@@ -22,12 +22,18 @@ public class DefaultLoginPage extends SiteBody {
 	public DefaultLoginPage() {
 		super();
 		setName(NAME);
-		addTextLabel("login.page.baloon.text");
-		addTextLabel("login.page.promo.general.text");
-		addTextLabel("login.page.promo.about.header.text");
-		addTextLabel("login.page.promo.about.text");
-		addTextLabel("login.page.promo.your.look.header.text");
-		addTextLabel("login.page.promo.your.look.text");
+		addTextLabel("login.page.why.mysocio.header");
+		addTextLabel("login.page.why.mysocio.text");
+		addTextLabel("login.page.new.to.mysocio.header");
+		addTextLabel("login.page.new.to.mysocio.text");
+		addTextLabel("login.page.we.are.open.source.header");
+		addTextLabel("login.page.we.are.open.source.text");
+		addTextLabel("login.page.help.us.help.you.header");
+		addTextLabel("login.page.help.us.help.you.text");
+		addTextLabel("login.page.privacy.header");
+		addTextLabel("login.page.privacy.text");
+		addTextLabel("login.page.moto.upper");
+		addTextLabel("login.page.moto.lower");
 	}
 	@Override
 	public String getPageFile() {

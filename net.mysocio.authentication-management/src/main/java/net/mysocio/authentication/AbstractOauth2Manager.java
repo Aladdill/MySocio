@@ -3,10 +3,15 @@
  */
 package net.mysocio.authentication;
 
+import java.util.Date;
+
 import net.mysocio.data.IAuthenticationManager;
 import net.mysocio.data.IConnectionData;
+import net.mysocio.data.IDataManager;
+import net.mysocio.data.MySocioInfo;
 import net.mysocio.data.accounts.Account;
 import net.mysocio.data.management.AccountsManager;
+import net.mysocio.ui.management.UnapprovedUserException;
 
 import org.scribe.builder.ServiceBuilder;
 import org.scribe.builder.api.Api;
@@ -83,5 +88,24 @@ public abstract class AbstractOauth2Manager implements IAuthenticationManager {
 		OAuthService service = getService();
 		Token accessToken = service.getAccessToken(null, verifier);
 		return getAccount(accessToken);
+	}
+
+	protected void checkUserInvitation(String email, IDataManager dataManager)
+			throws UnapprovedUserException {
+		if (dataManager.getUserPermissions(email) == null){
+			String message = "User with email " + email + "wasn't approved and knocked.";
+			logger.error(message);
+			try {
+				dataManager.saveObject(new MySocioInfo("Unapproved User", message, new Date().toString()));
+			} catch (Exception e) {
+				logger.warn("Coudn't save info.",e);
+			}
+			throw new UnapprovedUserException();
+		}
+		try {
+			dataManager.saveObject(new MySocioInfo("Logged In User", "User with email " + email, new Date().toString()));
+		} catch (Exception e) {
+			logger.warn("Coudn't save info.",e);
+		}
 	}
 }

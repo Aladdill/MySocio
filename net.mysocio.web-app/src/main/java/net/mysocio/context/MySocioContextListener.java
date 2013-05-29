@@ -84,12 +84,12 @@ public class MySocioContextListener implements ServletContextListener {
 					dbPass.toCharArray());
 			ds.ensureCaps();
 			ds.ensureIndexes();
-			IDataManager manager = new MongoDataManager(ds);
-			DataManagerFactory.init(manager);
 			MongoURI uri = new MongoURI("mongodb://" + dbServer + ":" + dbPort);
 			Mongo connectionBean = new Mongo(uri);
 			DB db = connectionBean.getDB(dbName);
 			db.authenticate(dbUser, dbPass.toCharArray());
+			IDataManager manager = new MongoDataManager(ds, db);
+			DataManagerFactory.init(manager);
 			if (!db.collectionExists("route_packages")){
 				DBObject options = BasicDBObjectBuilder.start().add("capped", true).add("size", 10000000).get();
 				db.createCollection("route_packages", options);

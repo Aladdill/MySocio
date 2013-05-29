@@ -5,12 +5,15 @@ package net.mysocio.ui.executors.basic;
 
 import net.mysocio.data.IConnectionData;
 import net.mysocio.data.IDataManager;
+import net.mysocio.data.UserTags;
 import net.mysocio.data.accounts.Account;
+import net.mysocio.data.accounts.google.GoogleAccount;
 import net.mysocio.data.management.AccountsManager;
 import net.mysocio.data.management.DataManagerFactory;
 import net.mysocio.ui.management.CommandExecutionException;
 import net.mysocio.ui.management.ICommandExecutor;
 import net.mysocio.ui.management.UnapprovedUserException;
+import net.mysocio.utils.rss.RssUtils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,6 +40,15 @@ public class CreateAccountExecutor implements ICommandExecutor {
 				logger.debug("Creating account for user with id: " + userId);
 				Account account = AccountsManager.getInstance().getAccount(connectionData);
 				IDataManager dataManager = DataManagerFactory.getDataManager();
+				if (account instanceof GoogleAccount){
+					String data = ((GoogleAccount)account).getGoogleReaderFeeds(userId);
+					if (data != null){
+						RssUtils.importGoogleReaderFeeds(userId, data);
+						UserTags userTags = dataManager.getUserTags(userId);
+						connectionData.setUserTags(userTags);
+					}
+				}
+				
 				dataManager.addAccountToUser(account, userId, connectionData.getUserTags());
 			}else{
 				logger.debug("Attempt was made to create account before login.");

@@ -15,6 +15,7 @@
 		<module>net.mysocio.google-pack</module>
 		<module>net.mysocio.rss-pack</module>
 		<module>net.mysocio.lj-pack</module>
+		<module>net.mysocio.vkontakte-pack</module>
 	</modules>
 	<dependencies>
 		<dependency>

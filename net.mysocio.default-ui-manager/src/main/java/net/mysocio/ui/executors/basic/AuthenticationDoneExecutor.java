@@ -51,10 +51,8 @@ public class AuthenticationDoneExecutor implements ICommandExecutor {
 			}
 			logger.debug("No cookie for hidden login found.");
 			return DefaultResourcesManager.getPage("closingLoginWindow.html");
-		}
-		if (cookieValue != null){
-			logger.debug("Cookie for hidden login found.");
-			return DefaultResourcesManager.getPage("hiddenLoginWindow.html");
+		}else{
+			
 		}
 		logger.debug("Adding account.");
 		return DefaultResourcesManager.getPage("closingAddAccountWindow.html");

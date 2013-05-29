@@ -4,6 +4,7 @@
 package net.mysocio.data.management;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
@@ -38,6 +39,13 @@ import org.slf4j.LoggerFactory;
 import com.github.jmkgreen.morphia.Datastore;
 import com.github.jmkgreen.morphia.Key;
 import com.github.jmkgreen.morphia.query.Query;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+import com.mongodb.DBRef;
+import com.mongodb.QueryBuilder;
 
 /**
  * @author Aladdin
@@ -46,36 +54,19 @@ import com.github.jmkgreen.morphia.query.Query;
 public class MongoDataManager implements IDataManager {
 	private static final Logger logger = LoggerFactory.getLogger(MongoDataManager.class);
 	private Datastore ds;
+	private DB db;
 	
 
-	public MongoDataManager(Datastore ds) {
-		this.ds = ds; 
+	public MongoDataManager(Datastore ds, DB db) {
+		this.ds = ds;
+		this.db = db;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * net.mysocio.data.management.IDataManager#createUser(java.lang.String,
-	 * java.lang.String)
-	 */
-	public SocioUser getUser(Account account, Locale locale) throws Exception {
-		String userName = account.getUserName();
-		logger.debug("Getting user " + userName + " for "
-				+ account.getAccountType());
-		SocioUser user = account.getUser();
-		if (user != null) {
-			logger.debug("Account found");
-			return user;
-		}
-		user = createUser(account, locale, userName);
-		return user;
-	}
-
-	private SocioUser createUser(Account account, Locale locale, String userName)
+	public SocioUser createUser(Account account, Locale locale)
 			throws Exception {
 		String userId;
-		logger.debug("Creating user");
+		String userName = account.getUserName();
+		logger.debug("Creating user"  + userName + " for "	+ account.getAccountType());
 		SocioUser user = new SocioUser();
 		user.setName(userName);
 		user.setLocale(locale.getLanguage());
@@ -135,6 +126,9 @@ public class MongoDataManager implements IDataManager {
 			logger.debug("Attempt was made to add existing account of type " + account.getAccountType() + " to user " + userId);
 			return;
 		}
+		SocioUser user = getObject(SocioUser.class, userId);
+		account.setUser(user);
+		saveObject(account);
 		UserAccount userAccount = new UserAccount();
 		userAccount.setUserId(userId);
 		userAccount.setAccount(account);
@@ -293,9 +287,13 @@ public class MongoDataManager implements IDataManager {
 		}
 	}
 
-	public List<UnreaddenMessage> getUnreadMessages(String userId, String tagId, UserTags tags) {
-		Query<UnreaddenMessage> q = ds.createQuery(UnreaddenMessage.class).field("userId").equal(userId.toString());
+	public List<GeneralMessage> getUnreadMessages(String userId, String tagId, UserTags tags) {
+		DBCollection coll = db.getCollection("unreadden_messages");
+		
+//		Query<UnreaddenMessage> q = ds.createQuery(UnreaddenMessage.class).field("userId").equal(userId.toString());
+		QueryBuilder query = QueryBuilder.start("userId").is(userId);
 		String order = tags.getOrder();
+		BasicDBObject dbOrder = new BasicDBObject("messageDate",-1);
 		if (!tagId.equals(UserTags.ALL_TAGS)){
 			SocioTag tag = tags.getTag(tagId);
 			order = tag.getOrder();
@@ -304,22 +302,33 @@ public class MongoDataManager implements IDataManager {
 			for (SocioTag leaf : leaves) {
 				tagsIds.add(leaf.getUniqueId());
 			}
-			q.field("tagId").hasAnyOf(tagsIds);
+//			q.field("tagId").hasAnyOf(tagsIds);
+			query.and("tagId").in(tagsIds);
 		}
 		if (order.equals(SocioTag.ASCENDING_ORDER)){
-			q.order("-messageDate");
+//			q.order("-messageDate");
 		}else{
-			q.order("messageDate");
+//			q.order("messageDate");
+			dbOrder = new BasicDBObject("messageDate",1);
 		}
-		q.limit(tags.getRange());
-		List<UnreaddenMessage> messagesList = new ArrayList<UnreaddenMessage>();
-		Iterable<UnreaddenMessage> messages = q.fetch();
-		for (UnreaddenMessage unreaddenMessage : messages) {
-			messagesList.add(unreaddenMessage);
+		DBCursor cursor = coll.find(query.get()).limit(tags.getRange()).sort(dbOrder);
+		Iterator<DBObject> iterator = cursor.iterator();
+		List<Key<GeneralMessage>> keys = new ArrayList<Key<GeneralMessage>>();
+		while (iterator.hasNext()){
+			DBObject next = iterator.next();
+			DBRef message = (DBRef)next.get("message");
+			keys.add(new Key<GeneralMessage>(GeneralMessage.class, new ObjectId(message.getId().toString())));
 		}
+//		q.limit(tags.getRange());
+		List<GeneralMessage> byKeys = ds.getByKeys(keys);
+//		List<UnreaddenMessage> messagesList = new ArrayList<UnreaddenMessage>();
+//		Iterable<UnreaddenMessage> messages = q.fetch();
+//		for (UnreaddenMessage unreaddenMessage : messages) {
+//			messagesList.add(unreaddenMessage);
+//		}
 		tags.setSelectedTag(tagId);
 		ds.save(tags);
-		return messagesList;
+		return byKeys;
 	}
 
 	public Long countUnreadMessages(String userId, String tagId) {

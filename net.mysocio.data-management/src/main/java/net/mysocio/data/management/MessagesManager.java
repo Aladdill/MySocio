@@ -13,7 +13,6 @@ import net.mysocio.data.SocioPair;
 import net.mysocio.data.UserTags;
 import net.mysocio.data.management.camel.AbstractMessageProcessor;
 import net.mysocio.data.messages.GeneralMessage;
-import net.mysocio.data.messages.UnreaddenMessage;
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
@@ -48,14 +47,14 @@ public class MessagesManager implements IMessagesManager {
 		return stored;
 	}
 
-	public void storeMessage(GeneralMessage message) throws Exception {
+	public<T extends GeneralMessage> void storeMessage(T message) throws Exception {
 		IDataManager dataManager = DataManagerFactory.getDataManager();
 		dataManager.saveObject(message);
 	}
 
-	public List<UnreaddenMessage> getMessagesForSelectedTag(String userId, String tagId, UserTags tags) {
+	public List<GeneralMessage> getMessagesForSelectedTag(String userId, String tagId, UserTags tags) {
 		IDataManager dataManager = DataManagerFactory.getDataManager();
-		List<UnreaddenMessage> unreadMessages = dataManager.getUnreadMessages(userId, tagId, tags);
+		List<GeneralMessage> unreadMessages = dataManager.getUnreadMessages(userId, tagId, tags);
 //		for (String id : unreadMessages) {
 //			IMessage message = getCacheMessage(id);
 //			if (message != null){

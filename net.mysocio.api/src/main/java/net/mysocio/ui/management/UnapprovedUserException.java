@@ -18,7 +18,7 @@ public class UnapprovedUserException extends Exception {
 	 * 
 	 */
 	public UnapprovedUserException() {
-		super("Sorry, you are not invited to this site, but you can knock on our door at aladdin@mysocio.net");
+		super("dialog.login.not.invited");
 	}
 
 	/**

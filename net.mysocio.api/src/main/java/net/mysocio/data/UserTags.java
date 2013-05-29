@@ -19,7 +19,7 @@ public class UserTags extends SocioObject {
 	private String value;
 	private boolean showAll = false;
 	private String order = SocioTag.ASCENDING_ORDER;
-	private int range = 25;
+	private int range = 8;
 	private String selectedTag = UserTags.ALL_TAGS;
 	
 	@com.github.jmkgreen.morphia.annotations.Embedded

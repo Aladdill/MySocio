@@ -61,6 +61,7 @@ function login(identifierValue) {
 	startAuthentication(identifierValue);
 }
 function startAuthentication(identifierValue) {
+	$.removeCookie('hidden_login_cookie');
 	$.post("execute?command=startAuthentication", {
 		identifier : identifierValue,
 	}).done(function(data) {
@@ -210,12 +211,12 @@ function showDiv(id) {
 	$("#" + id).css("display", "block");
 }
 function onFailure(data) {
+	$.removeCookie('login_cookie');
+	$.removeCookie('hidden_login_cookie');
 	if (data.responseText == "restart"){
 		loadStartPage();
 		return;
 	}
-	$.removeCookie('login_cookie');
-	$.removeCookie('hidden_login_cookie');
 	showError(data.responseText);
 }
 function showError(error) {
@@ -246,17 +247,14 @@ function showSettings() {
 	showTabs();
 	$("#upper_link").html($("#back_to_main_link").html());
 	clearDataContainer();
-	showRssFeeds();
+	showAccounts();
 }
 function clearDataContainer(){
 	$("#data_container .jspPane").html("");
 }
 function showRssFeeds() {
-	$("#post_container").addClass("Invisible");
-	$(".PostBoxTriangle").addClass("Invisible");
+	$(".content_menu").addClass("Invisible");
 	$("#rss_content_menu").removeClass("Invisible");
-	$("#main_content_menu").addClass("Invisible");
-	$("#data_container").unbind();
 	$.post("execute?command=getRssFeeds").done(
 			function(data) {
 				if (isNoContent(data)) {
@@ -298,7 +296,7 @@ function showMainPage() {
 	showSources(true);
 	$("#post_container").removeClass("Invisible");
 	$(".PostBoxTriangle").removeClass("Invisible");
-	$("#rss_content_menu").addClass("Invisible");
+	$(".content_menu").addClass("Invisible");
 	$("#main_content_menu").removeClass("Invisible");
 	$("#upper_link").html($("#settings_link").html());
 	$("#data_container .jspPane").html("<div id='filler' class='filler'></div>");
@@ -404,29 +402,25 @@ function markAllMessagesReadden() {
 	  	}).always(closeWaitDialog)
 	  	.done(function(){refreshTags(false);});
 }
-function initPage() {
-	if ($("#login_center_div").size() != 0) {
-		centerLoginCircle();
-	} else {
-		openMainPage();
-	}
-}
 function loadMainPage() {
-	openUrlInDiv($("#SiteBody"), "execute?command=openMainPage", initPage);
+	openUrlInDiv($("#SiteBody"), "execute?command=openMainPage", openMainPage);
 }
 function searchTree(){
 	$("#sources_tree").jstree("search",$("#search_field").prop("value"));
 }
 function logout() {
-	openUrlInDiv($("#SiteBody"), "execute?command=logout", initPage);
+	$.removeCookie('login_cookie');
+	$.removeCookie('hidden_login_cookie');
+	$("#sources_tree").stopTime();
+	openUrlInDiv($("#SiteBody"), "execute?command=logout");
 }
 function loadStartPage() {
 	var login_value = $.cookie('login_cookie');
 	if (login_value != undefined){
 		setLoginCookie(login_value);
-		startHiddenAuthentication(login_value);
+		startAuthentication(login_value);
 	}else{
-		openUrlInDiv($("#SiteBody"), "execute?command=openStartPage", initPage);
+		openUrlInDiv($("#SiteBody"), "execute?command=openStartPage");
 	}
 }
 function getMessages(id, resetContainer) {
@@ -461,7 +455,11 @@ function refreshDataContainerScroll(){
 	$("#data_container").data('jsp').reinitialise();
 }
 function showAccounts() {
+	$(".content_menu").addClass("Invisible");
+	$("#accounts_content_menu").removeClass("Invisible");
 	$("#post_container").addClass("Invisible");
+	$(".PostBoxTriangle").addClass("Invisible");
+	$("#data_container").unbind();
 	openUrlInDiv($("#data_container .jspPane"), "execute?command=getAccounts");
 }
 function showContacts() {

@@ -5,19 +5,16 @@ package net.mysocio.ui.executors.basic;
 
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 
 import net.mysocio.data.CorruptedDataException;
 import net.mysocio.data.IConnectionData;
 import net.mysocio.data.IDataManager;
 import net.mysocio.data.SocioUser;
 import net.mysocio.data.UserAccount;
-import net.mysocio.data.management.AccountsManager;
 import net.mysocio.data.management.DataManagerFactory;
 import net.mysocio.data.management.DefaultResourcesManager;
 import net.mysocio.ui.data.objects.AccountLine;
 import net.mysocio.ui.data.objects.DefaultAccountLine;
-import net.mysocio.ui.data.objects.NewAccountLine;
 import net.mysocio.ui.management.CommandExecutionException;
 import net.mysocio.ui.management.ICommandExecutor;
 import net.mysocio.ui.managers.basic.AbstractUiManager;
@@ -42,16 +39,7 @@ public class GetAccountsExecutor implements ICommandExecutor {
 			SocioUser user = dataManager.getObject(SocioUser.class, userId);
 			List<UserAccount> accounts = dataManager.getAccounts(userId);
 			AbstractUiManager uiManager = new DefaultUiManager();
-			Set<String> accountsTypes = AccountsManager.getInstance().getAccounts();
-			String newAccountHTML = uiManager.getPage(NewAccountLine.CATEGORY, NewAccountLine.NAME, userId);
 			Locale locale = new Locale(user.getLocale());
-			for (String identifier : accountsTypes) {
-				String currentAccountHTML = newAccountHTML;
-				currentAccountHTML = currentAccountHTML.replace("account.icon", DefaultResourcesManager.getResource(locale, (identifier + ".icon.account")));
-				currentAccountHTML = currentAccountHTML.replace("account.add.new", DefaultResourcesManager.getResource(locale, ("account.add.new"), new String[]{DefaultResourcesManager.getResource(locale,identifier + ".tag")}));
-				currentAccountHTML = currentAccountHTML.replace("account.identifier", identifier);
-				page += currentAccountHTML;
-			}
 			String accountHTML = uiManager.getPage(AccountLine.CATEGORY, AccountLine.NAME, userId);
 			for (UserAccount userAccount : accounts) {
 				String currentAccountHTML = accountHTML;

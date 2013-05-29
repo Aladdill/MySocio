@@ -9,7 +9,7 @@ package net.mysocio.ui.management;
  */
 public class CommandExecutionException extends Exception {
 
-	public static final String BETA_ERROR = "HI, this is beta version, you encountered an error, please send mail to aladdin@mysocio.net with description of your nauty doings.";
+	public static final String BETA_ERROR = "dialog.default.beta.error";
 	/**
 	 * 
 	 */

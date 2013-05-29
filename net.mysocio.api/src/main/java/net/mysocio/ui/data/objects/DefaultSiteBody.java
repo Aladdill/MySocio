@@ -40,6 +40,10 @@ public class DefaultSiteBody extends SiteBody{
 		addTextLabel("enter.rss.url");
 		addTextLabel("choose.file");
 		addTextLabel("search.for.tag");
+		addTextLabel("add.facebook.account");
+		addTextLabel("add.google.account");
+		addTextLabel("add.twitter.account");
+		addTextLabel("add.vkontakte.account");
 	}
 	@Override
 	public String getPageFile() {

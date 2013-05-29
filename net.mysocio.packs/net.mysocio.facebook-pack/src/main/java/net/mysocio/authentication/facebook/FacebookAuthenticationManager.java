@@ -6,7 +6,6 @@ package net.mysocio.authentication.facebook;
 import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ResourceBundle;
 import java.util.Set;
 
 import net.mysocio.authentication.AbstractOauth2Manager;
@@ -18,7 +17,6 @@ import net.mysocio.data.accounts.facebook.FacebookFriendList;
 import net.mysocio.data.contacts.Contact;
 import net.mysocio.data.contacts.facebook.FacebookContact;
 import net.mysocio.data.management.DataManagerFactory;
-import net.mysocio.ui.management.UnapprovedUserException;
 
 import org.scribe.builder.api.Api;
 import org.scribe.builder.api.FacebookApi;
@@ -74,10 +72,7 @@ public class FacebookAuthenticationManager extends AbstractOauth2Manager {
 		User user = facebook.getMe();
 		String email = user.getEmail();
 		IDataManager dataManager = DataManagerFactory.getDataManager();
-		if (dataManager.getUserPermissions(email) == null){
-			logger.error("User with email " + email + "wasn't approved and knocked.");
-			throw new UnapprovedUserException();
-		}
+		checkUserInvitation(email, dataManager);
 		String id = user.getId();
 		account = (FacebookAccount) dataManager.getAccount(id);
 		if (account != null) {
@@ -102,16 +97,6 @@ public class FacebookAuthenticationManager extends AbstractOauth2Manager {
 		logger.debug("friends parsed");
 		dataManager.saveObject(account);
 		return account;
-	}
-
-	private boolean isApprovedUser(String email) {
-		try {
-			ResourceBundle approvedBundle = ResourceBundle.getBundle("approved");
-			return approvedBundle.getString("approved.users").contains(email);
-		} catch (Exception e) {
-			logger.error("No authentication properties were found.",e);
-		}
-		return false;
 	}
 
 	private List<Contact> parseFriends(Facebook facebook) throws Exception {
