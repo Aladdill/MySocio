@@ -3,10 +3,8 @@
  */
 package net.mysocio.authentication.facebook;
 
-import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import net.mysocio.authentication.AbstractOauth2Manager;
 import net.mysocio.data.ContactsList;
@@ -20,10 +18,7 @@ import net.mysocio.data.management.DataManagerFactory;
 
 import org.scribe.builder.api.Api;
 import org.scribe.builder.api.FacebookApi;
-import org.scribe.model.OAuthRequest;
-import org.scribe.model.Response;
 import org.scribe.model.Token;
-import org.scribe.model.Verb;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -134,26 +129,5 @@ public class FacebookAuthenticationManager extends AbstractOauth2Manager {
 			friendsLists.add(friendList);
 		}
 		return friendsLists;
-	}
-
-	public String callUrl(String token, String url) throws ConnectException {
-		if (url.indexOf("?") > 0) {
-			url += "&";
-		} else {
-			url += "?";
-		}
-		OAuthRequest request = new OAuthRequest(Verb.GET, url + "access_token="
-				+ token);
-		Response response = request.send();
-		if (response.getCode() != 200) {
-			logger.error("Error getting Facebook data for url: " + url);
-			Set<String> headers = response.getHeaders().keySet();
-			for (String name : headers) {
-				logger.error(response.getHeader(name));
-			}
-			throw new ConnectException("Error getting Facebook data for url: "
-					+ url);
-		}
-		return response.getBody();
 	}
 }

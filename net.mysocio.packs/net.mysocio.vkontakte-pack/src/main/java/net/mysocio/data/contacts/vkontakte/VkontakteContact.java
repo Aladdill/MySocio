@@ -1,7 +1,7 @@
 /**
  * 
  */
-package net.mysocio.data.contacts.facebook;
+package net.mysocio.data.contacts.vkontakte;
 
 import java.util.Collections;
 import java.util.List;
@@ -17,14 +17,14 @@ import com.github.jmkgreen.morphia.annotations.Entity;
  *
  */
 @Entity("contacts")
-public class FacebookContact extends Contact {
+public class VkontakteContact extends Contact {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -7405708860373380037L;
 	
-	private String facebookId;
+	private String vkontakteId;
 
 	@Override
 	public List<Source> getSources() {
@@ -36,38 +36,31 @@ public class FacebookContact extends Contact {
 		return Collections.emptyList();
 	}
 
-	public String getFacebookId() {
-		return facebookId;
-	}
-
-	public void setFacebookId(String facebookId) {
-		this.facebookId = facebookId;
-	}
 
 	public String getIcon() {
-		return "images/networksIcons/fb.png";
+		return "images/networksIcons/v-kontakte.png";
 	}
 
-	@Override
-	public String getUserpicUrl() {
-		return "https://graph.facebook.com/" + getFacebookId() + "/picture";
-	}
-
-	/* (non-Javadoc)
-	 * @see net.mysocio.data.contacts.Contact#getUrl()
-	 */
 	@Override
 	public String getUrl() {
-		return "https://www.facebook.com/" + getFacebookId();
+		return "http://vk.com/id" + getVkontakteId();
 	}
 
 	@Override
 	public String getUniqueFieldName() {
-		return "facebookId";
+		return "vkontakteId";
 	}
 
 	@Override
 	public Object getUniqueFieldValue() {
-		return getFacebookId();
+		return getVkontakteId();
+	}
+
+	public String getVkontakteId() {
+		return vkontakteId;
+	}
+
+	public void setVkontakteId(String vkontakteId) {
+		this.vkontakteId = vkontakteId;
 	}
 }

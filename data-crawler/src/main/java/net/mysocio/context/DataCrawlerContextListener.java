@@ -22,6 +22,7 @@ import net.mysocio.data.SocioRoute;
 import net.mysocio.data.accounts.facebook.FacebookAccount;
 import net.mysocio.data.accounts.google.GoogleAccount;
 import net.mysocio.data.accounts.lj.LjAccount;
+import net.mysocio.data.accounts.vkontakte.VkontakteAccount;
 import net.mysocio.data.management.AccountsManager;
 import net.mysocio.data.management.DataManagerFactory;
 import net.mysocio.data.management.MongoDataManager;
@@ -139,7 +140,7 @@ public class DataCrawlerContextListener implements ServletContextListener {
 				new FacebookAuthenticationManager());
 		AccountsManager.getInstance().addAccount("twitter",
 				new TwitterAuthenticationManager());
-		AccountsManager.getInstance().addAccount("vkontakte",
+		AccountsManager.getInstance().addAccount(VkontakteAccount.ACCOUNT_TYPE,
 				new VkontakteAuthenticationManager());
 		AccountsManager.getInstance().addAccount("linkedin",
 				new LinkedinAuthenticationManager());

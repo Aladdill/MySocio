@@ -763,7 +763,10 @@ a.Undecorated {
 	background: url("../images/loginPage/twitter-dis.png") no-repeat;
 }
 .LoginVkontakte {
-	background: url("../images/loginPage/vkontakte-dis.png") no-repeat;
+	background: url("../images/loginPage/vkontakte-idle.png") no-repeat;
+}
+.LoginVkontakte:HOVER {
+	background: url("../images/loginPage/vkontakte-hover.png") no-repeat;
 }
 .AddAccountIcon {
 	width: 28px;

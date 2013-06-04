@@ -416,9 +416,14 @@ function logout() {
 }
 function loadStartPage() {
 	var login_value = $.cookie('login_cookie');
+	var loggedin_value = $.cookie('loggedin_cookie');
 	if (login_value != undefined){
-		setLoginCookie(login_value);
-		startAuthentication(login_value);
+		if (loggedin_value != undefined){
+			executeLogin();
+		}else{
+			setLoginCookie(login_value);
+			startAuthentication(login_value);
+		}
 	}else{
 		openUrlInDiv($("#SiteBody"), "execute?command=openStartPage");
 	}
@@ -476,9 +481,11 @@ function loadBundles(lang) {
 }
 function setLoginCookie(login_value){
 	$.cookie('login_cookie', login_value, { expires: 30, path: '/' });
+	$.cookie('loggedin_cookie', "loggedin");
 }
 function removeLoginCookie(){
 	$.removeCookie('login_cookie');
+	$.removeCookie('loggedin_cookie');
 }
 function refreshLoginCookie(){
 	var login_value = $.cookie('login_cookie');

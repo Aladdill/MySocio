@@ -29,9 +29,6 @@
 				<enabled>false</enabled>
 			</snapshots>
 		</repository>
-		<!-- <repository> <id>morphia</id> <url>http://morphia.googlecode.com/svn/mavenrepo</url> 
-			<releases> <enabled>true</enabled> </releases> <snapshots> <enabled>false</enabled> 
-			</snapshots> </repository> -->
 		<repository>
 			<id>mandubian-mvn</id>
 			<url>http://mandubian-mvn.googlecode.com/svn/trunk/mandubian-mvn/repository</url>
@@ -176,6 +173,16 @@
 			<dependency>
 				<groupId>net.mysocio</groupId>
 				<artifactId>facebook-pack</artifactId>
+				<version>${mysocio.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>net.mysocio</groupId>
+				<artifactId>vkontakte-pack</artifactId>
+				<version>${mysocio.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>net.mysocio</groupId>
+				<artifactId>packs</artifactId>
 				<version>${mysocio.version}</version>
 			</dependency>
 			<dependency>

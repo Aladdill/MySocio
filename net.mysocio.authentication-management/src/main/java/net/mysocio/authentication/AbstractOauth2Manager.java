@@ -29,9 +29,9 @@ import org.slf4j.LoggerFactory;
 public abstract class AbstractOauth2Manager implements IAuthenticationManager {
 	private static final Logger logger = LoggerFactory.getLogger(AbstractOauth2Manager.class);
 
-	protected String getBasicRequestUrl(){
-		return AuthenticationResourcesManager.getAuthenticationRequestUrl(getUserIdentifier());
-	}
+//	protected String getBasicRequestUrl(){
+//		return AuthenticationResourcesManager.getAuthenticationRequestUrl(getUserIdentifier());
+//	}
 	
 	protected abstract String getUserIdentifier();
 
@@ -74,9 +74,9 @@ public abstract class AbstractOauth2Manager implements IAuthenticationManager {
 		return AuthenticationResourcesManager.getAuthenticationSecret(getUserIdentifier());
 	}
 
-	protected String getTokenUrl(){
-		return AuthenticationResourcesManager.getAuthenticationTokenUrl(getUserIdentifier());
-	}
+//	protected String getTokenUrl(){
+//		return AuthenticationResourcesManager.getAuthenticationTokenUrl(getUserIdentifier());
+//	}
 
 	protected abstract Account getAccount(Token accessToken) throws Exception;
 
@@ -100,7 +100,7 @@ public abstract class AbstractOauth2Manager implements IAuthenticationManager {
 			} catch (Exception e) {
 				logger.warn("Coudn't save info.",e);
 			}
-			throw new UnapprovedUserException();
+//			throw new UnapprovedUserException();
 		}
 		try {
 			dataManager.saveObject(new MySocioInfo("Logged In User", "User with email " + email, new Date().toString()));
