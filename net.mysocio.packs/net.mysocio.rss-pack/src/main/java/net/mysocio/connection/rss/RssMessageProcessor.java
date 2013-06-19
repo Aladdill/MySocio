@@ -6,7 +6,7 @@ package net.mysocio.connection.rss;
 import java.util.List;
 
 import net.mysocio.data.management.MessagesManager;
-import net.mysocio.data.management.camel.AbstractMessageProcessor;
+import net.mysocio.data.management.camel.UserMessageProcessor;
 import net.mysocio.data.messages.rss.RssMessage;
 import net.mysocio.utils.rss.RssUtils;
 
@@ -23,18 +23,17 @@ import com.sun.syndication.feed.synd.SyndFeed;
  * @author Aladdin
  *
  */
-public class RssMessageProcessor extends AbstractMessageProcessor {
+public class RssMessageProcessor extends UserMessageProcessor {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 6216755406044921125L;
 	@Transient
 	static final Logger logger = LoggerFactory.getLogger(RssMessageProcessor.class);
+	private String url;
 	
-	private String tag;
-	
-	public void process(Exchange exchange) throws Exception {
-		SyndFeed feed = (SyndFeed)exchange.getIn().getBody();
+	public void process() throws Exception {
+		SyndFeed feed = RssUtils.buldFeed(url);
 		if (feed == null){
 			return;
 		}
@@ -90,22 +89,22 @@ public class RssMessageProcessor extends AbstractMessageProcessor {
 		} catch (Exception e) {
 			//if it's duplicate message - we ignore it
 		}
-		addMessageForTag(message, tag);
+		addMessageForTag(message, url);
 	}
 
-	public String getTag() {
-		return tag;
+	public String getUrl() {
+		return url;
 	}
 
-	public void setTag(String tag) {
-		this.tag = tag;
+	public void setUrl(String url) {
+		this.url = url;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + ((tag == null) ? 0 : tag.hashCode());
+		result = prime * result + ((url == null) ? 0 : url.hashCode());
 		return result;
 	}
 
@@ -118,10 +117,10 @@ public class RssMessageProcessor extends AbstractMessageProcessor {
 		if (getClass() != obj.getClass())
 			return false;
 		RssMessageProcessor other = (RssMessageProcessor) obj;
-		if (tag == null) {
-			if (other.tag != null)
+		if (url == null) {
+			if (other.url != null)
 				return false;
-		} else if (!tag.equals(other.tag))
+		} else if (!url.equals(other.url))
 			return false;
 		return true;
 	}

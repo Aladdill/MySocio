@@ -4,10 +4,9 @@
 package net.mysocio.camel;
 
 
-import net.mysocio.data.SocioRoute;
-
 import org.apache.camel.CamelContext;
 import org.apache.camel.Component;
+import org.apache.camel.Processor;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.util.jndi.JndiContext;
@@ -40,10 +39,9 @@ public class CamelContextManager {
 		camelContext.addComponent(name,component);
 	}
 	
-	public static String addRoute(SocioRoute route) throws Exception{
-		GeneralRouteBuilder builder = new GeneralRouteBuilder(route);
+	public static void addRoute(String from, Processor processor) throws Exception{
+		GeneralRouteBuilder builder = new GeneralRouteBuilder(from, processor);
 		camelContext.addRoutes(builder);
-		return builder.getRouteId();
 	}
 
 	public static ProducerTemplate getProducerTemplate(){

@@ -1,0 +1,35 @@
+/**
+ * 
+ */
+package net.mysocio.routes.reader;
+
+import net.mysocio.data.IDataManager;
+import net.mysocio.data.TempProcessor;
+import net.mysocio.data.management.DataManagerFactory;
+import net.mysocio.data.management.camel.DefaultUserProcessor;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.github.jmkgreen.morphia.annotations.Entity;
+
+/**
+ * @author Aladdin
+ *
+ */
+@Entity
+public class NewUserProcessor extends CappedCollectionProcessor {
+	private static final Logger logger = LoggerFactory.getLogger(NewUserProcessor.class);
+	public long process(Object tempRouteObject) throws Exception {
+		TempProcessor tempProcessor = getObject(TempProcessor.class, tempRouteObject);
+		IDataManager dataManager = DataManagerFactory.getDataManager();
+		String userId = tempProcessor.getUserId();
+		if (!dataManager.isProcessorExist(userId)){
+			DefaultUserProcessor processor = new DefaultUserProcessor();
+			processor.setUserId(userId);
+			logger.debug("New user processor was registered for user with id: " + userId);
+			dataManager.saveObject(processor);
+		}
+		return tempProcessor.getCreationDate();
+	}
+}

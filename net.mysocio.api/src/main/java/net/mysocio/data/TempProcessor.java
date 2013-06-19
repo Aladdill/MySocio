@@ -10,8 +10,8 @@ import com.github.jmkgreen.morphia.annotations.Entity;
  * @author Aladdin
  *
  */
-@Entity(value="temp_routes",cap=@CappedAt(100000))
-public class TempRoute extends SocioRoute {
+@Entity(value="temp_user_processors",cap=@CappedAt(100000))
+public class TempProcessor extends AbstractUserProcessor {
 	/**
 	 * 
 	 */

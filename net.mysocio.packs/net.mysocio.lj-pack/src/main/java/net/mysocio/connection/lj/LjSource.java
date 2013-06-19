@@ -28,14 +28,19 @@ public class LjSource extends RssSource {
 		return LjMessage.class;
 	}
 	
-	public void createRoute(String to) throws Exception {
+	public void createProcessor(String userId) throws Exception {
 		String url = getUrl();
 		if (logger.isDebugEnabled()){
 			logger.debug("Creating route for LJ feed on url" + url);
 		}
 		LjMessageProcessor processor = new LjMessageProcessor();
-		processor.setTo(to);
-		processor.setTag(url);
-		DataManagerFactory.getDataManager().createRoute("rss:" + url + "?consumer.delay=2000", processor, 0l);
+		processor.setUrl(url);
+		processor.setUserId(userId);
+		DataManagerFactory.getDataManager().saveProcessor(processor, "url", getUrl());
+	}
+	
+	@Override
+	public void removeProcessor(String userId) throws Exception {
+		DataManagerFactory.getDataManager().deleteUserProcessorByField(LjMessageProcessor.class, "url", getUrl(), userId);		
 	}
 }

@@ -5,7 +5,7 @@ package net.mysocio.connection.vkontakte;
 
 import java.text.ParseException;
 
-import net.mysocio.data.management.camel.AbstractMessageProcessor;
+import net.mysocio.data.management.camel.UserMessageProcessor;
 import net.mysocio.data.messages.vkontakte.VkontakteMessage;
 
 import org.apache.camel.Exchange;
@@ -18,7 +18,7 @@ import com.github.jmkgreen.morphia.annotations.Transient;
  * @author Aladdin
  *
  */
-public class VkontakteInputProcessor extends AbstractMessageProcessor {
+public class VkontakteInputProcessor extends UserMessageProcessor {
 	/**
 	 * 
 	 */
@@ -49,7 +49,7 @@ public class VkontakteInputProcessor extends AbstractMessageProcessor {
 		return message;
 	}
 	
-	public void process(Exchange exchange) throws Exception {
+	public void process() throws Exception {
 		long to = System.currentTimeMillis();
 		long from = lastUpdate;
 		from = to - MONTH;

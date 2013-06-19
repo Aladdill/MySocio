@@ -9,7 +9,6 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
-import net.mysocio.authentication.AuthenticationResourcesManager;
 import net.mysocio.authentication.facebook.FacebookAuthenticationManager;
 import net.mysocio.authentication.google.GoogleAuthenticationManager;
 import net.mysocio.authentication.linkedin.LinkedinAuthenticationManager;
@@ -18,19 +17,21 @@ import net.mysocio.authentication.twitter.TwitterAuthenticationManager;
 import net.mysocio.authentication.vkontakte.VkontakteAuthenticationManager;
 import net.mysocio.camel.CamelContextManager;
 import net.mysocio.data.IDataManager;
-import net.mysocio.data.SocioRoute;
 import net.mysocio.data.accounts.facebook.FacebookAccount;
 import net.mysocio.data.accounts.google.GoogleAccount;
 import net.mysocio.data.accounts.lj.LjAccount;
 import net.mysocio.data.accounts.vkontakte.VkontakteAccount;
+import net.mysocio.data.management.AbstractMongoInitializer;
 import net.mysocio.data.management.AccountsManager;
+import net.mysocio.data.management.AuthenticationResourcesManager;
 import net.mysocio.data.management.DataManagerFactory;
 import net.mysocio.data.management.MongoDataManager;
-import net.mysocio.data.management.camel.AbstractMessageProcessor;
+import net.mysocio.data.management.camel.DefaultUserProcessor;
 import net.mysocio.data.management.camel.MarkMessageReaddenProcessor;
+import net.mysocio.data.management.camel.UserMessageProcessor;
 import net.mysocio.routes.reader.MongoCappedCollectionReader;
 import net.mysocio.routes.reader.NewPackageProcessor;
-import net.mysocio.routes.reader.NewRouteProcessor;
+import net.mysocio.routes.reader.NewUserProcessor;
 
 import org.apache.activemq.camel.component.ActiveMQComponent;
 import org.slf4j.Logger;
@@ -38,17 +39,14 @@ import org.slf4j.LoggerFactory;
 
 import com.github.jmkgreen.morphia.Datastore;
 import com.github.jmkgreen.morphia.Morphia;
-import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DB;
-import com.mongodb.DBObject;
-import com.mongodb.Mongo;
-import com.mongodb.MongoURI;
 
 /**
  * @author Aladdin
  * 
  */
-public class DataCrawlerContextListener implements ServletContextListener {
+public class DataCrawlerContextListener extends AbstractMongoInitializer implements ServletContextListener {
+	
 	private static final Logger logger = LoggerFactory.getLogger(DataCrawlerContextListener.class);
 	/*
 	 * (non-Javadoc)
@@ -79,38 +77,20 @@ public class DataCrawlerContextListener implements ServletContextListener {
 				.mapPackage("net.mysocio.connection");
 		ServletContext servletContext = arg0.getServletContext();
 		AuthenticationResourcesManager.init(servletContext.getRealPath(""));
-		String dbUser = AuthenticationResourcesManager.getResource("db.server.admin.username");
-		String dbName = AuthenticationResourcesManager.getResource("db.server.db.name");
-		int dbPort = Integer.parseInt(AuthenticationResourcesManager.getResource("db.server.port"));
-		String dbServer = AuthenticationResourcesManager.getResource("db.server.address");
-		String dbPass = AuthenticationResourcesManager.getResource("db.server.admin.password");
+		
 		try {
-			Datastore ds = new Morphia().createDatastore(new Mongo(
-					dbServer,
-					dbPort),
-					dbName,
-					dbUser,
-					dbPass.toCharArray());
-			ds.ensureCaps();
-			ds.ensureIndexes();
-			
-			MongoURI uri = new MongoURI("mongodb://" + dbServer + ":" + dbPort);
-			Mongo connectionBean = new Mongo(uri);
-			DB db = connectionBean.getDB(dbName);
-			db.authenticate(dbUser, dbPass.toCharArray());
-			IDataManager manager = new MongoDataManager(ds, db);
+			Datastore ds = getMongoDatastore(DB_SERVER_ADMIN_USERNAME, DB_SERVER_DB_NAME, DB_SERVER_PORT,
+					DB_SERVER_ADDRESS, DB_SERVER_ADMIN_PASSWORD);
+			Datastore processorsDs = getMongoDatastore(PROCESSORS_DB_SERVER_ADMIN_USERNAME,
+					PROCESSORS_DB_SERVER_DB_NAME, PROCESSORS_DB_SERVER_PORT,
+					PROCESSORS_DB_SERVER_ADDRESS,	PROCESSORS_DB_SERVER_ADMIN_PASSWORD);
+			IDataManager manager = new MongoDataManager(ds, processorsDs);
 			DataManagerFactory.init(manager);
-			if (!db.collectionExists("route_packages")){
-				DBObject options = BasicDBObjectBuilder.start().add("capped", true).add("size", 10000000).get();
-				db.createCollection("route_packages", options);
-			}
-			if (!db.collectionExists("temp_routes")){
-				DBObject options = BasicDBObjectBuilder.start().add("capped", true).add("size", 10000000).get();
-				db.createCollection("temp_routes", options);
-			}
-			final Thread routesThread = new Thread(new MongoCappedCollectionReader(db, "temp_routes", new NewRouteProcessor()));
+			DB db = getMongoDatabaseAndInitCappedCollections(DB_SERVER_ADMIN_USERNAME, DB_SERVER_DB_NAME, DB_SERVER_PORT,
+					DB_SERVER_ADDRESS, DB_SERVER_ADMIN_PASSWORD);
+			final Thread routesThread = new Thread(new MongoCappedCollectionReader(db, TEMP_USER_PROCESSORS, new NewUserProcessor()));
 			routesThread.start();
-			final Thread packagesThread = new Thread(new MongoCappedCollectionReader(db, "route_packages", new NewPackageProcessor()));
+			final Thread packagesThread = new Thread(new MongoCappedCollectionReader(db, ROUTE_PACKAGES, new NewPackageProcessor()));
 			packagesThread.start();
 		} catch (Exception e) {
 			logger.error("Error initializing mongo cursor.", e);
@@ -119,18 +99,13 @@ public class DataCrawlerContextListener implements ServletContextListener {
 				.activeMQComponent("vm://localhost?broker.persistent=true"));
 		CamelContextManager.initContext();
 		IDataManager dataManager = DataManagerFactory.getDataManager();
-		List<SocioRoute> routes = dataManager.getObjects(SocioRoute.class);
+		List<DefaultUserProcessor> processors = dataManager.getObjects(DefaultUserProcessor.class);
 		try {
 			MarkMessageReaddenProcessor readdenProcessor = new MarkMessageReaddenProcessor();
-			SocioRoute readenMessagesRoute = new SocioRoute();
-			readenMessagesRoute.setFrom(AbstractMessageProcessor.ACTIVEMQ_READEN_MESSAGE);
-			readenMessagesRoute.setProcessor(readdenProcessor);
-			readenMessagesRoute.setDelay(0l);
-			CamelContextManager.addRoute(readenMessagesRoute);
-			for (SocioRoute route : routes) {
-				route.setCamelRouteId(CamelContextManager.addRoute(route));
+			CamelContextManager.addRoute(UserMessageProcessor.ACTIVEMQ_READEN_MESSAGE, readdenProcessor);
+			for (DefaultUserProcessor processor : processors) {
+				CamelContextManager.addRoute("timer://" + processor.getUserId() + "?fixedRate=true&period=60s", processor);
 			}
-			dataManager.saveObjects(SocioRoute.class, routes);
 		} catch (Exception e) {
 			logger.error("Error initializing existing route", e);
 		}

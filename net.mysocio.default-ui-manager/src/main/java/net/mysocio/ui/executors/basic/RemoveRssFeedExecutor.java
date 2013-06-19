@@ -34,7 +34,7 @@ public class RemoveRssFeedExecutor implements ICommandExecutor {
 		try {
 			dataManager.saveObject(userTags);
 			Source source = dataManager.getSource(tagId);
-			source.removeRoute(connectionData.getUserId());
+			source.removeProcessor(connectionData.getUserId());
 		} catch (Exception e) {
 			logger.error("Can't remove rss feed.",e);
 			throw new CommandExecutionException(e);

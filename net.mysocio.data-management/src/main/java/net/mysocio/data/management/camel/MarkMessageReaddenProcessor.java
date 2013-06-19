@@ -3,27 +3,20 @@
  */
 package net.mysocio.data.management.camel;
 
-import net.mysocio.data.AbstractProcessor;
 import net.mysocio.data.IDataManager;
 import net.mysocio.data.SocioPair;
 import net.mysocio.data.management.DataManagerFactory;
 
 import org.apache.camel.Exchange;
+import org.apache.camel.Processor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.github.jmkgreen.morphia.annotations.Transient;
 
 /**
  * @author Aladdin
  *
  */
-public class MarkMessageReaddenProcessor extends AbstractProcessor {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 3491823008113289073L;
-	@Transient
+public class MarkMessageReaddenProcessor implements Processor {
 	private static final Logger logger = LoggerFactory.getLogger(MarkMessageReaddenProcessor.class);
 
 	/* (non-Javadoc)

@@ -25,17 +25,18 @@ public class VkontakteSource extends AccountSource {
 		return VkontakteMessage.class;
 	}
 
-	public void createRoute(String to) throws Exception {
+	public void createProcessor(String userId) throws Exception {
 		VkontakteInputProcessor processor = new VkontakteInputProcessor();
 		VkontakteAccount account = (VkontakteAccount)getAccount();
-		processor.setTo(to);
 		processor.setToken(account.getToken());
-		processor.setAccountId(account.getId().toString());
-		DataManagerFactory.getDataManager().createRoute("timer://" + getId() + "?fixedRate=true&period=60s", processor, 0l);
+		String accountId = account.getId().toString();
+		processor.setAccountId(accountId);
+		processor.setUserId(userId);
+		DataManagerFactory.getDataManager().saveProcessor(processor, "accountId", getAccount().getId().toString());
 	}
 
 	@Override
-	public void removeRoute(String userId) throws Exception {
-		DataManagerFactory.getDataManager().removeRoute("timer://" + getId() + "?fixedRate=true&period=60s", userId);
+	public void removeProcessor(String userId) throws Exception {
+		DataManagerFactory.getDataManager().deleteProcessorByField(VkontakteInputProcessor.class, "accountId", getAccount().getId().toString());
 	}
 }

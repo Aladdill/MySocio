@@ -25,17 +25,17 @@ public class FacebookSource extends AccountSource {
 		return FacebookMessage.class;
 	}
 
-	public void createRoute(String to) throws Exception {
-		FacebookInputProcessor processor = new FacebookInputProcessor();
+	public void createProcessor(String userId) throws Exception {
+		FacebookMessagesProcessor processor = new FacebookMessagesProcessor();
 		FacebookAccount account = (FacebookAccount)getAccount();
-		processor.setTo(to);
 		processor.setToken(account.getToken());
 		processor.setAccountId(account.getId().toString());
-		DataManagerFactory.getDataManager().createRoute("timer://" + getId() + "?fixedRate=true&period=60s", processor, 0l);
+		processor.setUserId(userId);
+		DataManagerFactory.getDataManager().saveProcessor(processor,"accountId", getAccount().getId().toString());
 	}
 
 	@Override
-	public void removeRoute(String userId) throws Exception {
-		DataManagerFactory.getDataManager().removeRoute("timer://" + getId() + "?fixedRate=true&period=60s", userId);
+	public void removeProcessor(String userId) throws Exception {
+		DataManagerFactory.getDataManager().deleteProcessorByField(FacebookMessagesProcessor.class, "accountId", getAccount().getId().toString());
 	}
 }

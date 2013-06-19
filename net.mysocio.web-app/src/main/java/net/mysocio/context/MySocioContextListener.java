@@ -7,7 +7,6 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
-import net.mysocio.authentication.AuthenticationResourcesManager;
 import net.mysocio.authentication.facebook.FacebookAuthenticationManager;
 import net.mysocio.authentication.google.GoogleAuthenticationManager;
 import net.mysocio.authentication.linkedin.LinkedinAuthenticationManager;
@@ -19,7 +18,9 @@ import net.mysocio.data.accounts.facebook.FacebookAccount;
 import net.mysocio.data.accounts.google.GoogleAccount;
 import net.mysocio.data.accounts.lj.LjAccount;
 import net.mysocio.data.accounts.vkontakte.VkontakteAccount;
+import net.mysocio.data.management.AbstractMongoInitializer;
 import net.mysocio.data.management.AccountsManager;
+import net.mysocio.data.management.AuthenticationResourcesManager;
 import net.mysocio.data.management.DataManagerFactory;
 import net.mysocio.data.management.DefaultResourcesManager;
 import net.mysocio.data.management.MongoDataManager;
@@ -30,17 +31,12 @@ import org.slf4j.LoggerFactory;
 
 import com.github.jmkgreen.morphia.Datastore;
 import com.github.jmkgreen.morphia.Morphia;
-import com.mongodb.BasicDBObjectBuilder;
-import com.mongodb.DB;
-import com.mongodb.DBObject;
-import com.mongodb.Mongo;
-import com.mongodb.MongoURI;
 
 /**
  * @author Aladdin
  * 
  */
-public class MySocioContextListener implements ServletContextListener {
+public class MySocioContextListener extends AbstractMongoInitializer implements ServletContextListener {
 	private static final Logger logger = LoggerFactory.getLogger(MySocioContextListener.class);
 	/*
 	 * (non-Javadoc)
@@ -72,33 +68,15 @@ public class MySocioContextListener implements ServletContextListener {
 		DefaultResourcesManager.init(servletContext.getRealPath(""));
 		AuthenticationResourcesManager.init(servletContext.getRealPath(""));
 		try {
-			String dbServer = AuthenticationResourcesManager.getResource("db.server.address");
-			int dbPort = Integer.parseInt(AuthenticationResourcesManager.getResource("db.server.port"));
-			String dbName = AuthenticationResourcesManager.getResource("db.server.db.name");
-			String dbUser = AuthenticationResourcesManager.getResource("db.server.admin.username");
-			String dbPass = AuthenticationResourcesManager.getResource("db.server.admin.password");
-			Datastore ds = new Morphia().createDatastore(new Mongo(
-					dbServer,
-					dbPort),
-					dbName,
-					dbUser,
-					dbPass.toCharArray());
-			ds.ensureCaps();
-			ds.ensureIndexes();
-			MongoURI uri = new MongoURI("mongodb://" + dbServer + ":" + dbPort);
-			Mongo connectionBean = new Mongo(uri);
-			DB db = connectionBean.getDB(dbName);
-			db.authenticate(dbUser, dbPass.toCharArray());
-			IDataManager manager = new MongoDataManager(ds, db);
+			Datastore ds = getMongoDatastore(DB_SERVER_ADMIN_USERNAME, DB_SERVER_DB_NAME, DB_SERVER_PORT,
+					DB_SERVER_ADDRESS, DB_SERVER_ADMIN_PASSWORD);
+			Datastore processorsDs = getMongoDatastore(PROCESSORS_DB_SERVER_ADMIN_USERNAME,
+					PROCESSORS_DB_SERVER_DB_NAME, PROCESSORS_DB_SERVER_PORT,
+					PROCESSORS_DB_SERVER_ADDRESS,	PROCESSORS_DB_SERVER_ADMIN_PASSWORD);
+			IDataManager manager = new MongoDataManager(ds, processorsDs);
 			DataManagerFactory.init(manager);
-			if (!db.collectionExists("route_packages")){
-				DBObject options = BasicDBObjectBuilder.start().add("capped", true).add("size", 10000000).get();
-				db.createCollection("route_packages", options);
-			}
-			if (!db.collectionExists("temp_routes")){
-				DBObject options = BasicDBObjectBuilder.start().add("capped", true).add("size", 10000000).get();
-				db.createCollection("temp_routes", options);
-			}
+			getMongoDatabaseAndInitCappedCollections(DB_SERVER_ADMIN_USERNAME, DB_SERVER_DB_NAME, DB_SERVER_PORT,
+					DB_SERVER_ADDRESS, DB_SERVER_ADMIN_PASSWORD);
 		} catch (Exception e) {
 			logger.error("Error initializing database", e);
 		}

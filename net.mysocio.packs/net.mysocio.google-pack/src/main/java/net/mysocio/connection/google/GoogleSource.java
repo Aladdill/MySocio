@@ -25,17 +25,17 @@ public class GoogleSource extends AccountSource {
 		return GoogleMessage.class;
 	}
 
-	public void createRoute(String to) throws Exception {
+	public void createProcessor(String userId) throws Exception {
 		GoogleInputProcessor processor = new GoogleInputProcessor();
 		GoogleAccount account = (GoogleAccount)getAccount();
-		processor.setTo(to);
 		processor.setToken(account.getToken());
 		processor.setAccountId(account.getId().toString());
-		DataManagerFactory.getDataManager().createRoute("timer://" + getId() + "?fixedRate=true&period=60s", processor, 0l);
+		processor.setUserId(userId);
+		DataManagerFactory.getDataManager().saveProcessor(processor, "accountId", getAccount().getId().toString());
 	}
 
 	@Override
-	public void removeRoute(String userId) throws Exception {
-		DataManagerFactory.getDataManager().removeRoute("timer://" + getId() + "?fixedRate=true&period=60s", userId);
+	public void removeProcessor(String userId) throws Exception {
+		DataManagerFactory.getDataManager().deleteProcessorByField(GoogleInputProcessor.class, "accountId", getAccount().getId().toString());
 	}
 }

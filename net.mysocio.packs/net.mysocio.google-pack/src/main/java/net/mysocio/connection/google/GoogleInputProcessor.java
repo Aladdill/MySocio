@@ -5,9 +5,8 @@ package net.mysocio.connection.google;
 
 import java.text.ParseException;
 
-import net.mysocio.data.management.camel.AbstractMessageProcessor;
+import net.mysocio.data.management.camel.UserMessageProcessor;
 
-import org.apache.camel.Exchange;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,7 +16,7 @@ import com.github.jmkgreen.morphia.annotations.Transient;
  * @author Aladdin
  *
  */
-public class GoogleInputProcessor extends AbstractMessageProcessor {
+public class GoogleInputProcessor extends UserMessageProcessor {
 	/**
 	 * 
 	 */
@@ -106,7 +105,7 @@ public class GoogleInputProcessor extends AbstractMessageProcessor {
 		return message;
 	}*/
 	
-	public void process(Exchange exchange) throws Exception {
+	public void process() throws Exception {
 		long to = System.currentTimeMillis();
 		long from = lastUpdate;
 	/*	if (facebook == null){

@@ -53,19 +53,23 @@ public interface IDataManager {
 
 	public Long countUnreadMessages(String userId, String tagId);
 
-	public void createRoute(String from, AbstractProcessor processor, Long delay) throws Exception;
-	
 	public void sendPackageToRoute(String to, SocioObject object) throws Exception;
 
 	boolean isNewMessage(String userId, GeneralMessage message);
 
 	void setMessagesReadden(String userId, String tagId, UserTags tags);
 
-	public abstract void removeRoute(String from, String userId);
+	public<T> void deleteProcessorByField(Class<T> clazz, String fieldName, String fieldValue);
 
 	public abstract Source getSource(String url);
 
-	public boolean isRouteExist(String from, AbstractProcessor processor);
+	public boolean isProcessorExist(String userId);
 
 	public abstract UserPermissions getUserPermissions(String mail);
+	
+	public List<AbstractUserMessagesProcessor> getUserProcessors(String userId);
+
+	public<T> void deleteUserProcessorByField(Class<T> clazz, String fieldName, String fieldValue, String userId);
+
+	public<T extends AbstractUserMessagesProcessor> void saveProcessor(T processor, String uniqueFieldName, String uniqueFieldValue) throws Exception;
 }

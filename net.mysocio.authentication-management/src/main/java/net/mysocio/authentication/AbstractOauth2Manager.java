@@ -11,6 +11,7 @@ import net.mysocio.data.IDataManager;
 import net.mysocio.data.MySocioInfo;
 import net.mysocio.data.accounts.Account;
 import net.mysocio.data.management.AccountsManager;
+import net.mysocio.data.management.AuthenticationResourcesManager;
 import net.mysocio.ui.management.UnapprovedUserException;
 
 import org.scribe.builder.ServiceBuilder;
@@ -100,7 +101,7 @@ public abstract class AbstractOauth2Manager implements IAuthenticationManager {
 			} catch (Exception e) {
 				logger.warn("Coudn't save info.",e);
 			}
-//			throw new UnapprovedUserException();
+			throw new UnapprovedUserException();
 		}
 		try {
 			dataManager.saveObject(new MySocioInfo("Logged In User", "User with email " + email, new Date().toString()));

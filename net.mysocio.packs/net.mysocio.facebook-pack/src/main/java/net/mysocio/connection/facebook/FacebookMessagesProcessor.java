@@ -10,7 +10,7 @@ import java.util.List;
 import net.mysocio.data.accounts.facebook.FacebookAccount;
 import net.mysocio.data.management.DataManagerFactory;
 import net.mysocio.data.management.MessagesManager;
-import net.mysocio.data.management.camel.AbstractMessageProcessor;
+import net.mysocio.data.management.camel.UserMessageProcessor;
 import net.mysocio.data.management.exceptions.DuplicateMySocioObjectException;
 import net.mysocio.data.messages.facebook.FacebookMessage;
 import net.mysocio.ui.data.objects.facebook.FacebookUiCheckinMessage;
@@ -19,7 +19,6 @@ import net.mysocio.ui.data.objects.facebook.FacebookUiPhotoMessage;
 import net.mysocio.ui.data.objects.facebook.FacebookUiStatusMessage;
 import net.mysocio.ui.data.objects.facebook.FacebookUiVideoMessage;
 
-import org.apache.camel.Exchange;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,14 +37,14 @@ import facebook4j.auth.AccessToken;
  * @author Aladdin
  *
  */
-public class FacebookInputProcessor extends AbstractMessageProcessor {
+public class FacebookMessagesProcessor extends UserMessageProcessor {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -1914368846859623850L;
 	@Transient
 	private static final Logger logger = LoggerFactory
-			.getLogger(FacebookInputProcessor.class);
+			.getLogger(FacebookMessagesProcessor.class);
 	private static final long MONTH = 30*24*3600l;
 	private Long lastUpdate = 0l;
 	private String token;
@@ -129,7 +128,7 @@ public class FacebookInputProcessor extends AbstractMessageProcessor {
 		return message;
 	}
 	
-	public void process(Exchange exchange) throws Exception {
+	public void process() throws Exception {
 		long to = System.currentTimeMillis();
 		long from = lastUpdate;
 		if (facebook == null){
@@ -194,7 +193,7 @@ public class FacebookInputProcessor extends AbstractMessageProcessor {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		FacebookInputProcessor other = (FacebookInputProcessor) obj;
+		FacebookMessagesProcessor other = (FacebookMessagesProcessor) obj;
 		if (accountId == null) {
 			if (other.accountId != null)
 				return false;

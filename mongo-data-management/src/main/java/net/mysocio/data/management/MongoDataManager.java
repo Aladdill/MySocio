@@ -4,27 +4,25 @@
 package net.mysocio.data.management;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
 import net.mysocio.connection.readers.Source;
-import net.mysocio.data.AbstractProcessor;
+import net.mysocio.data.AbstractUserMessagesProcessor;
 import net.mysocio.data.CappedCollectionTimeStamp;
 import net.mysocio.data.IDataManager;
 import net.mysocio.data.ISocioObject;
 import net.mysocio.data.IUniqueObject;
 import net.mysocio.data.RoutePackage;
 import net.mysocio.data.SocioObject;
-import net.mysocio.data.SocioRoute;
 import net.mysocio.data.SocioTag;
 import net.mysocio.data.SocioUser;
-import net.mysocio.data.TempRoute;
+import net.mysocio.data.TempProcessor;
 import net.mysocio.data.UserAccount;
 import net.mysocio.data.UserPermissions;
 import net.mysocio.data.UserTags;
 import net.mysocio.data.accounts.Account;
-import net.mysocio.data.management.camel.DefaultUserMessagesProcessor;
+import net.mysocio.data.management.camel.DefaultUserProcessor;
 import net.mysocio.data.management.exceptions.DuplicateMySocioObjectException;
 import net.mysocio.data.messages.GeneralMessage;
 import net.mysocio.data.messages.ReaddenMessage;
@@ -40,11 +38,6 @@ import com.github.jmkgreen.morphia.Datastore;
 import com.github.jmkgreen.morphia.Key;
 import com.github.jmkgreen.morphia.query.Query;
 import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
-import com.mongodb.DBRef;
 import com.mongodb.QueryBuilder;
 
 /**
@@ -54,12 +47,12 @@ import com.mongodb.QueryBuilder;
 public class MongoDataManager implements IDataManager {
 	private static final Logger logger = LoggerFactory.getLogger(MongoDataManager.class);
 	private Datastore ds;
-	private DB db;
+	private Datastore processorsDs;
 	
 
-	public MongoDataManager(Datastore ds, DB db) {
+	public MongoDataManager(Datastore ds, Datastore processorsDs) {
 		this.ds = ds;
-		this.db = db;
+		this.processorsDs = processorsDs;
 	}
 
 	public SocioUser createUser(Account account, Locale locale)
@@ -79,26 +72,24 @@ public class MongoDataManager implements IDataManager {
 		UserTags userTags = new UserTags();
 		userTags.setUserId(user.getId().toString());
 		addAccountToUser(account, userId, userTags);
-		DefaultUserMessagesProcessor processor = new DefaultUserMessagesProcessor();
+		TempProcessor processor = new TempProcessor();
 		processor.setUserId(userId);
-		createRoute("activemq:" + userId + ".newMessage", processor, 0l);
+		processor.setCreationDate(System.currentTimeMillis());
+		saveObject(processor);
 		logger.debug("User created");
 		return user;
 	}
 
-	public void createRoute(String from, AbstractProcessor processor, Long delay)
-			throws DuplicateMySocioObjectException {
-		TempRoute route = new TempRoute();
-		route.setFrom(from);
-		route.setProcessor(processor);
-		route.setDelay(delay);
-		route.setCreationDate(System.currentTimeMillis());
-		saveObject(route);
-	}
 	@Override
-	public void removeRoute(String from, String userId){
-		Query<SocioRoute> q = ds.createQuery(SocioRoute.class).field("from").equal(from).field("processor.to").equal("activemq:" + userId + ".newMessage");
-		ds.delete(q);
+	public<T> void deleteProcessorByField(Class<T> clazz, String fieldName, String fieldValue){
+		Query<T> q = processorsDs.createQuery(clazz).field(fieldName).equal(fieldValue);
+		processorsDs.delete(q);
+	}
+	
+	@Override
+	public<T> void deleteUserProcessorByField(Class<T> clazz, String fieldName, String fieldValue, String userId){
+		Query<T> q = processorsDs.createQuery(clazz).field(fieldName).equal(fieldValue).field("userId").equal(userId);
+		processorsDs.delete(q);
 	}
 	
 	@Override
@@ -151,7 +142,7 @@ public class MongoDataManager implements IDataManager {
 				return;
 			}
 		}
-		source.createRoute("activemq:" + userId  + ".newMessage");
+		source.createProcessor(userId);
 	}
 	
 	@Override
@@ -174,6 +165,11 @@ public class MongoDataManager implements IDataManager {
 	public UserPermissions getUserPermissions(String mail) {
 		Query<UserPermissions> q = ds.createQuery(UserPermissions.class).field("mail").equal(mail);
 		return q.get();
+	}
+	
+	public List<AbstractUserMessagesProcessor> getUserProcessors(String userId) {
+		Query<AbstractUserMessagesProcessor> q = ds.createQuery(AbstractUserMessagesProcessor.class).field("userId").equal(userId);
+		return q.asList();
 	}
 
 	public<T> T getObject(Class<T> T, String id) {
@@ -239,6 +235,21 @@ public class MongoDataManager implements IDataManager {
 		ds.save(object);
 	}
 	@Override
+	public<T extends AbstractUserMessagesProcessor> void saveProcessor(T processor, String uniqueFieldName, String uniqueFieldValue) throws DuplicateMySocioObjectException {
+		Query<T> q = (Query<T>)processorsDs.createQuery(processor.getClass()).field(uniqueFieldName).equal(uniqueFieldValue);
+		String userId = processor.getUserId();
+		if (userId != null){
+			q.field("userId").equal(userId);
+		}
+		AbstractUserMessagesProcessor existingProcessor = q.get();
+		if (existingProcessor != null) {
+			processor.setId(existingProcessor.getId());
+			logger.info("Duplicate processor for query: " + q.toString());
+			throw new DuplicateMySocioObjectException("Duplicate processor for query: " + q.toString());
+		}
+		processorsDs.save(processor);
+	}
+	@Override
 	public void setMessageReadden(String userId, String messageId) {
 		Query<UnreaddenMessage> q = ds.createQuery(UnreaddenMessage.class).field("message").equal(new Key<GeneralMessage>(GeneralMessage.class, new ObjectId(messageId))).field("userId").equal(userId);
 		ds.delete(q);
@@ -288,9 +299,8 @@ public class MongoDataManager implements IDataManager {
 	}
 
 	public List<GeneralMessage> getUnreadMessages(String userId, String tagId, UserTags tags) {
-		DBCollection coll = db.getCollection("unreadden_messages");
 		
-//		Query<UnreaddenMessage> q = ds.createQuery(UnreaddenMessage.class).field("userId").equal(userId.toString());
+		Query<UnreaddenMessage> q = ds.createQuery(UnreaddenMessage.class).field("userId").equal(userId.toString());
 		QueryBuilder query = QueryBuilder.start("userId").is(userId);
 		String order = tags.getOrder();
 		BasicDBObject dbOrder = new BasicDBObject("messageDate",-1);
@@ -302,33 +312,22 @@ public class MongoDataManager implements IDataManager {
 			for (SocioTag leaf : leaves) {
 				tagsIds.add(leaf.getUniqueId());
 			}
-//			q.field("tagId").hasAnyOf(tagsIds);
-			query.and("tagId").in(tagsIds);
+			q.field("tagId").hasAnyOf(tagsIds);
 		}
 		if (order.equals(SocioTag.ASCENDING_ORDER)){
-//			q.order("-messageDate");
+			q.order("-messageDate");
 		}else{
-//			q.order("messageDate");
-			dbOrder = new BasicDBObject("messageDate",1);
+			q.order("messageDate");
 		}
-		DBCursor cursor = coll.find(query.get()).limit(tags.getRange()).sort(dbOrder);
-		Iterator<DBObject> iterator = cursor.iterator();
-		List<Key<GeneralMessage>> keys = new ArrayList<Key<GeneralMessage>>();
-		while (iterator.hasNext()){
-			DBObject next = iterator.next();
-			DBRef message = (DBRef)next.get("message");
-			keys.add(new Key<GeneralMessage>(GeneralMessage.class, new ObjectId(message.getId().toString())));
+		q.limit(tags.getRange());
+		List<GeneralMessage> messagesList = new ArrayList<GeneralMessage>();
+		Iterable<UnreaddenMessage> messages = q.fetch();
+		for (UnreaddenMessage unreaddenMessage : messages) {
+			messagesList.add(unreaddenMessage.getMessage());
 		}
-//		q.limit(tags.getRange());
-		List<GeneralMessage> byKeys = ds.getByKeys(keys);
-//		List<UnreaddenMessage> messagesList = new ArrayList<UnreaddenMessage>();
-//		Iterable<UnreaddenMessage> messages = q.fetch();
-//		for (UnreaddenMessage unreaddenMessage : messages) {
-//			messagesList.add(unreaddenMessage);
-//		}
 		tags.setSelectedTag(tagId);
 		ds.save(tags);
-		return byKeys;
+		return messagesList;
 	}
 
 	public Long countUnreadMessages(String userId, String tagId) {
@@ -356,11 +355,8 @@ public class MongoDataManager implements IDataManager {
 	}
 
 	@Override
-	public boolean isRouteExist(String from, AbstractProcessor processor) {
-		Query<SocioRoute>  routes = ds.createQuery(SocioRoute.class).field("from").equal(from);
-		if (processor != null){
-			routes.field("processor.to").equal(processor.getTo());
-		}
-		return (routes.countAll() > 0);
+	public boolean isProcessorExist(String userId) {
+		Query<DefaultUserProcessor>  processor = processorsDs.createQuery(DefaultUserProcessor.class).field("userId").equal(userId);
+		return (processor.countAll() > 0);
 	}
 }

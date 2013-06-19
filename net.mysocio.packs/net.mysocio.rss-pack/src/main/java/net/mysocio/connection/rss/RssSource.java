@@ -28,28 +28,19 @@ public class RssSource extends Source {
 		return RssMessage.class;
 	}
 
-	public void createRoute(String to) throws Exception {
+	public void createProcessor(String userId) throws Exception {
 		String url = getUrl();
 		if (logger.isDebugEnabled()){
 			logger.debug("Creating route for RSS feed on url " + url);
 		}
 		RssMessageProcessor processor = new RssMessageProcessor();
-		processor.setTo(to);
-		processor.setTag(url);
-		String separator = "?";
-		if (url.contains("?")){
-			separator = "&";
-		}
-		DataManagerFactory.getDataManager().createRoute("rss:" + url + separator + "consumer.delay=60000&mysociouserId=" + to.substring(9, 33), processor, 0l);
+		processor.setUrl(url);
+		processor.setUserId(userId);
+		DataManagerFactory.getDataManager().saveProcessor(processor, "url", getUrl());
 	}
 
 	@Override
-	public void removeRoute(String userId) throws Exception {
-		String url = getUrl();
-		String separator = "?";
-		if (url.contains("?")){
-			separator = "&";
-		}
-		DataManagerFactory.getDataManager().removeRoute("rss:" + url + separator + "consumer.delay=60000&mysociouserId=" + userId, userId);		
+	public void removeProcessor(String userId) throws Exception {
+		DataManagerFactory.getDataManager().deleteUserProcessorByField(RssMessageProcessor.class, "url", getUrl(), userId);		
 	}
 }

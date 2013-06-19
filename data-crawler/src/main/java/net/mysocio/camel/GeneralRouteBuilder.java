@@ -3,8 +3,6 @@
  */
 package net.mysocio.camel;
 
-import net.mysocio.data.SocioRoute;
-
 import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.RouteDefinition;
@@ -20,18 +18,12 @@ public class GeneralRouteBuilder extends RouteBuilder {
 			.getLogger(GeneralRouteBuilder.class);
 	private String from;
 	private Processor processor;
-	private Long delay;
-	private boolean autoStartup;
-
-	private String routeId;
 
 
-	public GeneralRouteBuilder(SocioRoute route) {
+	public GeneralRouteBuilder(String from, Processor processor) {
 		super();
-		this.from = route.getFrom();
-		this.processor = route.getProcessor();
-		this.delay = route.getDelay();
-		this.autoStartup = route.isAutoStartup();
+		this.from = from;
+		this.processor = processor;
 	}
 
 	/*
@@ -42,38 +34,8 @@ public class GeneralRouteBuilder extends RouteBuilder {
 	@Override
 	public void configure() throws Exception {
 		if (logger.isDebugEnabled()) {
-			logger.debug("Creating route from: " + from);
+			logger.debug("Creating route from " + from);
 		}
-		RouteDefinition routeDefinition = from(from).autoStartup(autoStartup).process(processor).delayer(delay);;
-		this.routeId = routeDefinition.getId();
-	}
-
-	/**
-	 * @return the delay
-	 */
-	public Long getDelay() {
-		return delay;
-	}
-
-	/**
-	 * @param delay the delay to set
-	 */
-	public void setDelay(Long delay) {
-		this.delay = delay;
-	}
-
-	/**
-	 * @return the routeId
-	 */
-	public String getRouteId() {
-		return routeId;
-	}
-	
-	public boolean isAutoStartup() {
-		return autoStartup;
-	}
-
-	public void setAutoStartup(boolean autoStartup) {
-		this.autoStartup = autoStartup;
+		RouteDefinition routeDefinition = from(from).autoStartup(true).process(processor);
 	}
 }
