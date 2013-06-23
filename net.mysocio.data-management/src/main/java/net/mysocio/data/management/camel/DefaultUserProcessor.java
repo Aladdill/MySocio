@@ -32,11 +32,17 @@ public class DefaultUserProcessor extends AbstractUserProcessor implements Proce
 	/* (non-Javadoc)
 	 * @see org.apache.camel.Processor#process(org.apache.camel.Exchange)
 	 */
-	public void process(Exchange exchange) throws Exception {
+	public void process(Exchange exchange){
 		IDataManager dataManager = DataManagerFactory.getDataManager();
 		List<AbstractUserMessagesProcessor> userProcessors = dataManager.getUserProcessors(getUserId());
 		for (AbstractUserMessagesProcessor userProcessor : userProcessors) {
-			userProcessor.process();
+			logger.debug("Starting processor with id: " + userProcessor.getId() + " for routeId : " + exchange.getFromRouteId());
+			try {
+				userProcessor.process();
+			} catch (Exception e) {
+				//if processor failed for some reason, we want to know it, but not to stop extraction process 
+				logger.warn("Problem processing messages for processor with id: " + userProcessor.getId(), e);
+			}
 		}
 	}
 }

@@ -5,7 +5,6 @@ package net.mysocio.camel;
 
 import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.model.RouteDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,6 +35,6 @@ public class GeneralRouteBuilder extends RouteBuilder {
 		if (logger.isDebugEnabled()) {
 			logger.debug("Creating route from " + from);
 		}
-		RouteDefinition routeDefinition = from(from).autoStartup(true).process(processor);
+		from(from).autoStartup(true).process(processor);
 	}
 }

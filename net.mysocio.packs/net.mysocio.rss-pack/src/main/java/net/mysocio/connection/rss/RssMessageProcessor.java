@@ -10,7 +10,6 @@ import net.mysocio.data.management.camel.UserMessageProcessor;
 import net.mysocio.data.messages.rss.RssMessage;
 import net.mysocio.utils.rss.RssUtils;
 
-import org.apache.camel.Exchange;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,6 +32,9 @@ public class RssMessageProcessor extends UserMessageProcessor {
 	private String url;
 	
 	public void process() throws Exception {
+		if (logger.isDebugEnabled()){
+			logger.debug("Trying to get messages for feed: " + url);
+		}
 		SyndFeed feed = RssUtils.buldFeed(url);
 		if (feed == null){
 			return;

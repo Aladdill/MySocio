@@ -8,7 +8,6 @@ import java.text.ParseException;
 import net.mysocio.data.management.camel.UserMessageProcessor;
 import net.mysocio.data.messages.vkontakte.VkontakteMessage;
 
-import org.apache.camel.Exchange;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,6 +49,9 @@ public class VkontakteInputProcessor extends UserMessageProcessor {
 	}
 	
 	public void process() throws Exception {
+		if (logger.isDebugEnabled()){
+			logger.debug("Got trying to get messages for vkontakte account: " + accountId);
+		}
 		long to = System.currentTimeMillis();
 		long from = lastUpdate;
 		from = to - MONTH;

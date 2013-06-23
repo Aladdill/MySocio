@@ -11,7 +11,7 @@ import com.github.jmkgreen.morphia.annotations.Entity;
  * @author Aladdin
  *
  */
-@Entity(value="route_packages", cap=@CappedAt(100000))
+@Entity(value="route_packages", cap=@CappedAt(10000000))
 public class RoutePackage extends SocioObject {
 
 	/**

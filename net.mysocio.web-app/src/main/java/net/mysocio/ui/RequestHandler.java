@@ -50,11 +50,13 @@ public class RequestHandler extends AbstractHandler {
 				connectionData.setUserTags(userTags);
 				connectionData.setSelectedTag(userTags.getSelectedTag());
 			}else{
-				if (!command.equals(EDefaultCommand.startAuthentication.name()) && 
-						!command.equals(EDefaultCommand.login.name()) &&
+				//if no user in session, start authentication
+				if (!command.equals(EDefaultCommand.startAuthentication.name()) &&
+						!command.equals(EDefaultCommand.openStartPage.name()) &&
 						!command.equals(EDefaultCommand.authenticationDone.name()) &&
-						!command.equals(EDefaultCommand.openStartPage.name())){
-					throw new CommandExecutionException("restart");
+						//here we get on savedlogin type, we need to start authentication
+						(command.equals(EDefaultCommand.login.name()) && connectionData.getSessionAttribute("code") == null)){
+					command = EDefaultCommand.startAuthentication.name();
 				}
 			}
 			ICommandInterpreter commandInterpreter = CommandIterpreterFactory.getCommandInterpreter(connectionData);

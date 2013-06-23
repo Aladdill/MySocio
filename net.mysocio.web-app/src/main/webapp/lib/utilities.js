@@ -61,7 +61,6 @@ function login(identifierValue) {
 	startAuthentication(identifierValue);
 }
 function startAuthentication(identifierValue) {
-	$.removeCookie('hidden_login_cookie');
 	$.post("execute?command=startAuthentication", {
 		identifier : identifierValue,
 	}).done(function(data) {
@@ -97,7 +96,6 @@ function authenticationDone() {
 }
 function executeLogin() {
 	showWaitDialog("dialog.login.title", "dialog.login.message");
-	$.removeCookie('hidden_login_cookie');
 	$.post("execute?command=login")
 	.done(function(data) {
 		if (isNoContent(data)) {
@@ -212,7 +210,6 @@ function showDiv(id) {
 }
 function onFailure(data) {
 	$.removeCookie('login_cookie');
-	$.removeCookie('hidden_login_cookie');
 	if (data.responseText == "restart"){
 		loadStartPage();
 		return;
@@ -227,7 +224,6 @@ function showError(error) {
 }
 function showAuthError(error) {
 	$.removeCookie('login_cookie');
-	$.removeCookie('hidden_login_cookie');
 	showWaitDialog("dialog.error.title", error);
 }
 function importingOPML() {
@@ -410,7 +406,6 @@ function searchTree(){
 }
 function logout() {
 	$.removeCookie('login_cookie');
-	$.removeCookie('hidden_login_cookie');
 	$("#sources_tree").stopTime();
 	openUrlInDiv($("#SiteBody"), "execute?command=logout");
 }

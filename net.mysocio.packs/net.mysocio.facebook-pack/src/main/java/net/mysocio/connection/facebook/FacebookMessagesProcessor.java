@@ -129,6 +129,9 @@ public class FacebookMessagesProcessor extends UserMessageProcessor {
 	}
 	
 	public void process() throws Exception {
+		if (logger.isDebugEnabled()){
+			logger.debug("Got trying to get messages for facebook account: " + accountId);
+		}
 		long to = System.currentTimeMillis();
 		long from = lastUpdate;
 		if (facebook == null){

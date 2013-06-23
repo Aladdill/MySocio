@@ -26,6 +26,9 @@ public class AuthenticationExecutor implements ICommandExecutor {
 	public String execute(IConnectionData connectionData)
 			throws CommandExecutionException {
 		String identifier = connectionData.getRequestParameter(AccountsManager.IDENTIFIER);
+		if (identifier == null){
+			identifier = connectionData.getCookieValue("login_cookie");
+		}
 		connectionData.setSessionAttribute(AccountsManager.IDENTIFIER, identifier);
 		logger.debug("Authenticating acount of type:" + identifier);
 		String accountRequestUrl = null;

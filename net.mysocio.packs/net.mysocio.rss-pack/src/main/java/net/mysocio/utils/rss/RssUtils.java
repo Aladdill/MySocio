@@ -74,9 +74,12 @@ public class RssUtils {
 	}
 	public static SyndFeed buldFeed(String url) throws FeedException,
 			IOException, MalformedURLException {
-		SyndFeedInput input = new SyndFeedInput();
-		SyndFeed feed = input.build(new XmlReader(new URL(url)));
-		return feed;
+//		SyndFeedInput input = new SyndFeedInput();
+//		SyndFeed feed = input.build(new XmlReader(new URL(url)));
+//		return feed;
+		InputStream in = new URL(url).openStream();
+        SyndFeedInput input = new SyndFeedInput();
+        return input.build(new XmlReader(in));
 	}
 	public static void importOpml(String userId, String url) throws Exception{
 		URL feedURL = new URL(url);

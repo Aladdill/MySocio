@@ -41,7 +41,9 @@ public class CamelContextManager {
 	
 	public static void addRoute(String from, Processor processor) throws Exception{
 		GeneralRouteBuilder builder = new GeneralRouteBuilder(from, processor);
+		logger.debug("Created route builder.");
 		camelContext.addRoutes(builder);
+		logger.debug("Added route.");
 	}
 
 	public static ProducerTemplate getProducerTemplate(){

@@ -57,7 +57,7 @@ public class AccountsManager {
 			identifier = connectionData
 					.getRequestParameter(AccountsManager.IDENTIFIER);
 			if (identifier == null) {
-				throw new InvalidNetworkException(identifier);
+					throw new InvalidNetworkException(identifier);
 			}
 		}
 		IAuthenticationManager authenticationManager = accounts.get(identifier);
