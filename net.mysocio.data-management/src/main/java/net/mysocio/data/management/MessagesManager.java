@@ -55,20 +55,6 @@ public class MessagesManager implements IMessagesManager {
 	public List<GeneralMessage> getMessagesForSelectedTag(String userId, String tagId, UserTags tags) {
 		IDataManager dataManager = DataManagerFactory.getDataManager();
 		List<GeneralMessage> unreadMessages = dataManager.getUnreadMessages(userId, tagId, tags);
-//		for (String id : unreadMessages) {
-//			IMessage message = getCacheMessage(id);
-//			if (message != null){
-//				messages.add(message);
-//			}else{
-//				message = (GeneralMessage)DataManagerFactory.getDataManager(user).getObject(id);
-//				if (message == null){
-//					//It's data loss, should be investigated
-//					logger.error("Message with id " + id + "is missing");
-//					setMessagesReadden(user, id);
-//				}
-//				messages.add(message);
-//			}
-//		}
 		return unreadMessages;
 	}
 	@Override
@@ -80,21 +66,5 @@ public class MessagesManager implements IMessagesManager {
 		for (String id : ids) {
 			DataManagerFactory.getDataManager().sendPackageToRoute(UserMessageProcessor.ACTIVEMQ_READEN_MESSAGE, new SocioPair(userId, id));
 		}
-	}
-	private void cacheMessage(GeneralMessage message){
-		CacheManager cm = CacheManager.create();
-		Cache cache = cm.getCache("Messages");
-		Element element = new Element(message.getId(), message);
-		cache.put(element);
-	}
-	
-	private GeneralMessage getCacheMessage(String id){
-		CacheManager cm = CacheManager.create();
-		Cache cache = cm.getCache("Messages");
-		Element element = cache.get(id);
-		if (element == null){
-			return null;
-		}
-		return (GeneralMessage)element.getValue();
 	}
 }

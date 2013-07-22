@@ -3,6 +3,7 @@
  */
 package net.mysocio.routes.reader;
 
+import net.mysocio.camel.CamelContextManager;
 import net.mysocio.data.IDataManager;
 import net.mysocio.data.TempProcessor;
 import net.mysocio.data.management.DataManagerFactory;
@@ -29,6 +30,7 @@ public class NewUserProcessor extends CappedCollectionProcessor {
 			processor.setUserId(userId);
 			logger.debug("New user processor was registered for user with id: " + userId);
 			dataManager.saveObject(processor);
+			CamelContextManager.addRoute("timer://" + processor.getUserId() + "?fixedRate=true&period=60s", processor);
 		}
 		return tempProcessor.getCreationDate();
 	}

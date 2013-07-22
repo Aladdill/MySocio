@@ -209,7 +209,7 @@ function showDiv(id) {
 	$("#" + id).css("display", "block");
 }
 function onFailure(data) {
-	$.removeCookie('login_cookie');
+	removeLoginCookie();
 	if (data.responseText == "restart"){
 		loadStartPage();
 		return;
@@ -223,7 +223,7 @@ function showError(error) {
 	showWaitDialog("dialog.error.title", error);
 }
 function showAuthError(error) {
-	$.removeCookie('login_cookie');
+	removeLoginCookie();
 	showWaitDialog("dialog.error.title", error);
 }
 function importingOPML() {
@@ -405,7 +405,7 @@ function searchTree(){
 	$("#sources_tree").jstree("search",$("#search_field").prop("value"));
 }
 function logout() {
-	$.removeCookie('login_cookie');
+	removeLoginCookie();
 	$("#sources_tree").stopTime();
 	openUrlInDiv($("#SiteBody"), "execute?command=logout");
 }
@@ -475,7 +475,7 @@ function loadBundles(lang) {
 	});
 }
 function setLoginCookie(login_value){
-	$.cookie('login_cookie', login_value, { expires: 30, path: '/' });
+	//$.cookie('login_cookie', login_value, { expires: 30, path: '/' });
 	$.cookie('loggedin_cookie', "loggedin");
 }
 function removeLoginCookie(){

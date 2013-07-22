@@ -29,6 +29,9 @@ import net.mysocio.data.messages.ReaddenMessage;
 import net.mysocio.data.messages.UnreaddenMessage;
 import net.mysocio.data.ui.UiObject;
 import net.mysocio.data.ui.UserPage;
+import net.sf.ehcache.Cache;
+import net.sf.ehcache.CacheManager;
+import net.sf.ehcache.Element;
 
 import org.bson.types.ObjectId;
 import org.slf4j.Logger;
@@ -48,11 +51,13 @@ public class MongoDataManager implements IDataManager {
 	private static final Logger logger = LoggerFactory.getLogger(MongoDataManager.class);
 	private Datastore ds;
 	private Datastore processorsDs;
+	private CacheManager cm;
 	
 
 	public MongoDataManager(Datastore ds, Datastore processorsDs) {
 		this.ds = ds;
 		this.processorsDs = processorsDs;
+		this.cm = CacheManager.create();
 	}
 
 	public SocioUser createUser(Account account, Locale locale)
@@ -147,9 +152,19 @@ public class MongoDataManager implements IDataManager {
 	
 	@Override
 	public boolean isNewMessage(String userId, GeneralMessage message){
+		cm.getCache("Messages");
+		Cache cache = cm.getCache("Messages");
+		String key = message.getId().toString() + userId;
+		Element element = cache.get(key);
+		if (element != null){
+			return (Boolean)element.getValue();
+		}
 		Query<UnreaddenMessage>  isUnread = ds.createQuery(UnreaddenMessage.class).field("userId").equal(userId).field("message").equal(message);
 		Query<ReaddenMessage>  isRead = ds.createQuery(ReaddenMessage.class).field("userId").equal(userId).field("messageUniqueId").equal(message.getUniqueFieldValue().toString());
-		return (isUnread.countAll() <= 0 && isRead.countAll() <= 0);
+		Boolean newMessage = isUnread.countAll() <= 0 && isRead.countAll() <= 0;
+		element = new Element(key, newMessage);
+		cache.put(element);
+		return newMessage;
 	}
 	
 	/**
@@ -168,7 +183,7 @@ public class MongoDataManager implements IDataManager {
 	}
 	
 	public List<AbstractUserMessagesProcessor> getUserProcessors(String userId) {
-		Query<AbstractUserMessagesProcessor> q = ds.createQuery(AbstractUserMessagesProcessor.class).field("userId").equal(userId);
+		Query<AbstractUserMessagesProcessor> q = processorsDs.createQuery(AbstractUserMessagesProcessor.class).field("userId").equal(userId);
 		return q.asList();
 	}
 
