@@ -447,7 +447,6 @@ function getMessages(id, resetContainer) {
 					}
 				});				
 				refreshDataContainerScroll();
-				gapi.plusone.go();
 			}).always(closeWaitDialog).always(function (){$("#data_container").data("gettingMessages", false);})
 			.fail(onFailure);
 }
