@@ -13,9 +13,6 @@ import net.mysocio.data.SocioPair;
 import net.mysocio.data.UserTags;
 import net.mysocio.data.management.camel.UserMessageProcessor;
 import net.mysocio.data.messages.GeneralMessage;
-import net.sf.ehcache.Cache;
-import net.sf.ehcache.CacheManager;
-import net.sf.ehcache.Element;
 
 /**
  * @author Aladdin

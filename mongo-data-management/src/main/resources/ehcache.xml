@@ -941,6 +941,18 @@ used with JMX monitors.
            memoryStoreEvictionPolicy="LFU"
            transactionalMode="off"
             />
+    
+    <cache name="Objects"
+           maxElementsInMemory="10000"
+           maxElementsOnDisk="1000"
+           eternal="false"
+           overflowToDisk="true"
+           diskSpoolBufferSizeMB="20"
+           timeToIdleSeconds="300"
+           timeToLiveSeconds="600"
+           memoryStoreEvictionPolicy="LFU"
+           transactionalMode="off"
+            />
 
 
     <!--

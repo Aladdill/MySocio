@@ -210,10 +210,10 @@ function showDiv(id) {
 }
 function onFailure(data) {
 	removeLoginCookie();
-	if (data.responseText == "restart"){
-		loadStartPage();
-		return;
-	}
+//	if (data.responseText == "restart"){
+//		loadStartPage();
+//		return;
+//	}
 	showError(data.responseText);
 }
 function showError(error) {
@@ -410,18 +410,19 @@ function logout() {
 	openUrlInDiv($("#SiteBody"), "execute?command=logout");
 }
 function loadStartPage() {
-	var login_value = $.cookie('login_cookie');
+//	var login_value = $.cookie('login_cookie');
 	var loggedin_value = $.cookie('loggedin_cookie');
-	if (login_value != undefined){
-		if (loggedin_value != undefined){
-			executeLogin();
-		}else{
-			setLoginCookie(login_value);
-			startAuthentication(login_value);
-		}
+//	if (login_value != undefined){
+	if (loggedin_value != undefined){
+		executeLogin();
 	}else{
 		openUrlInDiv($("#SiteBody"), "execute?command=openStartPage");
 	}
+//		else{
+//			setLoginCookie("dummy");
+//			startAuthentication(login_value);
+//		}
+//	}
 }
 function getMessages(id, resetContainer) {
 	if ($("#data_container").data("gettingMessages")){

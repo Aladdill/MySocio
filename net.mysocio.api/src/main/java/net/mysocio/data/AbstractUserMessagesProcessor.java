@@ -3,14 +3,13 @@
  */
 package net.mysocio.data;
 
-import com.github.jmkgreen.morphia.annotations.CappedAt;
 import com.github.jmkgreen.morphia.annotations.Entity;
 
 /**
  * @author Aladdin
  *
  */
-@Entity(value="my_socio_user_messages_processors", cap=@CappedAt(10000000))
+@Entity(value="my_socio_user_messages_processors")
 public abstract class AbstractUserMessagesProcessor extends UserObject {
 	/**
 	 * 

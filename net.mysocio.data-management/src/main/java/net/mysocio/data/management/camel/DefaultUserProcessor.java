@@ -3,6 +3,7 @@
  */
 package net.mysocio.data.management.camel;
 
+import java.net.ConnectException;
 import java.util.List;
 
 import net.mysocio.data.AbstractUserMessagesProcessor;
@@ -39,6 +40,8 @@ public class DefaultUserProcessor extends AbstractUserProcessor implements Proce
 			logger.debug("Starting processor with id: " + userProcessor.getId() + " for routeId : " + exchange.getFromRouteId());
 			try {
 				userProcessor.process();
+			} catch (ConnectException ce){
+				logger.warn("Problem with connection " + userProcessor.getId() + " because of " + ce.getMessage());
 			} catch (Exception e) {
 				//if processor failed for some reason, we want to know it, but not to stop extraction process 
 				logger.warn("Problem processing messages for processor with id: " + userProcessor.getId(), e);

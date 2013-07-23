@@ -100,10 +100,12 @@ public class DataCrawlerContextListener extends AbstractMongoInitializer impleme
 		CamelContextManager.initContext();
 		IDataManager dataManager = DataManagerFactory.getDataManager();
 		List<DefaultUserProcessor> processors = dataManager.getObjects(DefaultUserProcessor.class);
+		logger.debug("Got " + processors.size() + " user processors.");
 		try {
 			MarkMessageReaddenProcessor readdenProcessor = new MarkMessageReaddenProcessor();
 			CamelContextManager.addRoute(UserMessageProcessor.ACTIVEMQ_READEN_MESSAGE, readdenProcessor);
 			for (DefaultUserProcessor processor : processors) {
+				logger.debug("Starting processor route for user " + processor.getUserId());
 				CamelContextManager.addRoute("timer://" + processor.getUserId() + "?fixedRate=true&period=60s", processor);
 			}
 		} catch (Exception e) {

@@ -152,9 +152,8 @@ public class MongoDataManager implements IDataManager {
 	
 	@Override
 	public boolean isNewMessage(String userId, GeneralMessage message){
-		cm.getCache("Messages");
 		Cache cache = cm.getCache("Messages");
-		String key = message.getId().toString() + userId;
+		String key = message.getUniqueFieldValue() + userId;
 		Element element = cache.get(key);
 		if (element != null){
 			return (Boolean)element.getValue();
@@ -239,10 +238,19 @@ public class MongoDataManager implements IDataManager {
 	public <T extends ISocioObject> void saveObject(T object) throws DuplicateMySocioObjectException {
 		if (object instanceof IUniqueObject){
 			IUniqueObject uniqueObject = (IUniqueObject)object;
+			Cache cache = cm.getCache("Objects");
+			String key =uniqueObject.getUniqueFieldName() + uniqueObject.getUniqueFieldValue();
+			Element element = cache.get(key);
+			if (element != null){
+				((SocioObject)object).setId((ObjectId)element.getValue());
+				return;
+			}
 			Query<T> q = (Query<T>)ds.createQuery(object.getClass()).field(uniqueObject.getUniqueFieldName()).equal(uniqueObject.getUniqueFieldValue());
 			T objectT = (T) q.get();
 			if (objectT != null) {
 				((SocioObject)object).setId(objectT.getId());
+				element = new Element(key, objectT.getId());
+				cache.put(element);
 				logger.info("Duplicate object of type: " + object.getClass() + " for query: " + q.toString());
 				throw new DuplicateMySocioObjectException("Duplicate object of type: " + object.getClass() + " for query: " + q.toString());
 			}
