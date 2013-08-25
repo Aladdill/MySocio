@@ -61,14 +61,7 @@ function login(identifierValue) {
 	startAuthentication(identifierValue);
 }
 function startAuthentication(identifierValue) {
-	$.post("execute?command=startAuthentication", {
-		identifier : identifierValue,
-	}).done(function(data) {
-		if (isNoContent(data)) {
-			return;
-		}
-		window.open(data, "name", "height=600,width=900");
-	}).fail(onFailure);
+	window.open("execute?command=startAuthentication&identifier=" + identifierValue, "name", "height=600,width=900");
 }
 
 function startHiddenAuthentication(identifierValue) {

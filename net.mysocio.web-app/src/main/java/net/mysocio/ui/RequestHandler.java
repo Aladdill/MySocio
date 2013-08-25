@@ -1,5 +1,7 @@
 package net.mysocio.ui;
 
+import java.io.IOException;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -62,6 +64,13 @@ public class RequestHandler extends AbstractHandler {
 			ICommandInterpreter commandInterpreter = CommandIterpreterFactory.getCommandInterpreter(connectionData);
 			response.setContentType(commandInterpreter.getCommandResponseType(command));
 			commandOutput = commandInterpreter.executeCommand(command);
+			if (command.equals(EDefaultCommand.startAuthentication.name())){
+				try {
+					response.sendRedirect(commandOutput);
+				} catch (IOException e) {
+					throw new CommandExecutionException(e);
+				}
+			}
 			userId = connectionData.getUserId();
 			if (userId != null) {
 				request.getSession().setAttribute("user", userId);
