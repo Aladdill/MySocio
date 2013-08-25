@@ -161,7 +161,7 @@ public class MongoDataManager implements IDataManager {
 		Query<UnreaddenMessage>  isUnread = ds.createQuery(UnreaddenMessage.class).field("userId").equal(userId).field("message").equal(message);
 		Query<ReaddenMessage>  isRead = ds.createQuery(ReaddenMessage.class).field("userId").equal(userId).field("messageUniqueId").equal(message.getUniqueFieldValue().toString());
 		Boolean newMessage = isUnread.countAll() <= 0 && isRead.countAll() <= 0;
-		element = new Element(key, newMessage);
+		element = new Element(key, new Boolean(false));
 		cache.put(element);
 		return newMessage;
 	}

@@ -51,6 +51,10 @@ public class RequestHandler extends AbstractHandler {
 				UserTags userTags = DataManagerFactory.getDataManager().getUserTags(userId);
 				connectionData.setUserTags(userTags);
 				connectionData.setSelectedTag(userTags.getSelectedTag());
+				//if user id initialaized, it's refresh
+				if (command.equals(EDefaultCommand.openStartPage.name())){
+					return "showMainPage";
+				}
 			}else{
 				//if no user in session, start authentication
 				if (!command.equals(EDefaultCommand.startAuthentication.name()) &&

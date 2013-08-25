@@ -152,7 +152,7 @@ function setDataContainer(data) {
 	closeWaitDialog();
 }
 function isNoContent(data) {
-	return (data.status == 204);
+	return (data && data.status && data.status == 204);
 }
 function isEmpty(str) {
     return (!str || 0 === str.length);
@@ -403,19 +403,15 @@ function logout() {
 	openUrlInDiv($("#SiteBody"), "execute?command=logout");
 }
 function loadStartPage() {
-//	var login_value = $.cookie('login_cookie');
-	var loggedin_value = $.cookie('loggedin_cookie');
-//	if (login_value != undefined){
-	if (loggedin_value != undefined){
-		executeLogin();
-	}else{
-		openUrlInDiv($("#SiteBody"), "execute?command=openStartPage");
-	}
-//		else{
-//			setLoginCookie("dummy");
-//			startAuthentication(login_value);
-//		}
-//	}
+	$.post("execute?command=openStartPage").done(function(data) {
+		if (isNoContent(data)) {
+			return;
+		}else if (data == "showMainPage"){
+			loadMainPage();
+		}else{
+			$("#SiteBody").html(data);
+		}
+	}).fail(onFailure).done(afterfunction);
 }
 function getMessages(id, resetContainer) {
 	if ($("#data_container").data("gettingMessages")){
@@ -469,7 +465,7 @@ function loadBundles(lang) {
 }
 function setLoginCookie(login_value){
 	//$.cookie('login_cookie', login_value, { expires: 30, path: '/' });
-	$.cookie('loggedin_cookie', "loggedin");
+	//$.cookie('loggedin_cookie', "loggedin");
 }
 function removeLoginCookie(){
 	$.removeCookie('login_cookie');

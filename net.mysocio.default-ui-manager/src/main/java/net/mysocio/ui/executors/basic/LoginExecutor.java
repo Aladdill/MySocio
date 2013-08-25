@@ -46,12 +46,12 @@ public class LoginExecutor implements ICommandExecutor {
 					logger.debug("Account found");
 				}else{
 					user = dataManager.createUser(account,connectionData.getLocale());
-					if (account instanceof GoogleAccount){
-						String data = ((GoogleAccount)account).getGoogleReaderFeeds(userId);
-						if (data != null){
-							RssUtils.importGoogleReaderFeeds(userId, data);
-						}
-					}
+//					if (account instanceof GoogleAccount){
+//						String data = ((GoogleAccount)account).getGoogleReaderFeeds(userId);
+//						if (data != null){
+//							RssUtils.importGoogleReaderFeeds(userId, data);
+//						}
+//					}
 				}
 				userId = user.getId().toString();
 				UserTags userTags = dataManager.getUserTags(userId);
