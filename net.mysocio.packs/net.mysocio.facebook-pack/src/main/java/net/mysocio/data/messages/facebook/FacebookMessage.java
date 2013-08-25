@@ -48,14 +48,15 @@ public class FacebookMessage extends UserMessage {
 		String picture = getPicture();
 		if (getType().equals("link") && !picture.isEmpty()){
 			message = message.replace("message.picture", "<img src=\"" + picture + "\">");
-		}else{
-			message = message.replace("message.picture", picture);
 		}
 //		else{
+//			message = message.replace("message.picture", picture);
+//		}
+		else{
 //		for some reason pictures shown in FB and ones in api messages are not the same
 //		those bastards denying access to full pictures 
-//			message = message.replace("message.picture", picture.replace("_s.", "_n."));
-//		}
+			message = message.replace("message.picture", picture.replace("_s.", "_n."));
+		}
 		message = message.replace("message.story", getStory());
 		message = message.replace("message.caption", getCaption());
 		message = message.replace("message.description", getDescription());
