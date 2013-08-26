@@ -5,11 +5,13 @@ package net.mysocio.ui.data.objects;
 
 import net.mysocio.data.ui.UiObject;
 
+import com.google.code.morphia.annotations.Entity;
+
 /**
  * @author Aladdin
  *
  */
-@com.github.jmkgreen.morphia.annotations.Entity("ui_objects")
+@Entity("ui_objects")
 public class ContactLine extends UiObject {
 	/**
 	 * 

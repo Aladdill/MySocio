@@ -7,7 +7,6 @@ import java.util.List;
 
 import net.mysocio.connection.writers.Destination;
 import net.mysocio.data.messages.GeneralMessage;
-import net.mysocio.data.messages.UnreaddenMessage;
 
 /**
  * @author Aladdin

@@ -3,7 +3,7 @@
  */
 package net.mysocio.ui.data.objects.vkontakte;
 
-import com.github.jmkgreen.morphia.annotations.Entity;
+import com.google.code.morphia.annotations.Entity;
 
 /**
  * @author Aladdin

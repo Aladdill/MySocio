@@ -3,7 +3,7 @@
  */
 package net.mysocio.ui.data.objects;
 
-import com.github.jmkgreen.morphia.annotations.Entity;
+import com.google.code.morphia.annotations.Entity;
 
 
 /**

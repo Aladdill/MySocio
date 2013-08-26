@@ -5,7 +5,7 @@ package net.mysocio.ui.data.objects.rss;
 
 import net.mysocio.ui.data.objects.DefaultMessage;
 
-import com.github.jmkgreen.morphia.annotations.Entity;
+import com.google.code.morphia.annotations.Entity;
 
 /**
  * @author Aladdin

@@ -6,7 +6,7 @@ package net.mysocio.data.messages.vkontakte;
 import net.mysocio.data.messages.UserMessage;
 import net.mysocio.ui.data.objects.vkontakte.VkontakteUiMessage;
 
-import com.github.jmkgreen.morphia.annotations.Entity;
+import com.google.code.morphia.annotations.Entity;
 
 /**
  * @author Aladdin

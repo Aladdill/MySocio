@@ -5,8 +5,8 @@ package net.mysocio.data;
 
 import net.mysocio.data.accounts.Account;
 
-import com.github.jmkgreen.morphia.annotations.Entity;
-import com.github.jmkgreen.morphia.annotations.Reference;
+import com.google.code.morphia.annotations.Entity;
+import com.google.code.morphia.annotations.Reference;
 
 /**
  * @author DH67CL

@@ -13,7 +13,7 @@ import net.mysocio.utils.rss.RssUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.jmkgreen.morphia.annotations.Transient;
+import com.google.code.morphia.annotations.Transient;
 import com.sun.syndication.feed.synd.SyndContent;
 import com.sun.syndication.feed.synd.SyndEntryImpl;
 import com.sun.syndication.feed.synd.SyndFeed;
@@ -91,7 +91,7 @@ public class RssMessageProcessor extends UserMessageProcessor {
 		} catch (Exception e) {
 			//if it's duplicate message - we ignore it
 		}
-		addMessageForTag(message, url);
+		addMessageForTag(message, RssMessage.class, url);
 	}
 
 	public String getUrl() {

@@ -15,7 +15,7 @@ import net.mysocio.data.messages.UnreaddenMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.jmkgreen.morphia.annotations.Transient;
+import com.google.code.morphia.annotations.Transient;
 
 /**
  * @author Aladdin
@@ -31,20 +31,20 @@ public abstract class UserMessageProcessor extends AbstractUserMessagesProcessor
 	 */
 	private static final long serialVersionUID = -2112778445393534126L;
 
-	protected void addMessageForTag(GeneralMessage message, String tag) throws Exception {
+	protected<T extends GeneralMessage> void addMessageForTag(T message, Class<T> T, String tag) throws Exception {
 		String userId = getUserId();
 		IDataManager dataManager = DataManagerFactory.getDataManager();
-		if (dataManager.isNewMessage(userId, message)){
+		if (dataManager.isNewMessage(userId, message, T)){
 			dataManager.saveObject(createUnreaddenMessage(message, tag, userId));
 		}
 	}
 	
-	protected void addMessagesForTag(List<GeneralMessage> messages, String tag) throws Exception {
+	protected<T extends GeneralMessage> void addMessagesForTag(List<T> messages, Class<T> T, String tag) throws Exception {
 		List<UnreaddenMessage> unreaddenMessages = new ArrayList<UnreaddenMessage>();
 		String userId = getUserId();
 		IDataManager dataManager = DataManagerFactory.getDataManager();
-		for (GeneralMessage generalMessage : messages) {
-			if (dataManager.isNewMessage(userId, generalMessage)){
+		for (T generalMessage : messages) {
+			if (dataManager.isNewMessage(userId, generalMessage, T)){
 				unreaddenMessages.add(createUnreaddenMessage(generalMessage, tag, userId));
 			}
 		}

@@ -5,10 +5,10 @@ package net.mysocio.data.messages;
 
 import net.mysocio.data.UserObject;
 
-import com.github.jmkgreen.morphia.annotations.Entity;
-import com.github.jmkgreen.morphia.annotations.Index;
-import com.github.jmkgreen.morphia.annotations.Indexes;
-import com.github.jmkgreen.morphia.annotations.Reference;
+import com.google.code.morphia.annotations.Entity;
+import com.google.code.morphia.annotations.Index;
+import com.google.code.morphia.annotations.Indexes;
+import com.google.code.morphia.annotations.Reference;
 
 /**
  * @author Oslocomp

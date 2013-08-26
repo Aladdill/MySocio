@@ -20,7 +20,7 @@ import net.mysocio.data.contacts.Contact;
 import net.mysocio.data.messages.GeneralMessage;
 import net.mysocio.data.messages.facebook.FacebookMessage;
 
-import com.github.jmkgreen.morphia.annotations.Entity;
+import com.google.code.morphia.annotations.Entity;
 
 import facebook4j.Facebook;
 import facebook4j.FacebookException;

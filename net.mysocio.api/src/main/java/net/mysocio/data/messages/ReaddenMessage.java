@@ -5,7 +5,7 @@ package net.mysocio.data.messages;
 
 import net.mysocio.data.UserObject;
 
-import com.github.jmkgreen.morphia.annotations.Entity;
+import com.google.code.morphia.annotations.Entity;
 
 /**
  * @author Oslocomp

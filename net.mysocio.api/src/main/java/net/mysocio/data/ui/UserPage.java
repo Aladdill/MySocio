@@ -5,7 +5,7 @@ package net.mysocio.data.ui;
 
 import net.mysocio.data.SocioObject;
 
-import com.github.jmkgreen.morphia.annotations.Entity;
+import com.google.code.morphia.annotations.Entity;
 
 /**
  * @author Oslocomp

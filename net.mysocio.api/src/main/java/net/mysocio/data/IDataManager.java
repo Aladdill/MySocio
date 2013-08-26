@@ -55,7 +55,7 @@ public interface IDataManager {
 
 	public void sendPackageToRoute(String to, SocioObject object) throws Exception;
 
-	boolean isNewMessage(String userId, GeneralMessage message);
+	public<T extends GeneralMessage> boolean isNewMessage(String userId, T message, Class<T> T);
 
 	void setMessagesReadden(String userId, String tagId, UserTags tags);
 

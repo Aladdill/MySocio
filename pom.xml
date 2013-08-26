@@ -108,7 +108,7 @@
 			<dependency>
 				<groupId>org.mongodb</groupId>
 				<artifactId>mongo-java-driver</artifactId>
-				<version>2.10.1</version>
+				<version>2.11.2</version>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.camel</groupId>
@@ -267,9 +267,9 @@
 				<version>1.2.16</version>
 			</dependency>
 			<dependency>
-				<groupId>com.github.jmkgreen.morphia</groupId>
+				<groupId>com.google.code.morphia</groupId>
 				<artifactId>morphia</artifactId>
-				<version>1.2.3</version>
+				<version>0.102</version>
 			</dependency>
 			<dependency>
 				<groupId>org.facebook4j</groupId>

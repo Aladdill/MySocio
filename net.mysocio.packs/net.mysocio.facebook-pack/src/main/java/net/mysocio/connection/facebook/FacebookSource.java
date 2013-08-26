@@ -8,7 +8,7 @@ import net.mysocio.data.accounts.facebook.FacebookAccount;
 import net.mysocio.data.management.DataManagerFactory;
 import net.mysocio.data.messages.facebook.FacebookMessage;
 
-import com.github.jmkgreen.morphia.annotations.Entity;
+import com.google.code.morphia.annotations.Entity;
 
 /**
  * @author Aladdin

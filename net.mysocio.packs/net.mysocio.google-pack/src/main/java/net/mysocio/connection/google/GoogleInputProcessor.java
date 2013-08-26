@@ -10,7 +10,7 @@ import net.mysocio.data.management.camel.UserMessageProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.jmkgreen.morphia.annotations.Transient;
+import com.google.code.morphia.annotations.Transient;
 
 /**
  * @author Aladdin

@@ -22,7 +22,7 @@ import net.mysocio.ui.data.objects.facebook.FacebookUiVideoMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.jmkgreen.morphia.annotations.Transient;
+import com.google.code.morphia.annotations.Transient;
 
 import facebook4j.Application;
 import facebook4j.Facebook;
@@ -166,7 +166,7 @@ public class FacebookMessagesProcessor extends UserMessageProcessor {
 				logger.debug("Got duplicate Facebook message.",e);
 				return;
 			}
-			addMessageForTag(message, message.getUserId());
+			addMessageForTag(message, FacebookMessage.class, message.getUserId());
 		}
 		lastUpdate = to;
 	}

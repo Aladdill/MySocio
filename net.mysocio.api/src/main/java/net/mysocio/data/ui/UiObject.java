@@ -10,8 +10,8 @@ import java.util.Map;
 
 import net.mysocio.data.NamedObject;
 
-import com.github.jmkgreen.morphia.annotations.Entity;
-import com.github.jmkgreen.morphia.annotations.Reference;
+import com.google.code.morphia.annotations.Entity;
+import com.google.code.morphia.annotations.Reference;
 
 /**
  * @author Aladdin

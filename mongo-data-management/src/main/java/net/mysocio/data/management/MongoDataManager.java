@@ -37,9 +37,9 @@ import org.bson.types.ObjectId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.github.jmkgreen.morphia.Datastore;
-import com.github.jmkgreen.morphia.Key;
-import com.github.jmkgreen.morphia.query.Query;
+import com.google.code.morphia.Datastore;
+import com.google.code.morphia.Key;
+import com.google.code.morphia.query.Query;
 import com.mongodb.BasicDBObject;
 import com.mongodb.QueryBuilder;
 
@@ -151,14 +151,14 @@ public class MongoDataManager implements IDataManager {
 	}
 	
 	@Override
-	public boolean isNewMessage(String userId, GeneralMessage message){
+	public<T extends GeneralMessage> boolean isNewMessage(String userId, T message, Class<T> T){
 		Cache cache = cm.getCache("Messages");
 		String key = message.getUniqueFieldValue() + userId;
 		Element element = cache.get(key);
 		if (element != null){
 			return (Boolean)element.getValue();
 		}
-		Query<UnreaddenMessage>  isUnread = ds.createQuery(UnreaddenMessage.class).field("userId").equal(userId).field("message").equal(message);
+		Query<UnreaddenMessage>  isUnread = ds.createQuery(UnreaddenMessage.class).field("userId").equal(userId).field("message").equal(new Key<T>(T, message.getId()));
 		Query<ReaddenMessage>  isRead = ds.createQuery(ReaddenMessage.class).field("userId").equal(userId).field("messageUniqueId").equal(message.getUniqueFieldValue().toString());
 		Boolean newMessage = isUnread.countAll() <= 0 && isRead.countAll() <= 0;
 		element = new Element(key, new Boolean(false));

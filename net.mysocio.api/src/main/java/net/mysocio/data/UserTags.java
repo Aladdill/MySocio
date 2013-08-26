@@ -6,7 +6,8 @@ package net.mysocio.data;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.github.jmkgreen.morphia.annotations.Entity;
+import com.google.code.morphia.annotations.Embedded;
+import com.google.code.morphia.annotations.Entity;
 
 /**
  * @author Aladdin
@@ -22,7 +23,7 @@ public class UserTags extends SocioObject {
 	private int range = 8;
 	private String selectedTag = UserTags.ALL_TAGS;
 	
-	@com.github.jmkgreen.morphia.annotations.Embedded
+	@Embedded
 	private List<SocioTag> children = new ArrayList<SocioTag>();
 	/**
 	 * 

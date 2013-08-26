@@ -203,10 +203,6 @@ function showDiv(id) {
 }
 function onFailure(data) {
 	removeLoginCookie();
-//	if (data.responseText == "restart"){
-//		loadStartPage();
-//		return;
-//	}
 	showError(data.responseText);
 }
 function showError(error) {
@@ -411,7 +407,7 @@ function loadStartPage() {
 		}else{
 			$("#SiteBody").html(data);
 		}
-	}).fail(onFailure).done(afterfunction);
+	}).fail(onFailure);
 }
 function getMessages(id, resetContainer) {
 	if ($("#data_container").data("gettingMessages")){

@@ -11,8 +11,12 @@
 	<description>MySocio API</description>
 	<dependencies>
 		<dependency>
-			<groupId>com.github.jmkgreen.morphia</groupId>
+			<groupId>com.google.code.morphia</groupId>
 			<artifactId>morphia</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.mongodb</groupId>
+			<artifactId>mongo-java-driver</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.camel</groupId>

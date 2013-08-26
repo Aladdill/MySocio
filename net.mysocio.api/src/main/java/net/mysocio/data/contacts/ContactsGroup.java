@@ -7,7 +7,7 @@ import java.util.List;
 
 import net.mysocio.data.NamedObject;
 
-import com.github.jmkgreen.morphia.annotations.Entity;
+import com.google.code.morphia.annotations.Entity;
 
 /**
  * @author Aladdin
