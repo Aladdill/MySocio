@@ -4,10 +4,22 @@
 package net.mysocio.connection.vkontakte;
 
 import java.text.ParseException;
+import java.util.Iterator;
+import java.util.List;
 
+import net.mysocio.authentication.vkontakte.VkontakteAuthenticationManager;
+import net.mysocio.data.accounts.vkontakte.VkontakteAccount;
+import net.mysocio.data.contacts.Contact;
+import net.mysocio.data.contacts.vkontakte.VkontakteContact;
+import net.mysocio.data.management.DataManagerFactory;
 import net.mysocio.data.management.camel.UserMessageProcessor;
 import net.mysocio.data.messages.vkontakte.VkontakteMessage;
 
+import org.codehaus.jackson.JsonFactory;
+import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.JsonProcessingException;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.scribe.model.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,6 +39,7 @@ public class VkontakteInputProcessor extends UserMessageProcessor {
 			.getLogger(VkontakteInputProcessor.class);
 	private static final long MONTH = 30*24*3600l;
 	private Long lastUpdate = 0l;
+	private String url = "https://api.vkontakte.ru/method/wall.get?owner_id=vkontakte_id&filter=owner";
 	private String token;
 	private String accountId;
 
@@ -53,6 +66,24 @@ public class VkontakteInputProcessor extends UserMessageProcessor {
 			logger.debug("Got trying to get messages for vkontakte account: " + accountId);
 		}
 		long to = System.currentTimeMillis();
+		VkontakteAuthenticationManager manager = new VkontakteAuthenticationManager();
+		VkontakteAccount account = DataManagerFactory.getDataManager().getObject(VkontakteAccount.class, getAccountId());
+		List<Contact> contacts = account.getContacts();
+		ObjectMapper mapper = new ObjectMapper(new JsonFactory());
+		for (Contact contact : contacts) {
+			VkontakteContact vkcontact = (VkontakteContact)contact;
+			Response response = manager.getOauthResponse(token, url.replace("vkontakte_id", vkcontact.getVkontakteId()));
+			try {
+				JsonNode root = mapper.readTree(response.getBody());
+				System.out.println(root.getElements().next());
+				Iterator<JsonNode> elements = root.get("response").getElements();
+				while(elements.hasNext()){
+					JsonNode next = elements.next();
+				}
+			} catch (JsonProcessingException e) {
+				e.printStackTrace();
+			}
+		}
 		long from = lastUpdate;
 		from = to - MONTH;
 		lastUpdate = to;

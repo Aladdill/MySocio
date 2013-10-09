@@ -53,6 +53,10 @@ public class VkontakteAuthenticationManager extends AbstractOauth2Manager {
 	protected Class<? extends Api> getApiClass() {
 		return VkontakteApi.class;
 	}
+	
+	public Response getOauthResponse(String token, String url) throws Exception {
+		return getOauthedResponse(new Token(token, getMySocioSecret()), url, getService());
+	}
 
 	@Override
 	protected Account getAccount(Token accessToken) throws Exception {
