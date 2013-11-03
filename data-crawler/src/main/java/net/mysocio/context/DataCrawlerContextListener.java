@@ -39,6 +39,8 @@ import org.slf4j.LoggerFactory;
 
 import com.google.code.morphia.Datastore;
 import com.google.code.morphia.Morphia;
+import com.google.code.morphia.logging.MorphiaLoggerFactory;
+import com.google.code.morphia.logging.slf4j.SLF4JLogrImplFactory;
 import com.mongodb.DB;
 
 /**
@@ -123,5 +125,6 @@ public class DataCrawlerContextListener extends AbstractMongoInitializer impleme
 				new LinkedinAuthenticationManager());
 		AccountsManager.getInstance().addAccount(LjAccount.ACCOUNT_TYPE,
 				new LjAuthenticationManager());
+		MorphiaLoggerFactory.registerLogger(SLF4JLogrImplFactory.class);
 	}
 }

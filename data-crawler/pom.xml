@@ -56,6 +56,10 @@
 			<artifactId>morphia</artifactId>
 		</dependency>
 		<dependency>
+		    <groupId>com.google.code.morphia</groupId>
+		    <artifactId>morphia-logging-slf4j</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
 			<scope>provided</scope>
