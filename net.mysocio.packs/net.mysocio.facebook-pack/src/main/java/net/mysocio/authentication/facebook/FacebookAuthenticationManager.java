@@ -119,12 +119,12 @@ public class FacebookAuthenticationManager extends AbstractOauth2Manager {
 					friendList.getIds().add(friend.getId());
 				}
 			} catch (Exception e1) {
-				logger.error("Failed to get friends list members " + friendlist.getName() + " for FB acc " + facebook.getEmail());
+				logger.error("Failed to get friends list members " + friendlist.getName() + " for FB acc " + facebook.getMe().getEmail());
 			}
 			try {
 				DataManagerFactory.getDataManager().saveObject(friendList);
 			} catch (Exception e) {
-				logger.error("Failed to save friends list " + friendlist.getName() + " for FB acc " + facebook.getEmail());
+				logger.error("Failed to save friends list " + friendlist.getName() + " for FB acc " + facebook.getMe().getEmail());
 			}
 			friendsLists.add(friendList);
 		}

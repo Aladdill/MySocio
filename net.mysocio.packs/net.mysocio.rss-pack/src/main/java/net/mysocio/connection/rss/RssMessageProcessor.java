@@ -59,7 +59,8 @@ public class RssMessageProcessor extends UserMessageProcessor {
 	}
 
 	protected void processMessage(SyndEntryImpl entry, RssMessage message) throws Exception {
-		message.setLink(entry.getLink());
+		//We are adding key to the end of the link to differ it from FB links  
+		message.setLink(entry.getLink() + "#mysocioRSS");
 		if (entry.getPublishedDate() != null){
 			message.setDate(entry.getPublishedDate().getTime());
 		}else{
