@@ -66,24 +66,24 @@ public class VkontakteInputProcessor extends UserMessageProcessor {
 			logger.debug("Got trying to get messages for vkontakte account: " + accountId);
 		}
 		long to = System.currentTimeMillis();
-		VkontakteAuthenticationManager manager = new VkontakteAuthenticationManager();
-		VkontakteAccount account = DataManagerFactory.getDataManager().getObject(VkontakteAccount.class, getAccountId());
-		List<Contact> contacts = account.getContacts();
-		ObjectMapper mapper = new ObjectMapper(new JsonFactory());
-		for (Contact contact : contacts) {
-			VkontakteContact vkcontact = (VkontakteContact)contact;
-			Response response = manager.getOauthResponse(token, url.replace("vkontakte_id", vkcontact.getVkontakteId()));
-			try {
-				JsonNode root = mapper.readTree(response.getBody());
-				System.out.println(root.getElements().next());
-				Iterator<JsonNode> elements = root.get("response").getElements();
-				while(elements.hasNext()){
-					JsonNode next = elements.next();
-				}
-			} catch (JsonProcessingException e) {
-				e.printStackTrace();
-			}
-		}
+//		VkontakteAuthenticationManager manager = new VkontakteAuthenticationManager();
+//		VkontakteAccount account = DataManagerFactory.getDataManager().getObject(VkontakteAccount.class, getAccountId());
+//		List<Contact> contacts = account.getContacts();
+//		ObjectMapper mapper = new ObjectMapper(new JsonFactory());
+//		for (Contact contact : contacts) {
+//			VkontakteContact vkcontact = (VkontakteContact)contact;
+//			Response response = manager.getOauthResponse(token, url.replace("vkontakte_id", vkcontact.getVkontakteId()));
+//			try {
+//				JsonNode root = mapper.readTree(response.getBody());
+//				System.out.println(root.getElements().next());
+//				Iterator<JsonNode> elements = root.get("response").getElements();
+//				while(elements.hasNext()){
+//					JsonNode next = elements.next();
+//				}
+//			} catch (JsonProcessingException e) {
+//				e.printStackTrace();
+//			}
+//		}
 		long from = lastUpdate;
 		from = to - MONTH;
 		lastUpdate = to;

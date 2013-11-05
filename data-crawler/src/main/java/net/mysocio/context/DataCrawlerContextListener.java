@@ -73,6 +73,7 @@ public class DataCrawlerContextListener extends AbstractMongoInitializer impleme
 	public void contextInitialized(ServletContextEvent arg0) {
 		System.setProperty("sun.net.http.allowRestrictedHeaders", "true");
 		System.setProperty("file.encoding", "UTF-8");
+		MorphiaLoggerFactory.registerLogger(SLF4JLogrImplFactory.class);
 		Morphia morphia = new Morphia();
 		morphia.mapPackage("net.mysocio.data")
 				.mapPackage("net.mysocio.ui.data.objects")
@@ -125,6 +126,5 @@ public class DataCrawlerContextListener extends AbstractMongoInitializer impleme
 				new LinkedinAuthenticationManager());
 		AccountsManager.getInstance().addAccount(LjAccount.ACCOUNT_TYPE,
 				new LjAuthenticationManager());
-		MorphiaLoggerFactory.registerLogger(SLF4JLogrImplFactory.class);
 	}
 }

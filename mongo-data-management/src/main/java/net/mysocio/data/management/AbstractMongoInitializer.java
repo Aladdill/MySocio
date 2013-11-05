@@ -71,7 +71,7 @@ public class AbstractMongoInitializer {
 			String dbPort, String dbServer, String dbPass)
 			throws UnknownHostException {
 		Mongo mongoClient = getMongoClient(dbServer, dbPort, dbName, dbUser, dbPass);
-		Datastore ds = new Morphia().createDatastore(mongoClient, dbName);
+		Datastore ds = new Morphia().createDatastore(mongoClient, AuthenticationResourcesManager.getResource(dbName));
 		ds.ensureCaps();
 		ds.ensureIndexes();
 		return ds;
