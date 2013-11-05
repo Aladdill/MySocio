@@ -4,6 +4,7 @@
 package net.mysocio.data.management;
 
 import java.net.UnknownHostException;
+import java.util.Arrays;
 
 import com.google.code.morphia.Datastore;
 import com.google.code.morphia.Morphia;
@@ -11,7 +12,9 @@ import com.mongodb.BasicDBObjectBuilder;
 import com.mongodb.DB;
 import com.mongodb.DBObject;
 import com.mongodb.Mongo;
-import com.mongodb.MongoURI;
+import com.mongodb.MongoClient;
+import com.mongodb.MongoCredential;
+import com.mongodb.ServerAddress;
 
 /**
  * @author Aladdin
@@ -39,13 +42,18 @@ public class AbstractMongoInitializer {
 
 	public static DB getMongoDatabase(String dbUser, String dbName, String dbPort,
 			String dbServer, String dbPass) throws UnknownHostException {
-		MongoURI uri = new MongoURI("mongodb://" + AuthenticationResourcesManager.getResource(dbServer) + 
-				":" + AuthenticationResourcesManager.getResource(dbPort));
-		Mongo connectionBean = new Mongo(uri);
-		DB db = connectionBean.getDB(AuthenticationResourcesManager.getResource(dbName));
+		Mongo mongoClient = getMongoClient(dbServer, dbPort, dbName, dbUser, dbPass);
+		DB db = mongoClient.getDB(AuthenticationResourcesManager.getResource(dbName));
 		db.authenticate(AuthenticationResourcesManager.getResource(dbUser), 
 				AuthenticationResourcesManager.getResource(dbPass).toCharArray());
 		return db;
+	}
+
+	public static Mongo getMongoClient(String dbServer, String dbPort, String dbName, String dbUser, String dbPass)
+			throws UnknownHostException {
+		MongoClient mongoClient = new MongoClient(new ServerAddress(AuthenticationResourcesManager.getResource(dbServer), Integer.parseInt(AuthenticationResourcesManager.getResource(dbPort))),
+                Arrays.asList(MongoCredential.createMongoCRCredential(AuthenticationResourcesManager.getResource(dbUser), AuthenticationResourcesManager.getResource(dbName), AuthenticationResourcesManager.getResource(dbPass).toCharArray())));
+		return mongoClient;
 	}
 
 	public static void initCappedCollections(DB db) {
@@ -62,12 +70,8 @@ public class AbstractMongoInitializer {
 	public static Datastore getMongoDatastore(String dbUser, String dbName,
 			String dbPort, String dbServer, String dbPass)
 			throws UnknownHostException {
-		Datastore ds = new Morphia().createDatastore(new Mongo(
-				AuthenticationResourcesManager.getResource(dbServer),
-				Integer.parseInt(AuthenticationResourcesManager.getResource(dbPort))),
-				AuthenticationResourcesManager.getResource(dbName),
-				AuthenticationResourcesManager.getResource(dbUser),
-				AuthenticationResourcesManager.getResource(dbPass).toCharArray());
+		Mongo mongoClient = getMongoClient(dbServer, dbPort, dbName, dbUser, dbPass);
+		Datastore ds = new Morphia().createDatastore(mongoClient, dbName);
 		ds.ensureCaps();
 		ds.ensureIndexes();
 		return ds;
