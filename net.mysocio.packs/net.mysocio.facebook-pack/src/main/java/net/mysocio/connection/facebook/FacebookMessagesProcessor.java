@@ -164,7 +164,6 @@ public class FacebookMessagesProcessor extends UserMessageProcessor {
 			} catch (DuplicateMySocioObjectException e) {
 				//if it's duplicate message - we ignore it
 				logger.debug("Got duplicate Facebook message.",e);
-				return;
 			}
 			addMessageForTag(message, FacebookMessage.class, message.getUserId());
 		}

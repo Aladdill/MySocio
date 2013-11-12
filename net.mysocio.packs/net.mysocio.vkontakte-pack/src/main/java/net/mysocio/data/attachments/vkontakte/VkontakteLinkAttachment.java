@@ -33,5 +33,12 @@ public class VkontakteLinkAttachment extends VkontakteAttachment{
 	public void setImageSrc(String imageSrc) {
 		this.imageSrc = imageSrc;
 	}
-	
+	@Override
+	public String replacePlaceholders(String template) {
+		String message = template.replace("message.picture", getImageSrc());
+		message = message.replace("message.description", getDescription());
+		message = message.replace("message.text", getTitle());
+		message = message.replace("message.link", getUrl());
+		return message;
+	}
 }

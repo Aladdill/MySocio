@@ -11,7 +11,7 @@ import com.google.code.morphia.annotations.Entity;
  */
 @Entity("ui_objects")
 public class VkontakteUiVideoMessage extends VkontakteUiMessage {
-	public static final String NAME = "FacebookVideoMessage";
+	public static final String NAME = "VkontakteVideoMessage";
 
 	/**
 	 * 
@@ -25,6 +25,6 @@ public class VkontakteUiVideoMessage extends VkontakteUiMessage {
 	
 	@Override
 	public String getPageFile() {
-		return "fbVideoMessage.html";
+		return "vkVideoMessage.html";
 	}
 }

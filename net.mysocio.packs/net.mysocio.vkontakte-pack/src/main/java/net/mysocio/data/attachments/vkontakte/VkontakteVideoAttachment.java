@@ -33,4 +33,11 @@ public class VkontakteVideoAttachment extends VkontakteAttachment{
 	public void setDescription(String description) {
 		this.description = description;
 	}
+	@Override
+	public String replacePlaceholders(String template) {
+		String message = template.replace("message.picture", getSrc());
+		message = message.replace("message.description", getDescription());
+		message = message.replace("message.text", getTitle());
+		return message;
+	}
 }

@@ -29,7 +29,10 @@ public class VkontakteMessage extends UserMessage {
 	@Override
 	public String replacePlaceholders(String template) {
 		String message = super.replacePlaceholders(template);
-		message = message.replace("message.link", getLink());
+		message = message.replace("message.outer.link", getLink());
+		if (attachment != null){
+			message = attachment.replacePlaceholders(message);
+		}
 		return message;
 	}
 

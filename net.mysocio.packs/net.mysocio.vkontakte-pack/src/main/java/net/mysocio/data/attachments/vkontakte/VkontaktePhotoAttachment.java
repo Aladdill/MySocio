@@ -26,4 +26,10 @@ public class VkontaktePhotoAttachment extends VkontakteAttachment{
 	public void setText(String text) {
 		this.text = text;
 	}
+	@Override
+	public String replacePlaceholders(String template) {
+		String message = template.replace("message.picture", getSrcBig());
+		message = message.replace("message.text", getText());
+		return message;
+	}
 }
