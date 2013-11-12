@@ -11,7 +11,7 @@ import com.google.code.morphia.annotations.Entity;
  */
 @Entity("ui_objects")
 public class VkontakteUiPhotoMessage extends VkontakteUiMessage {
-	public static final String NAME = "FacebookPhotoMessage";
+	public static final String NAME = "VkontaktePhotoMessage";
 
 	/**
 	 * 
