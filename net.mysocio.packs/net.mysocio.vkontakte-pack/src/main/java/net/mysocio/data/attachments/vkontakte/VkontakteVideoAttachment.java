@@ -4,6 +4,10 @@ import com.google.code.morphia.annotations.Entity;
 
 @Entity
 public class VkontakteVideoAttachment extends VkontakteAttachment{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String src;
 	private String srcBig;
 	private String title;
@@ -35,9 +39,16 @@ public class VkontakteVideoAttachment extends VkontakteAttachment{
 	}
 	@Override
 	public String replacePlaceholders(String template) {
-		String message = template.replace("message.picture", getSrc());
-		message = message.replace("message.description", getDescription());
-		message = message.replace("message.text", getTitle());
+		String message = template;
+		if (srcBig != null){
+			message = template.replace("message.picture", getSrc());
+		}
+		if (description != null){
+			message = message.replace("message.description", getDescription());
+		}
+		if (title != null){
+			message = message.replace("message.text", getTitle());
+		}
 		return message;
 	}
 }

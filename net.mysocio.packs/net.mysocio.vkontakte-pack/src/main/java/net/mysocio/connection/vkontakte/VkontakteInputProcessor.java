@@ -72,30 +72,61 @@ public class VkontakteInputProcessor extends UserMessageProcessor {
 		if (attachmentNode != null){
 			String type = attachmentNode.get("type").getTextValue();
 			VkontakteAttachment attachment = null;
+			JsonNode src = attachmentNode.get("src");
+			JsonNode srcBig = attachmentNode.get("src_big");
 			if (type.equals("photo") || type.equals("posted_photo") || type.equals("graffiti")){
 				attachment = new VkontaktePhotoAttachment();
+				JsonNode text = attachmentNode.get("text");
 				message.setUiObjectName(VkontakteUiPhotoMessage.NAME);
-				((VkontaktePhotoAttachment)attachment).setSrc(attachmentNode.get("src").getTextValue());
-				((VkontaktePhotoAttachment)attachment).setSrcBig(attachmentNode.get("src_big").getTextValue());
-				((VkontaktePhotoAttachment)attachment).setText(attachmentNode.get("text").getTextValue());
-			}else if (type.equals("link") || type.equals("note")){
-				attachment = new VkontakteLinkAttachment();
-				message.setUiObjectName(VkontakteUiLinkMessage.NAME);
-				((VkontakteLinkAttachment)attachment).setUrl(attachmentNode.get("url").getTextValue());
-				((VkontakteLinkAttachment)attachment).setTitle(attachmentNode.get("title").getTextValue());
-				((VkontakteLinkAttachment)attachment).setDescription(attachmentNode.get("description").getTextValue());
-				((VkontakteLinkAttachment)attachment).setImageSrc(attachmentNode.get("image_src").getTextValue());
-			}else if (type.equals("video")){
-				attachment = new VkontakteVideoAttachment();
-				message.setUiObjectName(VkontakteUiVideoMessage.NAME);
-				((VkontakteVideoAttachment)attachment).setSrc(attachmentNode.get("src").getTextValue());
-				((VkontakteVideoAttachment)attachment).setSrcBig(attachmentNode.get("src_big").getTextValue());
-				((VkontakteVideoAttachment)attachment).setTitle(attachmentNode.get("title").getTextValue());
-				((VkontakteVideoAttachment)attachment).setDescription(attachmentNode.get("description").getTextValue());
+				if (src != null){
+					((VkontaktePhotoAttachment)attachment).setSrc(src.getTextValue());
+				}
+				if (srcBig != null){
+					((VkontaktePhotoAttachment)attachment).setSrcBig(srcBig.getTextValue());
+				}
+				if (text != null){
+					((VkontaktePhotoAttachment)attachment).setText(text.getTextValue());
+				}
+			} else {
+				JsonNode title = attachmentNode.get("title");
+				JsonNode description = attachmentNode.get("description");
+				if (type.equals("link") || type.equals("note")){
+					attachment = new VkontakteLinkAttachment();
+					JsonNode imageSrc = attachmentNode.get("image_src");
+					JsonNode urlNode = attachmentNode.get("url");
+					message.setUiObjectName(VkontakteUiLinkMessage.NAME);
+					if (urlNode != null){
+						((VkontakteLinkAttachment)attachment).setUrl(urlNode.getTextValue());
+					}
+					if (title != null){
+						((VkontakteLinkAttachment)attachment).setTitle(title.getTextValue());
+					}
+					if (description != null){
+						((VkontakteLinkAttachment)attachment).setDescription(description.getTextValue());
+					}
+					if (imageSrc != null){
+						((VkontakteLinkAttachment)attachment).setImageSrc(imageSrc.getTextValue());
+					}
+				}else if (type.equals("video")){
+					attachment = new VkontakteVideoAttachment();
+					message.setUiObjectName(VkontakteUiVideoMessage.NAME);
+					if (src != null){
+						((VkontakteVideoAttachment)attachment).setSrc(src.getTextValue());
+					}
+					if (srcBig != null){
+						((VkontakteVideoAttachment)attachment).setSrcBig(srcBig.getTextValue());
+					}
+					if (title != null){
+						((VkontakteVideoAttachment)attachment).setTitle(title.getTextValue());
+					}
+					if (description != null){
+						((VkontakteVideoAttachment)attachment).setDescription(description.getTextValue());
+					}
+				}
 			}
 			message.setAttachment(attachment);
 		}
-		message.setVkId(messageJson.get("from_id").getTextValue() + "_" + messageJson.get("id").getTextValue());
+		message.setVkId("vk_" + messageJson.get("from_id") + "_" + messageJson.get("id"));
 		message.setTitle(messageJson.get("text").getTextValue());
 		message.setDate(messageJson.get("date").getLongValue());
 		return message;
@@ -106,24 +137,6 @@ public class VkontakteInputProcessor extends UserMessageProcessor {
 			logger.debug("Got trying to get messages for vkontakte account: " + accountId);
 		}
 		long to = System.currentTimeMillis();
-//		VkontakteAuthenticationManager manager = new VkontakteAuthenticationManager();
-//		VkontakteAccount account = DataManagerFactory.getDataManager().getObject(VkontakteAccount.class, getAccountId());
-//		List<Contact> contacts = account.getContacts();
-//		ObjectMapper mapper = new ObjectMapper(new JsonFactory());
-//		for (Contact contact : contacts) {
-//			VkontakteContact vkcontact = (VkontakteContact)contact;
-//			Response response = manager.getOauthResponse(token, url.replace("vkontakte_id", vkcontact.getVkontakteId()));
-//			try {
-//				JsonNode root = mapper.readTree(response.getBody());
-//				System.out.println(root.getElements().next());
-//				Iterator<JsonNode> elements = root.get("response").getElements();
-//				while(elements.hasNext()){
-//					JsonNode next = elements.next();
-//				}
-//			} catch (JsonProcessingException e) {
-//				e.printStackTrace();
-//			}
-//		}
 		long from = lastUpdate;
 		
 		if (from == 0 || (to - from) > MONTH){
@@ -132,10 +145,12 @@ public class VkontakteInputProcessor extends UserMessageProcessor {
 		VkontakteAuthenticationManager manager = new VkontakteAuthenticationManager();
 		VkontakteAccount account = DataManagerFactory.getDataManager().getObject(VkontakteAccount.class, getAccountId());
 		List<Contact> contacts = account.getContacts();
+		logger.debug("Got list of contacts of size: " + contacts.size());
 		ObjectMapper mapper = new ObjectMapper(new JsonFactory());
 		for (Contact contact : contacts) {
 			VkontakteContact vkcontact = (VkontakteContact)contact;
 			Response response = manager.getOauthResponse(token, url.replace("vkontakte_id", vkcontact.getVkontakteId()));
+			logger.debug("Got response for contact with id " + vkcontact.getVkontakteId() + " with length: " + response.getBody().length());
 			try {
 				JsonNode root = mapper.readTree(response.getBody());
 				Iterator<JsonNode> elements = root.get("response").getElements();

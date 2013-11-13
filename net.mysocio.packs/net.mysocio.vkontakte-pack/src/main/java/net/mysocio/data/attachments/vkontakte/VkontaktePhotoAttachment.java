@@ -4,6 +4,10 @@ import com.google.code.morphia.annotations.Entity;
 
 @Entity
 public class VkontaktePhotoAttachment extends VkontakteAttachment{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String src;
 	private String srcBig;
 	private String text;
@@ -28,8 +32,13 @@ public class VkontaktePhotoAttachment extends VkontakteAttachment{
 	}
 	@Override
 	public String replacePlaceholders(String template) {
-		String message = template.replace("message.picture", getSrcBig());
-		message = message.replace("message.text", getText());
+		String message = template;
+		if (srcBig != null){
+			message = message.replace("message.picture", getSrcBig());
+		}
+		if (text != null){
+			message = message.replace("message.text", getText());
+		}
 		return message;
 	}
 }
