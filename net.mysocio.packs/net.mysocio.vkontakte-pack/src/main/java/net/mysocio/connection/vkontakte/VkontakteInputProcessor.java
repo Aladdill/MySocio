@@ -21,6 +21,7 @@ import net.mysocio.data.management.camel.UserMessageProcessor;
 import net.mysocio.data.management.exceptions.DuplicateMySocioObjectException;
 import net.mysocio.data.messages.vkontakte.VkontakteMessage;
 import net.mysocio.ui.data.objects.vkontakte.VkontakteUiLinkMessage;
+import net.mysocio.ui.data.objects.vkontakte.VkontakteUiMessage;
 import net.mysocio.ui.data.objects.vkontakte.VkontakteUiPhotoMessage;
 import net.mysocio.ui.data.objects.vkontakte.VkontakteUiVideoMessage;
 
@@ -122,13 +123,15 @@ public class VkontakteInputProcessor extends UserMessageProcessor {
 					if (description != null){
 						((VkontakteVideoAttachment)attachment).setDescription(description.getTextValue());
 					}
+				}else{
+					message.setUiObjectName(VkontakteUiMessage.NAME);
 				}
 			}
 			message.setAttachment(attachment);
 		}
-		message.setVkId("vk_" + messageJson.get("from_id") + "_" + messageJson.get("id"));
-		message.setTitle(messageJson.get("text").getTextValue());
+		message.setVkId(messageJson.get("from_id") + "_" + messageJson.get("id"));
 		message.setDate(messageJson.get("date").getLongValue());
+		message.setText(messageJson.get("text").getTextValue());
 		return message;
 	}
 	
@@ -165,6 +168,7 @@ public class VkontakteInputProcessor extends UserMessageProcessor {
 					logger.debug("Got vkontakte message from user " + message.getTitle() + " with id " + message.getVkId());
 					message.setUserPic(contact.getUserpicUrl());
 					message.setUserId((String)contact.getUniqueFieldValue());
+					message.setTitle(contact.getName());
 					try {
 						MessagesManager.getInstance().storeMessage(message);
 					} catch (DuplicateMySocioObjectException e) {

@@ -29,6 +29,10 @@ import net.mysocio.ui.data.objects.facebook.FacebookUiPhotoMessage;
 import net.mysocio.ui.data.objects.facebook.FacebookUiStatusMessage;
 import net.mysocio.ui.data.objects.facebook.FacebookUiVideoMessage;
 import net.mysocio.ui.data.objects.rss.RssUiMessage;
+import net.mysocio.ui.data.objects.vkontakte.VkontakteUiLinkMessage;
+import net.mysocio.ui.data.objects.vkontakte.VkontakteUiMessage;
+import net.mysocio.ui.data.objects.vkontakte.VkontakteUiPhotoMessage;
+import net.mysocio.ui.data.objects.vkontakte.VkontakteUiVideoMessage;
 
 
 
@@ -41,36 +45,23 @@ public class DefaultUiManager extends AbstractUiManager {
 	
 	public static void init(){
 		defaultPages = new HashMap<String, UiObject>();
-		DefaultLoginPage defaultLoginPage = new DefaultLoginPage();
-		defaultPages.put(defaultLoginPage.getCategory()+defaultLoginPage.getName(),defaultLoginPage);
-		AccountLine accountLine = new AccountLine();
-		defaultPages.put(accountLine.getCategory()+accountLine.getName(),accountLine);
-		DefaultAccountLine defaultAccountLine = new DefaultAccountLine();
-		defaultPages.put(defaultAccountLine.getCategory()+defaultAccountLine.getName(),defaultAccountLine);
-		RssLine rssLine = new RssLine();
-		defaultPages.put(rssLine.getCategory()+rssLine.getName(),rssLine);
-		ContactLine contactLine = new ContactLine();
-		defaultPages.put(contactLine.getCategory()+contactLine.getName(),contactLine);
-		DefaultMessage defaultMessage = new DefaultMessage();
-		defaultPages.put(defaultMessage.getCategory()+defaultMessage.getName(),defaultMessage);
-		UserUiMessage userUiMessage = new UserUiMessage();
-		defaultPages.put(userUiMessage.getCategory()+userUiMessage.getName(),userUiMessage);
-		FacebookUiMessage facebookUiMessage = new FacebookUiMessage();
-		defaultPages.put(facebookUiMessage.getCategory()+facebookUiMessage.getName(),facebookUiMessage);
-		facebookUiMessage = new FacebookUiCheckinMessage();
-		defaultPages.put(facebookUiMessage.getCategory()+facebookUiMessage.getName(),facebookUiMessage);
-		facebookUiMessage = new FacebookUiLinkMessage();
-		defaultPages.put(facebookUiMessage.getCategory()+facebookUiMessage.getName(),facebookUiMessage);
-		facebookUiMessage = new FacebookUiPhotoMessage();
-		defaultPages.put(facebookUiMessage.getCategory()+facebookUiMessage.getName(),facebookUiMessage);
-		facebookUiMessage = new FacebookUiStatusMessage();
-		defaultPages.put(facebookUiMessage.getCategory()+facebookUiMessage.getName(),facebookUiMessage);
-		facebookUiMessage = new FacebookUiVideoMessage();
-		defaultPages.put(facebookUiMessage.getCategory()+facebookUiMessage.getName(),facebookUiMessage);
+		UiObject[] basicUiObjects = {new DefaultLoginPage(), new AccountLine(), new DefaultAccountLine(), new RssLine(),
+				new ContactLine(), new DefaultMessage(), new UserUiMessage(), new DefaultSiteBody()};
+		for (UiObject uiObject : basicUiObjects) {
+			defaultPages.put(uiObject.getCategory()+uiObject.getName(),uiObject);
+		}
+		UiObject[] facebookObjects = {new FacebookUiMessage(), new FacebookUiCheckinMessage(), new FacebookUiLinkMessage(),
+				new FacebookUiPhotoMessage(), new FacebookUiStatusMessage(), new FacebookUiVideoMessage()};
+		for (UiObject uiObject : facebookObjects) {
+			defaultPages.put(uiObject.getCategory()+uiObject.getName(),uiObject);
+		}
+		UiObject[] vkontakteObjects = {new VkontakteUiMessage(), new VkontakteUiLinkMessage(),
+				new VkontakteUiPhotoMessage(), new VkontakteUiVideoMessage()};
+		for (UiObject uiObject : vkontakteObjects) {
+			defaultPages.put(uiObject.getCategory()+uiObject.getName(),uiObject);
+		}
 		RssUiMessage rssUiMessage = new RssUiMessage();
 		defaultPages.put(rssUiMessage.getCategory()+rssUiMessage.getName(),rssUiMessage);
-		DefaultSiteBody defaultSiteBody = new DefaultSiteBody();
-		defaultPages.put(defaultSiteBody.getCategory()+defaultSiteBody.getName(),defaultSiteBody);
 	}
 	
 	public String getPage(String category, String name, String userId) throws CorruptedDataException {

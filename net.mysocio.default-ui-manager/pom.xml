@@ -33,5 +33,9 @@
 			<groupId>net.mysocio</groupId>
 			<artifactId>google-pack</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>net.mysocio</groupId>
+			<artifactId>vkontakte-pack</artifactId>
+		</dependency>
 	</dependencies>
 </project>
