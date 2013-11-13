@@ -61,7 +61,16 @@ public class VkontakteMessage extends UserMessage {
 		return "http://vk.com/wall" + vkId;
 	}
 
-
+	@Override
+	public String getUiName() {
+		return uiObjectName;
+	}
+	
+	@Override
+	public String getUiCategory() {
+		return VkontakteUiMessage.CATEGORY;
+	}
+	
 	public String getVkId() {
 		return vkId;
 	}

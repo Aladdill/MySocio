@@ -73,11 +73,12 @@ public class VkontakteInputProcessor extends UserMessageProcessor {
 		if (attachmentNode != null){
 			String type = attachmentNode.get("type").getTextValue();
 			VkontakteAttachment attachment = null;
-			JsonNode src = attachmentNode.get("src");
-			JsonNode srcBig = attachmentNode.get("src_big");
+			attachmentNode = attachmentNode.get(type);
 			if (type.equals("photo") || type.equals("posted_photo") || type.equals("graffiti")){
 				attachment = new VkontaktePhotoAttachment();
 				JsonNode text = attachmentNode.get("text");
+				JsonNode src = attachmentNode.get("src");
+				JsonNode srcBig = attachmentNode.get("src_big");
 				message.setUiObjectName(VkontakteUiPhotoMessage.NAME);
 				if (src != null){
 					((VkontaktePhotoAttachment)attachment).setSrc(src.getTextValue());
@@ -110,12 +111,14 @@ public class VkontakteInputProcessor extends UserMessageProcessor {
 					}
 				}else if (type.equals("video")){
 					attachment = new VkontakteVideoAttachment();
+					JsonNode image = attachmentNode.get("image");
+					JsonNode imageBig = attachmentNode.get("image_big");
 					message.setUiObjectName(VkontakteUiVideoMessage.NAME);
-					if (src != null){
-						((VkontakteVideoAttachment)attachment).setSrc(src.getTextValue());
+					if (image != null){
+						((VkontakteVideoAttachment)attachment).setSrc(image.getTextValue());
 					}
-					if (srcBig != null){
-						((VkontakteVideoAttachment)attachment).setSrcBig(srcBig.getTextValue());
+					if (imageBig != null){
+						((VkontakteVideoAttachment)attachment).setSrcBig(imageBig.getTextValue());
 					}
 					if (title != null){
 						((VkontakteVideoAttachment)attachment).setTitle(title.getTextValue());
@@ -130,7 +133,7 @@ public class VkontakteInputProcessor extends UserMessageProcessor {
 			message.setAttachment(attachment);
 		}
 		message.setVkId(messageJson.get("from_id") + "_" + messageJson.get("id"));
-		message.setDate(messageJson.get("date").getLongValue());
+		message.setDate(messageJson.get("date").getLongValue()*1000);
 		message.setText(messageJson.get("text").getTextValue());
 		return message;
 	}

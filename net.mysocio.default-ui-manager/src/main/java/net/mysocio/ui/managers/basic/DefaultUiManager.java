@@ -8,6 +8,9 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import net.mysocio.data.CorruptedDataException;
 import net.mysocio.data.IDataManager;
 import net.mysocio.data.SocioUser;
@@ -41,35 +44,43 @@ import net.mysocio.ui.data.objects.vkontakte.VkontakteUiVideoMessage;
  *
  */
 public class DefaultUiManager extends AbstractUiManager {
+	private static final Logger logger = LoggerFactory.getLogger(DefaultUiManager.class);
 	private static Map<String, UiObject> defaultPages;
 	
 	public static void init(){
+		logger.debug("Initializing UI objects");
 		defaultPages = new HashMap<String, UiObject>();
+		logger.debug("Initializing basic UI objects");
 		UiObject[] basicUiObjects = {new DefaultLoginPage(), new AccountLine(), new DefaultAccountLine(), new RssLine(),
 				new ContactLine(), new DefaultMessage(), new UserUiMessage(), new DefaultSiteBody()};
 		for (UiObject uiObject : basicUiObjects) {
 			defaultPages.put(uiObject.getCategory()+uiObject.getName(),uiObject);
 		}
+		logger.debug("Initializing facebook UI objects");
 		UiObject[] facebookObjects = {new FacebookUiMessage(), new FacebookUiCheckinMessage(), new FacebookUiLinkMessage(),
 				new FacebookUiPhotoMessage(), new FacebookUiStatusMessage(), new FacebookUiVideoMessage()};
 		for (UiObject uiObject : facebookObjects) {
 			defaultPages.put(uiObject.getCategory()+uiObject.getName(),uiObject);
 		}
+		logger.debug("Initializing vkontakte UI objects");
 		UiObject[] vkontakteObjects = {new VkontakteUiMessage(), new VkontakteUiLinkMessage(),
 				new VkontakteUiPhotoMessage(), new VkontakteUiVideoMessage()};
 		for (UiObject uiObject : vkontakteObjects) {
 			defaultPages.put(uiObject.getCategory()+uiObject.getName(),uiObject);
 		}
+		logger.debug("Initializing RSS UI objects");
 		RssUiMessage rssUiMessage = new RssUiMessage();
 		defaultPages.put(rssUiMessage.getCategory()+rssUiMessage.getName(),rssUiMessage);
 	}
 	
 	public String getPage(String category, String name, String userId) throws CorruptedDataException {
 		String pageKey = category + name;
+		logger.debug("Getting UI object " + pageKey);
 		IDataManager dataManager = DataManagerFactory.getDataManager();
 		String pageHTML = dataManager.getPage(userId, pageKey);
 		if (pageHTML == null){
 			UiObject page = defaultPages.get(pageKey);
+			logger.debug("HTML is: " + pageHTML);
 			if (page == null){
 				throw new CorruptedDataException("Page: " + category + " " + name + " wasn't found.");
 			}

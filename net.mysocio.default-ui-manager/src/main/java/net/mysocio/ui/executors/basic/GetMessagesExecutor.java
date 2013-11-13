@@ -26,9 +26,6 @@ import org.slf4j.LoggerFactory;
  */
 public class GetMessagesExecutor implements ICommandExecutor {
 	private static final Logger logger = LoggerFactory.getLogger(GetContactsExecutor.class);
-	/* (non-Javadoc)
-	 * @see net.mysocio.ui.management.ICommandExecutor#execute(javax.servlet.http.HttpServletRequest)
-	 */
 	@Override
 	public String execute(IConnectionData connectionData) throws CommandExecutionException{
 		StringBuffer output = new StringBuffer();
@@ -37,6 +34,7 @@ public class GetMessagesExecutor implements ICommandExecutor {
 		String messagePage = "";
 		for (GeneralMessage message : messages) {
 			try {
+				logger.debug("Getting message UI object " + message.getUiCategory() + message.getUiName());
 				messagePage = uiManager.getPage(message.getUiCategory(), message.getUiName(), connectionData.getUserId());
 			} catch (CorruptedDataException e) {
 				logger.error("Failed showing messages",e);
