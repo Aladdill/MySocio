@@ -80,16 +80,16 @@ public class DefaultUiManager extends AbstractUiManager {
 		String pageHTML = dataManager.getPage(userId, pageKey);
 		if (pageHTML == null){
 			UiObject page = defaultPages.get(pageKey);
-			logger.debug("HTML is: " + pageHTML);
 			if (page == null){
 				throw new CorruptedDataException("Page: " + category + " " + name + " wasn't found.");
 			}
 			SocioUser user = dataManager.getObject(SocioUser.class, userId);
 			pageHTML = getUiObjectHtml(page , defaultPages , new Locale(user.getLocale()));
-			UserPage userPage =  new UserPage();
-			userPage.setUserId(userId);
-			userPage.setPageHTML(pageHTML);
-			userPage.setPageKey(pageKey);
+			logger.debug("HTML is: " + pageHTML);
+//			UserPage userPage =  new UserPage();
+//			userPage.setUserId(userId);
+//			userPage.setPageHTML(pageHTML);
+//			userPage.setPageKey(pageKey);
 			try {
 				//TODO while working on UI I don't need to save it, remove later 
 //				dataManager.saveObject(userPage);

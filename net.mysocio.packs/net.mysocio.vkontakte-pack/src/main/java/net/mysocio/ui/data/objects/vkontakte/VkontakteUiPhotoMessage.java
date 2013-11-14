@@ -25,6 +25,6 @@ public class VkontakteUiPhotoMessage extends VkontakteUiMessage {
 	
 	@Override
 	public String getPageFile() {
-		return "fbPhotoMessage.html";
+		return "vkPhotoMessage.html";
 	}
 }
