@@ -35,7 +35,9 @@ public class RssMessageProcessor extends UserMessageProcessor {
 		if (logger.isDebugEnabled()){
 			logger.debug("Trying to get messages for feed: " + url);
 		}
+		
 		SyndFeed feed = RssUtils.buldFeed(url);
+		
 		if (feed == null){
 			return;
 		}

@@ -4,7 +4,10 @@
 package net.mysocio.data.management.camel;
 
 import java.net.ConnectException;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import net.mysocio.data.AbstractUserMessagesProcessor;
 import net.mysocio.data.AbstractUserProcessor;
@@ -29,6 +32,8 @@ public class DefaultUserProcessor extends AbstractUserProcessor implements Proce
 	private static final long serialVersionUID = 178995248777936666L;
 	@Transient
 	private static final Logger logger = LoggerFactory.getLogger(DefaultUserProcessor.class);
+	@Transient
+	private Map<String, Long> failures = new HashMap<String, Long>(); 
 
 	/* (non-Javadoc)
 	 * @see org.apache.camel.Processor#process(org.apache.camel.Exchange)
@@ -37,13 +42,21 @@ public class DefaultUserProcessor extends AbstractUserProcessor implements Proce
 		IDataManager dataManager = DataManagerFactory.getDataManager();
 		List<AbstractUserMessagesProcessor> userProcessors = dataManager.getUserProcessors(getUserId());
 		for (AbstractUserMessagesProcessor userProcessor : userProcessors) {
+			String processorId = userProcessor.getId().toString();
+			Long lastFailure = failures.get(processorId);
 			logger.debug("Starting processor with id: " + userProcessor.getId() + " for routeId : " + exchange.getFromRouteId());
+			long now = System.currentTimeMillis();
 			try {
-				userProcessor.process();
+				//if connection failed, we want to retry only after 15 minutes
+				if (lastFailure == null || (now - lastFailure) > 1000*60*15){
+					userProcessor.process();
+				}
 			} catch (ConnectException ce){
+				failures.put(processorId, now);
 				logger.warn("Problem with connection " + userProcessor.getId() + " because of " + ce.getMessage());
 			} catch (Exception e) {
 				//if processor failed for some reason, we want to know it, but not to stop extraction process 
+				failures.put(processorId, now);
 				logger.warn("Problem processing messages for processor with id: " + userProcessor.getId(), e);
 			}
 		}

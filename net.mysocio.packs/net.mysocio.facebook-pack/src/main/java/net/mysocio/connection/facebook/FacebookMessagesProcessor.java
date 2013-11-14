@@ -148,24 +148,30 @@ public class FacebookMessagesProcessor extends UserMessageProcessor {
 			home = facebook.getHome(/*new Reading().since(fromDate)*/);
 		} catch (FacebookException e) {
 			logger.warn("Can't connect to facebook ", e);
-			if (getAccountId()!= null){
-				FacebookAccount account = DataManagerFactory.getDataManager().getObject(FacebookAccount.class, getAccountId());
-				token = account.getToken();
-				facebook = new FacebookFactory().getInstance();
-				facebook.setOAuthAccessToken(new AccessToken(token, null));
-				home = facebook.getHome();
+			try{
+				if (getAccountId()!= null){
+					FacebookAccount account = DataManagerFactory.getDataManager().getObject(FacebookAccount.class, getAccountId());
+					token = account.getToken();
+					facebook = new FacebookFactory().getInstance();
+					facebook.setOAuthAccessToken(new AccessToken(token, null));
+					home = facebook.getHome();
+				}
+			} catch (FacebookException e1) {
+				logger.warn("Can't connect to facebook ", e);
 			}
 		}
-		for (Post post : home) {
-			FacebookMessage message = parseFacebookMessage(post);
-			logger.debug("Got facebook message from user " + message.getTitle() + " with id " + message.getFbId());
-			try {
-				MessagesManager.getInstance().storeMessage(message);
-			} catch (DuplicateMySocioObjectException e) {
-				//if it's duplicate message - we ignore it
-				logger.debug("Got duplicate Facebook message.",e);
+		if (home != null){
+			for (Post post : home) {
+				FacebookMessage message = parseFacebookMessage(post);
+				logger.debug("Got facebook message from user " + message.getTitle() + " with id " + message.getFbId());
+				try {
+					MessagesManager.getInstance().storeMessage(message);
+				} catch (DuplicateMySocioObjectException e) {
+					//if it's duplicate message - we ignore it
+					logger.debug("Got duplicate Facebook message.");
+				}
+				addMessageForTag(message, FacebookMessage.class, message.getUserId());
 			}
-			addMessageForTag(message, FacebookMessage.class, message.getUserId());
 		}
 		lastUpdate = to;
 	}

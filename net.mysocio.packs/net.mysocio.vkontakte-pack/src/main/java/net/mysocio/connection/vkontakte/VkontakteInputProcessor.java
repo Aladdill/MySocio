@@ -159,26 +159,31 @@ public class VkontakteInputProcessor extends UserMessageProcessor {
 			logger.debug("Got response for contact with id " + vkcontact.getVkontakteId() + " with length: " + response.getBody().length());
 			try {
 				JsonNode root = mapper.readTree(response.getBody());
-				Iterator<JsonNode> elements = root.get("response").getElements();
-				if (elements.hasNext()){
-					JsonNode count = elements.next();
-					if (count == null){
-						logger.debug("This strange count is null");
+				if (root != null){
+					JsonNode responseNode = root.get("response");
+					if (responseNode != null){
+						Iterator<JsonNode> elements = responseNode.getElements();
+						if (elements.hasNext()){
+							JsonNode count = elements.next();
+							if (count == null){
+								logger.debug("This strange count is null");
+							}
+						}
+						while(elements.hasNext()){
+							VkontakteMessage message = parseVkontakteMessage(elements.next());
+							logger.debug("Got vkontakte message from user " + message.getTitle() + " with id " + message.getVkId());
+							message.setUserPic(contact.getUserpicUrl());
+							message.setUserId((String)contact.getUniqueFieldValue());
+							message.setTitle(contact.getName());
+							try {
+								MessagesManager.getInstance().storeMessage(message);
+							} catch (DuplicateMySocioObjectException e) {
+								//if it's duplicate message - we ignore it
+								logger.debug("Got duplicate Vkontakte message.");
+							}
+							addMessageForTag(message, VkontakteMessage.class, message.getUserId());
+						}
 					}
-				}
-				while(elements.hasNext()){
-					VkontakteMessage message = parseVkontakteMessage(elements.next());
-					logger.debug("Got vkontakte message from user " + message.getTitle() + " with id " + message.getVkId());
-					message.setUserPic(contact.getUserpicUrl());
-					message.setUserId((String)contact.getUniqueFieldValue());
-					message.setTitle(contact.getName());
-					try {
-						MessagesManager.getInstance().storeMessage(message);
-					} catch (DuplicateMySocioObjectException e) {
-						//if it's duplicate message - we ignore it
-						logger.debug("Got duplicate Vkontakte message.",e);
-					}
-					addMessageForTag(message, VkontakteMessage.class, message.getUserId());
 				}
 			} catch (JsonProcessingException e) {
 				logger.error("Failed to parse vkontakte messages for user " + contact.getName());
