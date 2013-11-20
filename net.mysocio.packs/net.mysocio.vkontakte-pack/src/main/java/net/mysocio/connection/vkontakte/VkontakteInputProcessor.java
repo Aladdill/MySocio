@@ -48,7 +48,6 @@ public class VkontakteInputProcessor extends UserMessageProcessor {
 	private static final Logger logger = LoggerFactory
 			.getLogger(VkontakteInputProcessor.class);
 	private static final long MONTH = 30*24*3600l;
-	private Long lastUpdate = 0l;
 	private String url = "https://api.vkontakte.ru/method/wall.get?owner_id=vkontakte_id&filter=owner";
 	private String token;
 	private String accountId;
@@ -143,7 +142,7 @@ public class VkontakteInputProcessor extends UserMessageProcessor {
 			logger.debug("Got trying to get messages for vkontakte account: " + accountId);
 		}
 		long to = System.currentTimeMillis();
-		long from = lastUpdate;
+		long from = getLastUpdate();
 		
 		if (from == 0 || (to - from) > MONTH){
 			from = to - MONTH;
@@ -189,7 +188,7 @@ public class VkontakteInputProcessor extends UserMessageProcessor {
 				logger.error("Failed to parse vkontakte messages for user " + contact.getName());
 			}
 		}
-		lastUpdate = to;
+		setLastUpdate(to);
 	}
 
 	public String getAccountId() {

@@ -5,18 +5,15 @@ package net.mysocio.connection.rss;
 
 import java.util.List;
 
-import net.mysocio.data.management.MessagesManager;
+import net.mysocio.data.IDataManager;
+import net.mysocio.data.management.DataManagerFactory;
 import net.mysocio.data.management.camel.UserMessageProcessor;
 import net.mysocio.data.messages.rss.RssMessage;
-import net.mysocio.utils.rss.RssUtils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.code.morphia.annotations.Transient;
-import com.sun.syndication.feed.synd.SyndContent;
-import com.sun.syndication.feed.synd.SyndEntryImpl;
-import com.sun.syndication.feed.synd.SyndFeed;
 
 /**
  * @author Aladdin
@@ -32,69 +29,17 @@ public class RssMessageProcessor extends UserMessageProcessor {
 	private String url;
 	
 	public void process() throws Exception {
-		if (logger.isDebugEnabled()){
-			logger.debug("Trying to get messages for feed: " + url);
+		long to = System.currentTimeMillis();
+		long from = getLastUpdate();
+		if (from == 0 || (to - from) > MONTH){
+			from = to - MONTH;
 		}
-		
-		SyndFeed feed = RssUtils.buldFeed(url);
-		
-		if (feed == null){
-			return;
+    	IDataManager dataManager = DataManagerFactory.getDataManager();
+    	List<RssMessage> messages = dataManager.getMessagesAfterDate(RssMessage.class, from, "sourceId", url);
+    	for (RssMessage message : messages) {
+    		addMessageForTag(message, RssMessage.class, url);
 		}
-		List<SyndEntryImpl> entries = feed.getEntries();
-    	if (logger.isDebugEnabled()){
-			logger.debug("Got " + entries.size() + " messages for feed: " + feed.getTitle());
-		}
-    	processMessages(feed, entries);
-	}
-
-	protected void processMessages(SyndFeed feed, List<SyndEntryImpl> entries) throws Exception {
-		for (SyndEntryImpl entry : entries) {
-    		RssMessage message = new RssMessage();
-    		message.setFeedTitle(feed.getTitle());
-    		String language = feed.getLanguage();
-    		if (language != null){
-    			message.setLanguage(language);
-    		}
-    		processMessage(entry, message);
-		}
-	}
-
-	protected void processMessage(SyndEntryImpl entry, RssMessage message) throws Exception {
-		//We are adding key to the end of the link to differ it from FB links  
-		message.setLink(entry.getLink() + "#mysocioRSS");
-		if (entry.getPublishedDate() != null){
-			message.setDate(entry.getPublishedDate().getTime());
-		}else{
-			if (entry.getUpdatedDate() != null){
-				message.setDate(entry.getUpdatedDate().getTime());
-			}else{
-				message.setDate(System.currentTimeMillis());
-			}
-		}
-		String title = entry.getTitle();
-		if (title == null){
-			title = "";
-		}
-		message.setTitle(title);
-		SyndContent description = entry.getDescription();
-		if (description == null){
-			//if message has no text - we ignore it
-			return;
-		}
-		String text = description.getValue();
-		message.setText(text);
-		
-		if (logger.isDebugEnabled()){
-			logger.debug("Message title: " + title);
-			logger.debug("Message text: " + text);
-		}
-		try {
-			MessagesManager.getInstance().storeMessage(message);
-		} catch (Exception e) {
-			//if it's duplicate message - we ignore it
-		}
-		addMessageForTag(message, RssMessage.class, url);
+    	setLastUpdate(to);
 	}
 
 	public String getUrl() {

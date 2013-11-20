@@ -272,6 +272,12 @@ public class MongoDataManager implements IDataManager {
 		}
 		processorsDs.save(processor);
 	}
+	
+	@Override
+	public void saveProcessor(AbstractUserMessagesProcessor processor) {
+		processorsDs.save(processor);
+	}
+	
 	@Override
 	public void setMessageReadden(String userId, String messageId) {
 		Query<UnreaddenMessage> q = ds.createQuery(UnreaddenMessage.class).field("message").equal(new Key<GeneralMessage>(GeneralMessage.class, new ObjectId(messageId))).field("userId").equal(userId);
@@ -351,6 +357,17 @@ public class MongoDataManager implements IDataManager {
 		tags.setSelectedTag(tagId);
 		ds.save(tags);
 		return messagesList;
+	}
+	
+	@Override
+	public<T extends GeneralMessage> List<T> getMessagesAfterDate(Class<T> T, Long date, String sourceField, String sourceId){
+		Query<T> q = (Query<T>)ds.createQuery(T).field("messageDate").greaterThanOrEq(date).field(sourceField).equal(sourceId);
+		Iterable<T> messages = q.fetch();
+		ArrayList<T> ret = new ArrayList<T>();
+		for (T message : messages) {
+			ret.add(message);
+		}
+		return ret;
 	}
 
 	public Long countUnreadMessages(String userId, String tagId) {

@@ -22,9 +22,11 @@ import com.google.code.morphia.annotations.Transient;
  *
  */
 public abstract class UserMessageProcessor extends AbstractUserMessagesProcessor{
-	public static final String ACTIVEMQ_READEN_MESSAGE = "activemq:readenMessage";
+	protected static final long MONTH = 30*24*3600l;
 	@Transient
 	private static final Logger logger = LoggerFactory.getLogger(UserMessageProcessor.class);
+	private Long lastUpdate = 0l;
+	private Long lastFailure = 0l;
 
 	/**
 	 * 
@@ -64,5 +66,21 @@ public abstract class UserMessageProcessor extends AbstractUserMessagesProcessor
 			logger.debug("Got message with uid " + message.getUniqueFieldValue().toString());
 		}
 		return unreaddenMessage;
+	}
+	
+	public Long getLastUpdate() {
+		return lastUpdate;
+	}
+
+	public void setLastUpdate(Long lastUpdate) {
+		this.lastUpdate = lastUpdate;
+	}
+
+	public Long getLastFailure() {
+		return lastFailure;
+	}
+
+	public void setLastFailure(Long lastFailure) {
+		this.lastFailure = lastFailure;
 	}
 }

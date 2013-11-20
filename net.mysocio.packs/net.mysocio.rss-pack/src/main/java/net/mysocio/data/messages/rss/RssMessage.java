@@ -25,6 +25,7 @@ public class RssMessage extends GeneralMessage {
 	private String link;
 	private String feedTitle;
 	private String language = "en";
+	private String sourceId;
 
 	@Override
 	public String getLink() {
@@ -84,5 +85,13 @@ public class RssMessage extends GeneralMessage {
 	@Override
 	public String getButtons() {
 		return super.getButtons() + "<div class='gplusbutton' ><div class='g-plusone' data-href='message.link' data-size='small' data-annotation='none'></div></div>";
+	}
+
+	public String getSourceId() {
+		return sourceId;
+	}
+
+	public void setSourceId(String sourceId) {
+		this.sourceId = sourceId;
 	}
 }

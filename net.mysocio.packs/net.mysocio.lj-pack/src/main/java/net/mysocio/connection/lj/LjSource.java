@@ -3,6 +3,8 @@
  */
 package net.mysocio.connection.lj;
 
+import java.util.List;
+
 import net.mysocio.connection.rss.RssSource;
 import net.mysocio.data.management.DataManagerFactory;
 import net.mysocio.data.messages.lj.LjMessage;
@@ -11,6 +13,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.code.morphia.annotations.Entity;
+import com.sun.syndication.feed.synd.SyndEntryImpl;
+import com.sun.syndication.feed.synd.SyndFeed;
+import com.sun.syndication.feed.synd.SyndImage;
 
 /**
  * @author Aladdin
@@ -42,5 +47,15 @@ public class LjSource extends RssSource {
 	@Override
 	public void removeProcessor(String userId) throws Exception {
 		DataManagerFactory.getDataManager().deleteUserProcessorByField(LjMessageProcessor.class, "url", getUrl(), userId);		
+	}
+	
+	@Override
+	public void processMessages(SyndFeed feed, List<SyndEntryImpl> entries) throws Exception {
+		SyndImage image = feed.getImage();
+		for (SyndEntryImpl entry : entries) {
+			LjMessage message = new LjMessage();
+    		message.setUserpic(image.getUrl());
+    		processMessage(entry, message);
+		}
 	}
 }

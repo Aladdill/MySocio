@@ -72,4 +72,8 @@ public interface IDataManager {
 	public<T> void deleteUserProcessorByField(Class<T> clazz, String fieldName, String fieldValue, String userId);
 
 	public<T extends AbstractUserMessagesProcessor> void saveProcessor(T processor, String uniqueFieldName, String uniqueFieldValue) throws Exception;
+	
+	public void saveProcessor(AbstractUserMessagesProcessor processor);
+
+	public<T extends GeneralMessage> List<T> getMessagesAfterDate(Class<T> T, Long date, String sourceField, String sourceId);
 }

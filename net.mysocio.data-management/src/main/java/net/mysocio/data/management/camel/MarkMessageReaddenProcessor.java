@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class MarkMessageReaddenProcessor implements Processor {
+	public static final String ACTIVEMQ_READEN_MESSAGE = "activemq:readenMessage";
 	private static final Logger logger = LoggerFactory.getLogger(MarkMessageReaddenProcessor.class);
 
 	/* (non-Javadoc)

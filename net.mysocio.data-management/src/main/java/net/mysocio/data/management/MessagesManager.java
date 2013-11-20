@@ -11,7 +11,7 @@ import net.mysocio.data.IDataManager;
 import net.mysocio.data.IMessagesManager;
 import net.mysocio.data.SocioPair;
 import net.mysocio.data.UserTags;
-import net.mysocio.data.management.camel.UserMessageProcessor;
+import net.mysocio.data.management.camel.MarkMessageReaddenProcessor;
 import net.mysocio.data.messages.GeneralMessage;
 
 /**
@@ -61,7 +61,7 @@ public class MessagesManager implements IMessagesManager {
 		}
 		String[] ids = messagesId.split(",");
 		for (String id : ids) {
-			DataManagerFactory.getDataManager().sendPackageToRoute(UserMessageProcessor.ACTIVEMQ_READEN_MESSAGE, new SocioPair(userId, id));
+			DataManagerFactory.getDataManager().sendPackageToRoute(MarkMessageReaddenProcessor.ACTIVEMQ_READEN_MESSAGE, new SocioPair(userId, id));
 		}
 	}
 }

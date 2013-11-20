@@ -45,8 +45,6 @@ public class FacebookMessagesProcessor extends UserMessageProcessor {
 	@Transient
 	private static final Logger logger = LoggerFactory
 			.getLogger(FacebookMessagesProcessor.class);
-	private static final long MONTH = 30*24*3600l;
-	private Long lastUpdate = 0l;
 	private String token;
 	private String accountId;
 	@Transient
@@ -133,7 +131,7 @@ public class FacebookMessagesProcessor extends UserMessageProcessor {
 			logger.debug("Got trying to get messages for facebook account: " + accountId);
 		}
 		long to = System.currentTimeMillis();
-		long from = lastUpdate;
+		long from = getLastUpdate();
 		if (facebook == null){
 			facebook = new FacebookFactory().getInstance();
 			facebook.setOAuthAccessToken(new AccessToken(token, null));
@@ -173,7 +171,7 @@ public class FacebookMessagesProcessor extends UserMessageProcessor {
 				addMessageForTag(message, FacebookMessage.class, message.getUserId());
 			}
 		}
-		lastUpdate = to;
+		setLastUpdate(to);
 	}
 
 	public String getAccountId() {
