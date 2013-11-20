@@ -203,7 +203,13 @@ public class MongoDataManager implements IDataManager {
 	}
 
 	public <T extends ISocioObject> List<T> getObjects(Class<T> T) {
-		return ds.find(T).asList();
+		Query<T> q = (Query<T>)ds.createQuery(T);
+		Iterable<T> objects = q.fetch();
+		ArrayList<T> ret = new ArrayList<T>();
+		for (T object : objects) {
+			ret.add(object);
+		}
+		return ret;
 	}
 
 	public void saveUiObject(UiObject uiObject) throws DuplicateMySocioObjectException{
@@ -361,7 +367,7 @@ public class MongoDataManager implements IDataManager {
 	
 	@Override
 	public<T extends GeneralMessage> List<T> getMessagesAfterDate(Class<T> T, Long date, String sourceField, String sourceId){
-		Query<T> q = (Query<T>)ds.createQuery(T).field("messageDate").greaterThanOrEq(date).field(sourceField).equal(sourceId);
+		Query<T> q = (Query<T>)ds.createQuery(T).field("date").greaterThanOrEq(date).field(sourceField).equal(sourceId);
 		Iterable<T> messages = q.fetch();
 		ArrayList<T> ret = new ArrayList<T>();
 		for (T message : messages) {

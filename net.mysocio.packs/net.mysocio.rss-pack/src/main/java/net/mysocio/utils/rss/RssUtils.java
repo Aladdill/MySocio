@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -74,12 +75,10 @@ public class RssUtils {
 	}
 	public static SyndFeed buldFeed(String url) throws FeedException,
 			IOException, MalformedURLException {
-//		SyndFeedInput input = new SyndFeedInput();
-//		SyndFeed feed = input.build(new XmlReader(new URL(url)));
-//		return feed;
-		InputStream in = new URL(url).openStream();
+		URLConnection cx = new URL(url).openConnection();
+		cx.setRequestProperty("User-Agent", "http://www.mysocio.net; nathan@mysocio.net");
         SyndFeedInput input = new SyndFeedInput();
-        return input.build(new XmlReader(in));
+        return input.build(new XmlReader(cx));
 	}
 	public static void importOpml(String userId, String url) throws Exception{
 		URL feedURL = new URL(url);
@@ -93,11 +92,13 @@ public class RssUtils {
 	private static void importOpml(String userId, Document document) throws Exception {
 		OPML20Parser parser = new OPML20Parser();
 		Opml feed = (Opml) parser.parse(document, true);
+		@SuppressWarnings("unchecked")
 		List<Outline> outlines = (List<Outline>) feed.getOutlines();
 		IDataManager dataManager = DataManagerFactory.getDataManager();
 		UserTags userTags = dataManager.getUserTags(userId);
 		SocioTag rssFeeds = getRssTag(userTags);
 		for (Outline outline : outlines) {
+			@SuppressWarnings("unchecked")
 			List<Outline> children = outline.getChildren();
 			String title = outline.getTitle();
 			if (title == null){

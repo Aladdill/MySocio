@@ -22,10 +22,7 @@ public class GoogleInputProcessor extends UserMessageProcessor {
 	 */
 	private static final long serialVersionUID = -1914368846859623850L;
 	@Transient
-	private static final Logger logger = LoggerFactory
-			.getLogger(GoogleInputProcessor.class);
-	private static final long MONTH = 30*24*3600l;
-	private Long lastUpdate = 0l;
+	private static final Logger logger = LoggerFactory.getLogger(GoogleInputProcessor.class);
 	private String token;
 	private String accountId;
 
@@ -109,8 +106,8 @@ public class GoogleInputProcessor extends UserMessageProcessor {
 		if (logger.isDebugEnabled()){
 			logger.debug("Got trying to get messages for google account: " + accountId);
 		}
-		long to = System.currentTimeMillis();
-		long from = lastUpdate;
+//		long to = System.currentTimeMillis();
+//		long from = getLastUpdate();
 	/*	if (facebook == null){
 			facebook = new FacebookFactory().getInstance();
 			facebook.setOAuthAccessToken(new AccessToken(token, null));
@@ -145,7 +142,7 @@ public class GoogleInputProcessor extends UserMessageProcessor {
 			}
 			addMessageForTag(message, message.getUserId());
 		}*/
-		lastUpdate = to;
+//		setLastUpdate(to);
 	}
 
 	public String getAccountId() {
