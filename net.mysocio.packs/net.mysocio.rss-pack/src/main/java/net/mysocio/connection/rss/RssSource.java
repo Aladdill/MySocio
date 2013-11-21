@@ -86,6 +86,11 @@ public class RssSource extends Source {
 			return;
 		}
 		String text = description.getValue();
+		@SuppressWarnings("unchecked")
+		List<SyndContent> contents = entry.getContents();
+		for (SyndContent syndContent : contents) {
+			text = text + "<br>" + syndContent.getValue();
+		}
 		message.setText(text);
 		
 		if (logger.isDebugEnabled()){

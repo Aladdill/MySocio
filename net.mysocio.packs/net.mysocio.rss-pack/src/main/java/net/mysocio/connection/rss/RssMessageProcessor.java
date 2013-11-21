@@ -3,6 +3,7 @@
  */
 package net.mysocio.connection.rss;
 
+import java.util.Date;
 import java.util.List;
 
 import net.mysocio.data.IDataManager;
@@ -31,11 +32,16 @@ public class RssMessageProcessor extends UserMessageProcessor {
 	public void process() throws Exception {
 		long to = System.currentTimeMillis();
 		long from = getLastUpdate();
+		logger.debug("Initial date " + new Date(from));
 		if (from == 0 || (to - from) > MONTH){
 			from = to - MONTH;
 		}
+		logger.debug("Date after if " + new Date(from));
     	IDataManager dataManager = DataManagerFactory.getDataManager();
     	List<RssMessage> messages = dataManager.getMessagesAfterDate(RssMessage.class, from, "sourceId", url);
+    	if (logger.isDebugEnabled()){
+    		logger.debug("Got " + messages.size() + " for RSS " + url + " from " + new Date(from) + " user " + getUserId());
+    	}
     	for (RssMessage message : messages) {
     		addMessageForTag(message, RssMessage.class, url);
 		}

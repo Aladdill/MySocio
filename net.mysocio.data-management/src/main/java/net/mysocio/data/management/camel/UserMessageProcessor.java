@@ -22,7 +22,7 @@ import com.google.code.morphia.annotations.Transient;
  *
  */
 public abstract class UserMessageProcessor extends AbstractUserMessagesProcessor{
-	protected static final long MONTH = 30*24*3600l;
+	protected static final long MONTH = 1000*30*24*3600l;
 	@Transient
 	private static final Logger logger = LoggerFactory.getLogger(UserMessageProcessor.class);
 	private Long lastUpdate = 0l;
@@ -37,6 +37,7 @@ public abstract class UserMessageProcessor extends AbstractUserMessagesProcessor
 		String userId = getUserId();
 		IDataManager dataManager = DataManagerFactory.getDataManager();
 		if (dataManager.isNewMessage(userId, message, T)){
+			logger.debug("Message is new.");
 			dataManager.saveObject(createUnreaddenMessage(message, tag, userId));
 		}
 	}

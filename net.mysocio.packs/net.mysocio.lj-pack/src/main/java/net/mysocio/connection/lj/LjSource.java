@@ -55,6 +55,7 @@ public class LjSource extends RssSource {
 		for (SyndEntryImpl entry : entries) {
 			LjMessage message = new LjMessage();
     		message.setUserpic(image.getUrl());
+    		message.setSourceId(getUrl());
     		processMessage(entry, message);
 		}
 	}
