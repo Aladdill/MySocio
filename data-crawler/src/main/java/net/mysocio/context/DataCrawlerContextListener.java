@@ -108,7 +108,7 @@ public class DataCrawlerContextListener extends AbstractMongoInitializer impleme
 			MarkMessageReaddenProcessor readdenProcessor = new MarkMessageReaddenProcessor();
 			CamelContextManager.addRoute(MarkMessageReaddenProcessor.ACTIVEMQ_READEN_MESSAGE, readdenProcessor);
 			RSSFeedsProcessor rssFeedsProcessor = new RSSFeedsProcessor();
-			CamelContextManager.addRoute("timer://" + RSSFeedsProcessor.ACTIVEMQ_RSS_FEEDS + "?fixedRate=true&period=60s", rssFeedsProcessor);
+			CamelContextManager.addRoute("timer://" + RSSFeedsProcessor.ACTIVEMQ_RSS_FEEDS + "?fixedRate=true&period=900s", rssFeedsProcessor);
 			for (DefaultUserProcessor processor : processors) {
 				logger.debug("Starting processor route for user " + processor.getUserId());
 				CamelContextManager.addRoute("timer://" + processor.getUserId() + "?fixedRate=true&period=60s", processor);

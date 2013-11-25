@@ -45,7 +45,10 @@ public class RssMessageProcessor extends UserMessageProcessor {
     	for (RssMessage message : messages) {
     		addMessageForTag(message, RssMessage.class, url);
 		}
-    	setLastUpdate(to);
+    	//we want to update last update time if was actual extraction.
+    	if (messages.size() > 0){
+    		setLastUpdate(to);
+    	}
 	}
 
 	public String getUrl() {

@@ -40,8 +40,6 @@ import org.slf4j.LoggerFactory;
 import com.google.code.morphia.Datastore;
 import com.google.code.morphia.Key;
 import com.google.code.morphia.query.Query;
-import com.mongodb.BasicDBObject;
-import com.mongodb.QueryBuilder;
 
 /**
  * @author Aladdin
@@ -251,6 +249,7 @@ public class MongoDataManager implements IDataManager {
 				((SocioObject)object).setId((ObjectId)element.getValue());
 				return;
 			}
+			@SuppressWarnings("unchecked")
 			Query<T> q = (Query<T>)ds.createQuery(object.getClass()).field(uniqueObject.getUniqueFieldName()).equal(uniqueObject.getUniqueFieldValue());
 			T objectT = (T) q.get();
 			if (objectT != null) {
@@ -263,8 +262,15 @@ public class MongoDataManager implements IDataManager {
 		}
 		ds.save(object);
 	}
+	
+	@Override
+	public <T extends ISocioObject> void saveExistingObject(T object) {
+		ds.save(object);
+	}
+	
 	@Override
 	public<T extends AbstractUserMessagesProcessor> void saveProcessor(T processor, String uniqueFieldName, String uniqueFieldValue) throws DuplicateMySocioObjectException {
+		@SuppressWarnings("unchecked")
 		Query<T> q = (Query<T>)processorsDs.createQuery(processor.getClass()).field(uniqueFieldName).equal(uniqueFieldValue);
 		String userId = processor.getUserId();
 		if (userId != null){
@@ -336,9 +342,7 @@ public class MongoDataManager implements IDataManager {
 	public List<GeneralMessage> getUnreadMessages(String userId, String tagId, UserTags tags) {
 		
 		Query<UnreaddenMessage> q = ds.createQuery(UnreaddenMessage.class).field("userId").equal(userId.toString());
-		QueryBuilder query = QueryBuilder.start("userId").is(userId);
 		String order = tags.getOrder();
-		BasicDBObject dbOrder = new BasicDBObject("messageDate",-1);
 		if (!tagId.equals(UserTags.ALL_TAGS)){
 			SocioTag tag = tags.getTag(tagId);
 			order = tag.getOrder();

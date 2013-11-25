@@ -76,4 +76,6 @@ public interface IDataManager {
 	public void saveProcessor(AbstractUserMessagesProcessor processor);
 
 	public<T extends GeneralMessage> List<T> getMessagesAfterDate(Class<T> T, Long date, String sourceField, String sourceId);
+
+	public<T extends ISocioObject> void saveExistingObject(T object);
 }

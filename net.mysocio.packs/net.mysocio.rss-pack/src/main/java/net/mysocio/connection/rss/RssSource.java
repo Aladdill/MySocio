@@ -29,6 +29,9 @@ public class RssSource extends Source {
 	 * 
 	 */
 	private static final long serialVersionUID = -3623303809928356829L;
+	private Long lastUpdate = 0l;
+	private Long lastFailure = 0l;
+	private boolean blocked = false;
 	
 	public Class<?> getMessageClass() {
 		return RssMessage.class;
@@ -102,5 +105,29 @@ public class RssSource extends Source {
 		} catch (Exception e) {
 			//if it's duplicate message - we ignore it
 		}
+	}
+
+	public Long getLastUpdate() {
+		return lastUpdate;
+	}
+
+	public void setLastUpdate(Long lastUpdate) {
+		this.lastUpdate = lastUpdate;
+	}
+
+	public Long getLastFailure() {
+		return lastFailure;
+	}
+
+	public void setLastFailure(Long lastFailure) {
+		this.lastFailure = lastFailure;
+	}
+
+	public boolean isBlocked() {
+		return blocked;
+	}
+
+	public void setBlocked(boolean blocked) {
+		this.blocked = blocked;
 	}
 }
