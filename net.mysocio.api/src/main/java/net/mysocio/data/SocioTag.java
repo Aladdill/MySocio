@@ -26,6 +26,7 @@ public class SocioTag implements Serializable, Comparable<SocioTag>{
 	private static final long serialVersionUID = -7408921930602565552L;
 	private String value;
 	private String iconType;
+	private boolean blocked = false;
 	@Id
 	private String uniqueId;
 	@Embedded
@@ -172,5 +173,13 @@ public class SocioTag implements Serializable, Comparable<SocioTag>{
 	@Override
 	public int compareTo(SocioTag o) {
 		return value.compareTo(o.value);
+	}
+
+	public boolean isBlocked() {
+		return blocked;
+	}
+
+	public void setBlocked(boolean blocked) {
+		this.blocked = blocked;
 	}
 }

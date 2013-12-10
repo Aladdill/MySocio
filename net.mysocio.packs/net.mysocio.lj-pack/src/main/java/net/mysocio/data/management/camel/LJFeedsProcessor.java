@@ -28,21 +28,22 @@ import com.sun.syndication.feed.synd.SyndFeed;
  * @author nathan
  *
  */
-public class RSSFeedsProcessor extends SocioObject implements Processor {
-	public static final String ACTIVEMQ_RSS_FEEDS = "rssFeeds";
+public class LJFeedsProcessor extends SocioObject implements Processor {
+	public static final String ACTIVEMQ_LJ_FEEDS = "ljFeeds";
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 4656771966871920349L;
 	@Transient
-	static final Logger logger = LoggerFactory.getLogger(RSSFeedsProcessor.class);
+	static final Logger logger = LoggerFactory.getLogger(LJFeedsProcessor.class);
 
 	@Override
 	public void process(Exchange arg0) throws Exception {
 		IDataManager dataManager = DataManagerFactory.getDataManager();
 		List<Source> rssSources = dataManager.getObjects(Source.class);
 		int i = 0;
-		logger.info("Starting rss messages extraction.");
+		logger.info("Starting LJ messages extraction.");
+		boolean connectionFail = false;
 		for (Source source : rssSources) {
 			if (!(source instanceof RssSource)){
 				continue;
@@ -50,8 +51,8 @@ public class RSSFeedsProcessor extends SocioObject implements Processor {
 			
 			RssSource rssSource = (RssSource)source;
 			String url = rssSource.getUrl();
-			//Livejournal feeds have separate processor
-			if (url != null && url.contains("livejournal.com")){
+			//Because of behavior of LJ if once connection failed we'll wait till next round 
+			if (url == null || !url.contains("livejournal.com") || connectionFail){
 				continue;
 			}
 			i++;
@@ -71,13 +72,12 @@ public class RSSFeedsProcessor extends SocioObject implements Processor {
 					if (updatedFeed != 0l){
 						logger.debug("url : " + url + " updated " + new Date(updatedFeed));
 					}
-					logger.debug("falure over : " + ((now - lastFailure) > 1000*60*240));
-					logger.debug("get messages if " + (((now - lastFailure) > 1000*60*240) && !blockedFeed));
+					logger.debug("get messages if " + (!blockedFeed));
 				}
-				//if connection failed, we want to retry only after 4 hours
-				if (((now - lastFailure) > 1000*60*240) && !blockedFeed){
+				
+				if (!blockedFeed){
 					if (debug){
-						logger.debug("Trying to get messages for feed: " + url);
+						logger.debug("Trying to get messages for LJ: " + url);
 					}
 					SyndFeed feed = RssUtils.buldFeed(url);
 					
@@ -87,21 +87,22 @@ public class RSSFeedsProcessor extends SocioObject implements Processor {
 					@SuppressWarnings("unchecked")
 					List<SyndEntryImpl> entries = (List<SyndEntryImpl>)feed.getEntries();
 			    	if (debug){
-						logger.debug("Got " + entries.size() + " messages for feed: " + feed.getTitle());
+						logger.debug("Got " + entries.size() + " messages for LJ: " + feed.getTitle());
 					}
 			    	((RssSource)rssSource).processMessages(feed, entries);
 			    	rssSource.setLastUpdate(now);
 				}
 			} catch (ConnectException ce){
 				rssSource.setLastFailure(now);
+				connectionFail = true;
 				logger.warn("Problem with connection " + url + " because of " + ce.getMessage());
 			} catch (FileNotFoundException fnfe){
 				rssSource.setBlocked(true);
-				logger.warn("Rss url broken " + url);
+				logger.warn("LJ url broken " + url);
 			} catch (Exception e) {
 				//if processor failed for some reason, we want to know it, but not to stop extraction process 
 				rssSource.setLastFailure(now);
-				logger.warn("Problem processing messages for RSS: " + url + " because of " + e.getMessage());
+				logger.warn("Problem processing messages for LJ: " + url + " because of " + e.getMessage());
 			}
 			dataManager.saveExistingObject(rssSource);
 		}

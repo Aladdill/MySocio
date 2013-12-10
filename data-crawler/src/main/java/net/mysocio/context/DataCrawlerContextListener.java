@@ -28,6 +28,7 @@ import net.mysocio.data.management.DataManagerFactory;
 import net.mysocio.data.management.MongoDataManager;
 import net.mysocio.data.management.camel.DefaultUserProcessor;
 import net.mysocio.data.management.camel.MarkMessageReaddenProcessor;
+import net.mysocio.data.management.camel.LJFeedsProcessor;
 import net.mysocio.data.management.camel.RSSFeedsProcessor;
 import net.mysocio.routes.reader.MongoCappedCollectionReader;
 import net.mysocio.routes.reader.NewPackageProcessor;
@@ -108,7 +109,9 @@ public class DataCrawlerContextListener extends AbstractMongoInitializer impleme
 			MarkMessageReaddenProcessor readdenProcessor = new MarkMessageReaddenProcessor();
 			CamelContextManager.addRoute(MarkMessageReaddenProcessor.ACTIVEMQ_READEN_MESSAGE, readdenProcessor);
 			RSSFeedsProcessor rssFeedsProcessor = new RSSFeedsProcessor();
-			CamelContextManager.addRoute("timer://" + RSSFeedsProcessor.ACTIVEMQ_RSS_FEEDS + "?fixedRate=true&period=900s", rssFeedsProcessor);
+			CamelContextManager.addRoute("timer://" + RSSFeedsProcessor.ACTIVEMQ_RSS_FEEDS + "?fixedRate=true&period=30m", rssFeedsProcessor);
+			LJFeedsProcessor ljFeedsProcessor = new LJFeedsProcessor();
+			CamelContextManager.addRoute("timer://" + LJFeedsProcessor.ACTIVEMQ_LJ_FEEDS + "?fixedRate=true&period=30m", ljFeedsProcessor);
 			for (DefaultUserProcessor processor : processors) {
 				logger.debug("Starting processor route for user " + processor.getUserId());
 				CamelContextManager.addRoute("timer://" + processor.getUserId() + "?fixedRate=true&period=60s", processor);

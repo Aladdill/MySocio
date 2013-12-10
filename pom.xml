@@ -78,7 +78,7 @@
 		<module>data-crawler</module>
 	</modules>
 	<properties>
-		<camel-version>[2.10.3,)</camel-version>
+		<camel-version>2.12.1</camel-version>
 		<scribe-version>1.3.2</scribe-version>
 		<mysocio.version>0.0.1-SNAPSHOT</mysocio.version>
 	</properties>
