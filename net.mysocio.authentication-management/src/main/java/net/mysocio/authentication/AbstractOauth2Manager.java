@@ -85,16 +85,16 @@ public abstract class AbstractOauth2Manager implements IAuthenticationManager {
 
 	protected void checkUserInvitation(String email, IDataManager dataManager)
 			throws UnapprovedUserException {
-//		if (dataManager.getUserPermissions(email) == null){
-//			String message = "User with email " + email + "wasn't approved and knocked.";
-//			logger.error(message);
-//			try {
-//				dataManager.saveObject(new MySocioInfo("Unapproved User", message, new Date().toString()));
-//			} catch (Exception e) {
-//				logger.warn("Coudn't save info.",e);
-//			}
-//			throw new UnapprovedUserException();
-//		}
+		if (dataManager.getUserPermissions(email) == null){
+			String message = "User with email " + email + "wasn't approved and knocked.";
+			logger.error(message);
+			try {
+				dataManager.saveObject(new MySocioInfo("Unapproved User", message, new Date().toString()));
+			} catch (Exception e) {
+				logger.warn("Coudn't save info.",e);
+			}
+			throw new UnapprovedUserException();
+		}
 		try {
 			dataManager.saveObject(new MySocioInfo("Logged In User", "User with email " + email, new Date().toString()));
 		} catch (Exception e) {
